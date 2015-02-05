@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="uiRouterSammple">
+<head>
+	<meta charset="UTF-8">
+	<!-- using twitter bootstrap -->
+	<link rel="stylesheet" href="vendor/bootstrap.min.css">
+	<!-- style for ng-animate are located here -->
+	<link rel="stylesheet" href="css/styles.css">
+	<!-- angular.js angular-animate.js angular-ui-router.js -->
+	<script src="scripts/angular-1.2.14/angular.js"></script>
+	<script src="scripts/angular-1.2.14/angular-animate.js"></script>
+	<script src="release/angular-ui-router.js"></script>
+	<!-- app.js declares the uiRouterSample module and adds items to $rootScope, and defines the 'home' and 'about' states -->
+	<script src="js/app.js"></script>
+	<!-- contacts.js declares the uiRouterSample.contacts module, and adds a number of contact related states -->
+	<script src="contacts/contacts.js"></script>
+	<!-- contacts-service.js and utils-service.js define services for use by the uiRouterSample.contacts module. -->
+	<script src="contacts/contacts-service.js"></script>
+	<script src="common/utils/utils-service.js"></script>
+
+	<title ng-bind="$state.current.name + ' - ui-router'">ui-router</title>
+</head>
+
+<body>
+	<div class="navbar navbar-fixed-top">
+		<div class="navbar-inner">
+			<div class="container">
+				<a class="brand" ui-sref="home">ui-router</a>
+				<ui class="nav">
+					<li ng-class="{active:$state.includes('contacts')}">
+						<a ui-sref="contacts.list">Contacts</a>
+					</li>
+					<li ui-sref-active="active"><a ui-sref="about">About</a></li>
+				</ui>
+
+				<p ui-view="hint" class="navbar-text pull-right"></p>
+			</div>
+		</div>
+	</div>
+
+	<div ui-view class="container slide" style="padding-top: 80px;"></div>
+
+	<hr>
+
+	<pre>
+		$state = {{ $state.current.name }}
+		$stateParams = {{ $stateParams }}
+		$state full url = {{ $state.$current.url.source }}
+	</pre>
+</body>
+</html>

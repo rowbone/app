@@ -1,0 +1,30 @@
+<div class="container w-xxl w-auto-xs" ng-controller="SigninFormController" ng-init="app.settings.container = false;">
+  <a href class="navbar-brand block m-t">{{app.name}}</a>
+  <div class="m-b-lg col-md-8 col-md-offset-2">
+    <div class="wrapper text-center">
+      <strong>请输入用户名和密码登录</strong>
+    </div>
+    <form name="form" class="form-validation">
+      <div class="text-danger wrapper text-center" ng-show="authError">
+          {{authError}}
+      </div>
+      <div class="list-group list-group-sm">
+        <div class="list-group-item">
+          <input type="text" placeholder="输入账号" class="form-control no-border" ng-model="user.userName" required>
+        </div>
+        <div class="list-group-item">
+           <input type="password" placeholder="输入密码" class="form-control no-border" ng-model="user.password" required>
+        </div>
+      </div>
+      <button type="submit" class="btn btn-success" ng-click="login(user)" ng-disabled='form.$invalid'>登录</button>
+      <div class="text-center m-t m-b"><a ui-sref="access.forgotpwd">忘记密码？</a></div>
+      <div class="line line-dashed"></div>
+
+      <pre>
+        userName:{{user.userName}}
+        password: {{ user.password }}
+      </pre>
+    </form>
+  </div>
+  <div class="text-center" ng-include="views/base/footer.html"></div>
+</div>
