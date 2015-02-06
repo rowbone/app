@@ -10,7 +10,7 @@ angular.module('app.form', ['ui.router'])
 		function($stateProvider, $urlRouterProvider) {
 			$stateProvider
 				.state('app.form', {
-					abstrct: true, 
+					abstract: true, 
 					url: '/form',
 					template: '<div ui-view></div>'
 				})
