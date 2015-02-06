@@ -7,6 +7,16 @@ app.controller('SigninFormController', ['$scope', '$http', '$state', '$rootScope
 		$scope.login = function(user) {
 			console.log('login');
 
+			$http.post('users/signin', { 'data': user})
+				.success(function(data) {
+					// 
+					console.log(data);
+				})
+				.error(function(data) {
+					// 
+					console.log('error');
+				});
+			/*
 			$http.get('data/base/login/signin.json')
 				.success(function(data) {
 					// 
@@ -28,7 +38,7 @@ app.controller('SigninFormController', ['$scope', '$http', '$state', '$rootScope
 					// 
 					console.log('获取用户信息出错！');
 				});
-
+				*/
 				/*
 				$http({
 					method: 'GET',

@@ -32,24 +32,14 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'app')));
 /*
 app.use('/', routes);
-app.use('/users', users);
 */
+app.use('/users', users);
+
+// app.get('/userlist', users.userlist(db));
 
 app.get('/', function(req, res) {
     res.sendfile('app/index-demo.html');
-})
-
-app.get('/userlist', function(db) {
-    return function（req, res) {
-        // 
-        var collection = db.get('user');
-        collection.find({}, {}, function(e, docs) {
-            res.render('', {
-                //
-            })
-        })
-    }
-})
+});
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

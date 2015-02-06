@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Users List</title>
+</head>
+
+<body>
+	<h1>Users List</h1>	
+
+	<ul>
+		<% for(var i in userlist) { %>
+		<li><a href=""><%= userlist[i].userName %></a></li>
+		<% } %>
+	</ul>
+</body>
+</html>
