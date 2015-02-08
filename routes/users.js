@@ -20,6 +20,8 @@ router.get('/userslist', function(req, res) {
 
 router.post('/signin', function(req, res) {
 	var paramReq = req.param('data');
+	var userName = paramReq.userName;
+	var password = paramReq.password;
 	var objRes = {};
 	// console.log(paramReq);
 	var userCollection = db.get('user');
@@ -27,21 +29,25 @@ router.post('/signin', function(req, res) {
 		var iLen = docs.length;
 		if(iLen <= 0) {
 			console.log('没有用户信息！');
+			objRes.status = 0;
+			objRes.msg = '没有用户信息！';
 		} else {
 			for(var i=0; i<iLen; i++) {
-				if(docs[i].userName == paramReq.userName && docs[i].password == paramReq.password) {
-					console.log('验证通过，用户名为：' + paramReq.userName);
+				if(docs[i].userName == userName && docs[i].password == password) {
+					console.log('验证通过！用户名为：' + userName);
 					objRes.status = 1;
+					objRes.msg = '验证通过！用户名为：' + userName;
 					objRes.data = docs[i];
 					break;
 				} else {
 					objRes.status = 0;
+					objRes.msg = '验证失败！用户名为：' + userName;
 				}
 			}
 		}
 
 		res.send(objRes);
 	})
-})
+});
 
 module.exports = router;
