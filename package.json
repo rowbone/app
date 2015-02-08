@@ -15,6 +15,10 @@
     "jade": "~1.6.0",
     "ejs": "2.1.4",
     "mongodb": "*",
-    "monk": "*"
+    "monk": "*",
+    "mysql": "*"
+  },
+  "devDependencies": {
+    "nodemon": "*"
   }
 }

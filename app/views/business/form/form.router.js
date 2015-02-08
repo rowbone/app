@@ -28,11 +28,25 @@ angular.module('app.form', ['ui.router'])
 				})
 				.state('app.form.selectForm', {
 					url: '/selectForm',
-					'': {
-						templateUrl: 'views/business/form/selectForm.html'
-					},
-					'formBtns@app.form.selectForm': {
-						templateUrl: 'views/business/form/formBtns.html'
+					templateUrl: 'views/business/form/selectForm.html'
+					// ,
+					// 'formBtns@app.form.selectForm': {
+					// 	templateUrl: 'views/business/form/formBtns.html'
+					// }
+				})
+				.state('app.form.commitEffectForm', {
+					url: '/commitEffectForm',
+					templateUrl: 'views/business/form/commitEffectForm.html',
+					resolve: {
+						deps: [ 'uiLoad',
+							function(uiLoad) {
+								return uiLoad.load([
+									'plugins/sweetalert/sweet-alert.js', 
+									'plugins/sweetalert/sweet-alert.css',
+									'views/business/form/commitEffectForm.js'
+								]);
+							}
+						]
 					}
 				})
 	}])
