@@ -41,8 +41,8 @@ angular.module('app.form', ['ui.router'])
 						deps: [ 'uiLoad',
 							function(uiLoad) {
 								return uiLoad.load([
-									'plugins/sweetalert/sweet-alert.js', 
-									'plugins/sweetalert/sweet-alert.css',
+									// 'plugins/sweetalert/sweet-alert.js', 
+									// 'plugins/sweetalert/sweet-alert.css',
 									'views/business/form/commitEffectForm.js'
 								]);
 							}

@@ -21,5 +21,9 @@ angular.module('app.demo', ['ui.router'])
 					url: '/bootstrap',
 					templateUrl: 'views/demo/bootstrap.html'
 				})
+				.state('app.demo.sweetAlert', {
+					url: '/sweetAlert',
+					templateUrl: 'views/demo/sweetAlert.html'
+				})
 		}
 	])

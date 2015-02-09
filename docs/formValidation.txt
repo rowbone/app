@@ -1,0 +1,17 @@
+
+1、HTML5自带功能：
+	必填：required
+	邮件：type="email"
+	数字：type="number"
+	URL：type="url"
+	密码：type="password"
+
+2、长度：
+	最小长度：ng-minlength="5"
+	最大长度：ng-maxlength="20"
+
+3、模式匹配：正则表达式
+	ng-pattern="/[a-zA-Z]/"
+
+4、屏蔽浏览器对表单的默认验证行为：
+	novalidate

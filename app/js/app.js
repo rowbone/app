@@ -6,5 +6,6 @@ var app = angular.module('demoApp', [
 	'ui.bootstrap',
 	'ui.load',
 	'app.demo',
-	'app.form'
+	'app.form',
+	'app.ngSweetAlert'
 	]);

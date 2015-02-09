@@ -27,6 +27,7 @@ router.post('/signin', function(req, res) {
 	var userCollection = db.get('user');
 	userCollection.find({}, {}, function(e, docs) {
 		var iLen = docs.length;
+		console.log('user.length:' + iLen);
 		if(iLen <= 0) {
 			console.log('没有用户信息！');
 			objRes.status = 0;
@@ -45,6 +46,8 @@ router.post('/signin', function(req, res) {
 				}
 			}
 		}
+
+		console.log(objRes);
 
 		res.send(objRes);
 	})
