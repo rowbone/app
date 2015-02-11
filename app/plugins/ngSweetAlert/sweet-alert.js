@@ -23,7 +23,8 @@
         customClass: '',
         html: false,
         animation: true,
-        allowEscapeKey: true
+        allowEscapeKey: true,
+        triggerAfterClose: false,
       };
 
 
@@ -287,7 +288,9 @@
           'imageSize',
           'html',
           'animation',
-          'allowEscapeKey'];
+          'allowEscapeKey',
+          'triggerAfterClose'
+        ];
 
         // It would be nice to just use .forEach here, but IE8... :(
         var numCustoms = availableCustoms.length;
@@ -677,6 +680,10 @@
 
     // Close timer
     modal.setAttribute('data-timer', params.timer);
+
+    // automatic trigger confirm button click 
+    // add by wlj --2015-2-10 15:26:11
+    modal.setAttribute('data-trigger', params.triggerAfterClose);
   }
 
 
@@ -748,18 +755,30 @@
         window.sweetAlert.close();
       }, timer);
     }
+
+    /*
+     * add by wlj: 2015-2-10 16:01:46
+     * automatic trigger confirm button click
+     */
+    var trigger = modal.getAttribute('data-trigger');
+    if(trigger !== 'null' && trigger !== '') {
+      var $confirmButton = modal.querySelector('button.confirm');
+      setTimeout(function() {
+        $confirmButton.click();
+      }, 2000);
+    }
   }
 
 
   // Aninmation when closing modal
   window.sweetAlert.close = window.swal.close = function() {
     var modal = getModal();
+
     fadeOut(getOverlay(), 5);
     fadeOut(modal, 5);
     removeClass(modal, 'showSweetAlert');
     addClass(modal, 'hideSweetAlert');
     removeClass(modal, 'visible');
-
 
     // Reset icon animations
 

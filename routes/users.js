@@ -24,25 +24,32 @@ router.post('/signin', function(req, res) {
 	var password = paramReq.password;
 	var objRes = {};
 	// console.log(paramReq);
+
+	if(paramReq == {}) {
+		objRes.success = false;
+		objRes.message = '没有传入对应的用户信息！';
+		res.send(objRes);
+	}
+
 	var userCollection = db.get('user');
 	userCollection.find({}, {}, function(e, docs) {
 		var iLen = docs.length;
 		console.log('user.length:' + iLen);
 		if(iLen <= 0) {
 			console.log('没有用户信息！');
-			objRes.status = 0;
-			objRes.msg = '没有用户信息！';
+			objRes.success = false;
+			objRes.message = '没有用户信息！';
 		} else {
 			for(var i=0; i<iLen; i++) {
 				if(docs[i].userName == userName && docs[i].password == password) {
 					console.log('验证通过！用户名为：' + userName);
-					objRes.status = 1;
-					objRes.msg = '验证通过！用户名为：' + userName;
-					objRes.data = docs[i];
+					objRes.success = true;
+					objRes.message = '验证通过！用户名为：' + userName;
+					objRes.obj = docs[i];
 					break;
 				} else {
-					objRes.status = 0;
-					objRes.msg = '验证失败！用户名为：' + userName;
+					objRes.success = false;
+					objRes.message = '验证失败！用户名为：' + userName;
 				}
 			}
 		}
