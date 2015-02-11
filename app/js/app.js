@@ -7,5 +7,6 @@ var app = angular.module('demoApp', [
 	'ui.load',
 	'app.demo',
 	'app.form',
-	'app.ngSweetAlert'
+	'app.ngSweetAlert',
+	'app.directives'
 	]);

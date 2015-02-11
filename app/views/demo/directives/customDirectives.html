@@ -1,0 +1,22 @@
+
+<!-- <div class="row" ng-controller="customDirectivesCtrl">
+	<userinfo>This will be replaced.</userinfo>
+</div>
+
+<div ng-controller="transcludeCtrl">
+	<mytransclude>This is a transcluded directive.{{ firstName }}</mytransclude>
+</div>
+ -->
+<!-- <div ng-controller="expanderCtrl">
+	<expander class="expander" expander-title="title">
+		{{text}}
+	</expander>
+</div> -->
+
+<div ng-controller="accordionCtrl">
+	<accordion>
+		<expander class="expander" ng-repeat="expander in expanders" expander-title="expander.title">
+			{{ expander.text }}
+		</expander>
+	</accordion>
+</div>
