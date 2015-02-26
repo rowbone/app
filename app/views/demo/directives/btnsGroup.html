@@ -1,7 +1,20 @@
 
-<div class="row">
+<div class="form-control" ng-controller="btnsGroupCtrl">
 	<h3>Buttons Group</h3>
-<!-- 	<button class="btn btn-primary" ng-click="save();">暂存</button>
-	<button class="btn btn-success" ng-click="submit();">提交</button> -->
-	<btns></btns>
+
+	<form name="form" class="bs-example novalidate">
+		<div class="form-group">
+			<label for="userName" class="control-label">用户名</label>
+			<input type="text" id="userName" name="userName" class="form-control" ng-model="entity.userName" required>
+		</div>
+
+		<div>
+			<label for="password" class="control-label">密码</label>
+			<input type="text" id="password" name="password" class="form-control" ng-model="entity.password" required>
+		</div>
+
+		<!-- <btnsgroup></btnsgroup> -->
+		<div btnsgroup params-save="{'type': 'post','url': 'users/signin', 'redirectUrl': 'app/form/selectForm'}" params-submit="submitFunc();"></div>
+		<!-- <div btnsgroup params-save="'post', 'users/signin', 'app/form/selectForm'" params-submit="submitFunc();"></div> -->
+	</form>
 </div>

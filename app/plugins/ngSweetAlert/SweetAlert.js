@@ -70,7 +70,7 @@ angular.module('app.ngSweetAlert', [])
 				 */
 				save: function(actionType, actionUrl, actionData, redirect) {
 					// this.info('操作提示', '保存中');
-					
+console.log('actionType=' + actionType);					
 					var objActionType = /^post$/i;
 					actionData = actionData || {};
 					// method type: post

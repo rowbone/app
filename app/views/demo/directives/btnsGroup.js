@@ -7,10 +7,12 @@ app.controller('btnsGroupCtrl', ['$scope',
 
 		$scope.save = function() {
 			// 
+			console.log('save');
 		}
 
 		$scope.submit = function() {
 			// 
+			console.log('submit');
 		}
 	}
 ])

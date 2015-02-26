@@ -1,21 +1,48 @@
 'use strict';
 
-app.directive('btns', function() {
+app.directive('btnsgroup', ['FormOperation', function(FormOperation) {
 	return {
 		restrict: 'AE',
 		templateUrl: './views/demo/directives/tpls.html',
-		controller: function() {
-			//
-			this.save = function() {
-				console.log('saving...');
-			}
+		// controller: function() {
+		// 	//
+		// 	this.save = function() {
+		// 		console.log('saving...');
+		// 	}
 
-			this.submit = function() {
-				console.log('submit...');
-			}
+		// 	this.submit = function() {
+		// 		console.log('submit...');
+		// 	}
+		// },
+		link: function(scope, elem, attrs) {
+
+			console.log(attrs);
+			// 
+			scope.save = function() {
+				console.log('save in link');
+				var paramsSave = attrs.paramsSave;
+				if(!paramsSave) {
+					console.log('Get save params wrong, exit');
+					return;
+				}
+				paramsSave = paramsSave.replace(/'/g, '"').replace(/\ /g, '');
+				console.log(typeof paramsSave);
+				paramsSave = JSON.parse(paramsSave);
+				console.log(paramsSave);
+				console.log('222' + typeof paramsSave);
+				// FormOperation.save('pOst', 'users/signin', scope.entity, 'app/form/selectForm');
+				FormOperation.save(paramsSave);
+			};
+
+			scope.submit = function() {
+				console.log('submit in link');
+				FormOperation.submit('post', 'users/signin', scope.entity, {state: 'app.form.simpleForm', url: 'app/form/simpleForm'});
+				// {'type': 'post','url': 'users/signin', 'redirectUrl': 'app/form/selectForm'}
+			};
+
 		}
 	}
-})
+}])
 // app.directive('userinfo', function() {
 // 	return {
 // 		restrict: 'AE',
