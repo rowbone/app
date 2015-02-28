@@ -1,0 +1,6 @@
+
+2015-2-27 14:03:17
+
+1、btnsgroup作为单独的指令，怎样获取页面的数据（如果页面ng-model绑定的object不为entity时应该怎样获取）
+
+2、如果要利用angular的表单校验规则（$valid,$invalid,$dirty），必须要用到表单的name属性，怎样获取

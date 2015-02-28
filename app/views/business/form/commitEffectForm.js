@@ -8,13 +8,20 @@ app.controller('CommitEffectFormCtrl', ['$scope', '$http', 'FormOperation',
 			'password': 'hr1'
 		}
 
-		$scope.save = function() {
-			FormOperation.save('pOst', 'users/signin', $scope.entity, 'app/form/selectForm');
+		$scope.save = function(data) {
+			console.log('CommitEffectFormCtrl save');
+			// FormOperation.save('pOst', 'users/signin', $scope.entity, 'app/form/selectForm');
+			// return data || $scope.entity;
 		}
 
 		$scope.submit = function() {
-			FormOperation.submit('post', 'users/signin', $scope.entity, {state: 'app.form.simpleForm', url: 'app/form/simpleForm'});
+			console.log('CommitEffectFormCtrl submit');
+			// FormOperation.submit('post', 'users/signin', $scope.entity, {state: 'app.form.simpleForm', url: 'app/form/simpleForm'});
 		};
+
+		$scope.funcClick = function() {
+			return $scope.entity;
+		}
 
 	}
 ])

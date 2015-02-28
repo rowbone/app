@@ -1,12 +1,12 @@
 
-<!-- <div class="row"> -->
+<div class="row">
 	<div class="col-md-8 col-md-offset-2">
 		<!-- <div class="modal-header">
 			<h3 class="modal-title">表单提交</h3>
 		</div> -->
 		<div ng-controller="CommitEffectFormCtrl">
 
-			<form name="form" class="bs-example novalidate">
+			<form name="form" class="bs-example" novalidate>
 
 				<div class="form-group">
 					<label class="control-label" for="userName">姓名</label>
@@ -18,7 +18,7 @@
 					<input type="text" id="password" name="password" class="form-control" ng-model="entity.password" required>
 				</div>
 
-				<!-- <div class="form-group">
+				<div class="form-group">
 					<label class="control-label" for="sex">性别:</label>
 					<input type="text" id="sex" name="ses" class="form-control" ng-model="entity.sex">
 				</div>
@@ -41,13 +41,21 @@
 				<div class="form-group">
 					<label class="control-label" for="email">邮箱</label>
 					<input type="text" id="email" name="email" class="form-control" ng-model="entity.email">
-				</div> -->
+				</div>
 				
-				<div>
+				<!-- <div>
 					<button class="btn btn-primary" ng-click="save();">保存</button>
 					<button class="btn btn-success" ng-click="submit();">提交</button>
+				</div> -->
+
+				<!-- <div btnsgroup data-params-save="users/signin, app/form/selectForm" data-params-submit="{'type': 'post','url': 'users/signin', 'redirectUrl': 'app/form/selectForm'}"></div> -->
+
+				<div>
+					<!-- <button class="btn btn-primary" btn-save ng-click="save();" data-params-save="users/signin, app/form/selectForm">暂存</button> -->
+					<button class="btn btn-primary" btn-save ng-click="save();" data-url="users/signin" data-redirect-url="app/form/selectForm" data-action-type="post">暂存</button>
+					<button class="btn btn-success" btn-submit ng-click="submit();" data-url="users/signin">提交</button>
 				</div>
 			</form>
 		</div>
 	</div>
-<!-- </div> -->
+</div>

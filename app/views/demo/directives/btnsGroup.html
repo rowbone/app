@@ -2,7 +2,7 @@
 <div class="form-control" ng-controller="btnsGroupCtrl">
 	<h3>Buttons Group</h3>
 
-	<form name="form" class="bs-example novalidate">
+	<form name="form" class="bs-example" novalidate>
 		<div class="form-group">
 			<label for="userName" class="control-label">用户名</label>
 			<input type="text" id="userName" name="userName" class="form-control" ng-model="entity.userName" required>
@@ -14,7 +14,7 @@
 		</div>
 
 		<!-- <btnsgroup></btnsgroup> -->
-		<div btnsgroup params-save="{'type': 'post','url': 'users/signin', 'redirectUrl': 'app/form/selectForm'}" params-submit="submitFunc();"></div>
-		<!-- <div btnsgroup params-save="'post', 'users/signin', 'app/form/selectForm'" params-submit="submitFunc();"></div> -->
+		<!-- <div btnsgroup data-params-save="{'type': 'post','url': 'users/signin', 'redirectUrl': 'app/form/selectForm'}" params-submit="submitFunc();"></div> -->
+		<div btnsgroup data-params-save="users/signin, app/form/selectForm" data-params-submit="{'type': 'post','url': 'users/signin', 'redirectUrl': 'app/form/selectForm'}"></div>
 	</form>
 </div>

@@ -4,42 +4,132 @@ app.directive('btnsgroup', ['FormOperation', function(FormOperation) {
 	return {
 		restrict: 'AE',
 		templateUrl: './views/demo/directives/tpls.html',
-		// controller: function() {
-		// 	//
-		// 	this.save = function() {
-		// 		console.log('saving...');
-		// 	}
-
-		// 	this.submit = function() {
-		// 		console.log('submit...');
-		// 	}
-		// },
 		link: function(scope, elem, attrs) {
-
-			console.log(attrs);
-			// 
 			scope.save = function() {
-				console.log('save in link');
-				var paramsSave = attrs.paramsSave;
+				var paramsSave = attrs.paramsSave,
+						objParams = {};
 				if(!paramsSave) {
 					console.log('Get save params wrong, exit');
 					return;
 				}
-				paramsSave = paramsSave.replace(/'/g, '"').replace(/\ /g, '');
-				console.log(typeof paramsSave);
-				paramsSave = JSON.parse(paramsSave);
-				console.log(paramsSave);
-				console.log('222' + typeof paramsSave);
+				// remove blanks in params string
+				paramsSave = paramsSave.replace(/\ /g, '');
+				if(paramsSave.indexOf('{') > -1) {
+					// stringified object
+					paramsSave = paramsSave.replace(/'/g, '"');
+					objParams = JSON.parse(paramsSave);
+				} else {
+					console.log('in save');
+					console.log(paramsSave);
+					// string
+					var arrParams = paramsSave.split(',');
+					objParams.actionUrl = arrParams[0];
+					objParams.redirectUrl = arrParams[1];
+				}
+				// form data to save
+				objParams.actionData = scope.entity;
 				// FormOperation.save('pOst', 'users/signin', scope.entity, 'app/form/selectForm');
-				FormOperation.save(paramsSave);
+				FormOperation.save(objParams);
 			};
 
 			scope.submit = function() {
 				console.log('submit in link');
-				FormOperation.submit('post', 'users/signin', scope.entity, {state: 'app.form.simpleForm', url: 'app/form/simpleForm'});
-				// {'type': 'post','url': 'users/signin', 'redirectUrl': 'app/form/selectForm'}
+				var paramsSubmit = attrs.paramsSubmit,
+						objParams = {};
+				if(!paramsSubmit) {
+					console.log('Get submit params wrong, exit');
+					return;
+				}
+				// remove blanks in params string
+				paramsSubmit = paramsSubmit.replace(/\ /g, '');
+				if(paramsSubmit.indexOf('{') > -1) {console.log(paramsSubmit);
+					// stringified object
+					paramsSubmit = paramsSubmit.replace(/'/g, '"');
+					paramsSubmit = JSON.parse(paramsSubmit);
+					if(paramsSubmit.type) {
+						objParams.actionType = paramsSubmit.type;
+					}
+					if(paramsSubmit.url) {
+						objParams.actionUrl = paramsSubmit.url;
+					}
+					if(paramsSubmit.redirectUrl) {
+						objParams.redirectUrl = paramsSubmit.redirectUrl;
+					}
+				} else {
+					// string
+					var arrParams = paramsSubmit.split(',');
+					objParams.actionUrl = arrParams[0];
+					objParams.redirectUrl = arrParams[1];
+				}
+				// form data to submit
+				objParams.actionData = scope.entity;
+				// FormOperation.save('pOst', 'users/signin', scope.entity, 'app/form/selectForm');
+				FormOperation.submit(objParams);
 			};
 
+		}
+	}
+}]).directive('btnSave', ['FormOperation', function(FormOperation) {
+	return {
+		restrict: 'AE',
+		link: function(scope, elem, attrs) {
+			// 
+			// attrs.$attr -- 获取所有属性以及对应的原始名称（object）
+			var funcBeforeSave = scope.save;
+
+			scope.save = function() {
+				var actionData;
+				if(angular.isFunction(funcBeforeSave) {
+					actionData = funcBeforeSave();
+				}
+
+				var actionType = attrs.actionType,
+						url = attrs.url,
+						redirectUrl = attrs.redirectUrl,
+						objParams = {};
+				if(angular.isUndefined(url)) {
+					console.log('Get param url wrong, exit.');
+					return false;
+				}
+				objParams.actionType = actionType || 'post';
+				objParams.actionUrl = url;
+				objParams.redirectUrl = redirectUrl || '';
+				// form data to save
+				objParams.actionData = actionData || scope.entity;
+				console.log(objParams);
+				FormOperation.save(objParams);
+			}
+		}
+	}
+}]).directive('btnSubmit', ['FormOperation', function(FormOperation) {
+	// 
+	return {
+		restrict: 'A',
+		link: function(scope, elem, attrs) {
+			var funcBeforeSubmit = scope.submit;
+
+			scope.submit = function() {
+				// 
+				var actionData;
+				if(angular.isFunction(funcBeforeSubmit)) {
+					actionData = funcBeforeSubmit();
+				}
+
+				var actionType = attrs.actionType,
+						url = attrs.url,
+						redirectUrl = attrs.redirectUrl,
+						objParams = {};
+				if(angular.isUndefined(url)) {
+					console.log('Get param url wrong, exit');
+					return false;
+				}
+				objParams.actionType = actionType || '';
+				objParams.actionUrl = url;
+				objParams.redirectUrl = redirectUrl || '';
+				objParams.actionData = actionData || scope.entity;
+
+				FormOperation.submit(objParams);
+			}
 		}
 	}
 }])

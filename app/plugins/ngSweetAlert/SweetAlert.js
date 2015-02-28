@@ -8,7 +8,7 @@ angular.module('app.ngSweetAlert', [])
 			// 页面重定向方法
 			// 注意$location 与 $window.location的使用
 			var funcRedirect = function(redirect) {
-				if(typeof redirect == 'undefined') {
+				if(angular.isUndefined(redirect) || angular.equals(redirect, '')) {
 					return;
 				}
 				if(typeof redirect == 'string') {
@@ -59,20 +59,25 @@ angular.module('app.ngSweetAlert', [])
 						swal(title, message, 'info');
 					}, 200);
 				},
+
 				/*
 				 * add by wlj		-- 2015-2-10 15:02:18
 				 * params:
-				 * actionType: GET/POST
+				 * actionType: GET/POST（忽略大小写）
 				 * actionUrl: 服务器拦截地址
 				 * actionData[optional]：需要提交的数据
-				 * redirect[optional]：操作成功的跳转地址。可以为string类型或者{state:'', url:''}的object类型
+				 * redirectUrl[optional]：操作成功的跳转地址。可以为string类型或者{state:'', url:''}的object类型
 				 *					 string类型时为相对地址；object类型时先读取state提供的参数。
 				 */
-				save: function(actionType, actionUrl, actionData, redirect) {
+				// save: function(actionType, actionUrl, actionData, redirectUrl) {
+				save: function(objParams) {
 					// this.info('操作提示', '保存中');
-console.log('actionType=' + actionType);					
+					var actionType = objParams.actionType || 'post',
+							actionUrl = objParams.actionUrl,
+							actionData = objParams.actionData || {},
+							redirectUrl = objParams.redirectUrl;
+
 					var objActionType = /^post$/i;
-					actionData = actionData || {};
 					// method type: post
 					if(objActionType.test(actionType)) {
 						$http.post(actionUrl, { 'data': actionData })
@@ -82,7 +87,7 @@ console.log('actionType=' + actionType);
 									$timeout(function() {
 										swal({ title: "操作结果", text: "保存成功", type: "success", triggerAfterClose: true }, 
 											function() {
-												funcRedirect(redirect);
+												funcRedirect(redirectUrl);
 											});
 									})
 								} else {
@@ -102,11 +107,14 @@ console.log('actionType=' + actionType);
 						console.log('other type');
 					}
 				},
-				submit: function(actionType, actionUrl, actionData, redirect) {
+				submit: function(objParams) {
 					// this.info('操作提示', '提交中');
-					
+					var actionType = objParams.actionType || 'post',
+							actionUrl = objParams.actionUrl,
+							actionData = objParams.actionData || {},
+							redirectUrl = objParams.redirectUrl;
+
 					var objActionType = /^post$/i;
-					actionData = actionData || {};
 					// method type: post
 					if(objActionType.test(actionType)) {
 						$http.post(actionUrl, { 'data': actionData })
@@ -116,7 +124,7 @@ console.log('actionType=' + actionType);
 									$timeout(function() {
 										swal({ title: "操作结果", text: "提交成功", type: "success", triggerAfterClose: true }, 
 											function() {
-												funcRedirect(redirect);
+												funcRedirect(redirectUrl);
 											}
 										);
 									})
