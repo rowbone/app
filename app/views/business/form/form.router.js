@@ -24,6 +24,13 @@ angular.module('app.form', ['ui.router'])
 						'formBtns@app.form.simpleForm': {
 							templateUrl: 'views/business/form/formBtns.html'
 						}*/
+					},
+					resolve: {
+						deps: [ 'uiLoad', 
+							function(uiLoad) {
+								return uiLoad.load(['views/business/form/simpleForm.js']);
+							}
+						]
 					}
 				})
 				.state('app.form.selectForm', {

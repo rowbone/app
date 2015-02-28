@@ -79,7 +79,7 @@ app.directive('btnsgroup', ['FormOperation', function(FormOperation) {
 
 			scope.save = function() {
 				var actionData;
-				if(angular.isFunction(funcBeforeSave) {
+				if(angular.isFunction(funcBeforeSave)) {
 					actionData = funcBeforeSave();
 				}
 
@@ -96,7 +96,6 @@ app.directive('btnsgroup', ['FormOperation', function(FormOperation) {
 				objParams.redirectUrl = redirectUrl || '';
 				// form data to save
 				objParams.actionData = actionData || scope.entity;
-				console.log(objParams);
 				FormOperation.save(objParams);
 			}
 		}

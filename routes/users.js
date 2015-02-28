@@ -19,6 +19,7 @@ router.get('/userslist', function(req, res) {
 });
 
 router.post('/signin', function(req, res) {
+	console.log('testing.......................');
 	var paramReq = req.param('data');
 	var userName = paramReq.userName;
 	var password = paramReq.password;
