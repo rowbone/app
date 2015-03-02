@@ -33,8 +33,6 @@ angular.module("w5c.validator", ["ng"])
                 var $elem = angular.element(elem),
                     $parent = $elem.parent(),
                     $group = $parent.parent();
-console.log('in defaultShowError');
-console.log('msg:' + errorMessages);
                 if(!this.isEmpty($group) && $group[0].tagName === "FORM"){
                     $group = $parent;
                 }
@@ -220,21 +218,21 @@ angular.module("w5c.validator")
                 }
                 options = angular.extend({}, w5cValidator.options, options);
 
-                //初始化验证规则，并时时监控输入值的变话
+                // 初始化验证规则，并实时监控输入值的变化
                 for (var i = 0; i < formElem.length; i++) {
                     var elem = formElem[i];
                     var $elem = angular.element(elem);
                     if (w5cValidator.elemTypes.toString().indexOf(elem.type) > -1 && !w5cValidator.isEmpty(elem.name)) {
                         var $viewValueName = formName + "." + elem.name + ".$viewValue";
-                        //监控输入框的value值当有变化时移除错误信息
-                        //可以修改成当输入框验证通过时才移除错误信息，只要监控$valid属性即可
+                        // 监控输入框的value值当有变化时移除错误信息
+                        // 可以修改成当输入框验证通过时才移除错误信息，只要监控$valid属性即可
                         scope.$watch("[" + $viewValueName + "," + i + "]", function (newValue) {
                             var $elem = formElem[newValue[1]];
                             scope[formName].$errors = [];
                             w5cValidator.removeError($elem, options);
                         }, true);
 
-                        //光标移走的时候触发验证信息
+                        // 光标移走的时候触发验证信息
                         if (options.blurTrig) {
                             $elem.bind("blur", function () {
                                 if (!options.blurTrig) {
@@ -364,7 +362,9 @@ angular.module("w5c.validator")
                     var attValues = scope.$eval(attrs.w5cUniqueCheck);
                     var url = attValues.url;
                     var isExists = attValues.isExists;          //default is true
-                    $http.get(url).success(function (data) {
+                    elem.after('<span  class="w5c-error glyphicon glyphicon-repeat">' + '校验中' + '</span>');
+
+                    $http.get(url).success(function (data) {elem.next('.w5c-error').remove();
                         if (isExists === false) {
                             ctrl.$setValidity('w5cuniquecheck', (data == "true"));
                         }

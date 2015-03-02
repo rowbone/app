@@ -63,7 +63,8 @@ angular.module('app.form', ['ui.router'])
 						deps: [ 'uiLoad', 
 							function(uiLoad) {
 								return uiLoad.load([
-									'views/business/form/validatorForm.js'
+									'views/business/form/validatorForm.js',
+									'views/business/form/validateForm.css'
 								]);
 							}
 						]

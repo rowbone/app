@@ -18,13 +18,17 @@ router.get('/userslist', function(req, res) {
 	})
 });
 
+var func = function(res, msg) {
+	res.send(msg)
+}
 router.get('/userCheck', function(req, res) {
+
 	var username = req.param('username');
 	console.log('username==' + username);
 	if(username == 'user1' || username == 'user2') {
-		res.send('true');
+		setTimeout(func(res, 'true'), 5000);
 	} else {
-		res.send('false');
+		setTimeout(func(res, 'false'), 5000);
 	}
 });
 
