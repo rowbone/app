@@ -56,4 +56,17 @@ angular.module('app.form', ['ui.router'])
 						]
 					}
 				})
+				.state('app.form.validatorForm', {
+					url: '/validatorForm',
+					templateUrl: 'views/business/form/validatorForm.html',
+					resolve: {
+						deps: [ 'uiLoad', 
+							function(uiLoad) {
+								return uiLoad.load([
+									'views/business/form/validatorForm.js'
+								]);
+							}
+						]
+					}
+				})
 	}])

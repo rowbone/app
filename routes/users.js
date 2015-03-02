@@ -18,6 +18,16 @@ router.get('/userslist', function(req, res) {
 	})
 });
 
+router.get('/userCheck', function(req, res) {
+	var username = req.param('username');
+	console.log('username==' + username);
+	if(username == 'user1' || username == 'user2') {
+		res.send('true');
+	} else {
+		res.send('false');
+	}
+});
+
 router.post('/signin', function(req, res) {
 	console.log('testing.......................');
 	var paramReq = req.param('data');

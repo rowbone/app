@@ -33,7 +33,8 @@ angular.module("w5c.validator", ["ng"])
                 var $elem = angular.element(elem),
                     $parent = $elem.parent(),
                     $group = $parent.parent();
-
+console.log('in defaultShowError');
+console.log('msg:' + errorMessages);
                 if(!this.isEmpty($group) && $group[0].tagName === "FORM"){
                     $group = $parent;
                 }
@@ -362,7 +363,7 @@ angular.module("w5c.validator")
                 var doValidate = function () {
                     var attValues = scope.$eval(attrs.w5cUniqueCheck);
                     var url = attValues.url;
-                    var isExists = attValues.isExists;//default is true
+                    var isExists = attValues.isExists;          //default is true
                     $http.get(url).success(function (data) {
                         if (isExists === false) {
                             ctrl.$setValidity('w5cuniquecheck', (data == "true"));
@@ -373,11 +374,15 @@ angular.module("w5c.validator")
                     });
                 };
 
-                scope.$watch(attrs.ngModel, function (newValue) {
-                    if (newValue && ctrl.$dirty) {
-                        doValidate();
-                    }
-                });
+                /*
+                 * 此段方法会在输入项改变时调用doValidate()方法，会造成频繁的后台请求，可应用于keyUp事件触发的校验中
+                 * annotation by wlj：2015-3-2 19:23:02
+                 */
+                // scope.$watch(attrs.ngModel, function (newValue) {
+                //     if (newValue && ctrl.$dirty) {
+                //         doValidate();
+                //     }
+                // });
 
                 elem.bind("blur.w5cUniqueCheck", function () {
                     $timeout(function () {
@@ -389,7 +394,7 @@ angular.module("w5c.validator")
                 });
                 elem.bind("focus.w5cUniqueCheck", function () {
                     $timeout(function () {
-                        //ctrl.$setValidity('w5cuniquecheck', true);
+                        ctrl.$setValidity('w5cuniquecheck', true);
                     });
                 });
                 scope.$on('$destroy', function () {
