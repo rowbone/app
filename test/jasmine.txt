@@ -1,0 +1,28 @@
+1、TDD（Test Driven Development）测试驱动开发，是敏捷开发中提出的最佳实践之一。
+    jasmine提出了BDD（Behaviour Driven Development）行为驱动开发。
+
+2、jasmine介绍：
+    Jasmine是一个用来编写Javascript测试的框架，不依赖于任何其他Javascript框架，也不需要操作DOM。
+
+3、jasmine结构：
+    describe("A suite", function() {
+    	var foo;
+    	beforeEach(function() {
+    		foo = 0;
+    		foo += 1;
+    	});
+
+    	afterEach(function() {
+    		foo = 0;
+    	});
+
+    	it("contains spec with an expectation", function() {
+    		expect(true).toBe(true);
+    	});
+    });
+
+    每个测试都在一个测试集中运行，Suite就是一个测试集，用describe函数封装。 
+    Spec表示每个测试用例，用it函数封装。通过expect函数，作为程序断言来判断相等关系。
+    setup过程用beforeEach函数封装，tearDown过程用afterEach封装。
+
+    
