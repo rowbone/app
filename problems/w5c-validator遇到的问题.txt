@@ -1,0 +1,6 @@
+
+1、w5cValidatorProvider.setRules 怎样在页面的控制器中进行设置
+
+2、怎样增加更多的校验规则
+
+3、

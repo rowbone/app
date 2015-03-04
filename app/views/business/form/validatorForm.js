@@ -38,6 +38,8 @@
             }
         });
     }]);
+})();
+
     app.controller("validateCtrl", ["$scope", "$http", function ($scope, $http) {
 console.log('validateCtrl.............');
         var vm = $scope.vm = {
@@ -54,31 +56,4 @@ console.log('validateCtrl.............');
         vm.validateOptions = {
             blurTrig: true
         };
-        
-        vm.changeShowType = function () {
-            if (vm.showErrorType == 2) {
-                vm.validateOptions.showError = false;
-                vm.validateOptions.removeError = false;
-            } else {
-                vm.validateOptions.showError = true;
-                vm.validateOptions.removeError = true;
-            }
-        };
-
-        // $http.get("index.js").success(function (result) {
-        //     vm.jsSource = result;
-        // });
-        // $http.get("validate.form.html").success(function (result) {
-        //     vm.htmlSource = result;
-        // });
-        // $http.get("validate.form.html").success(function (result) {
-        //     vm.htmlSource = result;
-        // });
-
-        // $http.get("css/style.less").success(function (result) {
-        //     vm.lessSource = result;
-        // });
-
     }]);
-
-})();

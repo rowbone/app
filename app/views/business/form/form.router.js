@@ -70,4 +70,17 @@ angular.module('app.form', ['ui.router'])
 						]
 					}
 				})
+				.state('app.form.formElems', {
+					url: '/formElems',
+					templateUrl: 'views/business/form/form_elems.html',
+					resolve: {
+						deps: ['uiLoad', 
+							function(uiLoad) {
+								return uiLoad.load([
+									'js/controllers/form.js'
+								]);
+							}
+						]
+					}
+				})
 	}])

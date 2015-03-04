@@ -1,0 +1,77 @@
+<div class="aside-wrap">
+  <div class="navi-wrap">
+    <div class="visible-folded"></div>
+    <div class="hidden-folded bg-light" ng-controller="">
+      <div class="vblock">
+        <div class="nav-blocks-alt bg-light">
+          <ul class="nav nav-justified nav-blocks">
+            <li ng-class="{'active': tabs[0]}">
+              <a class="p-xs block" ng-click="tab(0)">
+                <i class="block text-md m-t-xs fa fa-comments"></i>
+                <span class="text-xs" translate="menu.msg">消息</span>
+              </a>
+            </li>
+            <li ng-class="{'active': tabs[1]}">
+              <a class="p-xs block" ng-click="tab(1)">
+                <i class="block text-md m-t-xs fa fa-user"></i>
+                <span class="text-xs" translate="menu.me">我</span>
+              </a>
+            </li>
+            <li ng-class="{'active': tabs[2]}">
+              <a class="p-xs block" ng-click="tab(2)">
+                <i class="block text-md m-t-xs fa fa-group"></i>
+                <span class="text-xs" translate="menu.team">团队</span>
+              </a>
+            </li>
+            <li ng-class="{'active': tabs[3]}">
+              <a class="p-xs block" ng-click="tab(3)">
+                <i class="block text-md m-t-xs fa fa-sitemap"></i>
+                <span class="text-xs" translate="menu.org">组织</span>
+              </a>
+            </li>
+            <li ng-class="{'active': tabs[4]}">
+              <a class="p-xs block" ng-click="tab(4)">
+                <i class="block text-md m-t-xs fa fa-book"></i>
+                <span class="text-xs" translate="menu.contact">通讯录</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+        <div class="tab-row">
+          <div class="cell scrollable hover">
+            <div class="cell-inner">
+              <div class="tab-content">
+                <!-- 消息板块 -->
+                <div data-ng-include=" 'app/business/home/msglist/msg_list.html' " class="tab-pane" ng-class="{'active': tabs[0]}"
+                     ng-controller="">
+                </div>
+                <!-- / 消息板块 -->
+                <!-- 我板块 -->
+                <div data-ng-include=" 'app/business/home/melist/me_list.html' " class="tab-pane" ng-class="{'active': tabs[1]}"
+                     ng-controller="">
+                </div>
+                <!-- / 我板块 -->
+                <!-- 团队板块 -->
+                <div data-ng-include=" 'app/business/home/teamlist/team_list.html' " class="tab-pane" ng-class="{'active': tabs[2]}"
+ 					ng-controller="">
+                </div>
+                <!-- / 团队板块 -->
+                <!-- 组织板块 -->
+                <div data-ng-include=" 'app/business/home/orglist/org_list.html' " class="tab-pane" ng-class="{'active': tabs[3]}"
+                     ng-controller="">
+                </div>
+                <!-- / 组织板块 -->
+                <!-- 通讯录板块 -->
+                <div data-ng-include=" 'app/business/home/contactlist/contact_list.html' " class="tab-pane active" ng-if="tabs[4]"
+                	ng-controller="">
+                </div>
+                <!-- / 通讯录板块 -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

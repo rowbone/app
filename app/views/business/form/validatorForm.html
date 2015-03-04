@@ -1,83 +1,141 @@
- 
-<div class="">
-  <h3>w5c-validator demo</h3>
+<div class="header-md h pos-fix w-full b-b bg-light dk">
+  <h3 class="m-n font-thin h3">w5c-validator demo</h3>
 </div>
-
-<div ng-controller="validateCtrl">
-  <form class="w5c-form demo-form" role="form" w5c-form-validate="vm.validateOptions" novalidate name="validateForm">
-      <div class="form-group">
-        <label class="col-sm-2 control-label" for="email">邮箱</label>
-
-        <div class="col-sm-10">
-          <input type="email" class="form-control" name="email" id="email" ng-model="entity.email" required="" placeholder="输入邮箱">
+<div class="wrapper-md pos-rlt">
+  <div class="row">
+    <div class="col-sm-5">
+      <div class="panel panel-default">
+        <div class="panel-heading font-bold">w5c-validator</div>
+        <div class="panel-body" ng-controller="validateCtrl">
+          <form class="w5c-form demo-form" role="form" w5c-form-validate="vm.validateOptions" novalidate name="validateForm">
+          <div class="form-group">
+            <label for="email">邮箱</label>
+            <input type="email" class="form-control" name="email" id="email" ng-model="entity.email" required="" placeholder="请输入邮箱">
+          </div>
+          <div class="form-group">
+            <label for="username">用户名</label>
+            <!-- <input type="text" class="form-control" name="username" id="username" required="" ng-pattern="/^[A-Za-z]{1}[0-9A-Za-z_]{1,19}$/" ng-model="entity.name" w5c-unique-check="{url:'users/userCheck?username='+entity.name}" placeholder="请输入用户名"> -->
+            <input type="text" class="form-control" name="username" id="username" required="" ng-pattern="/^[A-Za-z]{1}[0-9A-Za-z_]{1,19}$/" ng-model="entity.name" w5c-unique-check="{url:'other/demo/form/validate.json?username='+entity.name}" placeholder="请输入用户名">
+          </div>
+          <div class="form-group">
+            <label for="password">密码</label>
+            <input type="password" class="form-control" name="password" id="password" required="" ng-model="entity.password" ng-minlength="5" ng-maxlength="15" placeholder="请输入密码">
+          </div>
+          <div class="form-group">
+            <label for="repeatPassword">确认密码</label>
+            <input type="password" class="form-control" name="repeatPassword" id="repeatPassword" required="" w5c-repeat="password" ng-model="entity.repeatPassword" placeholder="请再次输入密码">
+          </div>
+          <div class="form-group">
+            <label for="number">数字</label>
+              <input type="number" class="form-control" name="number" id="number" required="" ng-model="entity.number" placeholder="输入数字10-15" max="15" min="10">
+          </div>
+          <div class="form-group">
+            <label for="url">URL</label>
+            <input type="url" class="form-control" name="url" id="url" required="" ng-model="entity.url" placeholder="请输入URL">
+          </div>
+    
+          <div class="form-group" ng-show="validateForm.$errors.length > 0 && vm.showErrorType == 2">
+            <label></label>
+              <div class="alert alert-danger">{{validateForm.$errors[0]}}</div>
+          </div>
+    
+          <div class="form-group">
+              <button type="button" class="btn btn-success" w5c-form-submit="vm.saveEntity()"> 提交</button>
+          </div>
+      </form>
         </div>
       </div>
-      <div class="form-group">
-        <label class="col-sm-2 control-label" for="username">用户名</label>
-
-        <div class="col-sm-10">
-          <!-- <input type="text" class="form-control" name="username" id="username" required="" ng-pattern="/^[A-Za-z]{1}[0-9A-Za-z_]{1,19}$/" ng-model="entity.name" w5c-unique-check="{url:'users/userCheck?username='+entity.name}" placeholder="输入用户名"> -->
-          <input type="text" class="form-control" name="username" id="username" required="" ng-pattern="/^[A-Za-z]{1}[0-9A-Za-z_]{1,19}$/" ng-model="entity.name" w5c-unique-check="{url:'data/bz/username.json?username='+entity.name}" placeholder="输入用户名">
-        </div>
-      </div>
-      <div class="form-group">
-        <label class="col-sm-2 control-label" for="password">密码</label>
-
-        <div class="col-sm-10">
-          <input type="password" class="form-control" name="password" id="password" required="" ng-model="entity.password" ng-minlength="5" ng-maxlength="15" placeholder="输入密码">
-        </div>
-      </div>
-      <div class="form-group">
-        <label class="col-sm-2 control-label" for="repeatPassword">重复密码</label>
-
-        <div class="col-sm-10">
-          <input type="password" class="form-control" name="repeatPassword" id="repeatPassword" required="" w5c-repeat="password" ng-model="entity.repeatPassword" placeholder="重复密码">
-        </div>
-      </div>
-      <div class="form-group">
-        <label class="col-sm-2 control-label" for="number">数字</label>
-
-        <div class="col-sm-10">
-          <input type="number" class="form-control" name="number" id="number" required="" ng-model="entity.number" placeholder="输入数字（10-15）" max="15" min="10">
-        </div>
-      </div>
-      <div class="form-group">
-        <label class="col-sm-2 control-label" for="url">URL</label>
-
-        <div class="col-sm-10">
-          <input type="url" class="form-control" name="url" id="url" required="" ng-model="entity.url" placeholder="输入URL">
-        </div>
-      </div>
-
-      <div class="form-group" ng-show="validateForm.$errors.length > 0 && vm.showErrorType == 2">
-        <label class="col-sm-2 control-label"></label>
-
-        <div class="col-sm-10">
-          <div class="alert alert-danger">{{validateForm.$errors[0]}}</div>
-        </div>
-      </div>
-
-      <div class="form-group">
-        <div class="col-sm-offset-2 col-sm-10">
-          <button type="button" class="btn btn-success" w5c-form-submit="vm.saveEntity()"> 验证</button>
-        </div>
-      </div>
-  </form>
-</div>
-
-<!-- 
-<div class="row">
-  <div class="col-md-2"></div>
-  <div class="col-md-10">
-    <div class="checkbox">
-      <label>
-        <input type="checkbox" ng-model="vm.validateOptions.blurTrig">光标移走触发验证
-      </label>
     </div>
-    <select name="" id="" class="form-control" ng-model="vm.showErrorType" ng-click="vm.changeShowType();">
-      <option value="1">每个输入框显示错误信息</option>
-      <option value="2">错误信息集中</option>
-    </select>
+    <div class="col-sm-7">
+      <div class="panel panel-default">
+        <div class="panel-heading font-bold">使用说明</div>
+        <div class="panel-body">
+          <div class="use-info">
+            <ol>
+            <li>在 index.html 中引入  vendor/w5c-validator/dist/w5cValidator.js</li>
+            <li>在 app.js 中启动 module 引用。<code>var app = angular.module('app', ['w5c.validator']);</code></li>
+            <li>在 app.config 事件中配置全局属性和显示规则：
+            <pre>
+  app.config(["w5cValidatorProvider", function(w5cValidatorProvider) {
+  // 全局配置
+  w5cValidatorProvider.config({
+      blurTrig   : false,
+      showError  : true,
+      removeError: true
+  
+  });
+  w5cValidatorProvider.setRules({
+      email   : {
+          required: "输入的邮箱地址不能为空",
+          email   : "输入邮箱地址格式不正确"
+      },
+        ...
+    });
+  }]);
+          </pre>
+            </li>
+            <li>在HTML模板中form上使用指令 w5c-form-validate 和 w5c-submit，w5c-form-validate指令表示该表单采用 w5cValidator的验证规则；w5c-submit 表示验证成功后调用的事件，当然w5c-submit可以不填写；</li>
+          </ol>
+          <h5 class="h5 font-bold">验证规则</h5>
+          <p>AngularJS原生支持很多种验证规则，比如：require（必填项），email，pattern（正则），maxlength，minlength，number，url，max，min</p>
+      <p>w5cValidator提供了w5c-repeat（级联重复，常用于重复密码）和w5cUniqueCheck (远程验证，常用于检验用户名邮箱是否存在)</p>
+      <h5 class="h5 font-bold">默认提示信息</h5>
+      <pre>
+{
+    required      : "该选项不能为空",
+    maxlength     : "该选项输入值长度不能大于{maxlength}",
+    minlength     : "该选项输入值长度不能小于{minlength}",
+    email         : "输入邮件的格式不正确",
+    repeat        : "两次输入不一致",
+    pattern       : "该选项输入格式不正确",
+    number        : "必须输入数字",
+    w5cuniquecheck: "该输入值已经存在，请重新输入",
+    url           : "输入URL格式不正确",
+    max           : "该选项输入值不能大于{max}",
+    min           : "该选项输入值不能小于{min}"
+
+}
+      </pre>
+      <h5 class="h5 font-bold">注意事项</h5>
+      <ol>
+        <li>由于验证使用的是 angular的form验证，所以必须要保证form和验证的元素都要有name属性；</li>
+        <li>如果你不想把验证成功事件w5c-submit写在 form上，可以直接在form里面的其他元素上使用w5cFormSubmit指令，如：
+          <code>&lt;button type="button" w5c-form-submit="vm.saveEntity()" class="btn btn-success"&gt; 验证&lt;/button&gt;</code>
+        </li>
+        <li>w5cUniqueCheck默认检验是否已经存在，存在验证不通过，不存在验证通过，如果isExists设置为false表示：存在验证通过，不存在验证不通过。</li>
+        <li>w5cValidatorProvider默认的错误提示信息是中文的，如果想修改成其他语言，可以通过 w5cValidatorProvider.setDefaultRules()方法设置。</li>
+      </ol>
+      
+          <h5 class="h5 font-bold">参数说明</h5>
+          <table class="table-bordered">
+            <thead>
+              <tr>
+                <td>名称</td>
+                <td>默认值</td>
+                <td>作用</td>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+              <td>blurTrig</td>
+              <td>false</td>
+              <td>光标移除元素后是否验证并显示错误提示信息</td>
+            </tr>
+            <tr>
+              <td>showError</td>
+              <td>true</td>
+              <td>可以是bool和function，每个元素验证不通过后调用该方法显示错误信息，默认true，显示错误信息在元素的后面。</td>
+            </tr>
+            <tr>
+              <td>removeError</td>
+              <td>true</td>
+              <td>可以是bool和function，每个元素验证通过后调用该方法移除错误信息，默认true，验证通过后在元素的后面移除错误信息。</td>
+            </tr>
+            </tbody>
+          </table>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
- -->

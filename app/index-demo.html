@@ -4,7 +4,7 @@
 	<meta charset="UTF-8">
 	<title>Angular Index</title>
 	<!-- bootstrap css -->
-	<link rel="stylesheet" href="./vendor/bootstrap.min.css">
+	<link rel="stylesheet" href="./vendor/bootstrap/css/bootstrap.css">
 	<!-- app css -->
 	<link rel="stylesheet" href="./css/app.css">
 	<!-- sweet alert style -->
@@ -45,6 +45,8 @@
 
 	<!-- form scripts -->
 	<script src="./js/controllers/bootstrap.js"></script>
+	<script src="./js/controllers/tab.js"></script>
+	<script src="./js/controllers/form.js"></script>
 	<script src="./views/demo/sweetAlert.js"></script>
 	<script src="./views/business/form/commitEffectForm.js"></script>
 	<script src="./views/business/form/simpleForm.js"></script>
@@ -73,5 +75,6 @@
 		</div> -->
 		<div ui-view></div>
 	</div>
+	<!-- <div class="app" id="app" ng-class="{'app-header-fixed':app.settings.headerFixed, 'app-aside-fixed':app.settings.asideFixed, 'app-aside-folded':app.settings.asideFolded, 'app-aside-dock':app.settings.asideDock, 'container':app.settings.container,'app-equ-switch':app.settings.equSwitch}" ui-view></div> -->
 </body>
 </html>
