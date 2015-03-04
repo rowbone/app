@@ -15,7 +15,7 @@
           <div class="form-group">
             <label for="username">用户名</label>
             <!-- <input type="text" class="form-control" name="username" id="username" required="" ng-pattern="/^[A-Za-z]{1}[0-9A-Za-z_]{1,19}$/" ng-model="entity.name" w5c-unique-check="{url:'users/userCheck?username='+entity.name}" placeholder="请输入用户名"> -->
-            <input type="text" class="form-control" name="username" id="username" required="" ng-pattern="/^[A-Za-z]{1}[0-9A-Za-z_]{1,19}$/" ng-model="entity.name" w5c-unique-check="{url:'other/demo/form/validate.json?username='+entity.name}" placeholder="请输入用户名">
+            <input type="text" class="form-control" name="username" id="username" required="" ng-pattern="/^[A-Za-z]{1}[0-9A-Za-z_]{1,19}$/" ng-model="entity.name" w5c-unique-check="{url:'data/bz/username.json?username='+entity.name}" placeholder="请输入用户名">
           </div>
           <div class="form-group">
             <label for="password">密码</label>
@@ -102,6 +102,7 @@
         <li>如果你不想把验证成功事件w5c-submit写在 form上，可以直接在form里面的其他元素上使用w5cFormSubmit指令，如：
           <code>&lt;button type="button" w5c-form-submit="vm.saveEntity()" class="btn btn-success"&gt; 验证&lt;/button&gt;</code>
         </li>
+        <li>w5cUniqueCheck验证存在时对应服务器接口返回'true'，不存在时返回'false'</li>
         <li>w5cUniqueCheck默认检验是否已经存在，存在验证不通过，不存在验证通过，如果isExists设置为false表示：存在验证通过，不存在验证不通过。</li>
         <li>w5cValidatorProvider默认的错误提示信息是中文的，如果想修改成其他语言，可以通过 w5cValidatorProvider.setDefaultRules()方法设置。</li>
       </ol>
