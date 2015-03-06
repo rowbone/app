@@ -83,4 +83,21 @@ angular.module('app.form', ['ui.router'])
 						]
 					}
 				})
+				.state('app.form.dialog', {
+					url: '/dialog',
+					templateUrl: 'views/business/form/dialog.html',
+					resolve: {
+						deps: ['uiLoad', 
+							function(uiLoad) {
+								return uiLoad.load([
+									'vendor/ngDialog/css/ngDialog.css',
+									'vendor/ngDialog/css/ngDialog-theme-default.css',
+									'vendor/ngDialog/css/ngDialog-theme-plain.css',
+									'vendor/ngDialog/js/ngDialog.js',
+									'views/business/form/dialog.js',
+								]);
+							}
+						]
+					}
+				})
 	}])

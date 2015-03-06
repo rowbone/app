@@ -1,0 +1,59 @@
+<title-bar name="ngDialog demo"></title-bar>
+
+<div class="wrapper-md pos-rlt" ng-controller="DialogDemoCtrl">
+	<div class="row">
+		<div class="col-sm-6">
+			<div class="panel panel-default">
+				<div class="panel-heading font-bold">弹出提示框</div>
+				<div class="panel-body">
+					<form role="form" class="form-horizontal">
+						<div class="form-group">
+							<label for="username" class="control-label col-sm-2">用户名</label>
+							<div class="col-sm-10">
+								<input type="text" class="form-control" name="username" id="username" ng-model="entity.username">
+							</div>
+						</div>
+						<div class="form-group col-md-3 pull-right">
+							<button type="button" class="btn btn-danger" ng-click="open(entity.username)">删除</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+
+		<div class="col-sm-6">
+			<div class="panel panel-default">
+				<div class="panel-heading font-bold">使用说明</div>
+				<ol>
+					<li></li>
+				</ol>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- <div class="row">
+	<form role="form">
+		<div class="form-group">
+			<button type="button" class="btn btn-info" ng-click="cancel()">取消</button>
+			<button type="button" class="btn btn-primary" ng-click="confrim()">确定</button>
+		</div>
+	</form>
+</div> -->
+
+
+<script type="text/ng-template" id="deleteConfirm">
+	<div class="col-md-offset-1">
+		<h3 class="">是否确定删除?</h3>
+	</div>
+	<div class="row">
+		<form role="form">
+			<div class="form-group">
+				<div class="col-md-6 pull-right">
+					<button type="button" class="btn btn-danger" ng-click="cancel()">取消</button>
+					<button type="button" class="btn btn-primary" ng-click="confirm()">确定</button>
+				</div>
+			</div>
+		</form>
+	</div>
+</script>
