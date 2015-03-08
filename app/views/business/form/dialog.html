@@ -13,21 +13,67 @@
 								<input type="text" class="form-control" name="username" id="username" ng-model="entity.username">
 							</div>
 						</div>
-						<div class="form-group col-md-3 pull-right">
+						<div class="form-group col-sm-3">
 							<button type="button" class="btn btn-danger" ng-click="open(entity.username)">删除</button>
+							<button class="btn btn-info" ng-click="test()">测试</button>
 						</div>
 					</form>
+						<div class="row">
+							代码
+							<pre>
+$scope.open = function() {
+    ngDialog.open({
+        template: 'deleteConfirm',
+        controller: 'DeleteCtrl',
+        closeByDocument: false
+    });
+};					
+							</pre>
+						</div>
+						其中 'deleteConfirm' 是用
+						<pre>
+&lt;script type="text/ng-template" id="deleteConfirm"&gt;&lt;/script&gt;
+						</pre>
 				</div>
 			</div>
+
+			<div>11111111111</div>
 		</div>
 
 		<div class="col-sm-6">
 			<div class="panel panel-default">
 				<div class="panel-heading font-bold">使用说明</div>
-				<ol>
-					<li></li>
-				</ol>
+				<div class="panel-body">
+					<ol>
+						<li>index.html中引入文件
+						<pre>
+&lt;link rel="stylesheet" href="./vendor/ngDialog/css/ngDialog.css"&gt;
+&lt;link rel="stylesheet" href="./vendor/ngDialog/css/ngDialog-theme-default.css"&gt;
+&lt;link rel="stylesheet" href="./vendor/ngDialog/css/ngDialog-theme-plain.css"&gt;
+
+&lt;script src="./vendor/ngDialog/js/ngDialog.js"&gt;&lt;/script&gt;
+						</pre>
+						</li>
+						<li>app.js中注入依赖<code>var app = angular.module('app', ['ngDialog']);</code></li>
+						<li>在controller中可直接注入 ngDialog 进行使用</li>
+					</ol>
+				</div>
 			</div>
+
+			<div class="panel panel-default">
+				<div class="panel-heading font-bold">参数说明</div>
+				<div class="panel-body">
+					<ol>
+						<li>template{String}</li>
+						<li>plain{Boolean}</li>
+						<li>controller{String} | {Array} | {Object}</li>
+						<li>scope{object}</li>
+						<li>scope{object}</li>
+					</ol>
+				</div>
+			</div>
+
+			<p>更多请参考项目主页：<a href="https://github.com/likeastore/ngDialog">ngDialog on github</a></p>
 		</div>
 	</div>
 </div>

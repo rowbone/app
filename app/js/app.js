@@ -5,6 +5,10 @@ var app = angular.module('demoApp', [
 	'ui.router',
 	'ui.bootstrap',
 	'ui.load',
+	// 'ui.jq',
+	// 'ui.validate',
+	'oc.lazyLoad',
+	
 	'app.demo',
 	'app.form',
 	'app.ngSweetAlert',

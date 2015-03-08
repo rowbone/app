@@ -20,6 +20,11 @@ app.controller('DialogDemoCtrl', ['$scope', '$rootScope', 'ngDialog',
 		    });
 		};
 
+		$scope.test = function() {
+			console.log('11111111111');
+			// toaster.pop('success', 'Test title', 'Test text');
+		};
+
 	}
 
 ]);
@@ -32,7 +37,7 @@ app.controller('DeleteCtrl', ['$scope', '$timeout', 'ngDialog', function($scope,
 		ngDialog.close();
 		if(count % 2 == 0) {
 			ngDialog.open({
-				template: '<div class="text-success"><span class="glyphicon glyphicon-ok"></span>删除成功</div>',
+				template: '<div class="text-success has-success"><span class="glyphicon glyphicon-ok"></span>删除成功</div>',
 				closeByDocument: false,
 				closeByEscape: false,
 				plain: true,
@@ -40,7 +45,7 @@ app.controller('DeleteCtrl', ['$scope', '$timeout', 'ngDialog', function($scope,
 			});
 		} else {
 			ngDialog.open({
-				template: '<div class="text-danger"><span class="glyphicon glyphicon-remove"></span>删除失败</div>',
+				template: '<div class="text-danger has-error"><span class="glyphicon glyphicon-remove"></span>删除失败</div>',
 				closeByDocument: false,
 				closeByEscape: false,
 				plain: true,
