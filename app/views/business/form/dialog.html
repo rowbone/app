@@ -23,7 +23,17 @@ $scope.open = function() {
         closeByDocument: false
     });
 };					
-								</pre>								
+								</pre>				
+								<p>可以在 DeleteCtrl 定义方法打开另外一个 dialog 对象</p>
+								<pre>
+ngDialog.open({
+	template: '&lt;div class="text-success has-success"&gt;&lt;span class="glyphicon glyphicon-ok"&gt;&lt;/span&gt;删除成功&lt;/div&gt;',
+	closeByDocument: false,
+	closeByEscape: false,
+	plain: true,
+	overlay: false
+});
+								</pre>
 							</div>
 							<div class="col-sm-2">
 								<button type="button" class="btn btn-danger" ng-click="open(entity.username)">删除</button>
@@ -33,8 +43,6 @@ $scope.open = function() {
 					</form>
 				</div>
 			</div>
-
-			<div>11111111111</div>
 		</div>
 
 		<div class="col-sm-6">
@@ -64,8 +72,9 @@ $scope.open = function() {
 						<li>template{String}</li>
 						<li>plain{Boolean}</li>
 						<li>controller{String} | {Array} | {Object}</li>
-						<li>scope{object}</li>
-						<li>scope{object}</li>
+						<li>closeByDocument{}</li>
+						<li>closeByEscape{}</li>
+						<li>overlay{}</li>
 					</ol>
 				</div>
 			</div>
