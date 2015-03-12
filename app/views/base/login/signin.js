@@ -6,6 +6,7 @@ app.controller('SigninFormCtrl', ['$scope', '$http', '$state', '$rootScope',
 
 		$scope.login = function(user) {
 			console.log('login');
+			console.log(user)
 
 			// get data from server
 			$http.post('users/signin', { 'data': user})

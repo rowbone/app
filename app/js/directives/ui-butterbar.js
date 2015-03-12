@@ -2,7 +2,7 @@ angular.module('demoApp')
 	.directive('uiButterbar', ['$rootScope', '$anchorScroll', function($rootScope, $anchorScroll) {
 		return {
 			restrict: 'AC',
-			template: '<span class="bar></span>',
+			template: '<span class="bar"></span>',
 			link: function(scope, el, attrs) {
 				el.addClass('butterbar hide');
 				scope.$on('$stateChangeStart', function(event) {

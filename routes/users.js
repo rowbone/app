@@ -32,6 +32,43 @@ router.get('/userCheck', function(req, res) {
 	}
 });
 
+router.post('/userDel', function(req, res) {
+	var paramReq = req.param('data');
+	var userName = paramReq.username;
+	var objRes = {};
+
+	if(paramReq == {}) {
+		objRes.success = false;
+		objRes.message = '没有传入对应的用户信息！';
+		res.send(objRes);
+	}
+
+	var userCollection = db.get('user');
+	userCollection.find({}, {}, function(e, docs) {
+		var iLen = docs.length;
+		if(iLen <= 0) {
+			objRes.success = false;
+			objRes.message = '没有用户信息！';
+		} else {
+			for(var i=0; i<iLen; i++) {
+				if(docs[i].userName == userName) {
+					objRes.success = true;
+					objRes.message = '删除用户信息成功！用户名为：' + userName;
+					objRes.obj = docs[i];
+					break;
+				}
+			}
+
+			if(!objRes.success) {
+				objRes.success = false;
+				objRes.message = '未获取到对应的用户信息！用户名为：' + userName;
+			}
+		}
+
+		res.send(objRes);
+	});
+})
+
 router.post('/signin', function(req, res) {
 	console.log('testing.......................');
 	var paramReq = req.param('data');

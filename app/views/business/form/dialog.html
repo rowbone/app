@@ -13,7 +13,24 @@
 								<input type="text" class="form-control" name="username" id="username" ng-model="entity.username">
 							</div>
 						</div>
+
 						<div class="form-group">
+							<label for="item" class="control-label col-sm-2">填入项</label>
+							<div class="col-sm-10">
+								<input type="text" class="form-control" name="item" id="item" ng-model="entity.item">
+							</div>
+						</div>
+
+						<div class="col-sm-5">
+							<!-- use by service -->
+							<!-- <button type="button" class="btn btn-danger" ng-click="open(entity.username)">删除</button> -->
+							<!-- use by attribute -->
+							<label conow-btn-del url="'users/userDel'" param="entity" do-modal="false" ng-click="test()"></label>
+							<!-- use by label name -->
+							<!-- <conow-btn-del url="'users/userDel'" param="entity" do-modal="true" ng-click="test()"></conow-btn-del> -->
+							<label conow-btn-prompt default-value="entity.item" text-title="请输入信息！"></label>
+						</div>
+<!-- 						<div class="form-group">
 							<div class="col-sm-8 col-sm-offset-2">
 								<pre>
 $scope.open = function() {
@@ -35,17 +52,33 @@ ngDialog.open({
 });
 								</pre>
 							</div>
-							<div class="col-sm-2">
-								<button type="button" class="btn btn-danger" ng-click="open(entity.username)">删除</button>
-							</div>
-							<!-- <button class="btn btn-info" ng-click="test()">测试</button> -->
-						</div>
+						</div> -->
 					</form>
 				</div>
 			</div>
 		</div>
 
 		<div class="col-sm-6">
+			<div class="panel panel-default">
+				<div class="panel-heading font-bold">使用说明</div>
+				<div class="panel-body">
+					<h4 class="font-bold">通过指令调用</h4>
+<code>&lt;label conow-btn-del url="'users/userDel'" param="entity" do-modal="false" ng-click="test()"&gt;&lt;/label&gt;</code>
+					或者
+<code>&lt;conow-btn-del url="'users/userDel'" param="entity" do-modal="true" ng-click="test()"&gt;&lt;/conow-btn-del&gt;</code>
+
+					<hr>
+					<h4 class="font-bold">参数说明</h4>
+
+					<h5><code>url{String}</code></h5>
+					<p>删除对应的后台地址</p>
+					<h5><code>do-modal{String} | {Boolean}</code></h5>
+					<p>当设置为"false"或者false时，为非模态弹出框，其他情况下为模态框。默认为模态弹出框</p>
+				</div>
+			</div>
+		</div>
+
+<!-- 		<div class="col-sm-6">
 			<div class="panel panel-default">
 				<div class="panel-heading font-bold">使用说明</div>
 				<div class="panel-body">
@@ -68,19 +101,64 @@ ngDialog.open({
 			<div class="panel panel-default">
 				<div class="panel-heading font-bold">参数说明</div>
 				<div class="panel-body">
+					<h5>
+						<code>template{String}</code>
+					</h5>
+					<p>弹出框的页面模板。有3种类型的String参数:templateId，url形式和字符串形式。使用方法如下：</p>
 					<ol>
-						<li>template{String}</li>
-						<li>plain{Boolean}</li>
-						<li>controller{String} | {Array} | {Object}</li>
-						<li>closeByDocument{}</li>
-						<li>closeByEscape{}</li>
-						<li>overlay{}</li>
+						<li>templateId</li>
+						'&lt;script type="text/ng-template" id="deleteConfirm"&gt;&lt;/script&gt;''
+						<li>url形式</li>
+						'views/business/form/tpls.html'
+						<li>字符串形式</li>
+						'&lt;div&gt;This is template param in plain.&lt;/div&gt;'	<br>
+						<span class="font-bold text-danger">注意：字符串形式必须设置plain参数为true</span>
 					</ol>
+					<h5>
+						<code>plain{Boolean}</code>
+					</h5>
+					<p>设置template模板以字符串形式使用</p>
+					<h5>
+						<code>controller{String} | {Array} | {Object}</code>
+					</h5>
+					<p>弹出窗需要使用的controller。可以给定controller的名称或者直接定义</p>
+					<pre>
+ngDialog.open({
+	template: 'views/business/form/tpls.html',
+	controller: 'DeleteCtrl'
+})
+app.controller('DeleteCtrl', ['$scope', function($scope) {
+	// more code goes here
+}])
+或者：
+ngDialog.open({
+	template: 'views/business/form/tpls.html',
+	controller: ['$scope', function($scope) {
+		// more code goes here
+	}]
+});
+					</pre>
+					<h5>
+						<code>closeByDocument{Boolean}</code>
+					</h5>
+					<p>点击页面时是否关闭，当值为true时，为非模态框，点击关闭；当值为false时，为模态框，点击不关闭</p>
+					<h5>
+						<code>closeByEscape{Boolean}</code>
+					</h5>
+					<p>ESC键是否关闭，默认为true</p>
+					<h5>
+						<code>showClose{Boolean}</code>
+					</h5>
+					<p>是否显示右上角的关闭按钮，默认为true</p>
+					<h5>
+						<code>overlay{Boolean}</code>
+					</h5>
+					<p>是否显示层遮盖原页面，默认为true</p>
 				</div>
 			</div>
 
 			<p>更多请参考项目主页：<a href="https://github.com/likeastore/ngDialog">ngDialog on github</a></p>
-		</div>
+		</div> -->
 	</div>
 </div>
 
