@@ -179,15 +179,15 @@ app.controller('DialogDemoCtrl', ['$scope', '$rootScope', 'ngDialog',
 
 		$scope.open = function() {
 		    ngDialog.open({
-		        template: 'views/business/form/tpls.html',
+		        template: 'views/business/form/del-tpls.html',
 		        // template: '<div>This is template param in plain.</div>',
 		        // plain: true,
-		        controller: 'DeleteCtrl',
-		        data: {
-		            foo: 'some data'
-		        },
-		        closeByDocument: false,
-		        showClose: false
+		        // controller: 'DeleteCtrl',
+		        // data: {
+		        //     foo: 'some data'
+		        // },
+		        // closeByDocument: false,
+		        // // showClose: false
 		    });
 		};
 

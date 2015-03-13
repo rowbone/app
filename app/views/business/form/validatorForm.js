@@ -1,20 +1,20 @@
-/*global angular,alert,w5cValidator*/
+/*global angular,alert,conowValidator*/
 (function () {
     "use strict";
     // var app = angular.module("demoApp", ["w5c.validator", "ui.bootstrap"]);
     // window.app = app;
 
-    app.config(["w5cValidatorProvider", function (w5cValidatorProvider) {
+    app.config(["conowValidatorProvider", function (conowValidatorProvider) {
 
         // 全局配置
-        w5cValidatorProvider.config({
+        conowValidatorProvider.config({
             blurTrig: false,
             showError: true,
             removeError: true
 
         });
 
-        w5cValidatorProvider.setRules({
+        conowValidatorProvider.setRules({
             email: {
                 required: "输入的邮箱地址不能为空",
                 email: "输入邮箱地址格式不正确"
@@ -41,7 +41,6 @@
 })();
 
     app.controller("validateCtrl", ["$scope", "$http", function ($scope, $http) {
-console.log('validateCtrl.............');
         var vm = $scope.vm = {
             htmlSource: "",
             showErrorType: 1
@@ -54,6 +53,7 @@ console.log('validateCtrl.............');
 
         //每个表单的配置，如果不设置，默认和全局配置相同
         vm.validateOptions = {
-            blurTrig: true
+            blurTrig: true,
+            isExists: true
         };
     }]);

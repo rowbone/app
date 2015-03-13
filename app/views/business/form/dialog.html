@@ -22,13 +22,14 @@
 						</div>
 
 						<div class="col-sm-5">
+							<button type="button" class="btn btn-default" ng-click="open()">测试</button>
 							<!-- use by service -->
 							<!-- <button type="button" class="btn btn-danger" ng-click="open(entity.username)">删除</button> -->
 							<!-- use by attribute -->
 							<label conow-btn-del url="'users/userDel'" param="entity" do-modal="false" ng-click="test()"></label>
 							<!-- use by label name -->
-							<!-- <conow-btn-del url="'users/userDel'" param="entity" do-modal="true" ng-click="test()"></conow-btn-del> -->
-							<label conow-btn-prompt default-value="entity.item" text-title="请输入信息！"></label>
+							<conow-btn-del url="'users/userDel'" param="entity" do-modal="true" ng-click="test()"></conow-btn-del>
+							<!-- <label conow-btn-prompt default-value="entity.item" text-title="请输入信息！"></label> -->
 						</div>
 <!-- 						<div class="form-group">
 							<div class="col-sm-8 col-sm-offset-2">

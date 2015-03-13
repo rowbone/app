@@ -1,13 +1,13 @@
 <div class="header-md h pos-fix w-full b-b bg-light dk">
-  <h3 class="m-n font-thin h3">w5c-validator demo</h3>
+  <h3 class="m-n font-thin h3">validator demo</h3>
 </div>
 <div class="wrapper-md pos-rlt">
   <div class="row">
     <div class="col-sm-5">
       <div class="panel panel-default">
-        <div class="panel-heading font-bold">w5c-validator</div>
+        <div class="panel-heading font-bold">validator</div>
         <div class="panel-body" ng-controller="validateCtrl">
-          <form class="w5c-form demo-form" role="form" w5c-form-validate="vm.validateOptions" novalidate name="validateForm">
+          <form class="conow-form demo-form" role="form" conow-form-validate="vm.validateOptions" novalidate name="validateForm">
           <div class="form-group">
             <label for="email">邮箱</label>
             <input type="email" class="form-control" name="email" id="email" ng-model="entity.email" required="" placeholder="请输入邮箱">
@@ -15,7 +15,7 @@
           <div class="form-group">
             <label for="username">用户名</label>
             <!-- <input type="text" class="form-control" name="username" id="username" required="" ng-pattern="/^[A-Za-z]{1}[0-9A-Za-z_]{1,19}$/" ng-model="entity.name" w5c-unique-check="{url:'users/userCheck?username='+entity.name}" placeholder="请输入用户名"> -->
-            <input type="text" class="form-control" name="username" id="username" required="" ng-pattern="/^[A-Za-z]{1}[0-9A-Za-z_]{1,19}$/" ng-model="entity.name" w5c-unique-check="{url:'data/bz/username.json?username='+entity.name}" placeholder="请输入用户名">
+            <input type="text" class="form-control" name="username" id="username" required="" ng-pattern="/^[A-Za-z]{1}[0-9A-Za-z_]{1,19}$/" ng-model="entity.name" conow-unique-check="{url:'data/bz/username.json?username='+entity.name}" is-exists=false placeholder="请输入用户名">
           </div>
           <div class="form-group">
             <label for="password">密码</label>
@@ -23,7 +23,7 @@
           </div>
           <div class="form-group">
             <label for="repeatPassword">确认密码</label>
-            <input type="password" class="form-control" name="repeatPassword" id="repeatPassword" required="" w5c-repeat="password" ng-model="entity.repeatPassword" placeholder="请再次输入密码">
+            <input type="password" class="form-control" name="repeatPassword" id="repeatPassword" required="" conow-repeat="password" ng-model="entity.repeatPassword" placeholder="请再次输入密码">
           </div>
           <div class="form-group">
             <label for="number">数字</label>
@@ -40,7 +40,7 @@
           </div>
     
           <div class="form-group">
-              <button type="button" class="btn btn-success" w5c-form-submit="vm.saveEntity()"> 提交</button>
+              <button type="button" class="btn btn-success" conow-form-submit="vm.saveEntity()"> 提交</button>
           </div>
       </form>
         </div>

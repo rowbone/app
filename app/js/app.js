@@ -13,7 +13,7 @@ var app = angular.module('demoApp', [
 	'app.form',
 	'app.ngSweetAlert',
 	'app.directives',
-	'w5c.validator',
+	'conow.validator',
 	'ngDialog'
 	]);
 

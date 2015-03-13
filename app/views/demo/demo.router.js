@@ -25,5 +25,21 @@ angular.module('app.demo', ['ui.router'])
 					url: '/sweetAlert',
 					templateUrl: 'views/demo/sweetAlert.html'
 				})
+				.state('app.demo.toaster', {
+					url: '/toaster',
+					templateUrl: 'views/demo/tpls/ui_toaster.html'
+					// ,
+					// resolve: {
+					// 	deps: ['$ocLazyLoad', 
+					// 		function($ocLazyLoad) {
+					// 			return $ocLazyLoad.load('toaster').then(
+					// 				function() {
+					// 					return $ocLazyLoad.load('views/demo/controllers/toaster.js');
+					// 				}
+					// 			);
+					// 		}
+					// 	]
+					// }
+				})
 		}
 	])

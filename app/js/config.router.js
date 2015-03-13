@@ -5,6 +5,29 @@ angular.module('demoApp')
 		function($rootScope, $state, $stateParams) {
 			$rootScope.$state = $state;
 			$rootScope.$stateParams = $stateParams;
+
+			$rootScope.$on('$routeChangeStart', function(evt, toState, toParams, fromState, fromParams) {
+				// evt.preventDefault();
+				console.log('route change begins');
+				console.log('toState.name', toState.name);
+			});
+
+			$rootScope.$on('$viewContentLoading', function(evt, viewConfig) {
+				console.log('viewContentLoading...');
+				console.log(viewConfig.targetView);
+			});
+
+			$rootScope.$on('$viewContentLoaded', function(evt) {
+				console.log('viewContentLoaded');
+			});
+
+			$rootScope.$on('$stateChangeSuccess', function(evt, toState, toParams, fromState, fromParams) {
+				console.log('stateChangeSuccess');
+			});
+
+			$rootScope.$on('$stateChangeError', function(evt, toState, toParams, fromState, fromParams, error) {
+				console.log('stateChangeError', error.code);
+			});
 		}
 	])
 	.config(function($stateProvider, $urlRouterProvider) {
