@@ -119,7 +119,7 @@ console.log('111111111')
 		// ngDialog.close();
 	};
 
-}])
+}]);
 
 app.controller('DeleteCtrl', ['$scope', '$timeout', 'ngDialog', '$http', function($scope, $timeout, ngDialog, $http) {
 
@@ -199,3 +199,44 @@ app.controller('DialogDemoCtrl', ['$scope', '$rootScope', 'ngDialog',
 	}
 
 ]);
+
+app.controller('ModalParentCtrl', ['$scope', '$modal', function($scope, $modal) {
+	$scope.items = ['item1', 'item2', 'item3'];
+
+	$scope.open = function(size) {
+		var modalInstance = $modal.open({
+			templateUrl: 'views/demo/tpls/modal.html',
+			controller: 'ModalCtrl',
+			size: size,
+			resolve: {
+				items: function() {
+					return $scope.items;
+				}
+			}
+		});
+
+		modalInstance.result.then(function(selectedItem) {
+			$scope.selectedItem = selectedItem;
+		}, function() {
+			console.log('Modal dismissed at: ' + new Date());
+		})
+	}
+}]);
+
+app.controller('ModalCtrl', ['$scope', '$modalInstance', 'items', function($scope, $modalInstance, items) {
+	// 
+	$scope.items = items;
+
+	$scope.selected = {
+		// item: items[0];
+		item: $scope.items[0]
+	};
+
+	$scope.ok = function() {
+		$modalInstance.close($scope.selected.item);
+	};
+
+	$scope.cancel = function() {
+		$modalInstance.dismiss('cancel');
+	};
+}])

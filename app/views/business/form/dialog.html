@@ -1,9 +1,9 @@
 <title-bar name="ngDialog demo"></title-bar>
 
-<div class="wrapper-md pos-rlt" ng-controller="DialogDemoCtrl">
+<div class="wrapper-md pos-rlt">
 	<div class="row">
 		<div class="col-sm-6">
-			<div class="panel panel-default">
+			<div class="panel panel-default" ng-controller="DialogDemoCtrl">
 				<div class="panel-heading font-bold">弹出提示框</div>
 				<div class="panel-body">
 					<form role="form" class="form-horizontal">
@@ -56,6 +56,21 @@ ngDialog.open({
 						</div> -->
 					</form>
 				</div>
+			</div>
+
+			<div class="panel panel-default" ng-controller="ModalParentCtrl">
+				<div class="panel-heading font-bold">modal</div>
+				<div class="panel-body">
+					<form action="" role="form">
+						<div class="form-group">
+							<button type="button" class="btn btn-primary" ng-click="open()">打开</button>
+						</div>
+						<div class="form-group">
+							<span>你选择了：{{selectedItem}}</span>
+						</div>
+					</form>
+				</div>
+				<div class="panel-footer">$modal 弹出框测试</div>
 			</div>
 		</div>
 
