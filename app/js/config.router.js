@@ -12,18 +12,18 @@ angular.module('demoApp')
 				console.log('toState.name', toState.name);
 			});
 
-			$rootScope.$on('$viewContentLoading', function(evt, viewConfig) {
-				console.log('viewContentLoading...');
-				console.log(viewConfig.targetView);
-			});
+			// $rootScope.$on('$viewContentLoading', function(evt, viewConfig) {
+			// 	console.log('viewContentLoading...');
+			// 	console.log(viewConfig.targetView);
+			// });
 
-			$rootScope.$on('$viewContentLoaded', function(evt) {
-				console.log('viewContentLoaded');
-			});
+			// $rootScope.$on('$viewContentLoaded', function(evt) {
+			// 	console.log('viewContentLoaded');
+			// });
 
-			$rootScope.$on('$stateChangeSuccess', function(evt, toState, toParams, fromState, fromParams) {
-				console.log('stateChangeSuccess');
-			});
+			// $rootScope.$on('$stateChangeSuccess', function(evt, toState, toParams, fromState, fromParams) {
+			// 	console.log('stateChangeSuccess');
+			// });
 
 			$rootScope.$on('$stateChangeError', function(evt, toState, toParams, fromState, fromParams, error) {
 				console.log('stateChangeError', error.code);

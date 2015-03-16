@@ -1,15 +1,13 @@
-	<div class="col-md-offset-1">
-		<h3 class="">是否确定删除?</h3>
-	</div>
-	<div class="row">
-		<form role="form">
-			<div class="form-group">
-				<div class="col-md-6 pull-right">
-					<button type="button" class="btn btn-danger" ng-click="cancel()">取消</button>
-					<button type="button" class="btn btn-primary" ng-click="confirm()">确定</button>
-				</div>
-			</div>
-		</form>
-	</div>
 
-	
+<div class="modal-header">
+  <span class="modal-title">删除确认</span>
+  <a class="glyphicon glyphicon-remove pull-right" ng-click="close()"></a>
+</div>
+<div class="modal-body">
+	<span class="h4">{{ params.confirmMsg }}</span>
+  <!-- <span class="h4">是否确认删除？</span> -->
+</div>
+<div class="modal-footer">
+  <button class="btn btn-default" ng-click="cancel()">取消</button>
+  <button class="btn btn-success" ng-click="confirm()">确定</button>
+</div>

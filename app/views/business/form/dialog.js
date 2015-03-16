@@ -1,242 +1,149 @@
 'use strict';
 
-app.directive('conowBtnDel', ['ngDialog', '$http', function(ngDialog, $http) {
-	return {
-		restrict: 'AE',
-		template: '<button type="button" class="btn btn-primary">删除</button>',
-		scope: {
+app.directive('conowBtnSel', ['$modal', 
+	function($modal) {
+		return {
 			//
-			ngClick: '&ngClick',
-			url: '=',
-			doModal: '=',
-			param: '='
-		},
-		link: function(scope, elem, attrs) {
-			// 当且仅当doModal为false或者"false"时，为非模态框。（即默认为模态框）
-			var originalFunc = scope.ngClick,
-					url = scope.url,
-					param = scope.param,
-					doModal = scope.doModal,
-					modalDialog = (doModal === false) ? false : true;
-
-			elem.on('click', function(e) {
-				e.preventDefault();
-
-				// var defaults = ngDialog.getDefaults();
-				// console.log(defaults);
-
-				ngDialog.open({
-					// 
-					template: 'views/business/form/del-tpls.html',
-					closeByDocument: modalDialog,
-					controller: 'DeleteCtrl',
-					data: {
-						'url': url,
-						'param': param
-					}
-				});
-			});
+			restrict: 'AE',
+			template: '<button type="button" class="btn btn-primary">选择</button>'
 		}
 	}
-}]);
+]);
 
-app.directive('conowBtnPrompt', ['ngDialog', '$parse', function(ngDialog, $parse) {
-	// 
-	return {
-		restrict: 'AE',
-		template: '<button type="button" class="btn btn-info">确定</button>',
-		scope: {
-			defaultValue: '='
-		},
-		link: function(scope, elem, attrs) {
+app.directive('conowBtnPrompt', ['$modal', 
+	function($modal) {
+		return {
+			restrict: 'AE',
+			template: '<button type="button" class="btn btn-primary">提示</button>',
+			link: function(scope, elem, attrs) {
 
-			scope.$on('PromptCtrlChange', function(event, msg) {
-				console.log('111111111111111111111111')
-				console.log('conowBtnPrompt', msg);
-				// scope.$broadcast
-			})
+				elem.on('click', function(e) {
+					e.preventDefault();
 
-			var defaultValue = scope.defaultValue,
-					textTitle = attrs.textTitle;
+					var modalInstance = $modal.open({
+						templateUrl: 'views/business/form/prompt-tpls.html',
+						controller: 'PromptModalCtrl',
+						backdrop: 'static',
+						resolve: {
+							params: function() {
+								var objParams = {
+									title: attrs.title,
+									data: scope.$eval(attrs.data)
+								};
 
-			var funcCallback = function(name) {
-				return name;
-			};
-
-			var obj = {
-				'name': 'abc',
-				'callback': funcCallback(name)
+								return objParams;
+							}
+						}
+					})
+				})
 			}
-
-			// add event
-			elem.on('click', function(e) {
-				e.preventDefault();
-
-				ngDialog.open({
-					template: 'views/business/form/prompt-tpls.html',
-					controller: 'PromptCtrl',
-					data: {
-						'defaultValue': defaultValue,
-						'textTitle': textTitle,
-						'obj': obj
-					}
-				});
-			});
 		}
 	}
-}]);
+]);
 
-app.controller('PromptCtrl', ['$scope', 'ngDialog', '$rootScope', function($scope, ngDialog, $rootScope) {
+app.controller('PromptModalCtrl', ['$scope', '$modalInstance', 'params', 
+	function($scope, $modalInstance, params) {
+		console.log('PromptModalCtrl');
+		console.log(params);	
 
-	// $scope.entity.item = $scope.ngDialogData.defaultValue;
-console.log('in', 'PromptCtrl');
-console.log($scope.ngDialogData.obj)
-console.log('111111111')
-	$scope.change = function(name) {
-		console.log('PromptCtrl', name);
-		$scope.$emit('PromptCtrlChange', name);
-	};
-
-	$scope.entity = {
-		'item': $scope.ngDialogData.defaultValue,
-		'title': $scope.ngDialogData.textTitle,
-		'callback': $scope.ngDialogData.callback
-	};
-
-
-
-	$scope.confirm = function() {
-		console.log('你输入了：' + $scope.entity.item);
-		// ngDialog.close();
-	};
-
-	$scope.cancel = function(itemVal) {
-		//
-		console.log(itemVal)
-		console.log('cancel..........');
-		console.log('PromptCtrl', itemVal);
-		$scope.$emit('PromptCtrlChange', itemVal);
-		// ngDialog.close();
-	};
-
-}]);
-
-app.controller('DeleteCtrl', ['$scope', '$timeout', 'ngDialog', '$http', function($scope, $timeout, ngDialog, $http) {
-
-	$scope.confirm = function() {
-		ngDialog.close();
-		// console.log($scope.ngDialogData);
-
-		$http.post($scope.ngDialogData.url, {
-			'data': $scope.ngDialogData.param
-		})
-		.success(function(data, status) {
-			console.log(data);
-			if(data.success) {
-				ngDialog.open({
-					template: '<div class="text-success has-success"><span class="glyphicon glyphicon-ok"></span>删除成功</div>',
-					// closeByDocument: false,
-					// closeByEscape: false,
-					plain: true,
-					overlay: false
-				});
-			} else {
-				ngDialog.open({
-					template: '<div class="text-danger has-error"><span class="glyphicon glyphicon-remove"></span>删除失败</div>',
-					// closeByDocument: false,
-					// closeByEscape: false,
-					plain: true,
-					overlay: false
-				});
-			}
-		})
-		.error(function(data, status) {
-			console.log(status);
-			console.log(data);
-		});
-
-		$timeout(function() {
-			ngDialog.close();
-		}, 1000);
-	};
-
-	$scope.cancel = function() {
-		console.log('cancel.........');
-		ngDialog.close();
-	};
-
-}]);
-
-app.controller('DialogDemoCtrl', ['$scope', '$rootScope', 'ngDialog', 
-	function($scope, $rootScope, ngDialog) {
-		//
-		console.log('DialogDemoCtrl...........');
-
-		$scope.entity = {
-			username: 'username1',
-			item: '111111111'
-		};
-
-		$scope.open = function() {
-		    ngDialog.open({
-		        template: 'views/business/form/del-tpls.html',
-		        // template: '<div>This is template param in plain.</div>',
-		        // plain: true,
-		        // controller: 'DeleteCtrl',
-		        // data: {
-		        //     foo: 'some data'
-		        // },
-		        // closeByDocument: false,
-		        // // showClose: false
-		    });
-		};
-
-		// $scope.test = function() {
-		// 	console.log('11111111111');
-		// 	// toaster.pop('success', 'Test title', 'Test text');
-		// };
-
+		// $scope.params = params;
+		$scope.entity = params.data;
 	}
+]);
 
+app.directive('conowBtnDel', ['$modal', '$timeout',
+	function($modal, $timeout) {
+		return {
+			restrict: 'AE',
+			template: '<button type="button" class="btn btn-danger">删除</button>',
+			link: function(scope, elem, attrs) {
+
+				elem.on('click', function(e) {
+					e.preventDefault();
+
+					var size = '';
+					var modalInstance = $modal.open({
+						templateUrl: 'views/business/form/del-tpls.html',
+						controller: 'DelModalCtrl',
+						size: size,
+						backdrop: 'static',
+						resolve: {
+							params: function() {
+								var objParams = {
+									url: attrs.url,
+									data: scope.$eval(attrs.data),
+									confirmMsg: attrs.confirmMsg
+								};
+								return objParams;
+							}
+						}
+					});
+
+					var modalInstance2 = {};
+					modalInstance.result.then(function(rtnVal) {
+						modalInstance2 = $modal.open({
+							templateUrl: 'views/business/form/del-result.html',
+							controller: 'DelModalResultCtrl',
+							backdrop: false,
+							resolve: {
+								params: function() {
+									return rtnVal;
+								}
+							}
+						});
+
+						$timeout(function() {
+							modalInstance2.close();
+						}, 2000);
+
+					}, function() {
+						console.log('Delete cancel.......');
+					})
+				})
+			}
+		}
+	}
+]);
+
+app.controller('DelModalResultCtrl', ['$scope', '$modalInstance', 'params', 
+	function($scope, $modalInstance, params) {
+
+		$scope.result = params;
+	}
+]);
+
+app.controller('DelModalCtrl', ['$scope', '$modalInstance', 'params', '$http', 
+	function($scope, $modalInstance, params, $http) {
+		$scope.params = params;
+
+		$scope.params.confirmMsg = $scope.params.confirmMsg || '是否确认删除？';
+
+		$scope.confirm = function() {
+			$http.post(params.url, {'data': params.data})
+				.success(function(data, status) {
+					// console.log(data);
+					$modalInstance.close(data);
+				})
+				.error(function(data, status) {
+					console.log('error.status:' + status);
+					$modalInstance.close(data);
+				});
+		};
+
+		$scope.cancel = function() {
+			$modalInstance.dismiss('cancel');
+		};
+
+		$scope.close = function() {
+			$modalInstance.dismiss('close');
+		}
+	}
 ]);
 
 app.controller('ModalParentCtrl', ['$scope', '$modal', function($scope, $modal) {
-	$scope.items = ['item1', 'item2', 'item3'];
 
-	$scope.open = function(size) {
-		var modalInstance = $modal.open({
-			templateUrl: 'views/demo/tpls/modal.html',
-			controller: 'ModalCtrl',
-			size: size,
-			resolve: {
-				items: function() {
-					return $scope.items;
-				}
-			}
-		});
+	$scope.entity = {
+		'username': 'staff1'
+	};
 
-		modalInstance.result.then(function(selectedItem) {
-			$scope.selectedItem = selectedItem;
-		}, function() {
-			console.log('Modal dismissed at: ' + new Date());
-		})
-	}
 }]);
-
-app.controller('ModalCtrl', ['$scope', '$modalInstance', 'items', function($scope, $modalInstance, items) {
-	// 
-	$scope.items = items;
-
-	$scope.selected = {
-		// item: items[0];
-		item: $scope.items[0]
-	};
-
-	$scope.ok = function() {
-		$modalInstance.close($scope.selected.item);
-	};
-
-	$scope.cancel = function() {
-		$modalInstance.dismiss('cancel');
-	};
-}])

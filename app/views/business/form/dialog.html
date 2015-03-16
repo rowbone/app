@@ -1,72 +1,24 @@
-<title-bar name="ngDialog demo"></title-bar>
+<title-bar title-name="ngDialog demo"><span class="h3">modal</span></title-bar>
 
 <div class="wrapper-md pos-rlt">
 	<div class="row">
 		<div class="col-sm-6">
-			<div class="panel panel-default" ng-controller="DialogDemoCtrl">
-				<div class="panel-heading font-bold">弹出提示框</div>
+			<div class="panel panel-default" ng-controller="ModalParentCtrl">
+				<div class="panel-heading font-bold">modal</div>
 				<div class="panel-body">
-					<form role="form" class="form-horizontal">
+					<form action="" role="form" class="form-horizontal">
 						<div class="form-group">
 							<label for="username" class="control-label col-sm-2">用户名</label>
 							<div class="col-sm-10">
 								<input type="text" class="form-control" name="username" id="username" ng-model="entity.username">
 							</div>
 						</div>
-
 						<div class="form-group">
-							<label for="item" class="control-label col-sm-2">填入项</label>
-							<div class="col-sm-10">
-								<input type="text" class="form-control" name="item" id="item" ng-model="entity.item">
+							<div class="col-sm-offset-2">
+								<conow-btn-del url="users/userDel" data="{'username': '{{ entity.username }}'}" confirm-msg="确认删除{{entity.username}}?" size=""></conow-btn-del>
+								<conow-btn-prompt title="提示标题" data="{'username': '{{ entity.username }}'}"></conow-btn-prompt>
+								<conow-btn-sel callback-func="" template-url=""></conow-btn-sel>
 							</div>
-						</div>
-
-						<div class="col-sm-5">
-							<button type="button" class="btn btn-default" ng-click="open()">测试</button>
-							<!-- use by service -->
-							<!-- <button type="button" class="btn btn-danger" ng-click="open(entity.username)">删除</button> -->
-							<!-- use by attribute -->
-							<label conow-btn-del url="'users/userDel'" param="entity" do-modal="false" ng-click="test()"></label>
-							<!-- use by label name -->
-							<conow-btn-del url="'users/userDel'" param="entity" do-modal="true" ng-click="test()"></conow-btn-del>
-							<!-- <label conow-btn-prompt default-value="entity.item" text-title="请输入信息！"></label> -->
-						</div>
-<!-- 						<div class="form-group">
-							<div class="col-sm-8 col-sm-offset-2">
-								<pre>
-$scope.open = function() {
-    ngDialog.open({
-        template: 'deleteConfirm',
-        controller: 'DeleteCtrl',
-        closeByDocument: false
-    });
-};					
-								</pre>				
-								<p>可以在 DeleteCtrl 定义方法打开另外一个 dialog 对象</p>
-								<pre>
-ngDialog.open({
-	template: '&lt;div class="text-success has-success"&gt;&lt;span class="glyphicon glyphicon-ok"&gt;&lt;/span&gt;删除成功&lt;/div&gt;',
-	closeByDocument: false,
-	closeByEscape: false,
-	plain: true,
-	overlay: false
-});
-								</pre>
-							</div>
-						</div> -->
-					</form>
-				</div>
-			</div>
-
-			<div class="panel panel-default" ng-controller="ModalParentCtrl">
-				<div class="panel-heading font-bold">modal</div>
-				<div class="panel-body">
-					<form action="" role="form">
-						<div class="form-group">
-							<button type="button" class="btn btn-primary" ng-click="open()">打开</button>
-						</div>
-						<div class="form-group">
-							<span>你选择了：{{selectedItem}}</span>
 						</div>
 					</form>
 				</div>
