@@ -21,7 +21,8 @@ app.directive('conowBtnPrompt', ['$modal',
 					e.preventDefault();
 
 					var modalInstance = $modal.open({
-						templateUrl: 'views/business/form/prompt-tpls.html',
+						// templateUrl: 'views/business/form/prompt-tpls.html',
+						templateUrl: 'views/business/form/list-tpls.html',
 						controller: 'PromptModalCtrl',
 						backdrop: 'static',
 						resolve: {
@@ -34,6 +35,14 @@ app.directive('conowBtnPrompt', ['$modal',
 								return objParams;
 							}
 						}
+					});
+
+					modalInstance.result.then(function(rtnVal) {
+						console.log('rtnVal...');
+						console.log(rtnVal);
+					}, function(rtnVal) {
+						console.log(rtnVal)
+						console.log('Prompt cancel.....');
 					})
 				})
 			}
@@ -48,6 +57,15 @@ app.controller('PromptModalCtrl', ['$scope', '$modalInstance', 'params',
 
 		// $scope.params = params;
 		$scope.entity = params.data;
+
+		$scope.confirm = function() {
+			// 
+			$modalInstance.close($scope.entity);
+		};
+
+		$scope.cancel = function() {
+			$modalInstance.dismiss('cancel...');
+		}
 	}
 ]);
 
