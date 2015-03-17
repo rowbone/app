@@ -14,7 +14,7 @@
           </div>
           <div class="form-group">
             <label for="username">用户名</label>
-            <!-- <input type="text" class="form-control" name="username" id="username" required="" ng-pattern="/^[A-Za-z]{1}[0-9A-Za-z_]{1,19}$/" ng-model="entity.name" w5c-unique-check="{url:'users/userCheck?username='+entity.name}" placeholder="请输入用户名"> -->
+            <!-- <input type="text" class="form-control" name="username" id="username" required="" ng-pattern="/^[A-Za-z]{1}[0-9A-Za-z_]{1,19}$/" ng-model="entity.name" conow-unique-check="{url:'users/userCheck?username='+entity.name}" placeholder="请输入用户名"> -->
             <input type="text" class="form-control" name="username" id="username" required="" ng-pattern="/^[A-Za-z]{1}[0-9A-Za-z_]{1,19}$/" ng-model="entity.name" conow-unique-check="{url:'data/bz/username.json?username='+entity.name}" is-exists=false placeholder="请输入用户名">
           </div>
           <div class="form-group">
@@ -52,19 +52,19 @@
         <div class="panel-body">
           <div class="use-info">
             <ol>
-            <li>在 index.html 中引入  vendor/w5c-validator/dist/w5cValidator.js</li>
-            <li>在 app.js 中启动 module 引用。<code>var app = angular.module('app', ['w5c.validator']);</code></li>
+            <li>在 index.html 中引入  vendor/conow-validator/dist/conowValidator.js</li>
+            <li>在 app.js 中启动 module 引用。<code>var app = angular.module('app', ['conow.validator']);</code></li>
             <li>在 app.config 事件中配置全局属性和显示规则：
             <pre>
-  app.config(["w5cValidatorProvider", function(w5cValidatorProvider) {
+  app.config(["conowValidatorProvider", function(conowValidatorProvider) {
   // 全局配置
-  w5cValidatorProvider.config({
+  conowValidatorProvider.config({
       blurTrig   : false,
       showError  : true,
       removeError: true
   
   });
-  w5cValidatorProvider.setRules({
+  conowValidatorProvider.setRules({
       email   : {
           required: "输入的邮箱地址不能为空",
           email   : "输入邮箱地址格式不正确"
@@ -74,11 +74,11 @@
   }]);
           </pre>
             </li>
-            <li>在HTML模板中form上使用指令 w5c-form-validate 和 w5c-submit，w5c-form-validate指令表示该表单采用 w5cValidator的验证规则；w5c-submit 表示验证成功后调用的事件，当然w5c-submit可以不填写；</li>
+            <li>在HTML模板中form上使用指令 conow-form-validate 和 conow-submit，conow-form-validate指令表示该表单采用 conowValidator的验证规则；conow-submit 表示验证成功后调用的事件，当然conow-submit可以不填写；</li>
           </ol>
           <h5 class="h5 font-bold">验证规则</h5>
           <p>AngularJS原生支持很多种验证规则，比如：require（必填项），email，pattern（正则），maxlength，minlength，number，url，max，min</p>
-      <p>w5cValidator提供了w5c-repeat（级联重复，常用于重复密码）和w5cUniqueCheck (远程验证，常用于检验用户名邮箱是否存在)</p>
+      <p>conowValidator提供了conow-repeat（级联重复，常用于重复密码）和conowUniqueCheck (远程验证，常用于检验用户名邮箱是否存在)</p>
       <h5 class="h5 font-bold">默认提示信息</h5>
       <pre>
 {
@@ -89,7 +89,7 @@
     repeat        : "两次输入不一致",
     pattern       : "该选项输入格式不正确",
     number        : "必须输入数字",
-    w5cuniquecheck: "该输入值已经存在，请重新输入",
+    conowuniquecheck: "该输入值已经存在，请重新输入",
     url           : "输入URL格式不正确",
     max           : "该选项输入值不能大于{max}",
     min           : "该选项输入值不能小于{min}"
@@ -99,12 +99,12 @@
       <h5 class="h5 font-bold">注意事项</h5>
       <ol>
         <li>由于验证使用的是 angular的form验证，所以必须要保证form和验证的元素都要有name属性；</li>
-        <li>如果你不想把验证成功事件w5c-submit写在 form上，可以直接在form里面的其他元素上使用w5cFormSubmit指令，如：
-          <code>&lt;button type="button" w5c-form-submit="vm.saveEntity()" class="btn btn-success"&gt; 验证&lt;/button&gt;</code>
+        <li>如果你不想把验证成功事件conow-submit写在 form上，可以直接在form里面的其他元素上使用conowFormSubmit指令，如：
+          <code>&lt;button type="button" conow-form-submit="vm.saveEntity()" class="btn btn-success"&gt; 验证&lt;/button&gt;</code>
         </li>
-        <li>w5cUniqueCheck验证存在时对应服务器接口返回'true'，不存在时返回'false'</li>
-        <li>w5cUniqueCheck默认检验是否已经存在，存在验证不通过，不存在验证通过，如果isExists设置为false表示：存在验证通过，不存在验证不通过。</li>
-        <li>w5cValidatorProvider默认的错误提示信息是中文的，如果想修改成其他语言，可以通过 w5cValidatorProvider.setDefaultRules()方法设置。</li>
+        <li>conowUniqueCheck验证存在时对应服务器接口返回'true'，不存在时返回'false'</li>
+        <li>conowUniqueCheck默认检验是否已经存在，存在验证不通过，不存在验证通过，如果isExists设置为false表示：存在验证通过，不存在验证不通过。</li>
+        <li>conowValidatorProvider默认的错误提示信息是中文的，如果想修改成其他语言，可以通过 conowValidatorProvider.setDefaultRules()方法设置。</li>
       </ol>
       
           <h5 class="h5 font-bold">参数说明</h5>

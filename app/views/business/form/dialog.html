@@ -3,22 +3,30 @@
 <div class="wrapper-md pos-rlt">
 	<div class="row">
 		<div class="col-sm-6">
-			<div class="panel panel-default" ng-controller="ModalParentCtrl">
-				<div class="panel-heading font-bold">modal</div>
+			<div class="panel panel-info" ng-controller="ModalParentCtrl">
+				<div class="panel-heading font-bold">弹出框示例</div>
 				<div class="panel-body">
-					<form action="" role="form" class="form-horizontal">
+					<form action="" role="form">
 						<div class="form-group">
-							<label for="username" class="control-label col-sm-2">用户名</label>
-							<div class="col-sm-10">
-								<input type="text" class="form-control" name="username" id="username" ng-model="entity.username">
-							</div>
+							<label for="username" class="control-label">用户名</label>
+							<input type="text" class="form-control" name="username" id="username" ng-model="entity.username">
 						</div>
 						<div class="form-group">
-							<div class="col-sm-offset-2">
-								<conow-btn-del url="users/userDel" data="{'username': '{{ entity.username }}'}" confirm-msg="确认删除{{entity.username}}?" size=""></conow-btn-del>
-								<conow-btn-prompt title="提示标题" data="{'username': '{{ entity.username }}', 'email': 'abc@mail.com'}"></conow-btn-prompt>
-								<conow-btn-sel callback-func="" template-url=""></conow-btn-sel>
-							</div>
+							<label for="email" class="control-label">邮箱</label>
+							<input type="email" class="form-control" name="email" id="email" ng-model="entity.email">
+						</div>
+
+						<div class="form-group">
+							<label for="" class="control-label">删除操作</label>
+							<conow-btn-del url="users/userDel" data="{'username': '{{ entity.username }}'}" title="标题测试" confirm-msg="确认删除{{entity.username}}?"></conow-btn-del>
+						</div>
+						<div class="form-group">
+							<label for="" class="control-label">提示信息</label>
+							<conow-btn-prompt title="提示标题测试" data="{'username': '{{ entity.username }}', 'email': '{{ entity.email }}'}"></conow-btn-prompt>
+						</div>
+						<div class="form-group">
+							<label for="" class="control-label">列表选择</label>
+							<conow-btn-sel callback-func="" template-url=""></conow-btn-sel>
 						</div>
 					</form>
 				</div>
@@ -27,131 +35,66 @@
 		</div>
 
 		<div class="col-sm-6">
-			<div class="panel panel-default">
-				<div class="panel-heading font-bold">使用说明</div>
+			<div class="panel panel-info">
+				<div class="panel-heading font-bold">删除操作按钮使用说明</div>
 				<div class="panel-body">
 					<h4 class="font-bold">通过指令调用</h4>
-<code>&lt;label conow-btn-del url="'users/userDel'" param="entity" do-modal="false" ng-click="test()"&gt;&lt;/label&gt;</code>
-					或者
-<code>&lt;conow-btn-del url="'users/userDel'" param="entity" do-modal="true" ng-click="test()"&gt;&lt;/conow-btn-del&gt;</code>
-
+					<p>
+						<pre>
+&lt;conow-btn-del url="users/userDel" data="{'username': '{{ entity.username }}'}" title="标题测试" confirm-msg="确认删除{ { entity.username } }?"&gt;&lt;/conow-btn-del&gt;
+						</pre>
+					</p>
 					<hr>
 					<h4 class="font-bold">参数说明</h4>
 
 					<h5><code>url{String}</code></h5>
 					<p>删除对应的后台地址</p>
-					<h5><code>do-modal{String} | {Boolean}</code></h5>
-					<p>当设置为"false"或者false时，为非模态弹出框，其他情况下为模态框。默认为模态弹出框</p>
+					<h5><code>data{Object}</code></h5>
+					<p>提交到后台的数据，需要后台接口做对应处理</p>
+					<h5><code>title{String}</code></h5>
+					<p>弹出框的显示标题</p>
+					<h5><code>confirm-msg{String}</code></h5>
+					<p>弹出框的提示信息</p>
+				</div>
+			</div>
+
+			<div class="panel panel-info">
+				<div class="panel-heading font-bold">提示信息按钮使用说明</div>
+				<div class="panel-body">
+					<h4 class="font-bold">通过指令调用</h4>
+					<p>
+						<code>
+&lt;conow-btn-prompt title="提示标题测试" data="{'username': '{{ entity.username }}', 'email': '{{ entity.email }}'}"&gt;&lt;/conow-btn-prompt&gt;							
+						</code>
+					</p>
+					<hr>
+					<h4 class="font-bold">参数说明</h4>
+
+					<h5><code>data{Object}</code></h5>
+					<p>需要在弹出框中显示的数据</p>
+					<h5><code>title{String}</code></h5>
+					<p>弹出框的显示标题</p>
+				</div>
+			</div>
+
+			<div class="panel panel-info">
+				<div class="panel-heading font-bold">列表选择按钮使用说明</div>
+				<div class="panel-body">
+					<h4 class="font-bold">通过指令调用</h4>
+					<p>
+						<code>
+&lt;conow-btn-sel callback-func="" template-url=""&gt;&lt;/conow-btn-sel&gt;							
+						</code>
+					</p>
+					<hr>
+					<h4 class="font-bold">参数说明</h4>
+
+					<h5><code>data{Object}</code></h5>
+					<p>需要在弹出框中显示的数据</p>
+					<h5><code>title{String}</code></h5>
+					<p>弹出框的显示标题</p>
 				</div>
 			</div>
 		</div>
-
-<!-- 		<div class="col-sm-6">
-			<div class="panel panel-default">
-				<div class="panel-heading font-bold">使用说明</div>
-				<div class="panel-body">
-					<ol>
-						<li>index.html中引入文件
-						<pre>
-&lt;link rel="stylesheet" href="./vendor/ngDialog/css/ngDialog.css"&gt;
-&lt;link rel="stylesheet" href="./vendor/ngDialog/css/ngDialog-theme-default.css"&gt;
-&lt;link rel="stylesheet" href="./vendor/ngDialog/css/ngDialog-theme-plain.css"&gt;
-
-&lt;script src="./vendor/ngDialog/js/ngDialog.js"&gt;&lt;/script&gt;
-						</pre>
-						</li>
-						<li>app.js中注入依赖<code>var app = angular.module('app', ['ngDialog']);</code></li>
-						<li>在controller中可直接注入 ngDialog 进行使用</li>
-					</ol>
-				</div>
-			</div>
-
-			<div class="panel panel-default">
-				<div class="panel-heading font-bold">参数说明</div>
-				<div class="panel-body">
-					<h5>
-						<code>template{String}</code>
-					</h5>
-					<p>弹出框的页面模板。有3种类型的String参数:templateId，url形式和字符串形式。使用方法如下：</p>
-					<ol>
-						<li>templateId</li>
-						'&lt;script type="text/ng-template" id="deleteConfirm"&gt;&lt;/script&gt;''
-						<li>url形式</li>
-						'views/business/form/tpls.html'
-						<li>字符串形式</li>
-						'&lt;div&gt;This is template param in plain.&lt;/div&gt;'	<br>
-						<span class="font-bold text-danger">注意：字符串形式必须设置plain参数为true</span>
-					</ol>
-					<h5>
-						<code>plain{Boolean}</code>
-					</h5>
-					<p>设置template模板以字符串形式使用</p>
-					<h5>
-						<code>controller{String} | {Array} | {Object}</code>
-					</h5>
-					<p>弹出窗需要使用的controller。可以给定controller的名称或者直接定义</p>
-					<pre>
-ngDialog.open({
-	template: 'views/business/form/tpls.html',
-	controller: 'DeleteCtrl'
-})
-app.controller('DeleteCtrl', ['$scope', function($scope) {
-	// more code goes here
-}])
-或者：
-ngDialog.open({
-	template: 'views/business/form/tpls.html',
-	controller: ['$scope', function($scope) {
-		// more code goes here
-	}]
-});
-					</pre>
-					<h5>
-						<code>closeByDocument{Boolean}</code>
-					</h5>
-					<p>点击页面时是否关闭，当值为true时，为非模态框，点击关闭；当值为false时，为模态框，点击不关闭</p>
-					<h5>
-						<code>closeByEscape{Boolean}</code>
-					</h5>
-					<p>ESC键是否关闭，默认为true</p>
-					<h5>
-						<code>showClose{Boolean}</code>
-					</h5>
-					<p>是否显示右上角的关闭按钮，默认为true</p>
-					<h5>
-						<code>overlay{Boolean}</code>
-					</h5>
-					<p>是否显示层遮盖原页面，默认为true</p>
-				</div>
-			</div>
-
-			<p>更多请参考项目主页：<a href="https://github.com/likeastore/ngDialog">ngDialog on github</a></p>
-		</div> -->
 	</div>
 </div>
-
-<!-- <div class="row">
-	<form role="form">
-		<div class="form-group">
-			<button type="button" class="btn btn-info" ng-click="cancel()">取消</button>
-			<button type="button" class="btn btn-primary" ng-click="confrim()">确定</button>
-		</div>
-	</form>
-</div> -->
-
-
-<script type="text/ng-template" id="deleteConfirm">
-	<div class="col-md-offset-1">
-		<h3 class="">是否确定删除?</h3>
-	</div>
-	<div class="row">
-		<form role="form">
-			<div class="form-group">
-				<div class="col-md-6 pull-right">
-					<button type="button" class="btn btn-danger" ng-click="cancel()">取消</button>
-					<button type="button" class="btn btn-primary" ng-click="confirm()">确定</button>
-				</div>
-			</div>
-		</form>
-	</div>
-</script>

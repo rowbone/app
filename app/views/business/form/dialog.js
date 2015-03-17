@@ -1,73 +1,12 @@
 'use strict';
 
-app.directive('conowBtnSel', ['$modal', 
-	function($modal) {
-		return {
-			//
-			restrict: 'AE',
-			template: '<button type="button" class="btn btn-primary">选择</button>'
-		}
-	}
-]);
+app.controller('ModalParentCtrl', ['$scope', '$modal', function($scope, $modal) {
 
-app.directive('conowBtnPrompt', ['$modal', 
-	function($modal) {
-		return {
-			restrict: 'AE',
-			template: '<button type="button" class="btn btn-primary">提示</button>',
-			link: function(scope, elem, attrs) {
+	// $scope.entity = {
+	// 	'username': 'staff1'
+	// };
 
-				elem.on('click', function(e) {
-					e.preventDefault();
-
-					var modalInstance = $modal.open({
-						// templateUrl: 'views/business/form/prompt-tpls.html',
-						templateUrl: 'views/business/form/list-tpls.html',
-						controller: 'PromptModalCtrl',
-						backdrop: 'static',
-						resolve: {
-							params: function() {
-								var objParams = {
-									title: attrs.title,
-									data: scope.$eval(attrs.data)
-								};
-
-								return objParams;
-							}
-						}
-					});
-
-					modalInstance.result.then(function(rtnVal) {
-						console.log('rtnVal...');
-						console.log(rtnVal);
-					}, function(rtnVal) {
-						console.log(rtnVal)
-						console.log('Prompt cancel.....');
-					})
-				})
-			}
-		}
-	}
-]);
-
-app.controller('PromptModalCtrl', ['$scope', '$modalInstance', 'params', 
-	function($scope, $modalInstance, params) {
-		console.log('PromptModalCtrl');
-		console.log(params);	
-
-		// $scope.params = params;
-		$scope.entity = params.data;
-
-		$scope.confirm = function() {
-			// 
-			$modalInstance.close($scope.entity);
-		};
-
-		$scope.cancel = function() {
-			$modalInstance.dismiss('cancel...');
-		}
-	}
-]);
+}]);
 
 app.directive('conowBtnDel', ['$modal', '$timeout',
 	function($modal, $timeout) {
@@ -81,7 +20,7 @@ app.directive('conowBtnDel', ['$modal', '$timeout',
 
 					var size = '';
 					var modalInstance = $modal.open({
-						templateUrl: 'views/business/form/del-tpls.html',
+						templateUrl: 'views/business/form/delTpls.html',
 						controller: 'DelModalCtrl',
 						size: size,
 						backdrop: 'static',
@@ -90,8 +29,10 @@ app.directive('conowBtnDel', ['$modal', '$timeout',
 								var objParams = {
 									url: attrs.url,
 									data: scope.$eval(attrs.data),
+									title: attrs.title,
 									confirmMsg: attrs.confirmMsg
 								};
+
 								return objParams;
 							}
 						}
@@ -100,7 +41,7 @@ app.directive('conowBtnDel', ['$modal', '$timeout',
 					var modalInstance2 = {};
 					modalInstance.result.then(function(rtnVal) {
 						modalInstance2 = $modal.open({
-							templateUrl: 'views/business/form/del-result.html',
+							templateUrl: 'views/business/form/delResultTpls.html',
 							controller: 'DelModalResultCtrl',
 							backdrop: false,
 							resolve: {
@@ -112,7 +53,7 @@ app.directive('conowBtnDel', ['$modal', '$timeout',
 
 						$timeout(function() {
 							modalInstance2.close();
-						}, 2000);
+						}, 1000);
 
 					}, function() {
 						console.log('Delete cancel.......');
@@ -123,18 +64,12 @@ app.directive('conowBtnDel', ['$modal', '$timeout',
 	}
 ]);
 
-app.controller('DelModalResultCtrl', ['$scope', '$modalInstance', 'params', 
-	function($scope, $modalInstance, params) {
-
-		$scope.result = params;
-	}
-]);
-
 app.controller('DelModalCtrl', ['$scope', '$modalInstance', 'params', '$http', 
 	function($scope, $modalInstance, params, $http) {
 		$scope.params = params;
 
 		$scope.params.confirmMsg = $scope.params.confirmMsg || '是否确认删除？';
+		$scope.params.title = $scope.params.title || '确认删除';
 
 		$scope.confirm = function() {
 			$http.post(params.url, {'data': params.data})
@@ -158,10 +93,127 @@ app.controller('DelModalCtrl', ['$scope', '$modalInstance', 'params', '$http',
 	}
 ]);
 
-app.controller('ModalParentCtrl', ['$scope', '$modal', function($scope, $modal) {
+app.controller('DelModalResultCtrl', ['$scope', '$modalInstance', 'params', 
+	function($scope, $modalInstance, params) {
 
-	$scope.entity = {
-		'username': 'staff1'
-	};
+		$scope.params = params;
+	}
+]);
 
-}]);
+app.directive('conowBtnPrompt', ['$modal', 
+	function($modal) {
+		return {
+			restrict: 'AE',
+			template: '<button type="button" class="btn btn-info">提示</button>',
+			link: function(scope, elem, attrs) {
+
+				elem.on('click', function(e) {
+					e.preventDefault();
+
+					var modalInstance = $modal.open({
+						templateUrl: 'views/business/form/promptTpls.html',
+						controller: 'PromptModalCtrl',
+						backdrop: 'static',
+						resolve: {
+							params: function() {
+								var objParams = {
+									title: attrs.title,
+									data: scope.$eval(attrs.data)
+								};
+
+								return objParams;
+							}
+						}
+					});
+
+					modalInstance.result.then(function(rtnVal) {
+						console.log('rtnVal...');
+						console.log(rtnVal);
+						scope.entity = rtnVal;
+					}, function(rtnVal) {
+						console.log(rtnVal)
+						console.log('Prompt cancel.....');
+					})
+				})
+			}
+		}
+	}
+]);
+
+app.controller('PromptModalCtrl', ['$scope', '$modalInstance', 'params', 
+	function($scope, $modalInstance, params) {
+		$scope.params = params;
+		$scope.params.title = params.title || '提示标题';
+		$scope.entity = params.data;
+
+		$scope.confirm = function() {
+			$modalInstance.close($scope.entity);
+		};
+
+		$scope.cancel = function() {
+			$modalInstance.dismiss('cancel...');
+		};
+
+		$scope.close = function() {
+			$modalInstance.dismiss('closing');
+		}
+	}
+]);
+
+app.directive('conowBtnSel', ['$modal', 
+	function($modal) {
+		return {
+			restrict: 'AE',
+			template: '<button type="button" class="btn btn-primary">选择</button>',
+			link: function(scope, elem, attrs) {
+				elem.on('click', function(e) {
+					e.preventDefault();
+
+					var modalInstance = $modal.open({
+						templateUrl: 'views/business/form/listTpls.html',
+						controller: 'SelModalCtrl',
+						backdrop: true,
+						resolve: {
+							params: function() {
+								var objParams = {
+									title: attrs.title,
+									data: scope.$eval(attrs.data)
+								};
+
+								return objParams;
+							}
+						}
+					});
+
+					modalInstance.result.then(function(rtnVal) {
+						console.log('confirm...............')
+						console.log(rtnVal);
+					}, function(rtnVal) {
+						console.log('dismiss:' + rtnVal);
+					})
+				});
+			}
+		}
+	}
+]);
+
+app.controller('SelModalCtrl', ['$scope', '$modalInstance', 'params',
+	function($scope, $modalInstance, params) {
+		$scope.params = params;	
+		$scope.params.title = params.title || '请选择';
+
+		$scope.confirm = function() {
+			// 
+			$modalInstance.close($scope.entity);
+		};
+
+		$scope.cancel = function() {
+			$modalInstance.dismiss('cancel...');
+		};
+
+		$scope.close = function() {
+			$modalInstance.dismiss('closing.....');
+		};
+
+	}
+]);
