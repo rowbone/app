@@ -1,0 +1,52 @@
+
+1、细则套件(spec suite)[可嵌套]：
+	describe('Unit test: MainCtrl', function() {
+		describe('index method', function() {
+			// spec
+		});
+	});
+
+	在每个 describe() 块运行时，这些字符串会沿着细则的名称链接起来。
+
+2.细则：
+	describe('A spec suit', function() {
+		it('contains a passing spec', function() {
+			expect(true).toBe(true);
+		});
+	});
+
+	细则的标题也会追加到 describe() 标题之后。
+	细则的函数，可以包含一个或多个用于测试代码功能的预期。
+
+3、预期：
+	断言条件在应用的不同阶段是符合我们期望的。
+
+	使用 expect() 函数来建立预期。expect() 函数带有一个单值参数，被称为真实值；
+	要建立一个预期，我们给它串联一个带单值参数的匹配器函数，这个参数就是期望值。
+	匹配器实现了一个在真实值和期望值之间的布尔比较。可以通过在匹配器前调用一个 not 来创建测试的否定式。
+
+	内置匹配器：
+		toBe():===
+		toEqual():比较值，对简单字面量和变量有效；
+		toMatch():使用正则表达式匹配字符串；
+		toBeDefined():
+		toBeUndefined():
+		toBeNull():
+		toBeTruthy()
+		toBeFalsy()
+		toContain():检测一个条目是否在数组中；
+		toBeLessThan():
+		toBeGreaterThan():
+		toBeCloseTo():在一个指定的精度级别内比较一个值是否接近另一个值；
+		toThrow():验证一个函数是否抛出了异常。
+
+	自定义匹配器：
+		describe('A spec suite', function() {
+			this.addMatchers({
+				toBeLessThanOrEqual: function(expected) {
+					return this.actual <= expected;
+				}
+			});
+		});
+
+4、安装和卸载：（p236）

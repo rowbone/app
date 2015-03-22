@@ -1,0 +1,5 @@
+
+angular.element($0).scope()获取当前对象上的scope
+
+AngularJS 的 url 中的#：表示页面跳转，而不会向后台发送请求。
+
