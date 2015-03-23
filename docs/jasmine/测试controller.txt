@@ -1,0 +1,19 @@
+
+1、Unit Test
+	describe('Unit Controller', function() {
+		// 模拟 app 模块
+		beforeEach(module('myApp'));
+		describe('FrameController', fucntion() {
+			var FrameController, scope;
+			beforeEach(inject(function($controller, $rootScope) {
+				// 创建子作用域
+				scope = $rootScope.$new();
+				// 创建 controller 实例(scope 内)
+				FrameController = $controller('FrameController', { $scope: scope });
+			}));
+
+			// Testing code goes here.
+		});
+	});
+
+2、

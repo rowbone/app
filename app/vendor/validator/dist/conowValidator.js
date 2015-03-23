@@ -362,8 +362,11 @@ angular.module("conow.validator")
                 var doValidate = function () {
                     // 属性为对象时获取其值的方法（scope.$eval）
                     var attValues = scope.$eval(attrs.conowUniqueCheck);
-                    console.log(attValues);
+console.log(attValues);
                     var url = attValues.url;
+console.log('url===' + url);
+console.log(attrs.isExists);
+
                     var isExists = attValues.isExists || attrs.isExists;  //default is true
                     
                     $http.get(url).success(function (data) {

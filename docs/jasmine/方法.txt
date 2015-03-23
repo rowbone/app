@@ -49,4 +49,34 @@
 			});
 		});
 
-4、安装和卸载：（p236）
+4、安装和卸载：
+	使用 beforeEach 方法来运行一组设置函数。beforeEach() 函数包含一个函数类型的参数，在每个细则之前被调用一次。
+	describe('A spec suite', function() {
+		var message;
+
+		beforeEach(function() {
+			message = 'hello';
+		});
+		it('should say hello world', function() {
+			expect(message + 'world').toEqual('hello world');
+		});
+		it('should say hello ari', function() {
+			expect(message + 'ari').toEqual('hello ari');
+		});
+	});
+
+	使用 afterEach() 方法来重置条件。afterEach() 函数包含一个函数类型额参数，在每个细则之后被调用一次。（清除数据库，通过模拟冲掉所有请求）
+	describe('A spec suite', function() {
+		var count;
+
+		afterEach(function() {
+			count = 0;
+		});
+		it('should add one to count', function() {
+			count += 1;
+			expect(count).toEqual(1);
+		});
+		it('should check for the reset value', function() {
+			expect(count).toEqual(0);
+		});
+	})
