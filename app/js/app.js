@@ -14,7 +14,8 @@ var app = angular.module('demoApp', [
 	'app.ngSweetAlert',
 	'app.directives',
 	'conow.validator',
-	'ngDialog'
+	'ngDialog',
+	'app.angular'
 	]);
 
 // app.config(['w5cValidatorProvider'], function(w5cValidatorProvider) {
