@@ -15,7 +15,7 @@
           <div class="form-group">
             <label for="username">用户名</label>
             <!-- <input type="text" class="form-control" name="username" id="username" required="" ng-pattern="/^[A-Za-z]{1}[0-9A-Za-z_]{1,19}$/" ng-model="entity.name" conow-unique-check="{url:'users/userCheck?username='+entity.name}" placeholder="请输入用户名"> -->
-            <input type="text" class="form-control" name="username" id="username" required="" ng-pattern="/^[A-Za-z]{1}[0-9A-Za-z_]{1,19}$/" ng-model="entity.name" conow-unique-check="{url:'data/bz/username.json?username='+entity.name}" is-exists="false" placeholder="请输入用户名">
+            <input type="text" class="form-control" required="" ng-pattern="/^[A-Za-z]{1}[0-9A-Za-z_]{1,19}$/" ng-model="entity.name" conow-unique-check="{url:'data/bz/username.json?username='+entity.name}" is-exists="false" placeholder="请输入用户名">
           </div>
           <div class="form-group">
             <label for="password">密码</label>
