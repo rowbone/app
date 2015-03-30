@@ -41,6 +41,7 @@
 // })();
 
     app.controller("validateCtrl", ["$scope", "$http", function ($scope, $http) {
+
         var vm = $scope.vm = {
             htmlSource: "",
             showErrorType: 1
@@ -48,6 +49,7 @@
 
         vm.saveEntity = function (form) {
             //do somethings for bz
+            console.log($scope.entity);
             alert("Save Successfully!!!");
         };
 
@@ -55,5 +57,15 @@
         vm.validateOptions = {
             blurTrig: true,
             isExists: true
+        };
+
+        $scope.entity = {
+            "email": "abc@email.com",
+            "name": "",
+            // "name": "abce",
+            "number": 12, 
+            "password": "11111",
+            "repeatPassword": "11111",
+            "url": "http://www.baidu.com"
         };
     }]);

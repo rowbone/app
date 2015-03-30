@@ -219,7 +219,7 @@ angular.module("conow.validator")
                 }
                 options = angular.extend({}, conowValidator.options, options);
 
-                //初始化验证规则，并实时监控输入值的变化
+                //初始化验证规则，并时时监控输入值的变话
                 for (var i = 0; i < formElem.length; i++) {
                     var elem = formElem[i];
                     var $elem = angular.element(elem);
@@ -362,19 +362,13 @@ angular.module("conow.validator")
                 var doValidate = function () {
                     // 属性为对象时获取其值的方法（scope.$eval）
                     var attValues = scope.$eval(attrs.conowUniqueCheck);
-console.log(attValues);
                     var url = attValues.url;
-console.log('url===' + url);
-console.log(attrs.isExists);
-
-                    var isExists = attValues.isExists || attrs.isExists;  //default is true
-                    
+                    var isExists = attValues.isExists;  //default is true
                     $http.get(url).success(function (data) {
-                        if (isExists === false || isExists === "false") {
-                            ctrl.$setValidity('conowuniquecheck', (data.success == true));
-                        }
-                        else {
-                            ctrl.$setValidity('conowuniquecheck', !(data.success == true));
+                        if (isExists === false) {
+                            ctrl.$setValidity('conowuniquecheck', !(data.obj == null));
+                        } else {
+                            ctrl.$setValidity('conowuniquecheck', (data.obj == null));
                         }
                     });
                 };

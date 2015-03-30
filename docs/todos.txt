@@ -1,0 +1,16 @@
+
+2015-03-30:
+
+1、Worktile中的实时消息推送服务实现	http://segmentfault.com/a/1190000000665676
+
+2、Dynamic routing with AngularJS	http://tech-blog.maddyzone.com/javascript/dynamic-routing-angularjs
+
+3、深入理解ng里的scope	http://www.ifeenan.com/angularjs/2014-08-19-%5B%E8%AF%91%5D%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3NG%E9%87%8C%E7%9A%84scope%2F
+
+4、AngularJS通过CORS实现跨域方案	http://blog.sina.com.cn/s/blog_65be64a40102v01m.html
+
+5、angular指令的compile的参数(tElement,tAttrs)和link中的参数(scope,iElement,iAttrs)究竟有什么区别?	http://segmentfault.com/q/1010000000664866
+
+6、ng指令中的compile与link函数解析	http://www.ifeenan.com/angularjs/2014-09-04-%5B%E8%AF%91%5DNG%E6%8C%87%E4%BB%A4%E4%B8%AD%E7%9A%84compile%E4%B8%8Elink%E5%87%BD%E6%95%B0%E8%A7%A3%E6%9E%90/
+
+7、angularjs入门学习【指令篇】	http://www.tuicool.com/articles/ANni63

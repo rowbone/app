@@ -1,0 +1,55 @@
+<div class="header-md h pos-fix w-full b-b bg-light dk">
+  <h3 class="m-n font-thin h3">Share Data Between Controllers</h3>
+</div>
+
+<div class="wrapper-md pos-rlt">
+	<div class="row">
+		<div class="col-sm-5">
+			<div class="panel panel-primary">
+				<div class="panel-heading font-bold">共享值是对象</div>
+				<div class="panel-body">
+					<form name="objForm" novalidate role="form">
+						<div class="form-group" ng-controller="ACtrl">
+							<p>A Ctrl:</p>
+							<p>count: {{ count.number }}</p>
+							<input type="text" ng-model="count.number">
+						</div>
+						<div class="form-group" ng-controller="BCtrl">
+							<p>B Ctrl:</p>
+							<p>count: {{ count.number }}</p>
+							<button ng-click="changeCount()">change count to 4</button>
+						</div>
+					</form>
+				</div>
+				<div class="panel-footer font-bold">
+					<ul>
+						<li>service是单例的</li>
+						<li>对象传递的是引用</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-sm-5">
+			<div class="panel panel-primary">
+				<div class="panel-heading font-bold">共享值是基础类型</div>
+				<div class="panel-body">
+					<form "name"="basicForm" role="form" novalidate>
+						<div class="form-group" ng-controller="CCtrl">
+							<p>C Ctrl:</p>
+							<p>count: {{ number }}</p>
+							<input type="text" ng-model="number">
+						</div>
+						<div class="form-group" ng-controller="DCtrl">
+							<p>D Ctrl:</p>
+							<p>count: {{ number }}</p>
+							<button ng-click="changeCount()">change count to 4</button>
+						</div>						
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
