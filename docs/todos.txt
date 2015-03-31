@@ -14,3 +14,23 @@
 6、ng指令中的compile与link函数解析	http://www.ifeenan.com/angularjs/2014-09-04-%5B%E8%AF%91%5DNG%E6%8C%87%E4%BB%A4%E4%B8%AD%E7%9A%84compile%E4%B8%8Elink%E5%87%BD%E6%95%B0%E8%A7%A3%E6%9E%90/
 
 7、angularjs入门学习【指令篇】	http://www.tuicool.com/articles/ANni63
+
+
+2015-03-31:
+1、简析搜索引擎中网络爬虫的搜索策略	http://blogread.cn/it/article/4078?f=wb
+
+2、React 入门实例教程	http://www.ruanyifeng.com/blog/2015/03/react.html
+
+3、再谈JavaScript的数据类型问题	http://blogread.cn/it/article/4081?f=wb
+
+4、[ 浏览器原理 ] Repaint 、Reflow 的基本认识和优化	http://segmentfault.com/a/1190000002629708
+
+5、[JS进阶] 编写可维护性代码	http://segmentfault.com/a/1190000002617895
+
+6、JavaScript的计时器的工作原理		http://segmentfault.com/a/1190000002633108
+
+7、也谈基于NodeJS的全栈式开发（基于NodeJS的前后端分离）	http://ued.taobao.org/blog/2014/04/full-stack-development-with-nodejs/
+
+8、Javascript – Arraylike的7种实现	http://web.jobbole.com/82233/
+
+9、JSON简介以及用法汇总	http://web.jobbole.com/82254/
