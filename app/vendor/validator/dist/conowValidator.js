@@ -2,7 +2,7 @@
 angular.module("conow.validator", ["ng"])
     .provider('conowValidator', [function () {
         var defaultRules = {
-                required      : "该选项不能为空",
+                // required      : "该选项不能为空",
                 maxlength     : "该选项输入值长度不能大于{maxlength}",
                 minlength     : "该选项输入值长度不能小于{minlength}",
                 email         : "输入邮件的格式不正确",
@@ -30,6 +30,8 @@ angular.module("conow.validator", ["ng"])
                 return false;
             };
             this.defaultShowError = function (elem, errorMessages) {
+                console.log(elem);
+                console.log(errorMessages);
                 var $elem = angular.element(elem),
                     $parent = $elem.parent(),
                     $group = $parent.parent();
@@ -39,7 +41,9 @@ angular.module("conow.validator", ["ng"])
                 }
                 if (!this.isEmpty($group) && !$group.hasClass("has-error")) {
                     $group.addClass("has-error");
-                    $elem.after('<span class="conow-error">' + errorMessages[0] + '</span>');
+                    console.log('has-error');
+                    console.log(errorMessages[0] == undefined)
+                    $elem.after('<span class="conow-error">' + (errorMessages[0] == undefined)? '' : errorMessages[0] + '</span>');
                 }
             };
             this.defaultRemoveError = function (elem) {
@@ -57,8 +61,9 @@ angular.module("conow.validator", ["ng"])
             };
             this.options = {
                 blurTrig   : false,
-                showError  : true,
-                removeError: true
+                showError  : true
+                ,
+                removeError: false
             }
         };
 
@@ -122,6 +127,8 @@ angular.module("conow.validator", ["ng"])
             showError       : function (elem, errorMessages, options) {
                 var useOptions = angular.extend({}, this.options, options);
                 angular.element(elem).removeClass("valid").addClass("error");
+                // 校验不通过时，自动focus到对应元素
+                elem.focus();
                 if (useOptions.showError === false) {
                     return;
                 }
@@ -256,6 +263,7 @@ angular.module("conow.validator")
 
                 //触发验证事件
                 var doValidate = function () {
+                    console.log('doValidate');
                     var errorMessages = [];
                     //循环验证
                     for (var i = 0; i < formElem.length; i++) {
@@ -265,10 +273,15 @@ angular.module("conow.validator")
                                 angular.element(elem).removeClass("error").addClass("valid");
                                 continue;
                             } else {
+                                console.log('else');
+                                console.log(scope[formName][elem.name].$error);
                                 var elementErrors = conowValidator.getErrorMessages(elem, scope[formName][elem.name].$error);
+                                console.log(elementErrors)
                                 errorMessages.push(elementErrors[0]);
                                 conowValidator.removeError(elem, options);
                                 conowValidator.showError(elem, elementErrors, options);
+                                // 提交时单个提示
+                                break;
                             }
                         }
                     }
@@ -282,7 +295,6 @@ angular.module("conow.validator")
                     }
                 };
                 scope[formName].doValidate = doValidate;
-
                 //conowSubmit is function
                 if (attr.conowSubmit && angular.isFunction(formSubmitFn)) {
 
@@ -320,11 +332,11 @@ angular.module("conow.validator")
             }
         };
     }])
-    .directive("conowFormSubmit", ['$parse', function ($parse) {
+    .directive("conowSubmit", ['$parse', function ($parse) {
         return{
             require : "^conowFormValidate",
             link    : function (scope, element, attr, ctrl) {
-                var validSuccessFn = $parse(attr.conowFormSubmit);
+                var validSuccessFn = $parse(attr.conowSubmit);
                 element.bind("click", function () {
                     ctrl.doValidate(validSuccessFn);
                 });

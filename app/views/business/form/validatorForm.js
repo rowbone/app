@@ -1,44 +1,48 @@
 /*global angular,alert,conowValidator*/
-// (function () {
-//     "use strict";
-//     // var app = angular.module("demoApp", ["w5c.validator", "ui.bootstrap"]);
-//     // window.app = app;
+(function () {
+    "use strict";
+    // var app = angular.module("demoApp", ["w5c.validator", "ui.bootstrap"]);
+    // window.app = app;
 
-//     app.config(["conowValidatorProvider", function (conowValidatorProvider) {
+    app.config(["conowValidatorProvider", function (conowValidatorProvider) {
 
-//         // 全局配置
-//         conowValidatorProvider.config({
-//             blurTrig: false,
-//             showError: true,
-//             removeError: true
+        // 全局配置
+        conowValidatorProvider.config({
+            blurTrig: false,
+            showError: true,
+            removeError: true
 
-//         });
+        });
 
-//         conowValidatorProvider.setRules({
-//             email: {
-//                 required: "输入的邮箱地址不能为空",
-//                 email: "输入邮箱地址格式不正确"
-//             },
-//             username: {
-//                 required: "输入的用户名不能为空",
-//                 pattern: "用户名必须输入字母、数字、下划线,以字母开头",
-//                 w5cuniquecheck:"输入用户名已经存在，请重新输入"
-//             },
-//             password: {
-//                 required: "密码不能为空",
-//                 minlength: "密码长度不能小于{minlength}",
-//                 maxlength: "密码长度不能大于{maxlength}"
-//             },
-//             repeatPassword: {
-//                 required: "重复密码不能为空",
-//                 repeat: "两次密码输入不一致"
-//             },
-//             number: {
-//                 required: "数字不能为空"
-//             }
-//         });
-//     }]);
-// })();
+        conowValidatorProvider.setRules({
+            email: {
+                // required: "输入的邮箱地址不能为空",
+                email: "输入邮箱地址格式不正确"
+            },
+            username: {
+                // required: "输入的用户名不能为空",
+                pattern: "用户名必须输入字母、数字、下划线,以字母开头",
+                conowuniquecheck:"输入用户名已经存在，请重新输入"
+            },
+            password: {
+                // required: "密码不能为空",
+                minlength: "密码长度不能小于{minlength}",
+                maxlength: "密码长度不能大于{maxlength}"
+            },
+            repeatPassword: {
+                // required: "重复密码不能为空",
+                repeat: "两次密码输入不一致"
+            },
+            number: {
+                // required: "数字不能为空"
+            },
+            identitycard: {
+                // required: '身份证号码不能为空',
+                pattern: '身份证号码格式不正确'
+            }
+        });
+    }]);
+})();
 
     app.controller("validateCtrl", ["$scope", "$http", function ($scope, $http) {
 
@@ -47,7 +51,7 @@
             showErrorType: 1
         };
 
-        vm.saveEntity = function (form) {
+        $scope.saveEntity = function (form) {
             //do somethings for bz
             console.log($scope.entity);
             alert("Save Successfully!!!");
@@ -64,8 +68,8 @@
             "name": "",
             // "name": "abce",
             "number": 12, 
-            "password": "11111",
-            "repeatPassword": "11111",
+            // "password": "11111",
+            // "repeatPassword": "11111",
             "url": "http://www.baidu.com"
         };
     }]);

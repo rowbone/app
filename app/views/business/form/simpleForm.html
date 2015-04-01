@@ -11,7 +11,12 @@
 	<form class="bs-example form-horizontal" role="form" name="simpleForm" novalidate>
 		<div class="form-group">
 			<label for="userName" class="control-label">用户名</label>
-			<input type="text" id="userName" class="form-control" ng-model="entity.userName" ng-blur="userNameCheck();">
+			<input type="text" name="userName" id="userName" class="form-control" ng-model="entity.userName" required ng-minlength="2" ng-maxlength="5" ng-pattern="/^[a-z]{2}\d{1,2}$/" >
+			<p class="text-info">error type: {{simpleForm.userName.$error}}</p>
+			<p ng-class="{'hidden': !simpleForm.userName.$error.required, 'text-danger': simpleForm.userName.$error.required}">required</p>
+			<p ng-class="{'hidden': !simpleForm.userName.$error.minlength, 'text-danger': simpleForm.userName.$error.minlength}">ng-minlength=2</p>
+			<p ng-class="{'hidden': !simpleForm.userName.$error.maxlength, 'text-danger': simpleForm.userName.$error.maxlength}">ng-maxlength=5</p>
+			<p ng-class="{'hidden': !simpleForm.userName.$error.pattern, 'text-danger': simpleForm.userName.$error.pattern}">ng-pattern:/^[a-z]{2}\d{1,2}$/</p>
 		</div>
 		<div class="form-group">
 			<label for="password" class="control-label">密码</label>
@@ -35,8 +40,8 @@
 		</div>
 
 		<div class="form-group">
-			<button class="btn btn-primary" btn-save ng-click="save();" url="users/signin" redirect-url="app/form/selectForm">暂存</button>
-			<button class="btn btn-success" btn-submit ng-click="submit();">提交</button>
+			<button class="btn btn-primary"  ng-click="save();" url="users/signin" redirect-url="app/form/selectForm">暂存</button>
+			<button class="btn btn-success"  ng-click="submit();">提交</button>
 		</div>
 	</form>
 </div>

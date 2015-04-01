@@ -1,0 +1,300 @@
+<form class="conow-form" role="form" conow-form-validate novalidate ng-controller="tripReqCtrl" name="tripReqForm" ng-submit="commitTrip()">
+	<div>
+		<title-Bar name="出差申请">
+			<div class="pull-right .m-r-md">
+				<button type="submit" class="btn m-r-sm w-xs btn-primary">提交</button>
+				<input type="button" value="暂存" class="btn m-r-sm w-xs btn-dark"
+					ng-disabled="!tripReqForm.$dirty" ng-click="saveTrip()" /> 
+				<input type="button" ng-if="TripReq.tripReqMap.ID" value="删除" class="btn m-r-sm w-xs btn-danger" ng-click="deleteTripReq()"/>
+				<input type="button" value="放弃" class="btn w-xs btn-danger" ng-click="back()" />
+			</div>
+		</title-Bar>
+
+		<div class="wrapper-md pos-rlt">
+			<div class="panel-body panel panel-default col-lg-12">
+				<div class="padder-lg m-b bg-white r-3x">
+					<div class="row">
+						<div class="wrapper-sm">
+							<span class="font-bold">基本信息：</span>
+						</div>
+						<div class="b-b b-black m-b-md"></div>
+							
+						<div class="bs-example form-horizontal ng-pristine ng-valid">
+		            <div class="form-group">
+		                    <label class="col-lg-2 control-label">出发地：</label>
+		                    <div class="col-lg-3">
+		                    	<conow-area ng-model="TripReq.tripReqAdrList[0].TRIP_SOURCE" region-type="city" display-root="false" include-parent="false"></conow-area>
+		                     </div> 
+		                    <lable class="pull-left control-label">时间：</lable>
+		                    <div class="col-lg-3 ng-scope">
+			                    <conow-datepicker ng-model="TripReq.tripReqAdrList[0].TRIP_START" max-date="TripReq.tripReqAdrList[0].TRIP_END" ng-required="true"></conow-datepicker>
+		                    </div>
+		                </div>
+		                
+		                <div class="form-group" ng-repeat="dest in adrListID">
+		                    <label class="col-lg-2 control-label">目的地：</label>
+		                    <div class="col-lg-3">
+								<conow-area ng-model="TripReq.tripReqAdrList[$index].TRIP_DEST" region-type="city" display-root="false" include-parent="false"></conow>
+		                    </div>
+		                    <lable class="pull-left control-label">时间：</lable>
+		                    <div class="col-lg-3 ng-scope">
+			                    <conow-datepicker ng-model="TripReq.tripReqAdrList[$index].TRIP_END" min-date="$index==0?TripReq.tripReqAdrList[0].TRIP_START : TripReq.tripReqAdrList[$index-1].TRIP_END" max-date="TripReq.tripReqAdrList[$index+1].TRIP_END" ng-required="true"></conow-datepicker>
+		                    </div>
+		                     <label class="col-lg-2 control-label">出差天数：<span>{{calDays($index)}}</span>天</label>
+		                     <div class="col-lg-1">
+		                     	<button type="button" class="close" ng-click="addDest($index)">
+							        <i class="fa fa-plus-circle"></i>
+				    			</button>
+		                     	<button type="button" class="close" ng-click="reduceDest($index)">
+							        <i class="fa fa-minus-circle"></i>
+				    			</button>
+		                     </div>
+		                </div>
+		                <div class="form-group">
+		                    <label class="col-lg-2 control-label">预计金额：</label>
+		                    <div class="col-lg-8">
+		              			<input ng-disabled="true" type="text" class="form-control">
+		                    	<span class="input-group-addon">元</span>
+		                    </div>
+		                </div>
+	                <div class="form-group">
+	                    <label class="col-lg-2 control-label">事项说明：</label>
+	                    <div class="col-lg-6">
+	                    	<textarea ng-model="TripReq.tripReqMap.TRIP_MEMO" type="text" class="form-control" placeholder="请输入申请理由" contenteditable="true"></textarea>
+	                    </div>
+	                </div>
+	                <div class="form-group">
+	                    <label class="col-lg-2 control-label">附件：</label>
+	                    <div class="col-lg-7">
+	                        <conow-file-upload
+			                	get-file="getFile(file)" 
+		  						remove-file="removeFile(file)"
+		 						need-drag="true"
+		  						file-num='10'
+		  						file-size='4'
+		  						file-type='*'
+		  						need-upload-button='true'
+			                ></conow-file-upload>
+			                <a ng-repeat="item in TripReq.appendixList track by $index"
+			                href="{{item.APPENDIX_URL}}" target="_blank">
+			                	<u class="text-primary m-r-sm">{{item.APPENDIX_NAME}}</u>
+			                </a>
+	                    </div>
+	                </div>
+                </div>
+                
+				</div>
+			</div>
+		</div>
+                <div class="form-group">
+                	<div class="padder-lg m-b">
+                	<div class="row">
+							<div class="wrapper-sm">
+								<span class="font-bold">费用分摊：</span>
+								<label class="checkbox-inline control-label i-checks">
+			                        <input ng-checked=TripReq.tripReqMap.LOAN_IF ng-click="showLoan()" type="checkbox"><i></i>是否借款
+			                    </label>
+								<div ng-controller="ModalCtrl" class="pull-right">
+										<input class="btn btn-info m-t-n-sm" type="button" value="添加项目分摊" ng-click="open('lg','app/business/fm/common/projectSelect.html','projectSelect')" />
+					        	</div>
+						<div class="b-b b-black m-b-md"></div>
+
+						<div class="bs-example form-horizontal ng-pristine ng-valid">
+							<div class="form-group">
+								<label class="col-lg-2 control-label">出发地：</label>
+								<div class="col-lg-3">
+									<conow-area ng-model="TripReq.tripReqAdrList[0].TRIP_SOURCE"
+										region-type="city" display-root="false" include-parent="false"></conow-area>
+								</div>
+								<lable class="pull-left control-label">时间：</lable>
+								<div class="col-lg-3 ng-scope">
+									<conow-datepicker
+										ng-model="TripReq.tripReqAdrList[0].TRIP_START"
+										max-date="TripReq.tripReqAdrList[0].TRIP_END"
+										ng-required="true"></conow-datepicker>
+								</div>
+
+							</div>
+
+							<div class="form-group" ng-repeat="dest in adrListID">
+								<label class="col-lg-2 control-label">目的地：</label>
+								<div class="col-lg-3">
+									<conow-area ng-model="TripReq.tripReqAdrList[$index].TRIP_DEST"
+										region-type="city" display-root="false" include-parent="false">
+									</conow>
+								</div>
+								<lable class="pull-left control-label">时间：</lable>
+								<div class="col-lg-3 ng-scope">
+									<conow-datepicker
+										ng-model="TripReq.tripReqAdrList[$index].TRIP_END"
+										min-date="$index==0?TripReq.tripReqAdrList[0].TRIP_START : TripReq.tripReqAdrList[$index-1].TRIP_END"
+										max-date="TripReq.tripReqAdrList[$index+1].TRIP_END"
+										ng-required="true"></conow-datepicker>
+								</div>
+								<label class="col-lg-2 control-label">出差天数：<span>{{calDays($index)}}</span>天</label>
+								<div class="col-lg-1">
+									<button type="button" class="close" ng-click="addDest($index)">
+										<i class="fa fa-plus-circle"></i>
+									</button>
+									<button type="button" class="close"
+										ng-click="reduceDest($index)">
+										<i class="fa fa-minus-circle"></i>
+									</button>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-lg-2 control-label">预计金额：</label>
+								<div class="col-lg-3">
+									<div class="input-group">
+										<input ng-model="TripReq.tripReqMap.ESTIMATE_COST" type="text"
+											class="form-control" ng-required="true"> <span
+											class="input-group-addon">元</span>
+									</div>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-lg-2 control-label">事项说明：</label>
+								<div class="col-lg-6">
+									<textarea ng-model="TripReq.tripReqMap.TRIP_MEMO" type="text"
+										class="form-control" placeholder="请输入申请理由"
+										contenteditable="true"></textarea>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-lg-2 control-label">附件：</label>
+								<div class="col-lg-7">
+									<conow-file-upload get-file="getFile(file)"
+										remove-file="removeFile(file)" need-drag="true" file-num='10'
+										file-size='4' file-type='*' need-upload-button='true'></conow-file-upload>
+									<a ng-repeat="item in TripReq.appendixList track by $index"
+										href="{{item.APPENDIX_URL}}" target="_blank"> <u
+										class="text-primary m-r-sm">{{item.APPENDIX_NAME}}</u> </a>
+								</div>
+							</div>
+						</div>
+
+					</div>
+				</div>
+			</div>
+			
+			<div class="form-group" ng-controller="expensePrjCtrl">
+			    <div class="padder-lg m-b">
+			   		<div class="row">
+			   			<div class="wrapper-sm">
+							<span class="font-bold">人员信息：</span>
+						</div>
+						<div class="b-b b-black"></div>
+						<div class="wrapper-sm">
+	        				<table class="table table-bordered text-center table-hover table-cell">
+	        					<thead>
+				        			<tr>
+				        				<th class="text-center">人员编号</th>
+				        				<th class="text-center">出差人姓名</th>
+				        				<th class="text-center">所属部门</th>
+				        				<th class="text-center">联系方式</th>
+				        				<th class="text-center">备注</th>
+				        			</tr>
+				        		</thead>
+				        		<tbody>
+				        			<tr ng-repeat="tripPeer in TripReq.tripPeerList track by $index">
+				        				<td>{{tripPeerInfo[$index].STAFF_CODE}}</td>
+				        				<td>{{tripPeerInfo[$index].NAME}}</td>
+				        				<td>{{tripPeerInfo[$index].ORG_UNIT_NAME}}</td>
+				        				<td>{{tripPeerInfo[$index].MOBILE}}</td>
+				        				<td><input type="text" class="form-control"></td>
+				        				<!-- <td>
+				        					<button type="button" class="close" ng-click="">
+												<i class="fa fa-minus-circle"></i>
+											</button>
+										</td> -->
+				        			</tr>
+			        			</tbody>
+	        				</table>
+        				</div>
+			   		</div>
+		   		</div>
+	   		</div>
+	   		
+	   		<div class="form-group">
+	   			<input ng-disabled="true" class="btn btn-info m-t-n-sm" type="button" value="添加同行人"	ng-click="" />
+	   		</div>
+			
+			<!-- 项目分摊 -->
+			<div ng-include="'app/business/fm/common/expensePrj.html'"></div>
+
+			<div class="form-group">
+				<label class="checkbox-inline control-label i-checks"> <input
+				ng-checked=TripReq.tripReqMap.LOAN_IF ng-click="showLoan()"
+				type="checkbox"><i></i>是否借款 </label>
+			</div>
+			
+			<div ng-show="TripReq.tripReqMap.LOAN_IF" class="form-group">
+				<div class="padder-lg m-b">
+					<div class="row">
+						<div class="wrapper-sm">
+							<span class="font-bold">借款分摊：</span>
+							<div ng-controller="ModalCtrl" class="pull-right">
+								<input class="btn btn-info m-t-n-sm" type="button"
+									value="添加项目分摊"
+									ng-click="open('lg','app/business/fm/personnel/trip/projectSelect.html','projectSelectLoan')" />
+							</div>
+						</div>
+						<div class="b-b b-black"></div>
+						<div class="wrapper-sm">
+							<table
+								class="table table-bordered text-center table-hover table-cell">
+								<thead>
+									<tr>
+										<th class="text-center col-lg-2">资金账号名称</th>
+										<th class="text-center col-lg-1">负责人</th>
+										<th class="text-center col-lg-1">资金账号可用资金</th>
+										<th class="text-center col-lg-2">预算科目</th>
+										<th class="text-center col-lg-1">科目可用资金</th>
+										<th class="text-center col-lg-2">费用分摊</th>
+										<th class="text-center col-lg-2">备注</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr
+										ng-repeat="expensePrj in TripReq.expensePrjListLoan track by $index">
+										<td>{{exeBudgetListLoan[$index].ACCOUNT_NAME}}</td>
+										<td>{{exeBudgetListLoan[$index].LEADER }}</td>
+										<td>{{exeBudgetListLoan[$index].ALL_BUDGET_AVAILABLE | currency:'￥'}}</td>
+										<td class="no-padder"><select
+											ng-model="expensePrj.BUDGET_ITEM_ID" class="form-control"
+											ng-options="temp.KEY as temp.VALUE for temp in exeBudgetListLoan[$index].OPTION_LIST"
+											ng-change="apportionAmt($index)">
+										</select></td>
+										<td>{{setAvailable($index) | currency:'￥'}}</td>
+										<td class="no-padder"><input class="form-control"
+											type="text" type="text" size="8"
+											ng-model="expensePrj.PRJ_APPORTION_AMT" ng-required="true"
+											onkeydown="return check(event)"
+											ng-keyup="apportionAmt($index)">
+										</td>
+										<td class="no-padder"><input class="form-control"
+											ng-model="expensePrj.MEMO" /></td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+						<div class="pull-right">
+							<div class="wrapper-sm" ng-if="TripReq.tripReqMap.LOAN_IF">
+								<span class="text-right font-bold">借款分摊合计：({{calLoanCost()
+									| converToChineseCurrency}})</span> <span
+									class="h4 font-bold text-danger">{{calLoanCost() |
+									currency:'￥'}}</span> <span>元</span>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- 结算方式 -->
+			<div ng-show="TripReq.tripReqMap.LOAN_IF"
+				ng-include="'app/business/fm/common/clearingForm.html'"></div>
+			<!-- 审批记录 -->
+			<div ng-include="'app/business/fm/common/approveInfo.html'"></div>
+		</div>
+	</div>
+</form>
