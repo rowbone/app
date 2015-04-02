@@ -2,7 +2,7 @@
 angular.module("conow.validator", ["ng"])
     .provider('conowValidator', [function () {
         var defaultRules = {
-                // required      : "该选项不能为空",
+                required      : "该选项不能为空",
                 maxlength     : "该选项输入值长度不能大于{maxlength}",
                 minlength     : "该选项输入值长度不能小于{minlength}",
                 email         : "输入邮件的格式不正确",
@@ -30,8 +30,6 @@ angular.module("conow.validator", ["ng"])
                 return false;
             };
             this.defaultShowError = function (elem, errorMessages) {
-                console.log(elem);
-                console.log(errorMessages);
                 var $elem = angular.element(elem),
                     $parent = $elem.parent(),
                     $group = $parent.parent();
@@ -41,9 +39,7 @@ angular.module("conow.validator", ["ng"])
                 }
                 if (!this.isEmpty($group) && !$group.hasClass("has-error")) {
                     $group.addClass("has-error");
-                    console.log('has-error');
-                    console.log(errorMessages[0] == undefined)
-                    $elem.after('<span class="conow-error">' + (errorMessages[0] == undefined)? '' : errorMessages[0] + '</span>');
+                    $elem.after('<span class="conow-error">' + ((errorMessages[0] == undefined) ? '' : errorMessages[0]) + '</span>');
                 }
             };
             this.defaultRemoveError = function (elem) {
@@ -60,10 +56,9 @@ angular.module("conow.validator", ["ng"])
                 }
             };
             this.options = {
-                blurTrig   : false,
-                showError  : true
-                ,
-                removeError: false
+                blurTrig   : true,
+                showError  : true,
+                removeError: true
             }
         };
 
@@ -127,8 +122,8 @@ angular.module("conow.validator", ["ng"])
             showError       : function (elem, errorMessages, options) {
                 var useOptions = angular.extend({}, this.options, options);
                 angular.element(elem).removeClass("valid").addClass("error");
-                // 校验不通过时，自动focus到对应元素
-                elem.focus();
+                // // 校验不通过时，自动focus到对应元素
+                // elem.focus();
                 if (useOptions.showError === false) {
                     return;
                 }
@@ -190,7 +185,7 @@ angular.module("conow.validator", ["ng"])
     }]);
 
 angular.module("conow.validator")
-    .directive("conowFormValidate", ['$parse', 'conowValidator', '$timeout', function ($parse, conowValidator, $timeout) {
+    .directive("conowFormValidate", ['$parse', '$timeout', 'conowValidator', function ($parse, $timeout, conowValidator) {
         return{
             controller: ['$scope', function ($scope) {
                 this.needBindKeydown = false;
@@ -224,23 +219,26 @@ angular.module("conow.validator")
                         }
                     }, true)
                 }
+                
                 options = angular.extend({}, conowValidator.options, options);
 
-                //初始化验证规则，并时时监控输入值的变话
+                // 初始化验证规则，并实时监控输入值的变化
+                // form.length 获取 form 中的元素个数；form[i]/form.elements[i] 获取页面的单个元素；
                 for (var i = 0; i < formElem.length; i++) {
                     var elem = formElem[i];
                     var $elem = angular.element(elem);
                     if (conowValidator.elemTypes.toString().indexOf(elem.type) > -1 && !conowValidator.isEmpty(elem.name)) {
+                        // $viewValue属性保存着更新视图所需的实际字符串。
                         var $viewValueName = formName + "." + elem.name + ".$viewValue";
-                        //监控输入框的value值当有变化时移除错误信息
-                        //可以修改成当输入框验证通过时才移除错误信息，只要监控$valid属性即可
+                        // 监控输入框的value值当有变化时移除错误信息
+                        // 可以修改成当输入框验证通过时才移除错误信息，只要监控$valid属性即可
                         scope.$watch("[" + $viewValueName + "," + i + "]", function (newValue) {
                             var $elem = formElem[newValue[1]];
                             scope[formName].$errors = [];
                             conowValidator.removeError($elem, options);
                         }, true);
 
-                        //光标移走的时候触发验证信息
+                        // 光标移走的时候触发验证信息
                         if (options.blurTrig) {
                             $elem.bind("blur", function () {
                                 if (!options.blurTrig) {
@@ -263,7 +261,6 @@ angular.module("conow.validator")
 
                 //触发验证事件
                 var doValidate = function () {
-                    console.log('doValidate');
                     var errorMessages = [];
                     //循环验证
                     for (var i = 0; i < formElem.length; i++) {
@@ -273,15 +270,12 @@ angular.module("conow.validator")
                                 angular.element(elem).removeClass("error").addClass("valid");
                                 continue;
                             } else {
-                                console.log('else');
-                                console.log(scope[formName][elem.name].$error);
                                 var elementErrors = conowValidator.getErrorMessages(elem, scope[formName][elem.name].$error);
-                                console.log(elementErrors)
                                 errorMessages.push(elementErrors[0]);
                                 conowValidator.removeError(elem, options);
                                 conowValidator.showError(elem, elementErrors, options);
-                                // 提交时单个提示
-                                break;
+                                // // 提交时单个提示
+                                // break;
                             }
                         }
                     }
@@ -295,7 +289,7 @@ angular.module("conow.validator")
                     }
                 };
                 scope[formName].doValidate = doValidate;
-                //conowSubmit is function
+                // conowSubmit is function
                 if (attr.conowSubmit && angular.isFunction(formSubmitFn)) {
 
                     form.bind("submit", function () {
@@ -373,11 +367,13 @@ angular.module("conow.validator")
             link   : function (scope, elem, attrs, ctrl) {
                 var doValidate = function () {
                     // 属性为对象时获取其值的方法（scope.$eval）
-                    var attValues = scope.$eval(attrs.conowUniqueCheck);
-                    var url = attValues.url;
-                    var isExists = attValues.isExists;  //default is true
+                    var attValues = scope.$eval(attrs.conowUniqueCheck),
+                        url = attValues.url,
+                        isExists = attValues.isExists;  // isExists 参数是 conow-unique-check 属性对象的一个属性。default is true
+
+                    var isExistsAttr = attrs.isExists;  // 增加 isExists 的属性调用方式
                     $http.get(url).success(function (data) {
-                        if (isExists === false) {
+                        if (isExists === false || isExistsAttr === 'false') {
                             ctrl.$setValidity('conowuniquecheck', !(data.obj == null));
                         } else {
                             ctrl.$setValidity('conowuniquecheck', (data.obj == null));
@@ -385,6 +381,7 @@ angular.module("conow.validator")
                     });
                 };
 
+                // // 每输入一个字符就提交校验
                 // scope.$watch(attrs.ngModel, function (newValue) {
                 //     if (newValue && ctrl.$dirty) {
                 //         doValidate();

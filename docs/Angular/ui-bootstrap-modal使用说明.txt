@@ -1,0 +1,13 @@
+
+$modal 是一个以AngularJS为基础的快速创建弹出框的服务。可以直接创建用户弹出框：新建一个视图片段，控制器和相关引用就可以使用服务。
+
+$modal 服务只有一个方法：open(options)，可使用的选项如下：
+	templateUrl：
+	template：
+	scope：
+	controller：
+	controllerAs：
+	resolve：
+	backdrop：true、false、static
+	
+
