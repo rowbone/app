@@ -44,24 +44,32 @@
 //     }]);
 // })();
 
-// app.service('ClickService', ['', function(){
-//   return {
-//     properties: {
-//       'name': 'abc',
-//       'age': 8
-//     },
+    app.service('ClickService', ['$http', function($http){
+      this.properties = {
+        'name': 'abc',
+        'age': 8
+      };
 
-//     clickFunc: function() {
-//       this.properties.name = 'new name';
-//     }
-//   }
-// }]);
+      this.clickFunc = function() {
+        var self = this;
+        console.log('service clickFunc');
+        self.properties.name = 'new name';
+      };
 
-    app.filter('preSubstr', function() {
-        return function(input, num) {
-          return input.substring(num -1);
+      this.reset = function() {
+        var self = this;
+        self.properties = {
+          'name': 'abc',
+          'age': 8
         };
-    });
+      }
+    }]);
+
+    // app.filter('preSubstr', function() {
+    //     return function(input, num) {
+    //       return input.substring(num -1);
+    //     };
+    // });
 
     app.filter('strDate', function($filter) {
       return function(input, mode) {
@@ -73,31 +81,36 @@
       };
     });
 
-    app.filter('strFromTo', function() {
-      return function(input, from, to) {
-        from = parseInt(from)
-        if(from - to > 0) {
-          // from > to
+    // app.filter('strFromTo', function() {
+    //   return function(input, from, to) {
+    //     from = parseInt(from)
+    //     if(from - to > 0) {
+    //       // from > to
 
-        }
-        if(input.length <= from) {
-          console.log()
-        }
-      };
-    });
+    //     }
+    //     if(input.length <= from) {
+    //       console.log()
+    //     }
+    //   };
+    // });
 
-    app.controller("validateCtrl", ["$scope", "$http" , function ($scope, $http) {
+    app.controller("validateCtrl", ["$scope", "$http", '$state', 'ClickService', function ($scope, $http, $state, ClickService) {
 
-        // $scope.test = function() {
-        //   console.log('testing');
-        //   ClickService.clickFunc();
-        // };
+        $scope.test = function() {
+          console.log('testing');
+          ClickService.clickFunc();
+        };
 
-        // $scope.$watch('ClickService.properties', function(newVal, oldVal) {
-        //   console.log('ClickService change');
-        //   console.log(newVal);
-        //   console.log(oldVal);
-        // }, true);
+        $scope.go = function() {
+          $state.go('app.form.simpleForm');
+        };
+
+        $scope.$watch(function() {
+          return ClickService.properties;
+        }, function(newVal, oldVal) {
+          console.log(newVal);
+          $scope.entity.ClickServiceProperty = newVal.name;
+        }, true);
 
         var vm = $scope.vm = {
             htmlSource: "",
@@ -119,13 +132,13 @@
         $scope.entity = {
             "email": "abc@email.com",
             "name": "",
-            // "name": "abce",
+            "name": "abce",
             "number": 12, 
-            // "password": "11111",
-            // "repeatPassword": "11111",
+            "password": "11111",
+            "repeatPassword": "11111",
             "url": "http://www.baidu.com",
-            "datetime": '2015-03-08 01:02:03.0'
-            // ,
-            // 'ClickServiceProperty': ClickService.properties.name
+            "datetime": '2015-03-08 01:02:03.0',
+            'memo': '备注',
+            'ClickServiceProperty': ClickService.properties.name
         };
     }]);

@@ -33,13 +33,18 @@ angular.module("conow.validator", ["ng"])
                 var $elem = angular.element(elem),
                     $parent = $elem.parent(),
                     $group = $parent.parent();
-
+                    
                 if(!this.isEmpty($group) && $group[0].tagName === "FORM"){
+                    $group = $parent;
+                }
+                if(!this.isEmpty($parent) && $parent.hasClass('input-group')) {
                     $group = $parent;
                 }
                 if (!this.isEmpty($group) && !$group.hasClass("has-error")) {
                     $group.addClass("has-error");
-                    $elem.after('<span class="conow-error">' + ((errorMessages[0] == undefined) ? '' : errorMessages[0]) + '</span>');
+                    // 修改 input-group 的提示问题 2015-4-3
+                    // $elem.addClass("has-error");
+                    $group.after('<span class="conow-error">' + ((errorMessages[0] == undefined) ? '' : errorMessages[0]) + '</span>');
                 }
             };
             this.defaultRemoveError = function (elem) {
@@ -50,9 +55,13 @@ angular.module("conow.validator", ["ng"])
                 if(!this.isEmpty($group) && $group[0].tagName === "FORM"){
                     $group = $parent;
                 }
+                if(!this.isEmpty($parent) && $parent.hasClass('input-group')) {
+                    $group = $parent;
+                }
                 if (!this.isEmpty($group) && $group.hasClass("has-error")) {
                     $group.removeClass("has-error");
-                    $elem.next(".conow-error").remove();
+                    // $elem.next(".conow-error").remove();
+                    $group.next(".conow-error").remove();
                 }
             };
             this.options = {

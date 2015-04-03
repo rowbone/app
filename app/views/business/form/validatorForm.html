@@ -6,7 +6,7 @@
     <div class="col-sm-6">
       <div class="panel panel-info">
         <div class="panel-heading">
-          <div class="panel-title">validator</div>
+          <div class="panel-title">validator form</div>
         </div>
         <div class="panel-body" ng-controller="validateCtrl">
           <form class="conow-form demo-form" role="form" conow-form-validate novalidate name="validateForm">
@@ -44,10 +44,121 @@
             <label for="memo">备注</label>
             <textarea class="form-control" name="memo" ng-model="entity.memo" id="memo" rows="3" required placeholder="请输入备注"></textarea>
           </div>
-         <!--  <div class="form-group">
+          <div class="form-group">
+            <label for="amount">金额</label>
+            <div class="input-group">
+              <div class="input-group-addon">￥</div>
+              <input type="text" class="form-control" ng-model="entity.amount" required name="amount" id="amount" placeholder="Amount">
+              <div class="input-group-addon">.00</div>
+            </div>
+          </div>
+          <div class="form-group">
             <button type="button" ng-click="test()">ClickService Click</button>
+            <button type="button" ng-click="go()">Click to Go</button>
             <span>{{ entity.ClickServiceProperty }}</span>
+          </div>
+
+          <!-- <div class="form-group">
+            <label for="identitycard">身份证</label>
+            <input type="text" class="form-control" name="identitycard"  ng-model="entity.identitycard" placeholder="请输入身份证号码" ng-pattern=" /(^\d{15}$)|(^\d{17}([0-9]|X)$)/">
+          </div>
+          <div class="form-group">
+            <label for="passport">护照</label>
+            <input type="text" class="form-control" name="passport" id="password"  ng-model="entity.passport" placeholder="请输入护照号码" ng-pattern="/^[a-zA-Z0-9]{3,21}$|^(P\d{7})|(G\d{8})$/">
+          </div>
+          <div class="form-group">
+            <label for="soldiercard">军官证/士兵证</label>
+            <input type="text" class="form-control" name="soldiercard" id="soldiercard"  ng-model="entity.soldiercard" placeholder="请输入证件号" ng-pattern="/^[a-zA-Z0-9]{3,21}$|^(P\d{7})|(G\d{8})$/">
+          </div>
+          <div class="form-group">
+            <label for="HKMacTW">港澳台证</label>
+            <input type="text" class="form-control" name="HKMacTW" id="HKMacTW"  ng-model="entity.HKMacTW" placeholder="请输入证件号" ng-pattern="/^[a-zA-Z0-9]{5,21}$/">
           </div> -->
+    
+          <div class="form-group" ng-show="validateForm.$errors.length > 0 && vm.showErrorType == 2">
+            <label></label>
+              <div class="alert alert-danger">{{validateForm.$errors[0]}}</div>
+          </div>
+    
+          <div class="form-group">
+            <a class="btn btn-primary" ui-sref="app.form.simpleForm">ui-sref 跳转</a>
+              <button type="button" class="btn btn-success" conow-submit="saveEntity()"> 提交</button>
+          </div>
+      </form>
+        </div>
+      </div>
+
+
+      <div class="panel panel-info">
+        <div class="panel-heading">
+          <div class="panel-title">validator form horizontal</div>
+        </div>
+        <div class="panel-body" ng-controller="validateCtrl">
+          <form class="conow-form demo-form form-horizontal" role="form" conow-form-validate novalidate name="validateForm">
+          <div class="form-group">
+            <label class="control-label col-md-2" for="email">邮箱</label>
+            <div class="col-md-10">
+              <input type="email" class="form-control" name="email" id="email" ng-model="entity.email" required="" placeholder="请输入邮箱">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="control-label col-md-2" for="username">用户名</label>
+            <div class="col-md-10">
+              <input type="text" class="form-control" name="username" id="username"  ng-pattern="/^[A-Za-z]{1}[0-9A-Za-z_]{1,19}$/" ng-model="entity.name" required conow-unique-check="{url:'data/bz/username.json?username='+entity.name}" is-exists="false" placeholder="请输入用户名">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="control-label col-md-2" for="password">密码</label>
+            <div class="col-md-10">
+              <input type="password" class="form-control" name="password" id="password" required="" ng-model="entity.password" ng-minlength="5" ng-maxlength="15" placeholder="请输入密码">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="control-label col-md-2" for="repeatPassword">确认密码</label>
+            <div class="col-md-10">
+              <input type="password" class="form-control" name="repeatPassword" id="repeatPassword" required="" conow-repeat="password" ng-model="entity.repeatPassword" placeholder="请再次输入密码">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="control-label col-md-2" for="number">数字</label>
+            <div class="col-md-10">
+              <input type="number" class="form-control" name="number" id="number" required="" ng-model="entity.number" placeholder="输入数字10-15" max="15" min="10">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="control-label col-md-2" for="url">URL</label>
+            <div class="col-md-10">
+              <input type="url" class="form-control" name="url" id="url" required="" ng-model="entity.url" placeholder="请输入URL">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="control-label col-md-2" for="datetime">date</label>
+            <div class="col-md-10">
+              <input type="text" class="form-control" name="datetime" id="datetime" required="" ng-model="entity.datetime" placeholder="请输入date">
+              <span>{{ entity.datetime | strDate:'yyyy-MM-dd HH:mm' }}</span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="control-label col-md-2" for="memo">备注</label>
+            <div class="col-md-10">
+              <textarea class="form-control" name="memo" ng-model="entity.memo" id="memo" rows="3" required placeholder="请输入备注"></textarea>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="control-label col-md-2" for="amount">金额</label>
+            <div class="col-md-10">
+              <div class="input-group">
+                <div class="input-group-addon">￥</div>
+                <input type="text" class="form-control" ng-model="entity.amount" required name="amount" id="amount" placeholder="Amount">
+                <div class="input-group-addon">.00</div>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <button type="button" ng-click="test()">ClickService Click</button>
+            <button type="button" ng-click="go()">Click to Go</button>
+            <span>{{ entity.ClickServiceProperty }}</span>
+          </div>
 
           <!-- <div class="form-group">
             <label for="identitycard">身份证</label>
