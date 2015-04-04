@@ -108,7 +108,6 @@
         $scope.$watch(function() {
           return ClickService.properties;
         }, function(newVal, oldVal) {
-          console.log(newVal);
           $scope.entity.ClickServiceProperty = newVal.name;
         }, true);
 

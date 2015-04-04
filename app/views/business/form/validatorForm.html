@@ -154,28 +154,6 @@
               </div>
             </div>
           </div>
-          <div class="form-group">
-            <button type="button" ng-click="test()">ClickService Click</button>
-            <button type="button" ng-click="go()">Click to Go</button>
-            <span>{{ entity.ClickServiceProperty }}</span>
-          </div>
-
-          <!-- <div class="form-group">
-            <label for="identitycard">身份证</label>
-            <input type="text" class="form-control" name="identitycard"  ng-model="entity.identitycard" placeholder="请输入身份证号码" ng-pattern=" /(^\d{15}$)|(^\d{17}([0-9]|X)$)/">
-          </div>
-          <div class="form-group">
-            <label for="passport">护照</label>
-            <input type="text" class="form-control" name="passport" id="password"  ng-model="entity.passport" placeholder="请输入护照号码" ng-pattern="/^[a-zA-Z0-9]{3,21}$|^(P\d{7})|(G\d{8})$/">
-          </div>
-          <div class="form-group">
-            <label for="soldiercard">军官证/士兵证</label>
-            <input type="text" class="form-control" name="soldiercard" id="soldiercard"  ng-model="entity.soldiercard" placeholder="请输入证件号" ng-pattern="/^[a-zA-Z0-9]{3,21}$|^(P\d{7})|(G\d{8})$/">
-          </div>
-          <div class="form-group">
-            <label for="HKMacTW">港澳台证</label>
-            <input type="text" class="form-control" name="HKMacTW" id="HKMacTW"  ng-model="entity.HKMacTW" placeholder="请输入证件号" ng-pattern="/^[a-zA-Z0-9]{5,21}$/">
-          </div> -->
     
           <div class="form-group" ng-show="validateForm.$errors.length > 0 && vm.showErrorType == 2">
             <label></label>
@@ -183,7 +161,9 @@
           </div>
     
           <div class="form-group">
+            <div class="col-md-10 col-md-offset-2">
               <button type="button" class="btn btn-success" conow-submit="saveEntity()"> 提交</button>
+            </div>
           </div>
       </form>
         </div>

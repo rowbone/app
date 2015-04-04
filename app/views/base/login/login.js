@@ -6,7 +6,7 @@ app.controller('loginFormCtrl', ['$scope', '$http', '$state', '$rootScope',
 
 		$scope.login = function(user) {
 			console.log(user);
-			$post('/')
+			// $post('/')
 		}
 	}
 ]);
