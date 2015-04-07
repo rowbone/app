@@ -1,0 +1,200 @@
+
+《AngularJS》5个实例详解Directive（指令）机制
+
+1、指令的作用：实现语义话标签。
+	把自定义的语义化标签替换成浏览器能够认识的HTML标签。
+
+
+2、指令声明方式选项：
+	E：元素	<my-menu title="products"></my-menu>
+	A：属性	<div my-menu="products"></div>
+	C：样式	<div class="my-menu:products"></div>
+	M：注释	<!-- directive:my-menu products -->
+
+3、常用参数：
+	var appModule = angular.module('app', []);
+
+	appModule.directive('hello', function() {
+		return {
+			// AEMC，默认A
+			restrict: 'E',
+			template: '<div>Hi there <span ng-transclude></span></div>',
+			// 替换。（生成的html元素也对应的被修改）
+			replace: true,
+
+			// 变换：标签替换成HTML模板，标签内部的内容保持不变（标签名保留）
+			transclude: true,
+			// compile 阶段进行标签解析和变换
+			compile: function() {
+				// 
+			},
+			// link 阶段进行数据绑定等操作
+			link: function(scope, element, attrs) {
+				scope.showMe = false;
+
+				scope.toggle = function toggle() {
+					scope.showMe = !scope.showMe;
+				}
+			}
+		}
+	})
+
+4、所有参数：
+	restrict：声明标示符在模板中作为元素、属性、类或组合，如何使用；
+	priority：设置模板中相对于其他标示符的执行顺序；
+	template：指定一个字符串的内嵌模板（不能是URL）；
+	templateUrl：指定URL加载的模板（指定了template，则不会使用）；
+	replace：为真，则替换当前元素；为假或未指定，则拼接到当前元素；
+	transclude：移动一个标示符的原始字节到新模板的位置；
+	scope：创建一个新的作用域，而不是继承父作用域；
+	controller：创建一个控制器通过标示符公开通信API；
+	require：当前标示符需要另外一个标示符提供正确的函数功能；
+	link：修改目标DOM元素的实例，添加事件监听，建立数据绑定；
+	compile：拷贝编程修改DOM模板。
+
+	myModule.directive('namespaceDirectiveName', function factory(injectables) {
+
+    var directiveDefinitionObject = {
+
+      restrict: string,//指令的使用方式，包括标签，属性，类，注释
+
+      priority: number,//指令执行的优先级
+
+      template: string,//指令使用的模板，用HTML字符串的形式表示
+
+      templateUrl: string,//从指定的url地址加载模板
+
+      replace: bool,//是否用模板替换当前元素，若为false，则append在当前元素上
+
+      transclude: bool,//是否将当前元素的内容转移到模板中
+
+      scope: bool or object,//指定指令的作用域
+
+      controller: function controllerConstructor($scope, $element, $attrs, $transclude){...},//定义与其他指令进行交互的接口函数
+
+      require: string,//指定需要依赖的其他指令
+
+      link: function postLink(scope, iElement, iAttrs) {...},//以编程的方式操作DOM，包括添加监听器等
+
+      compile: function compile(tElement, tAttrs, transclude){
+
+          return: {
+
+              pre: function preLink(scope, iElement, iAttrs, controller){...},
+
+              post: function postLink(scope, iElement, iAttrs, controller){...}
+
+          }
+
+      }//编程的方式修改DOM模板的副本，可以返回链接函数
+
+    };
+
+    return directiveDefinitionObject;
+
+	});
+
+5、Angular初始化过程：
+	【1】脚本加载:加载angular，查找ng-app标识符找到应用绑定；
+
+	【2】编译阶段:在这一阶段，angular便利DOM标志模版中所有注册的标识，对于每个标识符，基于标识符规则(template,replace,transclude等等）改造DOM，然后
+
+	如果编译函数存在就调用它，结果一个编译的template函数，它会调用所有的标识符搜集的link函数；
+
+	【3】链接阶段：为了让视图动起来，angular为每个标识符运行link函数，link函数通常在DOM或模型上创建监听器，这些监听器让视图和模型始终保持一致
+
+	详细过程：
+
+	【1】浏览器得到 HTML 字符串内容，解析得到 DOM 结构。
+	【2】ng 引入，把 DOM 结构扔给 $compile 函数处理：
+　　① 找出 DOM 结构中有变量占位符
+　　② 匹配找出 DOM 中包含的所有指令引用
+　　③ 把指令关联到 DOM
+　　④ 关联到 DOM 的多个指令按权重排列
+　　⑤ 执行指令中的 compile 函数（改变 DOM 结构，返回 link 函数）
+　　⑥ 得到的所有 link 函数组成一个列表作为 $compile 函数的返回
+　【3】 执行 link 函数（连接模板的 scope）。
+
+	注意区别一下$compile和compile，前者是ng内部的编译服务，后者是指令中的编译函数，两者发挥作用的范围不同。
+
+6、获取作用域scope的三种方法：
+	标识符DOM元素中已经存在的作用域；
+	创建一个继承封闭的控制器作用域的新作用域，以便读取结构树作用域的所有值；
+	独立作用域，从父类中不继承任何属性，隔离这个标识符的操作和父作用域。
+
+	已有作用域：scope:false （不指定时的默认值）
+	新作用域：scope:true
+	独立作用域：scope:{属性名次和绑定风格}
+
+	注意：虽然独立作用域并没有继承模型属性，但他们仍然是父作用域的子节点，并$parent指向父类。
+
+	可以通过标识符属性的键值对父类传递指定的属性给独立作用域，这里有三种可行的方式从父作用域传递数据，我们称这些传递数据方式叫做“绑定策略”，你可以为这个属性名称指定一个本地别名
+		不指定别名：
+		scope: {
+			attributeName1: 'binding-strategy',
+			attributeName2: 'binding-strategy',
+			...
+		}
+
+		指定别名：
+		scope: {
+			attributeAlias: 'binding-strategy' + 'templateAttributeName',
+			...
+		}
+
+		attributeAlias:
+			@					传递字符串属性；
+			=					数据绑定属性在标识符父作用域的属性中；
+			&					传递一个来自父作用域的函数，稍后调用
+
+		scope: { title: '=expanderTitle' }	的功能：
+			创建一个叫title的本地作用域属性，用来数据绑定到expander-title属性中声明的parent-scope属性。
+
+
+7、指令在html和js中的写法：
+	兼容HTML5的写法：在属性前面加上x-或者data-前缀。
+	当匹配指令时，Angular会从元素/属性名之前去除前缀x-或者data-。然后将分隔符 - 或者 : 转换为驼峰表示法已匹配注册的指令。这就是为什么我们的helloWorld指令用在HTML中的时候实际上写成了hello-world。
+
+8、link 函数（主要用来对DOM元素绑定事件监听器，监视模型属性变化，并更新DOM）的参数
+	link: function(scope, elem, attrs) {}
+	scope：指令被使用的作用域；
+	elem：绑定指令的元素的jQlite包裹元素；
+	attrs：绑定指令的元素上的属性。
+
+9、compile 函数（主要用来在link函数运行之前进行一些DOM转化）的参数：
+	compile: function(tElem, attrs) {}
+	tElem：指令绑定的元素；
+	attrs：元素声明的属性。
+
+	注意：compile不能够访问scope，而且必须返回一个link函数。
+
+10、指令是如何被编译的：
+	当应用在启动时，Angular开始使用$compile服务解析DOM。这项服务会在标记中寻找指令然后将它们各自匹配到注册的元素。一旦所有的指令都已经被识别完成，Angular就开始执行它们的compile函数。正如前面所提到的，compile函数返回一个link函数，该函数会被添加到稍后执行的link函数队列中。这叫做编译阶段(compile phase)。注意到即使同一个指令有几个实例存在，compile函数也只会运行一次。
+
+	在编译阶段之后就到了链接阶段(link phase)，这时link函数就一个接一个的执行。在这个阶段中模板被生成，指令被运用到正确的作用域，DOM元素上开始有了事件监听器。不像是compile函数，lin函数会对每个指令的实例都执行一次。
+
+11、改变指令的作用域：
+	如果我们对指令暴露了父控制器的scope，那么指令就可以自由的修改scope属性。
+	在一些情况下你的指令可能想要添加一些只有内部可以使用的属性和函数。
+	如果我们都在父作用域中完成，可能会污染了父作用域。因此，我们有两种选择：
+
+		一个子作用域 - 这个作用域会原型继承父作用域。
+			app.directive('helloWorld', function() {
+				return {
+					// 使用一个继承父作用域的自作用域
+					scope: true,
+					restrict: 'AE',
+					replace: true,
+					template: '<h3>Hello World!</h3>'
+				}
+			})
+		一个隔离的作用域 - 一个全新的、不继承、独立存在的作用域。
+			app.directive('helloWorld', function() {
+				return {
+					// 使用一个全新的隔离作用域
+					scope: {},
+					restrict: 'AE',
+					replace: true,
+					template: '<h3>Hello World</h3>'
+				}
+			})

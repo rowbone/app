@@ -48,8 +48,19 @@
             <label for="amount">金额</label>
             <div class="input-group">
               <div class="input-group-addon">￥</div>
-              <input type="text" class="form-control" ng-model="entity.amount" required name="amount" id="amount" placeholder="Amount">
+              <input type="text" class="form-control" ng-model="entity.amount" required name="amount" id="amount" placeholder="Amount" ng-pattern="/^\d{2,5}$/" >
               <div class="input-group-addon">.00</div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="" class="control-label">是否同意</label>
+            <div>
+              <label class="radio-inline">
+                <input type="radio" name="isAgree" value="yes" ng-model="entity.isAgree">是  
+              </label>
+              <label class="radio-inline">
+                <input type="radio" name="isAgree" value="no" ng-model="entity.isAgree">否
+              </label>
             </div>
           </div>
           <div class="form-group">
@@ -154,6 +165,29 @@
               </div>
             </div>
           </div>
+          <div class="form-group">
+            <label for="" class="control-label col-md-2">是否同意</label>
+            <div class="col-md-10">
+              <label class="radio-inline">
+                <input type="radio" name="isAgree" value="yes" ng-model="entity.isAgree">是  
+              </label>
+              <label class="radio-inline">
+                <input type="radio" name="isAgree" value="no" ng-model="entity.isAgree">否
+              </label>
+            </div>
+          </div>
+          <div class="form-group" ng-class="{ 'hidden':  entity.isAgree !== 'yes' }">
+            <label for="reason" class="control-label col-md-2">原因</label>
+            <div class="col-md-10">
+              <textarea class="form-control" ng-model="entity.reason" ng-class="{ 'hidden': entity.isAgree !== 'yes' }" name="reason" id="reason" rows="3" placeholder="请填写理由！" required></textarea>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="directValidate" class="control-label col-md-2">生成元素验证</label>
+            <div class="col-md-10">
+              <direct-validate name="directValidate" required></direct-validate>
+            </div>
+          </div>
     
           <div class="form-group" ng-show="validateForm.$errors.length > 0 && vm.showErrorType == 2">
             <label></label>
@@ -214,7 +248,9 @@
         </div>
         <div class="panel-body">
           <ul class="list-unstyled">
-            <li>2015-3-31 - 增加“常见问题”和“版本维护说明”</li>
+            <li>2015-03-31 - 增加“常见问题”和“版本维护说明”</li>
+            <li>2015-04-07 - 修改input-group的提示显示样式</li>
+            <li>2015-04-07 - 修改默认的验证触发方式blurTrig为true</li>
           </ul>
         </div>
       </div>
@@ -297,7 +333,7 @@
             <tbody>
               <tr>
               <td>blurTrig</td>
-              <td>false</td>
+              <td>true</td>
               <td>光标移除元素后是否验证并显示错误提示信息</td>
             </tr>
             <tr>

@@ -28,52 +28,69 @@ angular.module("conow.validator", ["ng"])
             }
             return false;
         };
-        this.defaultShowError = function (elem, errorMessages) {
-            var $elem = angular.element(elem),
-                $parent = $elem.parent();
-                // $group = $parent.parent();
-// console.log('$elem.class-->' + $elem.attr('class'));                
-// console.log('$parent.class-->' + $parent.attr('class'));                
-// console.log('$group.class-->' + $group.attr('class')); 
-var $formGroup = $parent;
-console.log('aaaaaaaaaaaa');
-console.log($parent.attr('class'))
-console.log('bbbbbbbbb')
-while(!($formGroup.hasClass('form-group'))) {
-  console.log($formGroup.attr('class'));
-  $formGroup = $formGroup.parent();
-}
-console.log($formGroup.attr('class'));
-console.log('after...............');
+        this.getShowObj = function(elem) {
+          var $elem = angular.element(elem),
+              $formGroup = $elem,
+              isHasInputGroup = false;
 
-            if(!this.isEmpty($group) && $group[0].tagName === "FORM"){
-                $group = $parent;
+          while(!($formGroup.hasClass('form-group'))) {
+            $formGroup = $formGroup.parent();
+            if($formGroup.hasClass('input-group')) {
+              isHasInputGroup = true;
+              break;
             }
-            if(!this.isEmpty($parent) && $parent.hasClass('input-group')) {
-                $group = $parent;
-            }
-            if (!this.isEmpty($group) && !$group.hasClass("has-error")) {
-                $group.addClass("has-error");
-                // 修改 input-group 的提示问题 2015-4-3
-                // $elem.addClass("has-error");
-                $group.after('<span class="conow-error">' + ((errorMessages[0] == undefined) ? '' : errorMessages[0]) + '</span>');
+          }
+          if(isHasInputGroup) {
+            return $elem.parent();
+          } else {
+            return $elem;
+          }
+        };
+        this.defaultShowError = function (elem, errorMessages) {
+            // var $elem = angular.element(elem),
+                // $parent = $elem.parent(),
+                // $group = $parent.parent();
+
+            $group = this.getShowObj(elem);
+
+            // if(!this.isEmpty($group) && $group[0].tagName === "FORM"){
+            //     $group = $parent;
+            // }
+            // if(!this.isEmpty($parent) && $parent.hasClass('input-group')) {
+            //     $group = $parent;
+            // }
+            // if (!this.isEmpty($group) && !$group.hasClass("has-error")) {
+            //     $group.addClass("has-error");
+            //     // 修改 input-group 的提示问题 2015-4-3
+            //     // $elem.addClass("has-error");
+            //     $group.after('<span class="conow-error">' + ((errorMessages[0] == undefined) ? '' : errorMessages[0]) + '</span>');
+            // }
+            if(!$group.hasClass('has-error')) {
+              $group.addClass('has-error');
+              $group.after('<span class="conow-error">' + ((errorMessages[0] == undefined) ? '' : errorMessages[0]) + '</span>');
             }
         };
         this.defaultRemoveError = function (elem) {
-            var $elem = angular.element(elem),
-                $parent = $elem.parent(),
-                $group = $parent.parent();
+            // var $elem = angular.element(elem),
+                // $parent = $elem.parent(),
+                // $group = $parent.parent();
 
-            if(!this.isEmpty($group) && $group[0].tagName === "FORM"){
-                $group = $parent;
-            }
-            if(!this.isEmpty($parent) && $parent.hasClass('input-group')) {
-                $group = $parent;
-            }
-            if (!this.isEmpty($group) && $group.hasClass("has-error")) {
-                $group.removeClass("has-error");
-                // $elem.next(".conow-error").remove();
-                $group.next(".conow-error").remove();
+            var $group = this.getShowObj(elem);
+
+            // if(!this.isEmpty($group) && $group[0].tagName === "FORM"){
+            //     $group = $parent;
+            // }
+            // if(!this.isEmpty($parent) && $parent.hasClass('input-group')) {
+            //     $group = $parent;
+            // }
+            // if (!this.isEmpty($group) && $group.hasClass("has-error")) {
+            //     $group.removeClass("has-error");
+            //     // $elem.next(".conow-error").remove();
+            //     $group.next(".conow-error").remove();
+            // }
+            if($group.hasClass('has-error')) {
+              $group.removeClass('has-error');
+              $group.next('.conow-error').remove();
             }
         };
         this.options = {

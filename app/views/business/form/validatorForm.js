@@ -138,6 +138,9 @@
             "url": "http://www.baidu.com",
             "datetime": '2015-03-08 01:02:03.0',
             'memo': '备注',
-            'ClickServiceProperty': ClickService.properties.name
+            'ClickServiceProperty': ClickService.properties.name,
+            'isAgree': 'no'
+            // ,
+            // 'reason': '拒绝理由'
         };
     }]);
