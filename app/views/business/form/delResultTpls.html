@@ -1,5 +1,7 @@
 
-<div class="modal-body">
-  <div ng-class="{'hidden': !params.success, 'text-success': true}"><span class="glyphicon glyphicon-ok"></span>{{ params.message }}</div>
-  <div ng-class="{'hidden': params.success, 'text-danger': true}"><span class="glyphicon glyphicon-remove"></span>{{ params.message}}</div>
+<div class="modal-body bg-success" ng-class="{'hidden': !params.success}">
+	<span class="glyphicon glyphicon-ok"> {{ params.message }} </span>
+</div>
+<div class="modal-body bg-danger" ng-class="{'hidden': params.success}">
+	<span class="glyphicon glyphicon-remove"> {{ params.message }} </span>
 </div>

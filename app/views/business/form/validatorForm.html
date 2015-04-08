@@ -1,6 +1,15 @@
 <div class="header-md h pos-fix w-full b-b bg-light dk">
   <h3 class="m-n font-thin h3">validator demo</h3>
 </div>
+
+<!-- <title-bar name="validator demo">
+  <div class="pull-right .m-r-md">
+    <button type="submit" class="btn m-r-sm w-xs btn-primary">提交</button>
+    <input type="button" value="暂存" class="btn m-r-sm w-xs btn-dark" ng-click="saveTrip()" /> 
+    <input type="button" value="删除" class="btn m-r-sm w-xs btn-danger" ng-click="deleteTripReq()"/>
+    <input type="button" value="放弃" class="btn w-xs btn-danger" ng-click="back()" />
+  </div>
+</title-bar> -->
 <div class="wrapper-md pos-rlt">
   <div class="row">
     <div class="col-sm-6">
@@ -185,7 +194,7 @@
           <div class="form-group">
             <label for="directValidate" class="control-label col-md-2">生成元素验证</label>
             <div class="col-md-10">
-              <direct-validate name="directValidate" required></direct-validate>
+              <direct-validate name="directValidate" ng-model="entity.directValidate" required></direct-validate>
             </div>
           </div>
     

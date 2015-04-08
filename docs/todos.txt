@@ -68,4 +68,6 @@
 5、记录下 js各种证件的正则验证
 	http://blog.csdn.net/dracotianlong/article/details/44151025
 
-6、
+2015-04-08:
+1、如何快速搭建Cocos2d-JS游戏开发环境
+	http://cn.cocos2d-x.org/tutorial/show?id=2678

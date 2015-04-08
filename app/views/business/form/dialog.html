@@ -17,6 +17,11 @@
 						</div>
 
 						<div class="form-group">
+							<label for="" class="control-label">保存操作</label>
+							<conow-btn-save url="users/userSave" data="{'entity': '{{ entity }}'}" title="保存测试" redirect-url="app.form.simpleForm"></conow-btn-save>
+						</div>
+
+						<div class="form-group">
 							<label for="" class="control-label">删除操作</label>
 							<conow-btn-del url="users/userDel" data="{'username': '{{ entity.username }}'}" title="标题测试" confirm-msg="确认删除{{entity.username}}?"></conow-btn-del>
 						</div>

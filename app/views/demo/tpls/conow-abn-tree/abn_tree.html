@@ -1,0 +1,210 @@
+<div class= "row">
+  <div class="col-lg-7" ng-controller="ztreeController">
+	  <div class="col-sm-7">
+	    <div class="wrapper-md">
+	      <div class="b-a bg-light lter r r-2x">
+	        <span ng-if="doing_async">...加载中...</span>
+	        <!-- /service/orgUnit!querySourceOfTree行政树 -->
+	        <!-- /service/orgUnit!queryMapByUser根据当前用户过滤树 -->
+	        <!-- /service/orgUnit!querySortOfTree分类树 -->
+	        <abn-tree 
+	          req_url        = "/service/orgUnit!querySourceOfTree"
+	          tree-control   = "my_tree" 
+	          search-input   = "true"
+	          search-element = "label;ORG_UNIT_NAME"
+	          on-select      = "my_tree_handler(branch)"
+	          multiselect    = "false"
+	          arr-selected   = "arrBranchs"
+	          >
+	        </abn-tree>
+	      </div>
+	    </div>
+	  </div>
+	  <div class="col-sm-5">
+	  	<div class="wrapper-md">
+	  		<div ng-if="!(arrBranchs.length > 0)">
+		  	  <label>树的结果输出：</label>
+		  	  <div class="alert alert-info">{{output}}</div>
+		  	</div>
+		  	<div ng-if="arrBranchs.length > 0">
+		  	  <label>树的结果输出：(多选)</label>
+		  	  <div class="alert alert-info">
+		  	  	<a ng-repeat="arr in arrBranchs">{{arr.label}}</a>
+			  </div>
+			 </div>
+	    </div>
+	    <div>
+	      <div class="line b-b line-lg"></div>
+	      <h5>测试树的操作API:</h5>
+	      <button ng-click="my_tree.select_first_branch()" class="btn btn-default btn-sm">根节点</button>
+	      <a></a>
+	      <div class="m-t-sm m-b-sm">
+	        <button ng-click="my_tree.select_next_sibling()" class="btn btn-default btn-sm">下一个同级节点</button>
+	        <button ng-click="my_tree.select_prev_sibling()" class="btn btn-default btn-sm">上一个同级节点</button>
+	      </div>
+	      <div class="m-b-sm">
+	        <button ng-click="my_tree.select_next_branch()" class="btn btn-default btn-sm">下一个分支</button>
+	        <button ng-click="my_tree.select_prev_branch()" class="btn btn-default btn-sm">上一个分支</button>
+	      </div>
+	      <button ng-click="my_tree.select_parent_branch()" class="btn btn-default btn-sm">父节点</button>
+	      <div class="m-t-sm m-b-sm">
+	        <button ng-click="my_tree.expand_branch()" class="btn btn-default btn-sm">展开</button>
+	        <button ng-click="my_tree.collapse_branch()" class="btn btn-default btn-sm">收起</button>
+	      </div>
+	      <div class="m-t-sm m-b-sm">
+	        <button ng-click="my_tree.expand_all()" class="btn btn-default btn-sm">全部展开</button>
+	        <button ng-click="my_tree.collapse_all()" class="btn btn-default btn-sm">全部收起</button>
+	      </div>
+	      <div class="line b-b line-lg"></div>
+	      <button ng-click="add_a_branch()" class="btn btn-success btn-sm"><i class="fa fa-fw m-r-xs fa-plus"></i>添加分支</button>
+	      <button ng-click="delete_a_branch()" class="btn btn-danger btn-sm"><i class="fa fa-fw m-r-xs fa-minus"></i>删除分支</button>
+	      <div class="m-t-sm m-b-sm">
+	      <button ng-click="edit_a_branch()" class="btn btn-primary btn-sm"><i class="fa fa-fw m-r-xs fa-minus"></i>修改分支</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+	<div class="col-lg-5">
+	  	<div class="panel panel-default">
+        <div class="panel-heading font-bold">navTreeDemo描述</div>
+        <div class="panel-body">
+		按需加载：调用树指令，在<label class="bg-success dker">路由中配置</label> $ocLazyLoad.load('angularBootstrapNavTree')<br />       
+                            集成tree只需要在所开发的html页面中使用<label class="bg-success dker"> abn-tree </label>指令。<br />
+                            示例如下：<br />
+           <pre>&lt;abn-tree
+req_url        =   "/service/orgUnit!querySourceOfTree"
+tree-control   =   "my_tree"
+search-input   =   "true"  //可不填，是否显示搜索框,搜索结果点击事件和树节点相同
+search-element =   "label;ORG_UNIT_NAME" // 可不填，搜索匹配字段，默认为label
+on-select      =   "my_tree_handler(branch)"
+icon-leaf      =   "fa fa-leaf"  //可不填，默认样式
+icon-expand    =   "fa fa-plus"  //可不填，默认样式
+icon-collapse  =   "fa fa-minus" //可不填，默认样式
+expand-level   =   "2"           //可不填，默认2层
+multiselect    =   "false"	 //可不填，默认fasle,填true则必填arr-selected属性
+arr-selected   =   "arrBranchs"  //多选动态返回的数组对象
+&gt;
+&lt;/abn-tree&gt;
+           </pre>
+           <br />
+           <div class="row b-b text-left m-l-xs m-r-xs">
+           <label>指令属性说明：</label>
+           </div>
+           <div class="row b-b m-l-xs m-r-xs">
+	           <div class="col-xs-3 bt">req_url</div>
+	           <div class="col-xs-9 b-l">请求数据格式如下：<br />[id:"12",label:"一组",children:Array[10]]</div>
+           </div>
+           <div class="row b-b m-l-xs m-r-xs">
+	           <div class="col-xs-3">tree-control</div>
+	           <div class="col-xs-9 b-l">方法的引用对象：在html页面直接使用my_tree对象调用树操作方法。<br />如：my_tree.select_parent_branch()获得父节点。</div>
+           </div>
+           <div class="row b-b m-l-xs m-r-xs">
+	           <div class="col-xs-3">search-input</div>
+	           <div class="col-xs-9 b-l">是否显示搜索框,搜索结果点击事件和树节点相同。</div>
+           </div>
+           <div class="row b-b m-l-xs m-r-xs">
+	           <div class="col-xs-3">search-element</div>
+	           <div class="col-xs-9 b-l">搜索匹配字段，默认为label。</div>
+           </div>
+           <div class="row b-b m-l-xs m-r-xs">
+	           <div class="col-xs-3">on-select</div>
+	           <div class="col-xs-9 b-l">选择节点是执行的方法。参数默认为branch:当前选择节点对象。</div>
+           </div>
+           <div class="row b-b m-l-xs m-r-xs">
+	           <div class="col-xs-3">icon-leaf</div>
+	           <div class="col-xs-9 b-l">叶节点图标</div>
+           </div>
+           <div class="row b-b m-l-xs m-r-xs">
+	           <div class="col-xs-3">icon-expand</div>
+	           <div class="col-xs-9 b-l">节点可展开图标</div>
+           </div>
+           <div class="row b-b m-l-xs m-r-xs">
+	           <div class="col-xs-3">icon-collapse</div>
+	           <div class="col-xs-9 b-l">节点可收缩图标</div>
+           </div>
+           <div class="row b-b m-l-xs m-r-xs">
+	           <div class="col-xs-3">expand-level</div>
+	           <div class="col-xs-9 b-l">展开的层级数</div>
+           </div>
+           <div class="row b-b m-l-xs m-r-xs">
+	           <div class="col-xs-3">multiselect</div>
+	           <div class="col-xs-9 b-l">是否支持多选：true为多选。当为true时，必填属性arr-selected</div>
+           </div>
+           <div class="row b-b m-l-xs m-r-xs">
+	           <div class="col-xs-3">arr-selected</div>
+	           <div class="col-xs-9 b-l">多选动态返回数组对象。</div>
+           </div>
+           <div class="row b-b text-left m-l-xs m-r-xs m-t">
+           <label>方法说明：<br />html中调用使用my_tree(指令属性中tree-control定义)。js中使用tree调用,先初始化var tree=$scope.my_tree={};</label>
+           </div>
+           <div class="row b-b m-l-xs m-r-xs">
+	           <div class="col-xs-5 bt">根节点</div>
+	           <div class="col-xs-7 b-l">select_first_branch()</div>
+           </div>
+           <div class="row b-b m-l-xs m-r-xs">
+	           <div class="col-xs-5">下一个同级节点</div>
+	           <div class="col-xs-7 b-l">select_next_sibling()</div>
+           </div>
+           <div class="row b-b m-l-xs m-r-xs">
+	           <div class="col-xs-5">上一个同级节点</div>
+	           <div class="col-xs-7 b-l">select_prev_sibling()</div>
+           </div>
+           <div class="row b-b m-l-xs m-r-xs">
+	           <div class="col-xs-5">下一分支</div>
+	           <div class="col-xs-7 b-l">select_next_branch()</div>
+           </div>
+           <div class="row b-b m-l-xs m-r-xs">
+	           <div class="col-xs-5">上一分支</div>
+	           <div class="col-xs-7 b-l">select_prev_branch()</div>
+           </div>
+           <div class="row b-b m-l-xs m-r-xs">
+	           <div class="col-xs-5">展开</div>
+	           <div class="col-xs-7 b-l">expand_branch()</div>
+           </div>
+           <div class="row b-b m-l-xs m-r-xs">
+	           <div class="col-xs-5">收起</div>
+	           <div class="col-xs-7 b-l">collapse_branch()</div>
+           </div>
+           <div class="row b-b m-l-xs m-r-xs">
+	           <div class="col-xs-5">展开所有</div>
+	           <div class="col-xs-7 b-l">expand_all()</div>
+           </div>
+           <div class="row b-b m-l-xs m-r-xs m-b">
+	           <div class="col-xs-5">收起所有</div>
+	           <div class="col-xs-7 b-l">collapse_all()</div>
+           </div>
+          <a class="font-bold">增删改：</a><label class="bg-success dker">业务操作完之后</label>调用js方法<br />
+                           新增节点  示例如下：<br />
+           <pre>
+//业务操作——保存组织信息（插入数据库后）返回值obj：新增的该组织对象
+b = tree.select_branch_id(obj.FATHER_ORG_ID);
+//将新增的组织对象插入到该对象的父节点下
+tree.add_branch(b, {
+  id: obj.ID,
+  label: obj.ORG_UNIT_SHORT_NAME,
+});
+
+PS:新增组织后，默认选择该新增组织，展开其所有父类节点。
+           </pre>
+           删除节点  示例如下：<br />
+           <pre>
+//业务操作——删除组织信息，传入该组织id，获取节点对象
+b = tree.select_branch_id(id);
+//将新增的组织对象插入到该对象的父节点下
+tree.delete_branch(b)
+
+PS:删除组织后，默认选择该组织父节点，展开其所有父类节点。
+           </pre>
+                     修改节点  示例如下：<br />
+           <pre>
+//业务操作——修改组织信息（修改数据库后）返回值obj：修改的该组织对象
+b = tree.select_branch_id(obj.ID);
+//将原节点的名称修改为修改后的名称
+tree.edit_branch(b,obj.org_UNIT_SHORT_NAME);
+
+PS:修改组织后，默认选择该组织，展开其所有父类节点。
+           </pre>
+        </div>
+      </div>
+	</div>
+</div>

@@ -8,6 +8,27 @@ app.controller('ModalParentCtrl', ['$scope', '$modal', function($scope, $modal) 
 
 }]);
 
+app.directive('conowBtnSave', ['$modal', '$timeout', 
+	function($modal, $timeout) {
+		return {
+			restrict: 'AE',
+			template: '<button type="button" class="btn btn-success">保存</button>',
+			link: function(scope, elem, attrs) {
+				elem.on('click', function(e) {
+					e.preventDefault();
+
+					var size = '';
+					var modalInstance = $modal.open({
+						templateUrl: 'views/business/form/saveTpl.html',
+						controller: 'SaveModalCtrl',
+						backdrop
+					})
+				});
+			}
+		}
+	}
+]);
+
 app.directive('conowBtnDel', ['$modal', '$timeout',
 	function($modal, $timeout) {
 		return {

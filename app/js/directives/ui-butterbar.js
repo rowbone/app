@@ -25,7 +25,7 @@ angular.module('demoApp')
 			replace: true,
 			transclude: true,
 			templateUrl: 'views/base/titlebar.html',
-			link: function(scope, el, attrs) {
+			link: function(scope, el, attrs) {console.log(attrs.name);
 				scope.titile = attrs.name;
 
 				scope.goBack = function goBack() {
