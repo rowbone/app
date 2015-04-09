@@ -32,6 +32,37 @@ router.get('/userCheck', function(req, res) {
 	}
 });
 
+router.post('/userSave', function(req, res) {
+	var paramReq = req.param('data');
+	var userName = paramReq.username;
+	var objRes = {};
+console.log('paramReq');
+console.log(paramReq);
+	if(paramReq == {}) {
+		objRes.success = false;
+		objRes.message = '没有传入对应的用户信息！';
+		objRes.obj = null;
+		res.send(objRes);
+	}
+
+	var userCollection = db.get('user');
+	userCollection.find({}, {}, function(e, docs) {
+		var iLen = docs.length;
+		console.log('iLen==' + iLen);
+		if(iLen > 0) {
+			objRes.success = true;
+			objRes.message = '获取到对应用户信息，进行更新操作';
+			objRes.obj = docs[0];
+		} else {
+			objRes.success = true,
+			objRes.message = '未获取到对应用户信息，进行插入操作！';
+			objRes.obj = paramReq;
+		}
+
+		res.send(objRes);
+	});
+});
+
 router.post('/userDel', function(req, res) {
 	var paramReq = req.param('data');
 	var userName = paramReq.username;

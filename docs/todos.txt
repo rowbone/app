@@ -71,3 +71,7 @@
 2015-04-08:
 1、如何快速搭建Cocos2d-JS游戏开发环境
 	http://cn.cocos2d-x.org/tutorial/show?id=2678
+
+2015-04-09:
+1、通过JS语句判断WEB网站的访问端是电脑还是手机
+	http://my.oschina.net/docin/blog/200663

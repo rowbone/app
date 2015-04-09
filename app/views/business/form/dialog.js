@@ -8,8 +8,8 @@ app.controller('ModalParentCtrl', ['$scope', '$modal', function($scope, $modal) 
 
 }]);
 
-app.directive('conowBtnSave', ['$modal', '$timeout', 
-	function($modal, $timeout) {
+app.directive('conowBtnSave', ['$modal', '$timeout', '$http', '$state',  
+	function($modal, $timeout, $http, $state) {
 		return {
 			restrict: 'AE',
 			template: '<button type="button" class="btn btn-success">保存</button>',
@@ -18,14 +18,165 @@ app.directive('conowBtnSave', ['$modal', '$timeout',
 					e.preventDefault();
 
 					var size = '';
+
 					var modalInstance = $modal.open({
 						templateUrl: 'views/business/form/saveTpl.html',
 						controller: 'SaveModalCtrl',
-						backdrop
-					})
+						backdrop: false,
+						resolve: {
+							params: function() {
+								var objParams = {
+									url: attrs.url,
+									data: scope.$eval(attrs.data),
+									title: attrs.title,
+									message: '保存中...'
+								};
+
+								return objParams;
+							}
+						}
+					});
+
+					var modalInstance2 = {};
+					modalInstance.result.then(function(rtnVal) {
+						modalInstance2 = $modal.open({
+							templateUrl: 'views/business/form/saveResultTpl.html',
+							backdrop: false,
+							controller: 'SaveResultCtrl',
+							resolve: {
+								params: function() {
+									return rtnVal;
+								}
+							}
+						});
+
+						$timeout(function() {
+							modalInstance2.close();
+						}, 1000);
+
+						if(attrs.redirectUrl) {
+							$timeout(function() {
+								$state.go(attrs.redirectUrl);
+							}, 1000);
+						}
+
+					}, function() {
+						console.log('save data canceled');
+					});
+
 				});
 			}
 		}
+	}
+]);
+
+app.controller('SaveModalCtrl', ['$scope', '$modalInstance', '$http', 'params', '$timeout',
+	function($scope, $modalInstance, $http, params, $timeout) {
+		$scope.params = params;
+		$http.post(params.url, {'data': params.data})
+			.success(function(data, status, headers, config) {
+				$timeout(function() {
+					console.log(data);
+					$modalInstance.close(data);
+				}, 1000);
+			})
+			.error(function(data, status, headers, config) {
+				$timeout(function() {
+					$modalInstance.close(data);
+				}, 1000);
+			});
+	}
+]);
+
+app.controller('SaveResultCtrl', ['$scope', 'params',
+	function($scope, params) {
+		$scope.params = params;
+	}
+]);
+
+app.directive('conowBtnSubmit', ['$modal', '$timeout', '$http', '$state',  
+	function($modal, $timeout, $http, $state) {
+		return {
+			restrict: 'AE',
+			template: '<button type="button" class="btn btn-primary">提交</button>',
+			link: function(scope, elem, attrs) {
+				elem.on('click', function(e) {
+					e.preventDefault();
+
+					var size = '';
+
+					var modalInstance = $modal.open({
+						templateUrl: 'views/business/form/submitTpl.html',
+						controller: 'SubmitModalCtrl',
+						backdrop: false,
+						resolve: {
+							params: function() {
+								var objParams = {
+									url: attrs.url,
+									data: scope.$eval(attrs.data),
+									title: attrs.title,
+									message: '提交中...'
+								};
+
+								return objParams;
+							}
+						}
+					});
+
+					var modalInstance2 = {};
+					modalInstance.result.then(function(rtnVal) {
+						modalInstance2 = $modal.open({
+							templateUrl: 'views/business/form/submitResultTpl.html',
+							backdrop: false,
+							controller: 'SubmitResultCtrl',
+							resolve: {
+								params: function() {
+									return rtnVal;
+								}
+							}
+						});
+
+						$timeout(function() {
+							modalInstance2.close();
+						}, 1000);
+
+						if(attrs.redirectUrl) {
+							$timeout(function() {
+								$state.go(attrs.redirectUrl);
+							}, 1000);
+						}
+
+					}, function() {
+						console.log('submit data canceled');
+					});
+
+				});
+			}
+		}
+	}
+]);
+
+app.controller('SubmitModalCtrl', ['$scope', '$modalInstance', '$http', 'params', '$timeout',
+	function($scope, $modalInstance, $http, params, $timeout) {
+		$scope.params = params;
+		$http.post(params.url, {'data': params.data})
+			.success(function(data, status, headers, config) {
+				$timeout(function() {
+					console.log(data);
+					$modalInstance.close(data);
+				}, 1000);
+			})
+			.error(function(data, status, headers, config) {
+				$timeout(function() {
+					$modalInstance.close(data);
+				}, 1000);
+			});
+	}
+]);
+
+app.controller('SubmitResultCtrl', ['$scope', 'params',
+	function($scope, params) {
+		$scope.params = params;
 	}
 ]);
 
@@ -41,7 +192,7 @@ app.directive('conowBtnDel', ['$modal', '$timeout',
 
 					var size = '';
 					var modalInstance = $modal.open({
-						templateUrl: 'views/business/form/delTpls.html',
+						templateUrl: 'views/business/form/delTpl.html',
 						controller: 'DelModalCtrl',
 						size: size,
 						backdrop: 'static',
@@ -62,7 +213,7 @@ app.directive('conowBtnDel', ['$modal', '$timeout',
 					var modalInstance2 = {};
 					modalInstance.result.then(function(rtnVal) {
 						modalInstance2 = $modal.open({
-							templateUrl: 'views/business/form/delResultTpls.html',
+							templateUrl: 'views/business/form/delResultTpl.html',
 							controller: 'DelModalResultCtrl',
 							backdrop: false,
 							resolve: {
@@ -91,8 +242,10 @@ app.controller('DelModalCtrl', ['$scope', '$modalInstance', 'params', '$http',
 
 		$scope.params.confirmMsg = $scope.params.confirmMsg || '是否确认删除？';
 		$scope.params.title = $scope.params.title || '确认删除';
-
+console.log(params)
 		$scope.confirm = function() {
+			console.log('DelModalCtrl -> params.data');
+			console.log(params.data)
 			$http.post(params.url, {'data': params.data})
 				.success(function(data, status) {
 					// console.log(data);

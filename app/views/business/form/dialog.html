@@ -1,4 +1,4 @@
-<title-bar title-name="ngDialog demo"><span class="h3">modal</span></title-bar>
+<title-bar name="ngDialog demo"><span class="h3">modal</span></title-bar>
 
 <div class="wrapper-md pos-rlt">
 	<div class="row">
@@ -18,7 +18,12 @@
 
 						<div class="form-group">
 							<label for="" class="control-label">保存操作</label>
-							<conow-btn-save url="users/userSave" data="{'entity': '{{ entity }}'}" title="保存测试" redirect-url="app.form.simpleForm"></conow-btn-save>
+							<conow-btn-save url="users/userSave" data="{'username': '{{ entity.username }}'}" title="保存测试" redirect-url="app.form.simpleForm"></conow-btn-save>
+						</div>
+
+						<div class="form-group">
+							<label for="" class="control-label">提交操作</label>
+							<conow-btn-submit url="users/userSave" data="{'username': '{{ entity.username }}'}" redirect-url="app.form.validatorForm"></conow-btn-submit>
 						</div>
 
 						<div class="form-group">
