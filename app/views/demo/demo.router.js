@@ -41,5 +41,13 @@ angular.module('app.demo', ['ui.router'])
 					// 	]
 					// }
 				})
+				.state('app.demo.conowArea', {
+					url: '/conowArea',
+					templateUrl: 'views/demo/conow-area/conow-area.html'
+				})
+				.state('app.demo.area', {
+					url: '/area',
+					templateUrl: 'views/demo/conow-area/area.html'
+				})
 		}
 	])
