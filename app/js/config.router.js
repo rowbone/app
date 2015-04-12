@@ -93,5 +93,19 @@ angular.module('demoApp')
 			// 	url: 'home',
 			// 	temp
 			// })
+			.state('app.tree', {
+				url: '/tree',
+				templateUrl: 'views/demo/tpls/ui_tree.html'
+				// ,
+				// resolve: {
+				// 	deps: ['$ocLazyLoad', function($ocLazyLoad) {
+				// 		return $ocLazyLoad.load('angularBootstrapNavTree').then(
+				// 			function() {
+				// 				return $ocLazyLoad.load('js/controllers/tree.js');
+				// 			}
+				// 		);
+				// 	}]
+				// }
+			})
 		}
 	);

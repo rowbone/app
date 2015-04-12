@@ -284,7 +284,6 @@ angular.module("conow.validator")
                               }
                               var self = this;
                               var $elem = angular.element(this);
-console.log($elem);
                               $timeout(function () {
                                   if (!scope[formName][self.name].$valid) {
                                       var errorMessages = conowValidator.getErrorMessages(self, scope[formName][self.name].$error);
