@@ -399,6 +399,24 @@ angular.module("conow.validator")
           }
       };
   }])
+  .directive('conowIdCheck', ['$timeout', 
+    function($timeout) {
+      var regExp = /^\d{2,5}$/;
+      return {
+        require: 'ngModel',
+        link: function(scope, elem, attr, ctrl) {
+          ctrl.$parsers.push(function(val) {
+            if(regExp.test(val)) {
+              console.log('true');
+              ctrl.$setValidity('idCheck', true);
+              return val;
+            }
+            ctrl.$setValidity('idCheck', false);
+          })
+        }
+      }
+    }
+  ])
   .directive("conowUniqueCheck", ['$timeout', '$http', function ($timeout, $http) {
       return{
           require: "ngModel",
