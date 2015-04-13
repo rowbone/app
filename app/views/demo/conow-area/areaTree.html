@@ -1,0 +1,39 @@
+
+<div class="row" ng-controller="AreaTreeCtrl">
+  <div class="col-xs-4 col-sm-6 col-md-6">
+    <div class="wrapper-md">
+      <button type="button" class="btn btn-primary" ng-click="showAreaModal()">选择地区</button>
+    </div>
+  </div>
+  <div class="col-xs-8 col-sm-6 col-md-4 col-lg-3">
+    <div class="wrapper-md">
+      <div class="b-a bg-light lter r r-2x">
+        <div>
+          <abn-tree 
+            req-url="data/bz/area.json" 
+            tree-control="my_tree" 
+            tree-data="treeData" 
+            search-input="true"
+            search-element="label"
+            on-select="my_tree_handler(branch)" 
+            multiselect="false" 
+            arr-selected="arrBranchs"
+            >
+          </abn-tree>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<!--   <div class="col-md-4">
+    <div class="dropdown">
+      <span class="btn btn-default dropdown-toggle" data-toggle="dropdown">abc</span>
+      <ul class="dropdown-menu" role="menu">
+        <li>广州</li>
+        <li>深圳</li>
+        <li>佛山</li>
+      </ul>
+    </div> 
+  </div> -->
+
+</div> 

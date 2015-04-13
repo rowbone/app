@@ -12,7 +12,7 @@ app.directive('conowBtnSave', ['$modal', '$timeout', '$http', '$state',
 	function($modal, $timeout, $http, $state) {
 		return {
 			restrict: 'AE',
-			template: '<button type="button" class="btn btn-success">保存</button>',
+			// template: '<button type="button" class="btn btn-success">保存</button>',
 			link: function(scope, elem, attrs) {
 				elem.on('click', function(e) {
 					e.preventDefault();
@@ -98,7 +98,7 @@ app.directive('conowBtnSubmit', ['$modal', '$timeout', '$http', '$state',
 	function($modal, $timeout, $http, $state) {
 		return {
 			restrict: 'AE',
-			template: '<button type="button" class="btn btn-primary">提交</button>',
+			// template: '<button type="button" class="btn btn-primary">提交</button>',
 			link: function(scope, elem, attrs) {
 				elem.on('click', function(e) {
 					e.preventDefault();

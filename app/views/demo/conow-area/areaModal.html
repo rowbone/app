@@ -2,18 +2,24 @@
   <div class="col">
     <div class="wrapper-md">
       <div class="b-a bg-light dk r r-2x">
-      <span ng-if="options.doing_async"><i class="fa fa-spin fa-spinner"></i>&nbsp;加载中...</span>
+        <!-- <span ng-if="options.doing_async"><i class="fa fa-spin fa-spinner"></i>&nbsp;加载中...</span> -->
+        
         <abn-tree 
-          tree-data         = "my_data" 
-          tree-control      = "my_tree" 
-          on-select         = "my_tree_handler(branch)" 
-          expand-level      = "2" 
-          initial-selection = "Granny Smith"
-          icon-leaf         = "fa fa-file-o"
-          icon-expand       = "fa fa-plus"
-          icon-collapse     = "fa fa-minus"
+          req-url="data/bz/area.json" 
+          tree-control="my_tree" 
+          tree-data="treeData" 
+          search-input="true"
+          search-element="label"
+          on-select="my_tree_handler(branch)" 
+          multiselect="false" 
+          arr-selected="arrBranchs"
           >
         </abn-tree>
+
+        <!-- <div class="pull-right">
+          <button class="btn btn-success" ng-click="confirm()">确定</button>
+          <button class="btn btn-defaultl" ng-click="cancel()">取消</button>
+        </div> -->
       </div>
     </div>
   </div>

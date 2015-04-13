@@ -107,5 +107,13 @@ angular.module('demoApp')
 				// 	}]
 				// }
 			})
+			.state('app.areaTree', {
+				url: '/areaTree',
+				templateUrl: 'views/demo/conow-area/areaTree.html'
+			})
+			.state('app.abnTree', {
+				url: '/abnTree',
+				templateUrl: 'views/demo/conow-abn-tree/abn_tree.html'
+			});
 		}
 	);

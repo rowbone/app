@@ -1,52 +1,97 @@
-// (function() {
+(function() {
   var module;
 
   module = angular.module('angularBootstrapNavTree', []);
-
-  module.directive('abnTree', [
-    '$timeout', function($timeout) {
+  /*searchOnSelect:'&', //点击搜索结果事件
+*/  module.directive('abnTree', [
+    '$timeout','$http', function($timeout,$http) {
       return {
         restrict: 'E',
-        template: "<ul class=\"nav nav-list nav-pills nav-stacked abn-tree\">\n  <li ng-repeat=\"row in tree_rows | filter:{visible:true} track by row.branch.uid\" ng-animate=\"'abn-tree-animate'\" ng-class=\"'level-' + {{ row.level }} + (row.branch.selected ? ' active':'')\" class=\"abn-tree-row\">\n    <a ng-click=\"user_clicks_branch(row.branch)\">\n      <i ng-class=\"row.tree_icon\" ng-click=\"row.branch.expanded = !row.branch.expanded\" class=\"indented tree-icon\"> </i>\n      <span class=\"indented tree-label\">{{ row.label }} </span>\n    </a>\n  </li>\n</ul>",
         replace: true,
         scope: {
-          treeData: '=',
-          onSelect: '&',
-          initialSelection: '@',
-          treeControl: '='
+          onSelect: '&',  //点击节点事件
+          initialSelection: '@', //初始化节点
+          searchInput : '@isSearchDisplay', //搜索栏的显示隐藏
+          isFindResults:'@isFindResults', //搜索是否找到结果
+          arrResults:'@arrRe', //搜索结果数组
+          isTreeDisplay:'@isTreeDisplay', //是否显示树
+          treeControl: '=',//树的方法调用对象
+          treeData : '=',//树的数据对象
+          arrSelected: '=' //多选返回的数组
         },
+        templateUrl:'vendor/modules/angular-bootstrap-nav-tree/abn_tree_tpl.html',
         link: function(scope, element, attrs) {
-          var error, expand_all_parents, expand_level, for_all_ancestors, for_each_branch, get_parent, n, on_treeData_change, select_branch, selected_branch, tree;
+          var error, expand_all_parents, expand_level, for_all_ancestors, for_each_branch, get_parent, n, on_treeData_change, select_branch ,multiselect_branch,foreach_selected_arr, selected_branch, tree ,multiselect;
+          
           error = function(s) {
             console.log('ERROR:' + s);
             debugger;
             return void 0;
           };
+          //是否显示搜索框
+          if (attrs.searchInput == 'true') {
+            scope.isSearchDisplay = 'true';
+          } else {
+            scope.isSearchDisplay = 'false';
+          }
+          //节点可展开图标初始化
           if (attrs.iconExpand == null) {
-            attrs.iconExpand = 'icon-plus  glyphicon glyphicon-plus  fa fa-plus';
+            attrs.iconExpand = 'fa fa-plus';
           }
+          //节点可收缩图标初始化
           if (attrs.iconCollapse == null) {
-            attrs.iconCollapse = 'icon-minus glyphicon glyphicon-minus fa fa-minus';
+            attrs.iconCollapse = 'fa fa-minus';
           }
+          //叶节点图标初始化
           if (attrs.iconLeaf == null) {
-            attrs.iconLeaf = 'icon-file  glyphicon glyphicon-file  fa fa-file';
+            attrs.iconLeaf = '';
           }
+          //默认展开层级数
           if (attrs.expandLevel == null) {
-            attrs.expandLevel = '3';
+            attrs.expandLevel = '2';
           }
           expand_level = parseInt(attrs.expandLevel, 10);
-          if (!scope.treeData) {
-            alert('no treeData defined for the tree!');
-            return;
-          }
-          if (scope.treeData.length == null) {
-            if (treeData.label != null) {
-              scope.treeData = [treeData];
-            } else {
-              alert('treeData should be an array of root branches');
-              return;
-            }
-          }
+
+          //请求获取后台数据并加载到树上
+          scope.treeData = [];
+          var getTreeData = function(location) {
+            var treeData = [];
+            $http.get(location)
+              .success(function(data) {
+                scope.treeData = data.obj;
+                return $timeout(function() {
+                  tree.expand_level();
+                }, 10);
+              })
+              .error(function(data) {
+                console.log('error......');
+                console.log(data);
+              });
+          };
+          //页面指令传入请求地址
+          getTreeData(attrs.reqUrl);
+          
+          scope.treeSearch = {};
+          //默认树显示
+          /*scope.isTreeDisplay = {};*/
+          scope.isTreeDisplay = "true";
+          //搜索返回对象
+          scope.arrRe = {};
+
+          scope.treeSearchEvent = function() {
+            scope.isTreeDisplay = "false";
+            select_branchs(scope.treeSearch.inputName);
+          };
+          scope.closeResultOpenTree = function(){
+            return $timeout(function(){
+              scope.treeSearch.inputName = "";
+              scope.isTreeDisplay = "true";
+            });
+          };
+
+          // 根据数据源拼凑树
+          // 层级遍历树，获取树节点（递归调用do_f）
+          // 可接收一个 function 参数[ function(branch, level)]
           for_each_branch = function(f) {
             var do_f, root_branch, _i, _len, _ref, _results;
             do_f = function(branch, level) {
@@ -70,76 +115,224 @@
             }
             return _results;
           };
+
           selected_branch = null;
-          select_branch = function(branch) {
-            if (!branch) {
-              if (selected_branch != null) {
-                selected_branch.selected = false;
-              }
-              selected_branch = null;
-              return;
-            }
-            if (branch !== selected_branch) {
-              if (selected_branch != null) {
-                selected_branch.selected = false;
-              }
-              branch.selected = true;
-              selected_branch = branch;
-              expand_all_parents(branch);
-              if (branch.onSelect != null) {
-                return $timeout(function() {
-                  return branch.onSelect(branch);
-                });
-              } else {
-                if (scope.onSelect != null) {
-                  return $timeout(function() {
-                    return scope.onSelect({
-                      branch: branch
-                    });
-                  });
-                }
-              }
-            }
+          
+          //根据节点label来寻找节点
+          if (attrs.searchElement == null) {
+            attrs.searchElement = "label";
           };
+          var searchKey = attrs.searchElement;
+          var searchKeyArr = new Array();
+          searchKeyArr = searchKey.split(";");
+          var searchIf = "";
+          for (var i = 0; i < searchKeyArr.length; i++) {
+            searchIf = searchIf + "|| b." + searchKeyArr[i] + ".indexOf(label)>=0 ";
+          };
+          searchIf = searchIf.substring(3, searchIf.length);
+          scope.isFindResults = {}; //树的搜索返回结果显示对象
+          scope.isFindResults.result = "true";
+
+        var select_branchs = function(label){
+          for_each_branch(function(b) {
+            if (b.selected) {
+              b.selected = false;
+            }
+          });
+          arrResults = [];
+          for_each_branch(function(b) {
+            //eval将字符串转换为条件
+            if (eval(searchIf)) {
+              return $timeout(function() {
+                select_branch_mutiple(b);
+              });
+            }
+          });
+          //搜索返回对象
+         
+          return $timeout(function() {
+            scope.arrRe.arrResultsInInput = arrResults;
+            if(scope.arrRe.arrResultsInInput.length > 0){
+              //树的搜索返回结果显示
+              scope.isFindResults.result = "true";
+            }else{
+             scope.isFindResults.result = "false";
+            }
+          },10);
+        };
+
+        //根据节点id来寻找节点
+        var select_branch_id = function(id){
+          var branch;
+          for_each_branch(function(b){
+            if (b.id == id){
+             branch =  b;
+            }
+          });
+          return branch;
+        };
+        //选择多个节点
+        var arrResults = new Array();
+        select_branch_mutiple = function(branch) {
+          arrResults.push(branch);
+          //默认处于选定状态
+          /*branch.selected = true;
+            expand_all_parents(branch);*/
+        };
+        //点击搜索结果
+        scope.searchOnSelect = function(id) {
+          branch = select_branch_id(id);
+          return $timeout(function() {
+            return scope.onSelect({
+              branch: branch
+            });
+          });
+        };
+
+        //点击一个节点
+        select_branch = function(branch) {
+console.log('select_branch');
+console.log(branch);
+          if (branch.id == undefined) {
+            tree.expand_branch(branch);
+            return;
+          }
+          //清空所有选择
+          for_each_branch(function(b) {
+            if (b.selected) {
+              b.selected = false;
+            }
+          });
+          if (!branch) {
+            if (selected_branch != null) {
+              selected_branch.selected = false;
+            }
+            selected_branch = null;
+            return;
+          }
+          if (branch !== selected_branch) {
+            if (selected_branch != null) {
+              selected_branch.selected = false;
+            }
+            branch.selected = true;
+            selected_branch = branch;
+            expand_all_parents(branch);
+            if (branch.onSelect != null) {
+              return $timeout(function() {
+                return branch.onSelect(branch);
+              });
+            } else {
+              if (scope.onSelect != null) {
+                return $timeout(function() {
+                  return scope.onSelect({
+                    branch: branch
+                  });
+                });
+              }
+            }
+          }
+        };
+
+        //多选操作
+        var selected_arr = new Array();
+        multiselect_branch = function(branch) {
+console.log('multiselect_branch');
+console.log(branch);
+          if (branch.id == undefined) {
+            tree.expand_branch(branch);
+            return;
+          }
+          //在多选数组中通过id查找是否存在该节点
+          branchSelected = foreach_selected_arr(branch.id, selected_arr);
+          //如果存在将该节点从数组中移除，不存在即放进数组中
+          if (branchSelected != undefined) {
+            branchSelected.selected = false;
+            selected_arr.indexof = function(id) {
+              var a = this;
+              for (var i = 0; i < a.length; i++) {
+                if (a[i].id == id)
+                  return i;
+              }
+            };
+            bnum = selected_arr.indexof(branch.id);
+            selected_arr.splice(bnum, 1);
+          } else if (branch.id != undefined) { //如果树节点id存在（不存在的是组织中的分类）
+            branch.selected = true;
+            selected_branch = branch;
+            selected_arr.push(branch);
+            expand_all_parents(branch);
+            scope.arrSelected = selected_arr;
+            //动态输出选择树的数组
+          } else { //如果树节点的id不存在
+            branch.selected = false;
+            tree.expand_branch(branch);
+          }
+          if (branch.onSelect != null) {
+            return $timeout(function() {
+              return branch.onSelect(selected_arr, "arr");
+            });
+          } else {
+            if (scope.onSelect != null) {
+              return $timeout(function() {
+                return scope.onSelect({
+                  branch: branch
+                });
+              });
+            }
+          }
+        };
+        //遍历已经选择的节点
+        foreach_selected_arr = function(id, arr) {
+          for (var i = 0; i < arr.length; i++) {
+            if (id == arr[i].id) {
+              return arr[i];
+            };
+          };
+        };
+        if (attrs.multiselect == "true") {
+          scope.user_clicks_branch = function(branch) {
+            return multiselect_branch(branch);
+          };
+        } else {
           scope.user_clicks_branch = function(branch) {
             if (branch !== selected_branch) {
               return select_branch(branch);
             }
           };
-          get_parent = function(child) {
-            var parent;
-            parent = void 0;
-            if (child.parent_uid) {
-              for_each_branch(function(b) {
-                if (b.uid === child.parent_uid) {
-                  return parent = b;
-                }
-              });
-            }
-            return parent;
-          };
-          for_all_ancestors = function(child, fn) {
-            var parent;
-            parent = get_parent(child);
-            if (parent != null) {
-              fn(parent);
-              return for_all_ancestors(parent, fn);
-            }
-          };
-          expand_all_parents = function(child) {
-            return for_all_ancestors(child, function(b) {
-              return b.expanded = true;
+        }
+        get_parent = function(child) {
+          var parent;
+          parent = void 0;
+          if (child.parent_uid) {
+            for_each_branch(function(b) {
+              if (b.uid === child.parent_uid) {
+                return parent = b;
+              }
             });
-          };
-          scope.tree_rows = [];
-          on_treeData_change = function() {
+          }
+          return parent;
+        };
+        for_all_ancestors = function(child, fn) {
+          var parent;
+          parent = get_parent(child);
+          if (parent != null) {
+            fn(parent);
+            return for_all_ancestors(parent, fn);
+          }
+        };
+        expand_all_parents = function(child) {
+          return for_all_ancestors(child, function(b) {
+            return b.expanded = true;
+          });
+        };
+        scope.tree_rows = [];
+        on_treeData_change = function() {
             var add_branch_to_list, root_branch, _i, _len, _ref, _results;
             for_each_branch(function(b, level) {
               if (!b.uid) {
                 return b.uid = "" + Math.random();
               }
             });
-            console.log('UIDs are set.');
             for_each_branch(function(b) {
               var child, _i, _len, _ref, _results;
               if (angular.isArray(b.children)) {
@@ -183,7 +376,7 @@
               }
             });
             add_branch_to_list = function(level, branch, visible) {
-              var child, child_visible, tree_icon, _i, _len, _ref, _results;
+              var child, child_visible, tree_icon, _i, _len, _ref, _results,check;
               if (branch.expanded == null) {
                 branch.expanded = false;
               }
@@ -196,6 +389,7 @@
                   tree_icon = attrs.iconExpand;
                 }
               }
+
               scope.tree_rows.push({
                 level: level,
                 branch: branch,
@@ -238,247 +432,359 @@
             b.level = level;
             return b.expanded = b.level < expand_level;
           });
-          if (scope.treeControl != null) {
-            if (angular.isObject(scope.treeControl)) {
-              tree = scope.treeControl;
-              tree.expand_all = function() {
-                return for_each_branch(function(b, level) {
-                  return b.expanded = true;
-                });
-              };
-              tree.collapse_all = function() {
-                return for_each_branch(function(b, level) {
-                  return b.expanded = false;
-                });
-              };
-              tree.get_first_branch = function() {
-                n = scope.treeData.length;
-                if (n > 0) {
-                  return scope.treeData[0];
-                }
-              };
-              tree.select_first_branch = function() {
-                var b;
-                b = tree.get_first_branch();
-                return tree.select_branch(b);
-              };
-              tree.get_selected_branch = function() {
-                return selected_branch;
-              };
-              tree.get_parent_branch = function(b) {
-                return get_parent(b);
-              };
-              tree.select_branch = function(b) {
-                select_branch(b);
-                return b;
-              };
-              tree.get_children = function(b) {
-                return b.children;
-              };
-              tree.select_parent_branch = function(b) {
-                var p;
-                if (b == null) {
-                  b = tree.get_selected_branch();
-                }
-                if (b != null) {
-                  p = tree.get_parent_branch(b);
-                  if (p != null) {
-                    tree.select_branch(p);
-                    return p;
-                  }
-                }
-              };
-              tree.add_branch = function(parent, new_branch) {
-                if (parent != null) {
-                  parent.children.push(new_branch);
-                  parent.expanded = true;
-                } else {
-                  scope.treeData.push(new_branch);
-                }
-                return new_branch;
-              };
-              tree.add_root_branch = function(new_branch) {
-                tree.add_branch(null, new_branch);
-                return new_branch;
-              };
-              tree.expand_branch = function(b) {
-                if (b == null) {
-                  b = tree.get_selected_branch();
-                }
-                if (b != null) {
-                  b.expanded = true;
-                  return b;
-                }
-              };
-              tree.collapse_branch = function(b) {
-                if (b == null) {
-                  b = selected_branch;
-                }
-                if (b != null) {
-                  b.expanded = false;
-                  return b;
-                }
-              };
-              tree.get_siblings = function(b) {
-                var p, siblings;
-                if (b == null) {
-                  b = selected_branch;
-                }
-                if (b != null) {
-                  p = tree.get_parent_branch(b);
-                  if (p) {
-                    siblings = p.children;
-                  } else {
-                    siblings = scope.treeData;
-                  }
-                  return siblings;
-                }
-              };
-              tree.get_next_sibling = function(b) {
-                var i, siblings;
-                if (b == null) {
-                  b = selected_branch;
-                }
-                if (b != null) {
-                  siblings = tree.get_siblings(b);
-                  n = siblings.length;
-                  i = siblings.indexOf(b);
-                  if (i < n) {
-                    return siblings[i + 1];
-                  }
-                }
-              };
-              tree.get_prev_sibling = function(b) {
-                var i, siblings;
-                if (b == null) {
-                  b = selected_branch;
-                }
-                siblings = tree.get_siblings(b);
-                n = siblings.length;
-                i = siblings.indexOf(b);
-                if (i > 0) {
-                  return siblings[i - 1];
-                }
-              };
-              tree.select_next_sibling = function(b) {
-                var next;
-                if (b == null) {
-                  b = selected_branch;
-                }
-                if (b != null) {
-                  next = tree.get_next_sibling(b);
-                  if (next != null) {
-                    return tree.select_branch(next);
-                  }
-                }
-              };
-              tree.select_prev_sibling = function(b) {
-                var prev;
-                if (b == null) {
-                  b = selected_branch;
-                }
-                if (b != null) {
-                  prev = tree.get_prev_sibling(b);
-                  if (prev != null) {
-                    return tree.select_branch(prev);
-                  }
-                }
-              };
-              tree.get_first_child = function(b) {
-                var _ref;
-                if (b == null) {
-                  b = selected_branch;
-                }
-                if (b != null) {
-                  if (((_ref = b.children) != null ? _ref.length : void 0) > 0) {
-                    return b.children[0];
-                  }
-                }
-              };
-              tree.get_closest_ancestor_next_sibling = function(b) {
-                var next, parent;
-                next = tree.get_next_sibling(b);
-                if (next != null) {
-                  return next;
-                } else {
-                  parent = tree.get_parent_branch(b);
-                  return tree.get_closest_ancestor_next_sibling(parent);
-                }
-              };
-              tree.get_next_branch = function(b) {
-                var next;
-                if (b == null) {
-                  b = selected_branch;
-                }
-                if (b != null) {
-                  next = tree.get_first_child(b);
-                  if (next != null) {
-                    return next;
-                  } else {
-                    next = tree.get_closest_ancestor_next_sibling(b);
-                    return next;
-                  }
-                }
-              };
-              tree.select_next_branch = function(b) {
-                var next;
-                if (b == null) {
-                  b = selected_branch;
-                }
-                if (b != null) {
-                  next = tree.get_next_branch(b);
-                  if (next != null) {
-                    tree.select_branch(next);
-                    return next;
-                  }
-                }
-              };
-              tree.last_descendant = function(b) {
-                var last_child;
-                if (b == null) {
-                  debugger;
-                }
-                n = b.children.length;
-                if (n === 0) {
-                  return b;
-                } else {
-                  last_child = b.children[n - 1];
-                  return tree.last_descendant(last_child);
-                }
-              };
-              tree.get_prev_branch = function(b) {
-                var parent, prev_sibling;
-                if (b == null) {
-                  b = selected_branch;
-                }
-                if (b != null) {
-                  prev_sibling = tree.get_prev_sibling(b);
-                  if (prev_sibling != null) {
-                    return tree.last_descendant(prev_sibling);
-                  } else {
-                    parent = tree.get_parent_branch(b);
-                    return parent;
-                  }
-                }
-              };
-              return tree.select_prev_branch = function(b) {
-                var prev;
-                if (b == null) {
-                  b = selected_branch;
-                }
-                if (b != null) {
-                  prev = tree.get_prev_branch(b);
-                  if (prev != null) {
-                    tree.select_branch(prev);
-                    return prev;
-                  }
-                }
-              };
-            }
+          
+          //tree方法控制对象
+          if (scope.treeControl == null) {
+            //如果在控制器中为声明对象，则初始化
+            scope.treeControl = {};
           }
+          //初始化多选返回的数组
+          if (scope.arrSelected == null){
+            scope.arrSelected = [];
+          }
+
+        if (angular.isObject(scope.treeControl)) {
+          tree = scope.treeControl;
+          tree.expand_level = function() {
+              return for_each_branch(function(b, level) {
+                b.level = level;
+                return b.expanded = b.level < expand_level;
+              });
+            };
+          tree.expand_all = function() {
+            return for_each_branch(function(b, level) {
+                return b.expanded = true;
+            });
+          };
+          tree.collapse_all = function() {
+            return for_each_branch(function(b, level) {
+              return b.expanded = false;
+            });
+          };
+          tree.get_first_branch = function() {
+            n = scope.treeData.length;
+console.info(n + "treeData length");
+            if (n > 0) {
+              return scope.treeData[0];
+            }
+          };
+          tree.select_first_branch = function() {
+            var b;
+            b = tree.get_first_branch();
+            return tree.select_branch(b);
+          };
+          tree.get_selected_branch = function() {
+            return selected_branch;
+          };
+
+          var arr = new Array();
+          tree.get_multiselect_branchs = function(){
+            for_each_branch(function(b) {
+              arr.push(tree.multiselect_branch(b));
+            });
+
+            return arr;
+          };
+
+          tree.get_parent_branch = function(b) {
+            return get_parent(b);
+          };
+          
+          tree.select_branch = function(b) {
+            select_branch(b);
+            return b;
+          };
+
+          tree.multiselect_branch = function(b) {
+            multiselect_branch(b);
+            return b;
+          };
+
+          tree.select_branchs = function(b) {
+            select_branchs(b);
+            return b;
+          };
+
+          tree.select_branch_id = function(b) {
+            return select_branch_id(b);;
+          };
+
+          tree.selected_delete = function(b){
+            return selected_delete(b);
+          };
+
+          tree.get_children = function(b) {
+            return b.children;
+          };
+          tree.select_parent_branch = function(b) {
+            var p;
+            if (b == null) {
+              b = tree.get_selected_branch();
+            }
+            if (b != null) {
+              p = tree.get_parent_branch(b);
+              if (p != null) {
+                tree.select_branch(p);
+                return p;
+              }
+            }
+          };
+
+          //添加节点
+          tree.add_branch = function(parent, new_branch) {
+            if (parent != null) {
+              parent.children.push(new_branch);
+              parent.expanded = true;
+              for_each_branch(function(b) {
+                if (b.selected) {
+                  b.selected = false;
+                }
+              });
+
+              /*new_branch.selected = true;*/
+              return $timeout(function(){
+               tree.select_branch(new_branch);
+               expand_all_parents(new_branch);
+              });
+            } else {
+              scope.treeData.push(new_branch);
+            }
+            return new_branch;
+          };
+
+          //修改节点
+          tree.edit_branch = function(branch, newName) {
+            branch.label = newName;
+            branch.selected = true;
+            return $timeout(function() {
+              tree.select_branch(branch);
+              expand_all_parents(branch);
+
+            });
+            return branch;
+          };
+
+          //删除节点
+          tree.delete_branch = function(b) {
+            var p;
+            p = tree.get_parent_branch(b);
+            if (p != null) {
+              var arr = p.children;
+              console.info(arr);
+              arr.indexof = function(value) {
+                var a = this;
+                for (var i = 0; i < a.length; i++) {
+                  if (a[i] == value)
+                    return i;
+                }
+              };
+              bnum = arr.indexof(b);
+              //删除的提示在业务中
+              p.children.splice(bnum, 1);
+              return $timeout(function() {
+                p = tree.get_parent_branch(b);
+                tree.select_branch(p);
+                expand_all_parents(b);
+              });
+            }
+          };
+
+          tree.add_root_branch = function(new_branch) {
+            tree.add_branch(null, new_branch);
+            return new_branch;
+          };
+
+          tree.expand_branch = function(b) {
+            if (b == null) {
+              b = tree.get_selected_branch();
+            }
+            if (b != null) {
+              b.expanded = true;
+              return b;
+            }
+          };
+
+          tree.collapse_branch = function(b) {
+            if (b == null) {
+              b = selected_branch;
+            }
+            if (b != null) {
+              b.expanded = false;
+              return b;
+            }
+          };
+
+          tree.get_siblings = function(b) {
+            var p, siblings;
+            if (b == null) {
+              b = selected_branch;
+            }
+            if (b != null) {
+              p = tree.get_parent_branch(b);
+              if (p) {
+                siblings = p.children;
+              } else {
+                siblings = scope.treeData;
+              }
+              return siblings;
+            }
+          };
+
+          tree.get_next_sibling = function(b) {
+            var i, siblings;
+            if (b == null) {
+              b = selected_branch;
+            }
+            if (b != null) {
+              siblings = tree.get_siblings(b);
+              n = siblings.length;
+              i = siblings.indexOf(b);
+              if (i < n) {
+                return siblings[i + 1];
+              }
+            }
+          };
+
+          tree.get_prev_sibling = function(b) {
+            var i, siblings;
+            if (b == null) {
+              b = selected_branch;
+            }
+            siblings = tree.get_siblings(b);
+            n = siblings.length;
+            i = siblings.indexOf(b);
+            if (i > 0) {
+              return siblings[i - 1];
+            }
+          };
+
+          tree.select_next_sibling = function(b) {
+            var next;
+            if (b == null) {
+              b = selected_branch;
+            }
+            if (b != null) {
+              next = tree.get_next_sibling(b);
+              if (next != null) {
+                return tree.select_branch(next);
+              }
+            }
+          };
+
+          tree.select_prev_sibling = function(b) {
+            var prev;
+            if (b == null) {
+              b = selected_branch;
+            }
+            if (b != null) {
+              prev = tree.get_prev_sibling(b);
+              if (prev != null) {
+                return tree.select_branch(prev);
+              }
+            }
+          };
+
+          tree.get_first_child = function(b) {
+            var _ref;
+            if (b == null) {
+              b = selected_branch;
+            }
+            if (b != null) {
+              if (((_ref = b.children) != null ? _ref.length : void 0) > 0) {
+                return b.children[0];
+              }
+            }
+          };
+
+          tree.get_closest_ancestor_next_sibling = function(b) {
+            var next, parent;
+            next = tree.get_next_sibling(b);
+            if (next != null) {
+              return next;
+            } else {
+              parent = tree.get_parent_branch(b);
+              return tree.get_closest_ancestor_next_sibling(parent);
+            }
+          };
+
+          tree.get_next_branch = function(b) {
+            var next;
+            if (b == null) {
+              b = selected_branch;
+            }
+            if (b != null) {
+              next = tree.get_first_child(b);
+              if (next != null) {
+                return next;
+              } else {
+                next = tree.get_closest_ancestor_next_sibling(b);
+                return next;
+              }
+            }
+          };
+
+          tree.select_next_branch = function(b) {
+            var next;
+            if (b == null) {
+              b = selected_branch;
+            }
+            if (b != null) {
+              next = tree.get_next_branch(b);
+              if (next != null) {
+                tree.select_branch(next);
+                return next;
+              }
+            }
+          };
+
+          tree.last_descendant = function(b) {
+            var last_child;
+            if (b == null) {
+              debugger;
+            }
+            n = b.children.length;
+            if (n === 0) {
+              return b;
+            } else {
+              last_child = b.children[n - 1];
+              return tree.last_descendant(last_child);
+            }
+          };
+
+          tree.get_prev_branch = function(b) {
+            var parent, prev_sibling;
+            if (b == null) {
+              b = selected_branch;
+            }
+            if (b != null) {
+              prev_sibling = tree.get_prev_sibling(b);
+              if (prev_sibling != null) {
+                return tree.last_descendant(prev_sibling);
+              } else {
+                parent = tree.get_parent_branch(b);
+                return parent;
+              }
+            }
+          };
+
+          return tree.select_prev_branch = function(b) {
+            var prev;
+            if (b == null) {
+              b = selected_branch;
+            }
+            if (b != null) {
+              prev = tree.get_prev_branch(b);
+              if (prev != null) {
+                tree.select_branch(prev);
+                return prev;
+              }
+            }
+          };
+        }
+          
         }
       };
     }
   ]);
 
-// }).call(this);
+}).call(this);

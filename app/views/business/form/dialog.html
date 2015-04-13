@@ -1,4 +1,4 @@
-<title-bar name="ngDialog demo"><span class="h3">modal</span></title-bar>
+<title-bar name="ngDialog demo"></title-bar>
 
 <div class="wrapper-md pos-rlt">
 	<div class="row">
@@ -18,12 +18,17 @@
 
 						<div class="form-group">
 							<label for="" class="control-label">保存操作</label>
-							<conow-btn-save url="users/userSave" data="{'username': '{{ entity.username }}'}" title="保存测试" redirect-url="app.form.simpleForm"></conow-btn-save>
+							<!-- <conow-btn-save url="users/userSave" data="{'username': '{{ entity.username }}'}" title="保存测试" redirect-url="app.form.simpleForm"></conow-btn-save> -->
+							<button type="button" class="btn btn-success" conow-btn-save url="users/userSave" data="{'username': '{{ entity.username }}'}" redirect-url="app.form.simpleForm">保存</button>
+
+							<a class="text-primary" conow-btn-save url="users/userSave" data="{'username': '{{ entity.username }}'}" redirect-url="app.form.simpleForm">保存2</a>
 						</div>
 
 						<div class="form-group">
 							<label for="" class="control-label">提交操作</label>
-							<conow-btn-submit url="users/userSave" data="{'username': '{{ entity.username }}'}" redirect-url="app.form.validatorForm"></conow-btn-submit>
+							<!-- <conow-btn-submit url="users/userSave" data="{'username': '{{ entity.username }}'}" redirect-url="app.form.validatorForm"></conow-btn-submit> -->
+							<button class="btn btn-primary" conow-btn-submit="" url="users/userSave" data="{'username': '{{ entity.username }}'}" redirect-url="app.form.validatorForm">提交</button>
+							<ul></ul>
 						</div>
 
 						<div class="form-group">
@@ -45,6 +50,20 @@
 		</div>
 
 		<div class="col-sm-6">
+			<div class="panel panel-info">
+				<div class="panel-heading">
+					<div class="panel-title">保存按钮操作使用说明</div>
+				</div>
+				<div class="panel-body">
+					<h4 class="font-bold">通过指令调用</h4>
+					<p>
+						<pre>
+&lt;button type="button" class="btn btn-success btn-sm" conow-btn-save url="users/userSave" data="{'username': '{{ entity.username }}'}" redirect-url="app.form.simpleForm"&gt;保存&lt;/button&gt;
+						</pre>
+					</p>
+				</div>
+			</div>
+
 			<div class="panel panel-info">
 				<div class="panel-heading font-bold">删除操作按钮使用说明</div>
 				<div class="panel-body">

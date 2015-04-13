@@ -180,20 +180,6 @@ app.controller('AbnTestController', function($scope, $timeout, $http, $modal) {
     };
 });
 
-app.directive('areaTree', ['$modal', 
-  function($modal) {
-    // 
-    console.log('areaTree directive ')
-    return {
-      restrict: 'AE',
-      templateUrl: 'views/demo/conow-area/areaModal.html',
-      link: function(scope, element, attrs) {
-        console.log('linking in areaTree directive')
-      }
-    }
-  }
-]);
-
 app.controller('AreaModalCtrl', ['$scope', '$http', '$modalInstance', 'tree_params', '$timeout', 
   function($scope, $http, $modalInstance, tree_params, $timeout) {
   // 

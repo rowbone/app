@@ -75,3 +75,8 @@
 2015-04-09:
 1、通过JS语句判断WEB网站的访问端是电脑还是手机
 	http://my.oschina.net/docin/blog/200663
+
+2015-04-13:
+1、sublime 之运行js方法
+	http://blog.csdn.net/dududu01/article/details/42804367
+

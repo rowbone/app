@@ -1,0 +1,5 @@
+
+1、sublime text 3，跳转到对应方法定义
+	CTags
+
+2、
