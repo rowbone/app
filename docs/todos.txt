@@ -80,3 +80,23 @@
 1、sublime 之运行js方法
 	http://blog.csdn.net/dududu01/article/details/42804367
 
+2015-04-14:
+1、AngularJS.directive系列：嵌套directive的通讯及scope研究
+	http://www.cnblogs.com/dajianshi/p/4071598.html
+
+2、[译]Angular-ui 之 多命名视图（Multiple Named Views）
+	http://www.cnblogs.com/dajianshi/p/4015609.html
+
+3、浏览器的工作原理：新式网络浏览器幕后揭秘
+	http://www.cnblogs.com/chehaoj/archive/2012/10/31/2747904.html
+
+4、Understanding Scopes
+	https://github.com/angular/angular.js/wiki/Understanding-Scopes
+
+5、基于 HTML5 构建 Web 操作系统
+	http://web.jobbole.com/28840/
+
+6、全面理解面向对象的 JavaScript
+	http://web.jobbole.com/38614/
+
+7、

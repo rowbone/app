@@ -1,21 +1,80 @@
 'use strict';
 
-app.controller('ModalParentCtrl', ['$scope', '$modal', function($scope, $modal) {
+app.controller('ModalParentCtrl', ['$scope', '$modal', '$rootScope', '$http', 
+	function($scope, $modal, $rootScope, $http) {
 
-	// $scope.entity = {
-	// 	'username': 'staff1'
-	// };
+		$http.get('data/bz/listTpl.json')
+			.success(function(data, status) {
+				$scope.items = data;
+			})
+			.error(function(data, status) {
+				console.log('error.............')
+				$scope.items = [];
+			});
 
-}]);
+		$rootScope.options = {
+			isPC: true
+		};
 
-app.directive('conowBtnSave', ['$modal', '$timeout', '$http', '$state',  
-	function($modal, $timeout, $http, $state) {
+		$scope.changeAgent = function(e) {
+			$rootScope.options.isPC = !$rootScope.options.isPC;
+
+			return;
+		};
+
+		$scope.beforeSave = function() {
+			// 
+			var entity = {
+				abc: 'abc'
+			}
+			if(!$scope.entity) {
+				$scope.entity = {};
+			}
+			angular.extend($scope.entity, entity);
+			console.log('before save.............')
+			return true;
+		};
+
+		$scope.afterSave = function() {
+			console.log('after save...............')
+			return true;
+		};
+
+		$scope.showLayer = function() {
+			console.log('showLayer....');
+			var modal = $modal.open({
+				templateUrl: 'views/business/form/validatorForm.html'
+			});
+			// 
+		};
+
+	}
+]);
+
+app.directive('conowBtnSave', ['$modal', '$timeout', '$http', '$state', '$parse', 
+	function($modal, $timeout, $http, $state, $parse) {
 		return {
-			restrict: 'AE',
+			// restrict: 'AE',
 			// template: '<button type="button" class="btn btn-success">保存</button>',
 			link: function(scope, elem, attrs) {
+				// beforeFunc: 点击前调用的方法，由具有业务提供。保存操作前执行
+				// flag: 标志位，默认为 true。用于判断是否进行下一步操作，保存 beforeFunc/afterFunc 的返回值
+				// afterFunc：点击后调用的方法，由具体业务提供。保存完成后，跳转前执行
+				var beforeFunc = $parse(attrs.beforeFunc),
+						afterFunc = $parse(attrs.afterFunc),
+						flag = true,
+						redirectUrl = attrs.redirectUrl;
+
 				elem.on('click', function(e) {
-					e.preventDefault();
+					e.preventDefault();console.log(beforeFunc)
+					if(attrs.beforeFunc && angular.isFunction(beforeFunc)) {
+						scope.$apply(function () {
+					    flag = beforeFunc(scope);
+						});
+					}
+					if(!flag) {
+						return;
+					}
 
 					var size = '';
 
@@ -52,14 +111,21 @@ app.directive('conowBtnSave', ['$modal', '$timeout', '$http', '$state',
 
 						$timeout(function() {
 							modalInstance2.close();
+
+							if(attrs.afterFunc && angular.isFunction(afterFunc)) {
+								scope.$apply(function() {
+									flag = afterFunc(scope);
+								});
+								if(!flag) {
+									return;
+								}
+							}
+
+							if(redirectUrl) {
+								$state.go(redirectUrl);
+							}
+
 						}, 1000);
-
-						if(attrs.redirectUrl) {
-							$timeout(function() {
-								$state.go(attrs.redirectUrl);
-							}, 1000);
-						}
-
 					}, function() {
 						console.log('save data canceled');
 					});
@@ -97,7 +163,7 @@ app.controller('SaveResultCtrl', ['$scope', 'params',
 app.directive('conowBtnSubmit', ['$modal', '$timeout', '$http', '$state',  
 	function($modal, $timeout, $http, $state) {
 		return {
-			restrict: 'AE',
+			// restrict: 'AE',
 			// template: '<button type="button" class="btn btn-primary">提交</button>',
 			link: function(scope, elem, attrs) {
 				elem.on('click', function(e) {
@@ -183,8 +249,8 @@ app.controller('SubmitResultCtrl', ['$scope', 'params',
 app.directive('conowBtnDel', ['$modal', '$timeout',
 	function($modal, $timeout) {
 		return {
-			restrict: 'AE',
-			template: '<button type="button" class="btn btn-danger">删除</button>',
+			// restrict: 'AE',
+			// template: '<button type="button" class="btn btn-danger">删除</button>',
 			link: function(scope, elem, attrs) {
 
 				elem.on('click', function(e) {
@@ -277,15 +343,15 @@ app.controller('DelModalResultCtrl', ['$scope', '$modalInstance', 'params',
 app.directive('conowBtnPrompt', ['$modal', 
 	function($modal) {
 		return {
-			restrict: 'AE',
-			template: '<button type="button" class="btn btn-info">提示</button>',
+			// restrict: 'AE',
+			// template: '<button type="button" class="btn btn-info">提示</button>',
 			link: function(scope, elem, attrs) {
 
 				elem.on('click', function(e) {
 					e.preventDefault();
 
 					var modalInstance = $modal.open({
-						templateUrl: 'views/business/form/promptTpls.html',
+						templateUrl: 'views/business/form/promptTpl.html',
 						controller: 'PromptModalCtrl',
 						backdrop: 'static',
 						resolve: {
@@ -337,14 +403,14 @@ app.controller('PromptModalCtrl', ['$scope', '$modalInstance', 'params',
 app.directive('conowBtnSel', ['$modal', 
 	function($modal) {
 		return {
-			restrict: 'AE',
-			template: '<button type="button" class="btn btn-primary">选择</button>',
+			// restrict: 'AE',
+			// template: '<button type="button" class="btn btn-primary">选择</button>',
 			link: function(scope, elem, attrs) {
 				elem.on('click', function(e) {
 					e.preventDefault();
 
 					var modalInstance = $modal.open({
-						templateUrl: 'views/business/form/listTpls.html',
+						templateUrl: 'views/business/form/listTpl.html',
 						controller: 'SelModalCtrl',
 						backdrop: true,
 						resolve: {
@@ -371,10 +437,23 @@ app.directive('conowBtnSel', ['$modal',
 	}
 ]);
 
-app.controller('SelModalCtrl', ['$scope', '$modalInstance', 'params',
-	function($scope, $modalInstance, params) {
+app.controller('SelModalCtrl', ['$scope', '$modalInstance', 'params', '$rootScope', '$http',  
+	function($scope, $modalInstance, params, $rootScope, $http) {
 		$scope.params = params;	
 		$scope.params.title = params.title || '请选择';
+
+		$http.get('data/bz/listTpl.json')
+			.success(function(data, status) {
+				$scope.items = data;
+			})
+			.error(function(data, status) {
+				console.log('error.............')
+				$scope.items = [];
+			});
+
+		$scope.options = {
+			isPC: $rootScope.options.isPC
+		};
 
 		$scope.confirm = function() {
 			// 
@@ -391,3 +470,77 @@ app.controller('SelModalCtrl', ['$scope', '$modalInstance', 'params',
 
 	}
 ]);
+
+app.directive('responsiveModal', ['$modal', 
+	function($modal) {
+		return {
+			'restrict': 'AE',
+			// templateUrl: 'views/business/form/modalTpl.html',
+			// transclude: true,
+			// replace: true,
+			link: function(scope, elem, attrs) {
+				// 
+				elem.on('click', function(e) {
+					// 
+					e.preventDefault();
+
+					var $modalInstance = $modal.open({
+						templateUrl: 'views/business/form/modalTpl.html',
+						controller: 'responsiveModalCtrl',
+						resolve: {
+							params: function() {
+								var objParams = {
+									innerUrl: 'views/business/form/listTpl2.html',
+									title: '请选择',
+									items: scope.$eval(attrs.data)
+								};
+
+								return objParams;
+							}
+						}
+					});
+
+					$modalInstance.result.then(function(rtnVal) {
+						scope.output = rtnVal;
+					}, function(rtnVal) {
+						console.log(rtnVal);
+					});
+				})
+			}
+		}
+	}
+]);
+
+app.controller('responsiveModalCtrl', ['$scope', '$modalInstance', '$rootScope', 'params', 
+	function($scope, $modalInstance, $rootScope, params) {
+		console.log('responsiveModalCtrl')
+
+		$scope.params = params;
+
+		$scope.options = {
+			isPC: $rootScope.options.isPC
+		};
+
+		var arrSelected = $scope.arrSelected = [];
+
+		$scope.click = function(index) {
+			var item = params.items[index];
+			index = arrSelected.toString().indexOf(item.id);
+			if(index > -1) {
+				arrSelected.splice(index, 1);
+			} else {
+				arrSelected.push(item.id);
+			}
+		};
+
+		$scope.confirm = function() {
+			console.log($scope.arrSelected);
+			$modalInstance.close($scope.arrSelected);
+		};
+
+		$scope.cancel = function() {
+			$modalInstance.dismiss('cancel...');
+		};
+
+	}
+])

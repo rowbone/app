@@ -7,8 +7,9 @@
 
 <div class="modal-header">
 	<div ng-if="!options.isPC">
-		<a class="modal-title" ng-click="cancel()"><i class="fa fa-angle-left text-2x"></i></a>
+		<a class="fa fa-angle-left pull-left text-2x pos-fix" ng-click="cancel()"></a>
 		<a class="pull-right text-2x text-primary" ng-click="confirm()">确定</a>
+		<div class="text-center text-lg text-2x">请选择</div>
 	</div>
 	<div ng-if="options.isPC">
 	  <span class="modal-title h3" ng-bind="params.title"></span>
@@ -17,30 +18,7 @@
 
 </div>
 <div class="modal-body">
-	<table class="table table-striped">
-		<thead>
-			<tr>
-				<th scope="row">
-					<label>
-						<input type="checkbox">
-					</label>
-				</th>
-				<th>First Name</th>
-				<th>Last Name</th>
-				<th>Username</th>
-			</tr>
-		</thead>
-		<tbody>
-			<tr ng-repeat="item in items">
-				<th scope="row">
-					<input type="checkbox">{{ $index + 1 }}
-				</th>
-				<td>{{ item.firstName }}</td>
-				<td>{{ item.lastName }}</td>
-				<td>{{ item.userName }}</td>
-			</tr>
-		</tbody>
-	</table>
+	<div ng-include="params.innerUrl" autoscroll></div>
 </div>
 <div class="modal-footer">
 	<div ng-if="options.isPC">

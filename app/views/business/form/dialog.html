@@ -19,7 +19,8 @@
 						<div class="form-group">
 							<label for="" class="control-label">保存操作</label>
 							<!-- <conow-btn-save url="users/userSave" data="{'username': '{{ entity.username }}'}" title="保存测试" redirect-url="app.form.simpleForm"></conow-btn-save> -->
-							<button type="button" class="btn btn-success" conow-btn-save url="users/userSave" data="{'username': '{{ entity.username }}'}" redirect-url="app.form.simpleForm">保存</button>
+							<!-- <button type="button" class="btn btn-success" conow-btn-save url="users/userSave" data="{'username': '{{ entity.username }}'}" redirect-url="app.form.simpleForm">保存</button> -->
+							<button type="button" class="btn btn-success" conow-btn-save url="users/userSave" data="{{entity}}" redirect-url="app.form.simpleForm" before-func="beforeSave()" after-func="afterSave()">保存</button>
 
 							<a class="text-primary" conow-btn-save url="users/userSave" data="{'username': '{{ entity.username }}'}" redirect-url="app.form.simpleForm">保存2</a>
 						</div>
@@ -28,20 +29,36 @@
 							<label for="" class="control-label">提交操作</label>
 							<!-- <conow-btn-submit url="users/userSave" data="{'username': '{{ entity.username }}'}" redirect-url="app.form.validatorForm"></conow-btn-submit> -->
 							<button class="btn btn-primary" conow-btn-submit="" url="users/userSave" data="{'username': '{{ entity.username }}'}" redirect-url="app.form.validatorForm">提交</button>
-							<ul></ul>
+							<span class="text-info" conow-btn-submit url="users/userSave" data="{'username': '{{ entity.username }}'}" redirect-url="app.form.validatorForm" style="cursor: pointer;">提交2</span>
 						</div>
 
 						<div class="form-group">
 							<label for="" class="control-label">删除操作</label>
-							<conow-btn-del url="users/userDel" data="{'username': '{{ entity.username }}'}" title="标题测试" confirm-msg="确认删除{{entity.username}}?"></conow-btn-del>
+							<button class="btn btn-danger" conow-btn-del url="users/userDel" data="{'username': '{{ entity.username }}'}" title="标题测试" confirm-msg="确认删除{{entity.username}}?">删除</button>
+							<ul class="list-unstyled">
+								<li>
+									<a class="text-danger" conow-btn-del url="users/userDel" data="{'username': '{{ entity.username }}'}" title="标题测试" confirm-msg="确认删除{{entity.username}}?">删除2</a>
+								</li>
+							</ul>
 						</div>
 						<div class="form-group">
 							<label for="" class="control-label">提示信息</label>
-							<conow-btn-prompt title="提示标题测试" data="{'username': '{{ entity.username }}', 'email': '{{ entity.email }}'}"></conow-btn-prompt>
+							<button class="btn btn-info" conow-btn-prompt title="提示标题测试" data="{'username': '{{ entity.username }}', 'email': '{{ entity.email }}'}">提示信息</button>
+							<a class="text-info" conow-btn-prompt title="提示标题测试" data="{'username': '{{ entity.usernmae }}', 'email': '{{ entity.email }}'}">提示信息2</a>
 						</div>
 						<div class="form-group">
 							<label for="" class="control-label">列表选择</label>
-							<conow-btn-sel callback-func="" template-url=""></conow-btn-sel>
+							<!-- <conow-btn-sel callback-func="" template-url=""></conow-btn-sel> -->
+							<button type="button" class="btn btn-primary" conow-btn-sel>选择</button>
+							<button type="button" class="btn btn-primary" ng-click="changeAgent()">Change Agent</button>
+						</div>
+						<div class="form-group">
+							<label for="" class="control-label">Responsive Modal</label>
+							<button type="button" class="btn btn-primary" responsive-modal data="items">Responsive Modal</button>
+						</div>
+						<div class="form-group">
+							<label for="" class="control-label">弹出层</label>
+							<button type="button" class="btn btn-default" ng-click="showLayer()">弹出</button>
 						</div>
 					</form>
 				</div>
