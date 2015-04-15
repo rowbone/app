@@ -1,11 +1,8 @@
-<style>
-	.modal-body {
-		height: 400px;
-		overflow: auto;
-	}
-</style>
+
+<link rel="stylesheet" href="views/business/form/modalTpl_style.css">
 
 <div class="modal-header">
+<!-- 
 	<div ng-if="!options.isPC">
 		<a class="fa fa-angle-left pull-left text-2x pos-fix" ng-click="cancel()"></a>
 		<a class="pull-right text-2x text-primary" ng-click="confirm()">确定</a>
@@ -15,14 +12,20 @@
 	  <span class="modal-title h3" ng-bind="params.title"></span>
 	  <a class="glyphicon glyphicon-remove pull-right" ng-click="close()"></a>	
 	</div>
+	 -->
+
+	<div class="modal-op">
+		<a class="fa fa-angle-left pull-left text-2x pos-fix sm-go-back" ng-click="cancel()"></a>
+		<a class="pull-right text-primary sm-confirm" ng-click="confirm()">确定</a>
+		<a class="glyphicon glyphicon-remove pull-right md-close" ng-click="close()"></a>
+		<div class="text-center text-lg text-2x sel-title">请选择</div>
+	</div>
 
 </div>
 <div class="modal-body">
 	<div ng-include="params.innerUrl" autoscroll></div>
 </div>
-<div class="modal-footer">
-	<div ng-if="options.isPC">
-		<button type="button" class="btn btn-success" ng-click="confirm()">确定</button>
-		<button type="button" class="btn btn-default" ng-click="cancel()">取消</button>
-	</div>
+<div class="modal-footer footer-op">
+	<button type="button" class="btn btn-success" ng-click="confirm()">确定</button>
+	<button type="button" class="btn btn-default" ng-click="cancel()">取消</button>
 </div>

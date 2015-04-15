@@ -521,15 +521,34 @@ app.controller('responsiveModalCtrl', ['$scope', '$modalInstance', '$rootScope',
 			isPC: $rootScope.options.isPC
 		};
 
-		var arrSelected = $scope.arrSelected = [];
+		var indexInArr = function(arr, obj) {
+			if(!angular.isArray(arr)) {
+				if(angular.equals(arr, obj)) {
+					return 0;
+				} else {
+					return -1;
+				}
+			}
+			for(var i=0; i<arr.length; i ++) {
+				if(angular.equals(arr[i], obj)) {
+					return i;
+				}
+			}
+
+			return -1;
+		};
+
+		var arrSelected = $scope.arrSelected = [],
+				items = params.items;
 
 		$scope.click = function(index) {
 			var item = params.items[index];
-			index = arrSelected.toString().indexOf(item.id);
+			index = indexInArr(arrSelected, item);
+
 			if(index > -1) {
 				arrSelected.splice(index, 1);
 			} else {
-				arrSelected.push(item.id);
+				arrSelected.push(item);
 			}
 		};
 
@@ -538,9 +557,13 @@ app.controller('responsiveModalCtrl', ['$scope', '$modalInstance', '$rootScope',
 			$modalInstance.close($scope.arrSelected);
 		};
 
+		$scope.close = function() {
+			$modalInstance.dismiss('close..........');
+		};
+
 		$scope.cancel = function() {
 			$modalInstance.dismiss('cancel...');
 		};
 
 	}
-])
+]);
