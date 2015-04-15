@@ -3,6 +3,11 @@
 app.controller('ModalParentCtrl', ['$scope', '$modal', '$rootScope', '$http', 
 	function($scope, $modal, $rootScope, $http) {
 
+		$scope.entity = {
+			userName: 'abc',
+			email: 'abc@email.com'
+		}
+
 		$http.get('data/bz/listTpl.json')
 			.success(function(data, status) {
 				$scope.items = data;
@@ -11,6 +16,18 @@ app.controller('ModalParentCtrl', ['$scope', '$modal', '$rootScope', '$http',
 				console.log('error.............')
 				$scope.items = [];
 			});
+
+			$scope.selectedItems = [{
+					"id": "003",
+					"firstName": "Larry",
+					"lastName": "the Bird",
+					"userName": "@twitter"
+				}, {
+					"id": "008",
+					"firstName": "Larry",
+					"lastName": "the Bird",
+					"userName": "@twitter"
+			}];
 
 		$rootScope.options = {
 			isPC: true
@@ -38,14 +55,6 @@ app.controller('ModalParentCtrl', ['$scope', '$modal', '$rootScope', '$http',
 		$scope.afterSave = function() {
 			console.log('after save...............')
 			return true;
-		};
-
-		$scope.showLayer = function() {
-			console.log('showLayer....');
-			var modal = $modal.open({
-				templateUrl: 'views/business/form/validatorForm.html'
-			});
-			// 
 		};
 
 	}
@@ -478,30 +487,43 @@ app.directive('responsiveModal', ['$modal',
 			// templateUrl: 'views/business/form/modalTpl.html',
 			// transclude: true,
 			// replace: true,
+			// scope: {
+			// 	items: '@',
+			// 	selectedItems: '@'
+			// },
 			link: function(scope, elem, attrs) {
-				// 
+				var cols = attrs.cols;
+				console.log(cols)
+				var colsArr = cols.split(';');
+				var colArr = [];
+				var colsMap = {};
+				for(var i=0; i<colsArr.length; i++) {
+					colArr = colsArr[i].split(':');
+					colsMap[colArr[0]] = colArr[1];
+				}
+
 				elem.on('click', function(e) {
-					// 
 					e.preventDefault();
 
 					var $modalInstance = $modal.open({
 						templateUrl: 'views/business/form/modalTpl.html',
-						controller: 'responsiveModalCtrl',
+						controller: 'ResponsiveModalCtrl',
 						resolve: {
 							params: function() {
 								var objParams = {
 									innerUrl: 'views/business/form/listTpl2.html',
 									title: '请选择',
-									items: scope.$eval(attrs.data)
+									items: scope.$eval(attrs.items),
+									selectedItems: scope.$eval(attrs.selectedItems),
+									colsMap: colsMap
 								};
-
 								return objParams;
 							}
 						}
 					});
 
 					$modalInstance.result.then(function(rtnVal) {
-						scope.output = rtnVal;
+						scope.selectedItems = rtnVal;
 					}, function(rtnVal) {
 						console.log(rtnVal);
 					});
@@ -511,14 +533,81 @@ app.directive('responsiveModal', ['$modal',
 	}
 ]);
 
-app.controller('responsiveModalCtrl', ['$scope', '$modalInstance', '$rootScope', 'params', 
+app.directive('responsiveModal2', ['$modal', 
+	function($modal) {
+		return {
+			'restrict': 'AE',
+			link: function(scope, elem, attrs) {
+
+				elem.on('click', function(e) {
+					e.preventDefault();
+
+					var $modalInstance = $modal.open({
+						templateUrl: 'views/business/form/modalTpl.html',
+						controller: 'ResponsiveModalCtrl',
+						resolve: {
+							params: function() {
+								var objParams = {
+									innerUrl: 'views/business/form/listTpl3.html',
+									title: '请选择',
+									items: scope.$eval(attrs.items),
+									selectedItems: scope.$eval(attrs.selectedItems)
+								};
+								return objParams;
+							}
+						}
+					});
+
+					$modalInstance.result.then(function(rtnVal) {
+						scope.selectedItems = rtnVal;
+					}, function(rtnVal) {
+						console.log(rtnVal);
+					});
+				})
+			}
+		}
+	}
+]);
+
+app.controller('ResponsiveModalCtrl', ['$scope', '$modalInstance', '$rootScope', 'params', 
 	function($scope, $modalInstance, $rootScope, params) {
-		console.log('responsiveModalCtrl')
+
+		var colsMap = params.colsMap;
+		var colsKey = Object.keys(colsMap);
+		var colsValue = [];console.log(colsMap)
+		for(var i=0; i<colsKey.length; i++) {
+			colsValue.push(colsMap[colsKey[i]]);
+		}
+
+		$scope.colsKey = colsKey;
+		$scope.colsValue = colsValue;
 
 		$scope.params = params;
 
-		$scope.options = {
-			isPC: $rootScope.options.isPC
+		var arrSelected = $scope.arrSelected = params.selectedItems,
+				items = params.items;
+
+		if(angular.equals(arrSelected, items)) {
+			$scope.isAllSelected = true;
+		} else {
+			$scope.isAllSelected = false;
+		}
+
+		$scope.isSelectedAll = function() {
+			if(angular.equals(params.items, $scope.arrSelected)) {
+				return true;
+			} else {
+				return false;
+			}
+		};
+
+		$scope.allChange = function() {
+			$scope.isAllSelected = !$scope.isAllSelected;
+			if(!$scope.isAllSelected) {
+				$scope.arrSelected.length = 0;
+			} else {
+				$scope.arrSelected = params.items.concat();
+			}
 		};
 
 		var indexInArr = function(arr, obj) {
@@ -538,10 +627,15 @@ app.controller('responsiveModalCtrl', ['$scope', '$modalInstance', '$rootScope',
 			return -1;
 		};
 
-		var arrSelected = $scope.arrSelected = [],
-				items = params.items;
+		$scope.inArr = function(arr, obj) {
+			if(indexInArr(arr, obj) > -1) {
+				return true;
+			} else {
+				return false;
+			}
+		};
 
-		$scope.click = function(index) {
+		$scope.oneClick = function(index) {
 			var item = params.items[index];
 			index = indexInArr(arrSelected, item);
 
@@ -553,7 +647,6 @@ app.controller('responsiveModalCtrl', ['$scope', '$modalInstance', '$rootScope',
 		};
 
 		$scope.confirm = function() {
-			console.log($scope.arrSelected);
 			$modalInstance.close($scope.arrSelected);
 		};
 

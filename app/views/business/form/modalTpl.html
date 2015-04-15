@@ -2,17 +2,6 @@
 <link rel="stylesheet" href="views/business/form/modalTpl_style.css">
 
 <div class="modal-header">
-<!-- 
-	<div ng-if="!options.isPC">
-		<a class="fa fa-angle-left pull-left text-2x pos-fix" ng-click="cancel()"></a>
-		<a class="pull-right text-2x text-primary" ng-click="confirm()">确定</a>
-		<div class="text-center text-lg text-2x">请选择</div>
-	</div>
-	<div ng-if="options.isPC">
-	  <span class="modal-title h3" ng-bind="params.title"></span>
-	  <a class="glyphicon glyphicon-remove pull-right" ng-click="close()"></a>	
-	</div>
-	 -->
 
 	<div class="modal-op">
 		<a class="fa fa-angle-left pull-left text-2x pos-fix sm-go-back" ng-click="cancel()"></a>
@@ -23,7 +12,7 @@
 
 </div>
 <div class="modal-body">
-	<div ng-include="params.innerUrl" autoscroll></div>
+	<div ng-include="params.innerUrl"></div>
 </div>
 <div class="modal-footer footer-op">
 	<button type="button" class="btn btn-success" ng-click="confirm()">确定</button>

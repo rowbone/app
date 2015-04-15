@@ -46,20 +46,23 @@
 							<button class="btn btn-info" conow-btn-prompt title="提示标题测试" data="{'username': '{{ entity.username }}', 'email': '{{ entity.email }}'}">提示信息</button>
 							<a class="text-info" conow-btn-prompt title="提示标题测试" data="{'username': '{{ entity.usernmae }}', 'email': '{{ entity.email }}'}">提示信息2</a>
 						</div>
-						<div class="form-group">
-							<label for="" class="control-label">列表选择</label>
+<!-- 						<div class="form-group">
+							<label for="" class="control-label">列表选择</label> -->
 							<!-- <conow-btn-sel callback-func="" template-url=""></conow-btn-sel> -->
-							<button type="button" class="btn btn-primary" conow-btn-sel>选择</button>
+<!-- 							<button type="button" class="btn btn-primary" conow-btn-sel>选择</button>
 							<button type="button" class="btn btn-primary" ng-click="changeAgent()">Change Agent</button>
-						</div>
+						</div> -->
 						<div class="form-group">
 							<label for="" class="control-label">Responsive Modal</label>
-							<button type="button" class="btn btn-primary" responsive-modal data="items">Responsive Modal</button>
+							<button type="button" class="btn btn-primary" responsive-modal cols="First Name:firstName;Last Name:lastName;Username:userName" items="items" selected-items="selectedItems">Responsive Modal</button>
 						</div>
-						<div class="form-group">
-							<label for="" class="control-label">弹出层</label>
-							<button type="button" class="btn btn-default" ng-click="showLayer()">弹出</button>
-						</div>
+
+<!-- 						<div class="form-group">
+							<label for="" class="control-label">Responsive Modal2</label>
+							<button type="button" class="btn btn-primary" responsive-modal2 items="items" selected-items="selectedItems">Responsive Modal2</button>
+						</div> -->
+
+						<pre>{{ selectedItems | json }}</pre>
 					</form>
 				</div>
 				<div class="panel-footer">$modal 弹出框测试</div>
@@ -72,22 +75,36 @@
 					<div class="panel-title">保存按钮操作使用说明</div>
 				</div>
 				<div class="panel-body">
-					<h4 class="font-bold">通过指令调用</h4>
+					<h4 class="font-bold">通过指令<code>conow-btn-save(属性)</code>调用</h4>
 					<p>
 						<pre>
 &lt;button type="button" class="btn btn-success btn-sm" conow-btn-save url="users/userSave" data="{'username': '{{ entity.username }}'}" redirect-url="app.form.simpleForm"&gt;保存&lt;/button&gt;
+&lt;a class="text-primary" conow-btn-save url="users/userSave" data="{'username': '{{ entity.username }}'}" redirect-url="app.form.simpleForm"&gt;保存2&lt;/a&gt;
 						</pre>
 					</p>
+					<hr>
+					<h4 class="font-bold">参数说明</h4>
+					<h5><code>url{String}</code></h5>
+					<p>保存对应的后台接口地址</p>
+					<h5><code>data{Object}</code></h5>
+					<p>提交到后台的数据</p>
+					<h5><code>redirect-url{String}</code></h5>
+					<p>保存成功的重定向地址（保存失败不会重定向）</p>
+					<h5><code>before-func{Function}</code></h5>
+					<p>保存操作前运行的方法，可进行部分逻辑处理，返回true时才进行保存操作</p>
+					<h5><code>after-func{Function}</code></h5>
+					<p>保存操作成功运行的方法，可进行部分逻辑处理，返回true时才进行下一步操作，页面重定向之前</p>
 				</div>
 			</div>
 
 			<div class="panel panel-info">
 				<div class="panel-heading font-bold">删除操作按钮使用说明</div>
 				<div class="panel-body">
-					<h4 class="font-bold">通过指令调用</h4>
+					<h4 class="font-bold">通过指令<code>conow-btn-del(属性)</code>调用</h4>
 					<p>
 						<pre>
-&lt;conow-btn-del url="users/userDel" data="{'username': '{{ entity.username }}'}" title="标题测试" confirm-msg="确认删除{ { entity.username } }?"&gt;&lt;/conow-btn-del&gt;
+&lt;button class="btn btn-danger" conow-btn-del url="users/userDel" data="{'username': '{{ entity.username }}'}" title="标题测试" confirm-msg="确认删除{{entity.username}}?"&gt;删除&lt;/button&gt;
+&lt;a class="text-danger" conow-btn-del url="users/userDel" data="{'username': '{{ entity.username }}'}" title="标题测试" confirm-msg="确认删除{{entity.username}}?"&gt;删除2&lt;/a&gt;
 						</pre>
 					</p>
 					<hr>
@@ -124,21 +141,23 @@
 			</div>
 
 			<div class="panel panel-info">
-				<div class="panel-heading font-bold">列表选择按钮使用说明</div>
+				<div class="panel-heading font-bold">响应式选择弹框使用说明</div>
 				<div class="panel-body">
-					<h4 class="font-bold">通过指令调用</h4>
+					<h4 class="font-bold">通过指令<code>responsive-modal（属性）</code>调用</h4>
 					<p>
 						<code>
-&lt;conow-btn-sel callback-func="" template-url=""&gt;&lt;/conow-btn-sel&gt;							
+&lt;button type="button" class="btn btn-primary" responsive-modal cols="First Name:firstName;Last Name:lastName;Username:userName" items="items" selected-items="selectedItems"&gt;Responsive Modal&lt;/button&gt;
 						</code>
 					</p>
 					<hr>
 					<h4 class="font-bold">参数说明</h4>
 
-					<h5><code>data{Object}</code></h5>
-					<p>需要在弹出框中显示的数据</p>
-					<h5><code>title{String}</code></h5>
-					<p>弹出框的显示标题</p>
+					<h5><code>cols{String}</code></h5>
+					<p>弹出table的表头和内容对应关系</p>
+					<h5><code>items{Array}</code></h5>
+					<p>待选项（业务controller提供具体的待选项对象数组）</p>
+					<h5><code>selected-items{Array}</code></h5>
+					<p>已选项（业务controller提供已选项对象数组，指令选择返回值也是此属性）</p>
 				</div>
 			</div>
 		</div>

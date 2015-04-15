@@ -1,4 +1,3 @@
-
 <table class="table table-striped">
 	<thead>
 		<tr>
@@ -7,7 +6,9 @@
 					<input ng-model="isAllSelected" type="checkbox" ng-click="allClick()" ng-checked="isSelectedAll()" ng-change="allChange()">
 				</label>
 			</th>
-			<th ng-repeat="key in colsKey">{{ key }}</th>
+			<th>First Name</th>
+			<th>Last Name</th>
+			<th>User Name</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -15,7 +16,9 @@
 			<th scope="row">
 				<input type="checkbox" ng-click="oneClick($index)" ng-checked="isAllSelected || inArr(arrSelected, item)">{{ $index + 1 }}
 			</th>
-			<td ng-repeat="value in colsValue">{{ item[value] }}</td>
+			<td>item.firstName</td>
+			<td>item.lastName</td>
+			<td>item.userName</td>
 		</tr>
 	</tbody>
 </table>
