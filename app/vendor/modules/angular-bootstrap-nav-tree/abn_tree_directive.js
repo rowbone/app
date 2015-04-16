@@ -1,11 +1,11 @@
 // vendor/modules/angular-bootstrap-nav-tree/abn_tree_tpl.html
 
-(function() {
-  var module;
+// (function() {
+//   var module;
 
-  module = angular.module('angularBootstrapNavTree', []);
+//   module = angular.module('angularBootstrapNavTree', []);
   /*searchOnSelect:'&', //点击搜索结果事件*/  
-  module.directive('abnTree', ['$timeout','$http', 
+  app.directive('conowAreaTree', ['$timeout','$http', 
     function($timeout,$http) {
       return {
         restrict: 'E',
@@ -806,5 +806,5 @@ console.log(selected_branch);
     }
   ]);
 
-}).call(this);
+// }).call(this);
 

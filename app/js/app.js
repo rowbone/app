@@ -15,8 +15,9 @@ var app = angular.module('demoApp', [
 	'app.directives',
 	'conow.validator',
 	'ngDialog',
-	'app.angular',
-	'angularBootstrapNavTree'
+	'app.angular'
+	// ,
+	// 'angularBootstrapNavTree'
 	]);
 
 // app.config(['w5cValidatorProvider'], function(w5cValidatorProvider) {
