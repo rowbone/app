@@ -129,6 +129,7 @@ app.directive('conowBtnSave', ['$modal', '$timeout', '$http', '$state', '$parse'
 									return;
 								}
 							}
+							
 
 							if(redirectUrl) {
 								$state.go(redirectUrl);

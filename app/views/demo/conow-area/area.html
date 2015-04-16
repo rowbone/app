@@ -1,26 +1,32 @@
 <title-bar name="validator demo">
   <div class="pull-right .m-r-md">
     <button type="submit" class="btn m-r-sm w-xs btn-primary">提交</button>
-    <input type="button" value="暂存" class="btn m-r-sm w-xs btn-dark" ng-click="saveTrip()" /> 
-    <input type="button" value="删除" class="btn m-r-sm w-xs btn-danger" ng-click="deleteTripReq()"/>
-    <input type="button" value="放弃" class="btn w-xs btn-danger" ng-click="back()" />
+    <input type="button" value="暂存" class="btn m-r-sm w-xs btn-dark"/> 
+    <input type="button" value="删除" class="btn m-r-sm w-xs btn-danger"/>
   </div>
 </title-bar>
 
 <div class="wrapper-md pos-rlt">
   <div class="row">
-  	<div class="col-sm-6">
+  	<div class="col-sm-12 col-md-6">
   		<div class="panel panel-info">
   			<div class="panel-heading">
   				<div class="panel-title">地区组件</div>
   			</div>
-  			<div class="panel-body">
+  			<div class="panel-body" ng-controller="AreaSelCtrl">
   				<form action="">
+            <div class="form-group">
+              <label for="area1" class="contral-label">选择地区</label>
+              <input type="text" class="form-control" name="area1" id="area1" ng-model="entity.area">
+            </div>
   					<div class="form-group">
-  						<label for="area1" class="contral-label">选择地区</label>
-  						<input type="text" class="form-control" name="area1" id="area1">
-  						<my-area></my-area>
+  						<label for="area1" class="contral-label">选择地区2</label>
+  						<input type="text" class="form-control" name="area2" id="area2" my-area ng-model="entity.area2" tree-data-show="treeDataShow">
   					</div>
+            <div class="form-group">
+              <span>test</span>
+              <span class="fa fa-angle-up"></span>
+            </div>
   				</form>
   			</div>
   		</div>

@@ -1,16 +1,24 @@
 
-<div class="row" ng-controller="AreaTreeCtrl">
-  <div class="col-xs-4 col-sm-6 col-md-6">
-    <div class="wrapper-md">
-      <button type="button" class="btn btn-primary" ng-click="showAreaModal()">选择地区</button>
-    </div>
-  </div>
-  <div class="col-xs-8 col-sm-6 col-md-4 col-lg-3">
+<div class="row">
+  <div >
     <div class="wrapper-md">
       <div class="b-a bg-light lter r r-2x">
-        <div>
+
+        <!-- search-input="true" -->
+        <link rel="stylesheet" href="views/business/form/modalTpl_style.css">
+
+        <div class="modal-header">
+          <div class="modal-op">
+            <a class="fa fa-angle-left pull-left text-2x pos-fix sm-go-back" ng-click="cancel()"></a>
+            <a class="pull-right text-primary sm-confirm" ng-click="confirm()">确定</a>
+            <a class="glyphicon glyphicon-remove pull-right md-close" ng-click="close()"></a>
+            <div class="text-center text-lg text-2x sel-title">请选择</div>
+          </div>
+        </div>
+
+        <div class="modal-body">
           <abn-tree 
-            req-url="data/bz/area.json" 
+            req-url="data/bz/region.json" 
             tree-control="my_tree" 
             tree-data="treeData" 
             search-input="true"
@@ -18,22 +26,21 @@
             on-select="my_tree_handler(branch)" 
             multiselect="false" 
             arr-selected="arrBranchs"
+            showinphone="true"
+            tree-data-show="treeDataShow" 
+            expand-level = 1 
+            is-tree-display=true
             >
           </abn-tree>
         </div>
+
+        <div class="modal-footer footer-op">
+          <button type="button" class="btn btn-success" ng-click="confirm()">确定</button>
+          <button type="button" class="btn btn-default" ng-click="cancel()">取消</button>
+        </div>
+
       </div>
     </div>
   </div>
-
-<!--   <div class="col-md-4">
-    <div class="dropdown">
-      <span class="btn btn-default dropdown-toggle" data-toggle="dropdown">abc</span>
-      <ul class="dropdown-menu" role="menu">
-        <li>广州</li>
-        <li>深圳</li>
-        <li>佛山</li>
-      </ul>
-    </div> 
-  </div> -->
 
 </div> 
