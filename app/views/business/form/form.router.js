@@ -1,3 +1,4 @@
+'use strict';
 
 angular.module('app.form', ['ui.router'])
 	.run(['$rootScope', '$state', '$stateParams', 
@@ -56,20 +57,6 @@ angular.module('app.form', ['ui.router'])
 						]
 					}
 				})
-				.state('app.form.validatorForm', {
-					url: '/validatorForm',
-					templateUrl: 'views/business/form/validatorForm.html',
-					resolve: {
-						deps: [ 'uiLoad', 
-							function(uiLoad) {
-								return uiLoad.load([
-									'views/business/form/validatorForm.js',
-									'views/business/form/validateForm.css'
-								]);
-							}
-						]
-					}
-				})
 				.state('app.form.formElems', {
 					url: '/formElems',
 					templateUrl: 'views/business/form/form_elems.html',
@@ -83,21 +70,5 @@ angular.module('app.form', ['ui.router'])
 						]
 					}
 				})
-				.state('app.form.dialog', {
-					url: '/dialog',
-					templateUrl: 'views/business/form/dialog.html',
-					resolve: {
-						deps: ['uiLoad', 
-							function(uiLoad) {
-								return uiLoad.load([
-									'vendor/ngDialog/css/ngDialog.css',
-									'vendor/ngDialog/css/ngDialog-theme-default.css',
-									'vendor/ngDialog/css/ngDialog-theme-plain.css',
-									'vendor/ngDialog/js/ngDialog.js',
-									'views/business/form/dialog.js',
-								]);
-							}
-						]
-					}
-				})
-	}])
+
+	}]);

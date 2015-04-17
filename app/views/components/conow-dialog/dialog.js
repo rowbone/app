@@ -75,7 +75,8 @@ app.directive('conowBtnSave', ['$modal', '$timeout', '$http', '$state', '$parse'
 						redirectUrl = attrs.redirectUrl;
 
 				elem.on('click', function(e) {
-					e.preventDefault();console.log(beforeFunc)
+					e.preventDefault();
+					
 					if(attrs.beforeFunc && angular.isFunction(beforeFunc)) {
 						scope.$apply(function () {
 					    flag = beforeFunc(scope);
@@ -88,7 +89,7 @@ app.directive('conowBtnSave', ['$modal', '$timeout', '$http', '$state', '$parse'
 					var size = '';
 
 					var modalInstance = $modal.open({
-						templateUrl: 'views/business/form/saveTpl.html',
+						templateUrl: 'views/components/conow-dialog/tpls/saveTpl.html',
 						controller: 'SaveModalCtrl',
 						backdrop: false,
 						resolve: {
@@ -108,7 +109,7 @@ app.directive('conowBtnSave', ['$modal', '$timeout', '$http', '$state', '$parse'
 					var modalInstance2 = {};
 					modalInstance.result.then(function(rtnVal) {
 						modalInstance2 = $modal.open({
-							templateUrl: 'views/business/form/saveResultTpl.html',
+							templateUrl: 'views/components/conow-dialog/tpls/saveResultTpl.html',
 							backdrop: false,
 							controller: 'SaveResultCtrl',
 							resolve: {
@@ -182,7 +183,7 @@ app.directive('conowBtnSubmit', ['$modal', '$timeout', '$http', '$state',
 					var size = '';
 
 					var modalInstance = $modal.open({
-						templateUrl: 'views/business/form/submitTpl.html',
+						templateUrl: 'views/components/conow-dialog/tpls/submitTpl.html',
 						controller: 'SubmitModalCtrl',
 						backdrop: false,
 						resolve: {
@@ -202,7 +203,7 @@ app.directive('conowBtnSubmit', ['$modal', '$timeout', '$http', '$state',
 					var modalInstance2 = {};
 					modalInstance.result.then(function(rtnVal) {
 						modalInstance2 = $modal.open({
-							templateUrl: 'views/business/form/submitResultTpl.html',
+							templateUrl: 'views/components/conow-dialog/tpls/submitResultTpl.html',
 							backdrop: false,
 							controller: 'SubmitResultCtrl',
 							resolve: {
@@ -268,7 +269,7 @@ app.directive('conowBtnDel', ['$modal', '$timeout',
 
 					var size = '';
 					var modalInstance = $modal.open({
-						templateUrl: 'views/business/form/delTpl.html',
+						templateUrl: 'views/components/conow-dialog/tpls/delTpl.html',
 						controller: 'DelModalCtrl',
 						size: size,
 						backdrop: 'static',
@@ -289,7 +290,7 @@ app.directive('conowBtnDel', ['$modal', '$timeout',
 					var modalInstance2 = {};
 					modalInstance.result.then(function(rtnVal) {
 						modalInstance2 = $modal.open({
-							templateUrl: 'views/business/form/delResultTpl.html',
+							templateUrl: 'views/components/conow-dialog/tpls/delResultTpl.html',
 							controller: 'DelModalResultCtrl',
 							backdrop: false,
 							resolve: {
@@ -361,7 +362,7 @@ app.directive('conowBtnPrompt', ['$modal',
 					e.preventDefault();
 
 					var modalInstance = $modal.open({
-						templateUrl: 'views/business/form/promptTpl.html',
+						templateUrl: 'views/components/conow-dialog/tpls/promptTpl.html',
 						controller: 'PromptModalCtrl',
 						backdrop: 'static',
 						resolve: {
@@ -420,7 +421,7 @@ app.directive('conowBtnSel', ['$modal',
 					e.preventDefault();
 
 					var modalInstance = $modal.open({
-						templateUrl: 'views/business/form/listTpl.html',
+						templateUrl: 'views/components/conow-dialog/tpls/listTpl.html',
 						controller: 'SelModalCtrl',
 						backdrop: true,
 						resolve: {
@@ -485,7 +486,7 @@ app.directive('responsiveModal', ['$modal',
 	function($modal) {
 		return {
 			'restrict': 'AE',
-			// templateUrl: 'views/business/form/modalTpl.html',
+			// templateUrl: 'views/components/conow-dialog/tpls/modalTpl.html',
 			// transclude: true,
 			// replace: true,
 			// scope: {
@@ -507,12 +508,12 @@ app.directive('responsiveModal', ['$modal',
 					e.preventDefault();
 
 					var $modalInstance = $modal.open({
-						templateUrl: 'views/business/form/modalTpl.html',
+						templateUrl: 'views/components/conow-dialog/tpls/modalTpl.html',
 						controller: 'ResponsiveModalCtrl',
 						resolve: {
 							params: function() {
 								var objParams = {
-									innerUrl: 'views/business/form/listTpl2.html',
+									innerUrl: 'views/components/conow-dialog/tpls/listTpl2.html',
 									title: '请选择',
 									items: scope.$eval(attrs.items),
 									selectedItems: scope.$eval(attrs.selectedItems),
@@ -544,12 +545,12 @@ app.directive('responsiveModal2', ['$modal',
 					e.preventDefault();
 
 					var $modalInstance = $modal.open({
-						templateUrl: 'views/business/form/modalTpl.html',
+						templateUrl: 'views/components/conow-dialog/tpls/modalTpl.html',
 						controller: 'ResponsiveModalCtrl',
 						resolve: {
 							params: function() {
 								var objParams = {
-									innerUrl: 'views/business/form/listTpl3.html',
+									innerUrl: 'views/components/conow-dialog/tpls/listTpl3.html',
 									title: '请选择',
 									items: scope.$eval(attrs.items),
 									selectedItems: scope.$eval(attrs.selectedItems)

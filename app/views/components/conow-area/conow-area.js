@@ -18,18 +18,18 @@ app.controller('AreaSelCtrl', ['$scope', '$http',
   }
 ])
 
-app.directive('myArea', ['$modal', function($modal) {
+app.directive('conowArea', ['$modal', function($modal) {
   return {
     restrict: 'A',
-    // templateUrl: 'views/demo/conow-area/area_tpl.html',
+    // templateUrl: 'views/components/conow-area/tpls/area_tpl.html',
     link: function(scope, elem, attrs) {
-      console.log('myArea linking...')
+      console.log('conowAreaTree linking...')
 
       elem.bind('click', function(e) {
         e.preventDefault();
 
         var modalInstance = $modal.open({
-          templateUrl: 'views/demo/conow-area/areaTree.html',
+          templateUrl: 'views/components/conow-area/tpls/area-tpl.html',
           controller: 'AreaTreeCtrl',
           resolve: {
             params: function() {
@@ -43,9 +43,7 @@ app.directive('myArea', ['$modal', function($modal) {
         });
 
         modalInstance.result.then(function(rtnVal) {
-          console.log(rtnVal);
           scope.entity.area2 = rtnVal.label;
-          console.log(scope.entity)
         }, function(rtnVal) {
           console.log(rtnVal);
         });
@@ -63,13 +61,10 @@ app.controller('AreaTreeCtrl', ['$scope', '$timeout', '$http', '$modalInstance',
     $scope.treeDataShow = params.treeDataShow;
 
     $scope.my_tree_handler = function(branch) {
-      console.log('selected==' + branch.label);
       selectedData = branch;
     };
 
     $scope.confirm = function() {
-      console.log('confirm.....');
-      console.log(selectedData)
       $modalInstance.close(selectedData);
     };
 

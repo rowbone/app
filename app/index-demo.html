@@ -14,8 +14,6 @@
 	<link rel="stylesheet" href="./vendor/fonts/simple-line-icons/css/simple-line-icons.css">
 	<!-- app css -->
 	<link rel="stylesheet" href="./css/app.css">
-	<!-- sweet alert style -->
-	<link rel="stylesheet" href="./plugins/ngSweetAlert/sweet-alert.css">
 	<!-- validator style -->
 	<link rel="stylesheet" href="./vendor/validator/example/css/style.css">
 	<!-- ngDialog style -->
@@ -37,18 +35,8 @@
 	<script src="./vendor/libs/ngstorage/ngStorage.js"></script>
 	<script src="./vendor/libs/oclazyload/ocLazyLoad.js"></script>
 
-	<script src="./plugins/ngSweetAlert/sweet-alert.js"></script>
-	<script src="./plugins/ngSweetAlert/SweetAlert.js"></script>
-
 	<!-- modules -->
 	<script src="./vendor/modules/angular-toaster/toaster.js"></script>
-
-	<!-- validator -->
-	<script src="./vendor/validator/example/lib/angular-highlightjs/angular-highlightjs.js"></script>
-	<script src="./vendor/validator/dist/conowValidator.js"></script>
-
-	<!-- ngDialog -->
-	<script src="./vendor/ngDialog/js/ngDialog.js"></script>
 
 	<!-- app -->
 	<script src="./js/app.js"></script>
@@ -68,27 +56,32 @@
 
 	<!-- directives -->
 	<script src="./js/directives/directives.js"></script>
-	<!-- conow-area -->
-	<script src="./js/directives/conow-area.js"></script>
-	<script src="./js/directives/my-area.js"></script>
-	<!-- area-tree -->
-	<script src="./js/directives/area-tree.js"></script>
+
+	<!-- components start -->
+	<!-- validator -->
+	<script src="./vendor/validator/example/lib/angular-highlightjs/angular-highlightjs.js"></script>
+	<script src="./vendor/validator/dist/conowValidator.js"></script>
+	<!-- dialog -->
+	<script src="./views/components/conow-dialog/dialog.js"></script>
+	<!-- area -->
+	<script src="./views/components/conow-area/conow-area.js"></script>
+
+	<!-- components end -->
+
+	<!-- router scripts -->
+	<script src="./views/demo/demo.router.js"></script>
+	<script src="./views/business/form/form.router.js"></script>
+	<script src="./views/demo/directives/directives.router.js"></script>
+	<script src="./views/angular/angular.router.js"></script>
+	<script src="./views/components/components.router.js"></script>
 
 	<!-- abn_tree controller -->
 	<script src="./views/demo/conow-abn-tree/abn_tree.js"></script>
-<!-- 	// <script src="./vendor/modules/3rd/uuid/uuid.js"></script>
-	// <script src="./vendor/modules/3rd/region/region.js"></script>
-	// <script src="./vendor/modules/3rd/region/nation.js"></script>
-	// <script src="./vendor/modules/3rd/region/fixdiv.js"></script> -->
 
 	<!-- form scripts -->
 	<script src="./views/base/login/login.js"></script>
 	<script src="./views/base/login/signin.js"></script>
-	<script src="./views/demo/demo.router.js"></script>
-	<script src="./views/business/form/form.router.js"></script>
-	<script src="./views/demo/directives/directives.router.js"></script>
 
-	<script src="./views/angular/angular.router.js"></script>
 	<script src="./js/controllers/bootstrap.js"></script>
 	<script src="./js/controllers/tab.js"></script>
 	<script src="./js/controllers/form.js"></script>
@@ -97,8 +90,7 @@
 	<script src="./views/business/form/simpleForm.js"></script>
 	<script src="./views/demo/directives/btnsGroup.js"></script>
 	<script src="./views/demo/directives/customDirectives.js"></script>
-	<script src="./views/business/form/validatorForm.js"></script>
-	<script src="./views/business/form/dialog.js"></script>
+	<script src="./views/components/conow-validator/validator-form.js"></script>
 	<script src="./views/angular/ctrlDataShare.js"></script>
 
 	<script src="./views/demo/controllers/toaster.js"></script>
@@ -107,22 +99,6 @@
 
 <body ng-controller="AppCtrl">
 	<div class="container">
-		<!-- 
-		<div ui-view>
-			<a ui-sref="state1">State1</a>
-			<a ui-sref="state2">State2</a>
-			<a ui-sref="app.form.simpleForm">form.simpleForm</a>
-		</div>
-		 -->
-		<!-- <div class="dropdown">
-			<a href="" class="dropdown-toggle btn btn-success" data-toggle="dropdown" role="button">
-				Form<span class="caret"></span>
-			</a>
-			<ul class="dropdown-menu" role="menu">
-				<li><a href="app.form.simpleForm">simpleForm</a></li>
-				<li><a href="app.form.selectForm">selectForm</a></li>
-			</ul>
-		</div> -->
 		<div ui-view></div>
 	</div>
 	<!-- <div class="app" id="app" ng-class="{'app-header-fixed':app.settings.headerFixed, 'app-aside-fixed':app.settings.asideFixed, 'app-aside-folded':app.settings.asideFolded, 'app-aside-dock':app.settings.asideDock, 'container':app.settings.container,'app-equ-switch':app.settings.equSwitch}" ui-view></div> -->

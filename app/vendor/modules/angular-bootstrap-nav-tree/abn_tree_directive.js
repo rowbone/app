@@ -232,8 +232,7 @@
             });
           };
           //点击一个节点
-          select_branch = function(branch) {console.log('select_branch')
-          console.log(branch)
+          select_branch = function(branch) {
             if(branch.id == undefined){
               tree.expand_branch(branch);
               // return;
@@ -244,7 +243,6 @@
                 b.selected = false;
               }
             });
-console.log(selected_branch);
             if (!branch) {
               if (selected_branch != null) {
                 selected_branch.selected = false;
@@ -473,7 +471,6 @@ console.log(selected_branch);
             });
           }
           n = scope.treeData.length;
-          console.log('num root branches = ' + n);
           for_each_branch(function(b, level) {
             b.level = level;
             return b.expanded = b.level < expand_level;
