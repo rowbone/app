@@ -15,8 +15,10 @@ app.controller('AreaSelCtrl', ['$scope', '$http',
       .error(function(data, status) {
         console.log('load treeData wrong....');
       });
+
   }
-])
+]); 
+
 
 app.directive('conowArea', ['$modal', function($modal) {
   return {
@@ -43,6 +45,7 @@ app.directive('conowArea', ['$modal', function($modal) {
         });
 
         modalInstance.result.then(function(rtnVal) {
+          console.log(rtnVal)
           scope.entity.area2 = rtnVal.label;
         }, function(rtnVal) {
           console.log(rtnVal);

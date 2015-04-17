@@ -12,24 +12,27 @@
             <a class="fa fa-angle-left pull-left text-2x pos-fix sm-go-back" ng-click="cancel()"></a>
             <a class="pull-right text-primary sm-confirm" ng-click="confirm()">确定</a>
             <a class="glyphicon glyphicon-remove pull-right md-close" ng-click="close()"></a>
-            <div class="text-center text-lg text-2x sel-title">请选择</div>
+            <div class="text-center text-lg text-2x sel-title font-bold">请选择</div>
           </div>
         </div>
 
         <div class="modal-body">
           <conow-area-tree 
+            show-search
+            show-search2="abc"
+            show-search3=true
             req-url="data/bz/region.json" 
             tree-control="my_tree" 
             tree-data="treeData" 
-            search-input="true"
             search-element="label"
             on-select="my_tree_handler(branch)" 
             multiselect="false" 
             arr-selected="arrBranchs"
-            showinphone="true"
             tree-data-show="treeDataShow" 
             expand-level = 1 
-            is-tree-display=true
+            show-tree=true
+            icon-expand
+            device-type="phone"
             >
           </conow-area-tree>
         </div>

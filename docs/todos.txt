@@ -109,3 +109,12 @@
 
 3、用AngularJS来实现一些ui上的东西（1）（angular lazyload）
 	http://www.html-js.com/article/Write-your-own-angularui-using-AngularJS-to-achieve-some-things-on-the-UI-1-angular-lazyload
+
+2015-04-17：
+1、一步步做组件-学校选择器(系列)
+	http://fuxiaode.cn/blog/2015/02/11/step-by-step-js-component-schoolbox-collections/
+
+2、前端乱炖-专栏：
+	http://www.html-js.com/article
+
+3、

@@ -14,21 +14,14 @@
           onSelect: '&',  //点击节点事件
           treeDataShow: '=',
           initialSelection: '@', //初始化节点
-          searchInput : '@isSearchDisplay', //搜索栏的显示隐藏
           isFindResults:'@isFindResults', //搜索是否找到结果
           arrResults:'@arrRe', //搜索结果数组
-          isTreeDisplay:'@isTreeDisplay', //是否显示树
           treeControl: '=',//树的方法调用对象
           treeData : '=',//树的数据对象
           arrSelected: '=',//多选返回的数组
           resetRequest:'='//是否重新请求resetRequest:'='
         },
-        templateUrl:function(e,a){
-          // if(a.showinphone == "true"){
-          //   return 'vendor/modules/angular-bootstrap-nav-tree/tree_phone_template.html';
-          // }else{
-          //   return 'vendor/modules/angular-bootstrap-nav-tree/abn_tree_template.html';
-          // }
+        templateUrl:function(telem, tattrs) {
           return 'vendor/modules/angular-bootstrap-nav-tree/abn_tree_tpl.html'
         },
         link: function(scope, element, attrs) {
@@ -42,43 +35,74 @@
             debugger;
             return void 0;
           };
-          //是否显示搜索框
-          if (attrs.searchInput == 'true') {
-            scope.isSearchDisplay = 'true';
+
+          // 配置项
+          var options = scope.options = {
+            showSearch: false,
+            iconExpand: 'fa fa-plus',
+            iconCollapse: 'fa fa-minus',
+            iconLeaf: 'fa fa-leaf',
+            expandLevel: 2,
+            showTree: true,
+            deviceType: 'PC'
+          };
+          // showSearch:default true.是否显示搜索框，默认为true
+          if(attrs.showSearch === 'false') {
+            options.showSearch = false;
           } else {
-            scope.isSearchDisplay = 'false';
+            options.showSearch = true;
           }
-          //节点可展开图标初始化
-          if (attrs.iconExpand == null) {
-            if (attrs.showinphone == "true") {
-              attrs.iconExpand = 'fa fa-angle-down';
-            } else {
-              attrs.iconExpand = 'fa fa-plus';
-            }
-          }
-          //节点可收缩图标初始化
-          if (attrs.iconCollapse == null) {
-            if (attrs.showinphone == "true") {
-              attrs.iconCollapse = 'fa fa-angle-up';
-            } else {
-              attrs.iconCollapse = 'fa fa-minus';
-            }
-          }
-          //叶节点图标初始化
-          if (attrs.iconLeaf == null) {
 
-            if (attrs.showinphone == "true") {
-              attrs.iconLeaf = 'fa fa-angle-right';
+          // deviceType:default PC.展示类型，默认为PC
+          if(attrs.deviceType === 'phone') {
+            options.deviceType = 'phone';
+          } else {
+            options.deviceType = 'PC';
+          }
+          if(attrs.deviceType === undefined || attrs.deviceType === '') {
+            options.deviceType = 'PC';
+          } else {
+            options.deviceType = attrs.deviceType;
+          }
+
+          // 是否展示树
+          if(attrs.showTree === 'false') {
+            options.showTree = false;
+          } else {
+            options.showTree = true;
+          }
+          // 节点可展开图标初始化
+          if (attrs.iconExpand === undefined || attrs.iconExpand === '') {
+            if (options.deviceType == "phone") {
+              options.iconExpand = 'fa fa-angle-down';
             } else {
-              attrs.iconLeaf = '';
+              options.iconExpand = 'fa fa-plus';
             }
+          } else {
+            options.iconExpand = attrs.iconExpand;
           }
-          //默认展开层级数
-          if (attrs.expandLevel == null) {
-            attrs.expandLevel = '2';
+          // 节点可收缩图标初始化
+          if (attrs.iconCollapse === undefined || attrs.iconCollapse === '') {
+            if (options.deviceType == "phone") {
+              options.iconCollapse = 'fa fa-angle-up';
+            } else {
+              options.iconCollapse = 'fa fa-minus';
+            }
+          } else {
+            options.iconCollapse = attrs.iconCollapse;
           }
+          // 叶节点图标初始化
+          if (attrs.iconLeaf == undefined) {
+            options.iconLeaf = '';
+          } else {
+            options.iconLeaf = attrs.iconLeaf;
+          }
+          // 默认展开层级数
+          if (attrs.expandLevel === undefined || attrs.expandLevel === '') {
+            options.expandLevel = '2';
+          }
+
           expand_level = parseInt(attrs.expandLevel, 10);
-
           //请求获取后台数据并加载到树上
           scope.treeData = [];
           scope.treeData = scope.$eval(attrs.treeDataShow);
@@ -100,39 +124,25 @@
           //     if(scope.resetRequest == "true"){
           //       getTreeData(attrs.reqUrl);
           //     }
-          //   });
-        
-          //请求获取后台人员数据并加载到树上
-          var getUserData = function(location, param, branch) {
-            var userData = [];
-            if (branch.firstclick != "false") {
-              $http.post(location, param).success(function(data) {
-                var userData = data.obj;
-                for (var i = 0; i < userData.length; i++) {
-                  tree.add_branch(branch, {
-                    id: userData[i].id,
-                    label: userData[i].label,
-                  });
-                }
-              });
-            }
-            branch.firstclick = "false";
-          };        
+          //   }); 
+          if(scope.treeData.length == 0) {
+            scope.isLoading = true;
+          }
+            scope.isLoading = true;
         
           scope.treeSearch = {};
-          //默认树显示
-          /*scope.isTreeDisplay = {};*/
-          scope.isTreeDisplay = "true";
-          //搜索返回对象
+          // 搜索返回对象
           scope.arrRe = {};
-          scope.treeSearchEvent = function(){
-            scope.isTreeDisplay = "false";
+
+          scope.treeSearchFunc = function(){
+            options.showTree = false;
             select_branchs(scope.treeSearch.inputName);
           };
-          scope.closeResultOpenTree = function(){
+
+          scope.showTreeFunc = function(){
             return $timeout(function(){
               scope.treeSearch.inputName = "";
-              scope.isTreeDisplay = "true";
+              options.showTree = true;
             });
           };
           //根据数据源拼凑树
@@ -192,8 +202,8 @@
                 });
               }
             });
-            //搜索返回对象
 
+            // 搜索返回对象
             return $timeout(function() {
               scope.arrRe.arrResultsInInput = arrResults;
               if (scope.arrRe.arrResultsInInput.length > 0) {
@@ -425,12 +435,12 @@
                 branch.expanded = false;
               }
               if (!branch.children || branch.children.length === 0) {
-                tree_icon = attrs.iconLeaf;
+                tree_icon = options.iconLeaf;
               } else {
                 if (branch.expanded) {
-                  tree_icon = attrs.iconCollapse;
+                  tree_icon = options.iconCollapse;
                 } else {
-                  tree_icon = attrs.iconExpand;
+                  tree_icon = options.iconExpand;
                 }
               }
 
