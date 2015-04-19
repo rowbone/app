@@ -36,11 +36,10 @@
 	</accordion>
 	
 	<!-- 树 -->
-	<!-- <ul class="nav nav-list nav-pills nav-stacked abn-tree" ng-if="showTree == 'true'">   -->
-<!-- 	<ul class="nav nav-list nav-pills nav-stacked abn-tree">  
+<!-- 	<ul class="nav nav-list nav-pills nav-stacked abn-tree b-b padder-v hbox" ng-if="options.showTree">  
 		<li ng-repeat="row in tree_rows | filter:{visible:true} track by row.branch.uid" ng-animate="'abn-tree-animate'" ng-class="'level-' + {{ row.level }} + (row.branch.selected ? ' active':'')" class="abn-tree-row">    
 			<a>
-				<i ng-if="row.tree_icon != ''" ng-class="row.tree_icon" ng-click="row.branch.expanded = !row.branch.expanded"  class="indented tree-icon"> </i>
+				<i ng-if="row.tree_icon != ''" ng-class="row.tree_icon" ng-click="row.branch.expanded = !row.branch.expanded"  class="indented tree-icon pull-right"> </i>
 				<span ng-if="row.tree_icon == ''" class="col-xs-offset-1"></span>
 				<span ng-click="user_clicks_branch(row.branch)" class="indented tree-label">{{ row.label }}</span> 
 			</a>   
@@ -48,9 +47,14 @@
 	</ul> -->
 	
 	<!-- 树 -->
+	<div ng-if="options.isLoading">
+		<i class="fa fa-spin fa-spinner"></i>
+		<span>加载中...</span>
+	</div>
 	<div class="wrapper-md" ng-if="options.showTree">
-		<!-- <div ng-if="isLoading">loading...</div> -->
 		<div class="b-b padder-v hbox" ng-repeat="row in tree_rows | filter:{visible:true} track by row.branch.uid" ng-animate="'abn-tree-animate'" ng-class="'level-' + {{ row.level }} + (row.branch.selected ? ' active':'')">
+		
+		<span>{{ row.branch.selected }}</span>
 			<a>
 				<!-- 当不存在子节点时不出现i -->
 				<i ng-if="row.tree_icon != ''" ng-class="row.tree_icon" ng-click="row.branch.expanded = !row.branch.expanded"  class="indented tree-icon pull-right"></i>

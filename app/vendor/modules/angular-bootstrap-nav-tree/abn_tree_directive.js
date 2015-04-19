@@ -38,7 +38,7 @@
 
           // 配置项
           var options = scope.options = {
-            showSearch: false,
+            showSearch: true,
             iconExpand: 'fa fa-plus',
             iconCollapse: 'fa fa-minus',
             iconLeaf: 'fa fa-leaf',
@@ -105,30 +105,30 @@
           expand_level = parseInt(attrs.expandLevel, 10);
           //请求获取后台数据并加载到树上
           scope.treeData = [];
-          scope.treeData = scope.$eval(attrs.treeDataShow);
+          // scope.treeData = scope.$eval(attrs.treeDataShow);
 
-          // var getTreeData = function(location){
-          //   var treeData = [];
-          //   $http.get(location).success(function(data){
-          //     scope.treeData = data.obj;
-          //     return $timeout(function() {
-          //       tree.expand_level();
-          //        }, 10);
-          //     });
-          //   };
-          // //页面指令传入请求地址
-          //   getTreeData(attrs.reqUrl);
-            //重新请求数据源
-          // scope.$watch('resetRequest',function(){
-          //     console.info(scope.resetRequest);
-          //     if(scope.resetRequest == "true"){
-          //       getTreeData(attrs.reqUrl);
-          //     }
-          //   }); 
-          if(scope.treeData.length == 0) {
-            scope.isLoading = true;
-          }
-            scope.isLoading = true;
+          var getTreeData = function(location){
+            var treeData = [];
+            $http.get(location)
+              .success(function(data){
+                if(data.obj) {
+                  data = data.obj;
+                }
+                options.isLoading = false;
+                scope.treeData = data;
+                return $timeout(function() {
+                  tree.expand_level();
+                }, 1000);
+              })
+              .error(function() {
+                console.log('Load tree data wrong...');
+              });
+          };
+
+          options.isLoading = true;
+
+          // 异步加载数据
+          getTreeData(attrs.reqUrl);
         
           scope.treeSearch = {};
           // 搜索返回对象
@@ -470,6 +470,7 @@
             }
             return _results;
           };
+          // 监听 treeData 变化，触发相应方法 on_treeData_change
           scope.$watch('treeData', on_treeData_change, true);
           if (attrs.initialSelection != null) {
             for_each_branch(function(b) {
