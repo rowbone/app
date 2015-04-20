@@ -4,7 +4,7 @@
 	<!-- 搜索框 -->
 	<div class="m-t m-b-sm" ng-if="options.showSearch">
 		<div class="input-group">
-			<input dropdown-toggle ng-model="treeSearch.inputName" type="text" class="form-control" placeholder="请输入关键字...">
+			<input dropdown-toggle ng-model="treeSearch.inputName" type="text" class="form-control" ng-keyup="enterPress($event)" placeholder="请输入关键字...">
 			<div class="input-group-btn dropdown" dropdown>
 				<button type="button" class="btn btn-primary" ng-click="treeSearchFunc()" tabindex="-1">
 					<i class="fa fa-search"></i>
@@ -17,21 +17,23 @@
 	<accordion ng-if="!options.showTree"> 
 		<accordion-group is-open="true" class="m-t"> 
 			<accordion-heading>
-			<label class="font-bold">搜索结果</label>
-			<i ng-click="showTreeFunc()" class="pull-right fa fa-times"></i>
+				<label class="font-bold">搜索结果</label>
+				<i ng-click="showTreeFunc()" class="pull-right fa fa-times"></i>
 			</accordion-heading>
-			<div ng-if="isFindResults.result == 'true'">
-				<div ng-repeat="result in arrRe.arrResultsInInput" class="b-a b-3x b-white">
-					<div><a ng-click="searchOnSelect('{{result.id}}')">
-						<!-- 默认搜索显示label -->
-						<div><b>{{result.label}}</b></div>
-						<!-- 当存在totalName时也会显示 -->
-						<small>{{result.totalName}}</small>
-					</a></div>
+			<div ng-if="searchResults.success" class="list-group">
+				<div ng-repeat="result in searchResults.results" class="b-a b-3x b-white list-group-item" ng-class="(result.selected ? ' active' : '')" ng-click="searchResultClick(result)">
+					<div class="">
+						<a>
+							<!-- 默认搜索显示label -->
+							<div>{{ result.label }}</div>
+							<!-- 此处可显示其他的属性 -->
+							<small>{{ result.totalName }}</small>
+						</a>
+					</div>
 				</div>
 				<!-- <pagination boundary-links="true" total-items="orgTotalItems" max-size="staffMaxSize" ng-model="page.orgCurrentPage"  items-per-page="orgPageSize" class="pagination-sm m-t-none m-b" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></pagination> -->
 			</div>
-			<div ng-if="isFindResults.result == 'false'">未找到相应结果</div>
+			<div ng-if="!searchResults.success">未找到相应结果</div>
 		</accordion-group>
 	</accordion>
 	
@@ -51,10 +53,8 @@
 		<i class="fa fa-spin fa-spinner"></i>
 		<span>加载中...</span>
 	</div>
-	<div class="wrapper-md" ng-if="options.showTree">
-		<div class="b-b padder-v hbox" ng-repeat="row in tree_rows | filter:{visible:true} track by row.branch.uid" ng-animate="'abn-tree-animate'" ng-class="'level-' + {{ row.level }} + (row.branch.selected ? ' active':'')">
-		
-		<span>{{ row.branch.selected }}</span>
+	<div class="list-group" ng-if="options.showTree">
+		<div class="b-b padder-v hbox nav nav-list abn-tree list-group-item" ng-repeat="row in tree_rows | filter:{visible:true} track by row.branch.uid" ng-animate="'abn-tree-animate'" ng-class="'level-' + {{ row.level }} + (row.branch.selected ? ' active':'')">
 			<a>
 				<!-- 当不存在子节点时不出现i -->
 				<i ng-if="row.tree_icon != ''" ng-class="row.tree_icon" ng-click="row.branch.expanded = !row.branch.expanded"  class="indented tree-icon pull-right"></i>

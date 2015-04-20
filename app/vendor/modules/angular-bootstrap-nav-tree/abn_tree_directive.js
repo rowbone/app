@@ -12,14 +12,11 @@
         replace: true,
         scope: {
           onSelect: '&',  //点击节点事件
-          treeDataShow: '=',
           initialSelection: '@', //初始化节点
-          isFindResults:'@isFindResults', //搜索是否找到结果
           arrResults:'@arrRe', //搜索结果数组
           treeControl: '=',//树的方法调用对象
           treeData : '=',//树的数据对象
           arrSelected: '=',//多选返回的数组
-          resetRequest:'='//是否重新请求resetRequest:'='
         },
         templateUrl:function(telem, tattrs) {
           return 'vendor/modules/angular-bootstrap-nav-tree/abn_tree_tpl.html'
@@ -44,8 +41,14 @@
             iconLeaf: 'fa fa-leaf',
             expandLevel: 2,
             showTree: true,
-            deviceType: 'PC'
+            deviceType: 'PC',
+            multiSelect: false
           };
+          if((attrs.multiSelect !== undefined && attrs.multiSelect !== 'false') || attrs.multiSelect === 'true') {
+            options.multiSelect = true;
+          } else {
+            options.multiSelect = false;
+          }
           // showSearch:default true.是否显示搜索框，默认为true
           if(attrs.showSearch === 'false') {
             options.showSearch = false;
@@ -129,19 +132,24 @@
 
           // 异步加载数据
           getTreeData(attrs.reqUrl);
+
+          // Enter 触发搜索事件
+          scope.enterPress = function(e) {
+            if(e.keyCode === 13) {
+              scope.treeSearchFunc();
+            }
+          };
         
           scope.treeSearch = {};
-          // 搜索返回对象
-          scope.arrRe = {};
 
-          scope.treeSearchFunc = function(){
+          scope.treeSearchFunc = function() {
             options.showTree = false;
             select_branchs(scope.treeSearch.inputName);
           };
 
           scope.showTreeFunc = function(){
             return $timeout(function(){
-              scope.treeSearch.inputName = "";
+              scope.treeSearch.inputName = '';
               options.showTree = true;
             });
           };
@@ -167,6 +175,7 @@
               root_branch = _ref[_i];
               _results.push(do_f(root_branch, 1));
             }
+
             return _results;
           };
           selected_branch = null;
@@ -184,10 +193,11 @@
           };
           searchIf = searchIf.substring(3, searchIf.length);
 
-          scope.isFindResults = {}; //树的搜索返回结果显示对象
-          scope.isFindResults.result = "true";
-
           var select_branchs = function(label) {
+
+            scope.searchResults = {}; //树的搜索返回结果显示对象
+            scope.searchResults.success = true;
+
             for_each_branch(function(b) {
               if (b.selected) {
                 b.selected = false;
@@ -195,8 +205,8 @@
             });
             arrResults = [];
             for_each_branch(function(b) {
-              //eval将字符串转换为条件
-              if (scope.$eval(searchIf)) {
+              // eval将字符串转换为条件
+              if (eval(searchIf)) {
                 return $timeout(function() {
                   select_branch_mutiple(b);
                 });
@@ -205,12 +215,18 @@
 
             // 搜索返回对象
             return $timeout(function() {
-              scope.arrRe.arrResultsInInput = arrResults;
-              if (scope.arrRe.arrResultsInInput.length > 0) {
-                //树的搜索返回结果显示
-                scope.isFindResults.result = "true";
+              // 搜索结果中增加是否选中标识，用于添加显示样式
+              var iLen = arrResults.length;
+              for(var i=0; i<iLen; i++) {
+                arrResults[i].selected = false;
+              }
+
+              scope.searchResults.results = arrResults;
+              if (scope.searchResults.results.length > 0) {
+                // 树的搜索返回结果显示
+                scope.searchResults.success = true;
               } else {
-                scope.isFindResults.result = "false";
+                scope.searchResults.success = false;
               }
             }, 10);
           };
@@ -224,22 +240,54 @@
             });
             return branch;
           };
-          //选择多个节点
-          var arrResults = new Array();
+
+          var select_branch_by_code = function(code) {
+            var branch;
+            for_each_branch(function(b) {
+              if(b.CODE === code || b.code === code) {
+                branch = b;
+              }
+            });
+
+            return branch;
+          };
+
+          // 选择多个节点
+          var arrResults = [];
           select_branch_mutiple = function(branch) {
             arrResults.push(branch);
-            //默认处于选定状态
-            /*branch.selected = true;
-              expand_all_parents(branch);*/
           };
-          //点击搜索结果
-          scope.searchOnSelect = function(id) {
-            branch = select_branch_id(id);
+          // 点击搜索结果
+          scope.searchResultClick = function(branch) {
+            // 取消选择
+            if(branch.selected) {
+              branch.selected = false;
+
+              return $timeout(function() {
+                return scope.onSelect({
+                  branch: null
+                });
+              });
+            }
+            // 取消其他选项
+            // if(!options.multiSelect) {
+              var arr = scope.searchResults.results,
+                  iLen = arr.length;
+              for(var i=0; i<iLen; i++) {
+                arr[i].selected = false;
+              }
+              branch.selected = true;
+            // }
+
             return $timeout(function() {
               return scope.onSelect({
                 branch: branch
               });
             });
+          };
+
+          var test = function(obj) {
+            angular.element(obj).addClass('active');
           };
           //点击一个节点
           select_branch = function(branch) {
@@ -342,13 +390,6 @@
             };
           } else {
             scope.user_clicks_branch = function(branch) {
-              // if (attrs.adduser == "true") {
-              //   //人员请求地址
-              //   var param = {
-              //     ID: branch.id
-              //   };
-              //   getUserData('/service/staffInfo!queryStaffByOrgIdForTree', param, branch);
-              // }
               if (branch !== selected_branch) {
                 return select_branch(branch);
               }
