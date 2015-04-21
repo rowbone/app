@@ -14,7 +14,8 @@ var app = angular.module('demoApp', [
 	'app.directives',
 	'conow.validator',
 	'app.angular',
-	'app.components'
+	'app.components',
+	'conow.datepicker'
 	// ,
 	// 'angularBootstrapNavTree'
 	]);

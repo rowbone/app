@@ -39,5 +39,9 @@ angular.module('app.components', ['ui.router'])
 					url: '/area',
 					templateUrl: 'views/components/conow-area/area.html'
 				})
+				.state('app.components.datepicker', {
+					url: '/datepicker',
+					templateUrl: 'views/components/conow-datepicker/datepicker.html'
+				})
 
 	}]);

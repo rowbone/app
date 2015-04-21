@@ -50,7 +50,7 @@ angular.module('app.form', ['ui.router'])
 							function(uiLoad) {
 								return uiLoad.load([
 									// 'plugins/sweetalert/sweet-alert.js', 
-									'plugins/sweetalert/sweet-alert.css',
+									// 'plugins/sweetalert/sweet-alert.css',
 									'views/business/form/commitEffectForm.js'
 								]);
 							}
@@ -70,5 +70,33 @@ angular.module('app.form', ['ui.router'])
 						]
 					}
 				})
+				.state('app.form.test', {
+					// url: '/test/{id}',
+					url: '/test/:id/:abc',
+					templateUrl: 'views/business/form/test.html',
+					controller: 'TestCtrl'
+				})
+				// .state('app.form.test', {
+				// 	// url: '/test/{id}',
+				// 	url: '/test/:id/:abc',
+				// 	templateUrl: 'views/business/form/test.html',
+				// 	controller: 'TestCtrl'
+				// })
 
 	}]);
+
+app.controller('TestCtrl', ['$scope', '$stateParams',
+	function($scope, $stateParams) {
+		// 
+		console.log($stateParams);
+		console.log($stateParams.id);
+	}
+]);
+
+app.controller('SelectFormCtrl', ['$scope', '$state',
+	function($scope, $state) {
+		$scope.test = function() {
+			$state.go('app.form.test', {id:"abc", abc:"111"})
+		};
+	}
+])

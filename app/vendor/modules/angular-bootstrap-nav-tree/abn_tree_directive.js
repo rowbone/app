@@ -286,15 +286,15 @@
             });
           };
 
-          var test = function(obj) {
-            angular.element(obj).addClass('active');
-          };
           //点击一个节点
           select_branch = function(branch) {
-            if(branch.id == undefined){
+            console.log('in select_branch');
+            console.log(branch);
+            branch.expanded = !branch.expanded
+            // if(branch.id == undefined){
               tree.expand_branch(branch);
               // return;
-            }
+            // }
             //清空所有选择
             for_each_branch(function(b) {
               if (b.selected) {

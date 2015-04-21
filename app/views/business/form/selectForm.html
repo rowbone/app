@@ -1,21 +1,35 @@
 
-<div class="header-md h pos-fix w-full b-b bg-light dk">
+<!-- <div class="header-md h pos-fix w-full b-b bg-light dk">
 	<h1 class="m-n font-thin h3">
 		Select Form
 	</h1>
-</div>
+</div> -->
 
-<div class="form form-horizontal">
-	<div class="row">
-		<label for="userName" class="col-md-4"></label>
-		<div class="col-md-8">
-			<input type="text" id="userName">
+<div class="row" ng-controller="SelectFormCtrl">
+
+	<div class="col-md-8 col-md-offset-2">
+		<div class="form form-horizontal">
+			<div class="form-group">
+				<label for="userName" class="control-label col-md-4">abc</label>
+				<div class="col-md-8">
+					<input type="text" id="userName" class="form-control">
+				</div>			
+			</div>
+
+			<div class="form-group">
+				<label for="password" class="col-md-4 control-label">aaa</label>
+				<div class="col-md-8">
+					<input type="text" id="password" class="form-control">
+				</div>
+			</div>
+
+			<div class="form-group">
+				<div class="col-md-8 col-md-offset-4">
+					<button type="button" class="btn btn-primary" ng-click="test()">跳转测试</button>
+					<a ui-sref="app.form.test({id:'abc', abc:'111'})">aaa</a>
+				</div>
+			</div>
 		</div>
 	</div>
-	<div class="row">
-		<label for="password" class="col-md-4"></label>
-		<div class="col-md-8"><input type="text" id="password"></div>
-	</div>
-
-	<div class="wrapper-md pos-rlt" ui-view="formBtns"></div>
+	
 </div>
