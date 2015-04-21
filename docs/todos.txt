@@ -117,4 +117,13 @@
 2、前端乱炖-专栏：
 	http://www.html-js.com/article
 
-3、
+2015-04-21：
+1、directive ng-model
+	http://www.oschina.net/question/105457_211751
+	http://segmentfault.com/q/1010000000347476
+
+2、ui-router
+	https://github.com/angular-ui/ui-router/wiki
+	http://bubkoo.com/2014/01/02/angular/ui-router/guide/index/
+	http://angular-ui.github.io/ui-router/site/#/api
+

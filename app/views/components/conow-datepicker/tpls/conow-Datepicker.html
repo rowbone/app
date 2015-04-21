@@ -1,0 +1,14 @@
+
+<span>
+	<span ng-show="!popup" class="input-group">
+		<input type="text" class="form-control {{iClass}}" conowdatepicker-popup="{{dateformat}}" ng-blur="ngBlur()" date-mode="{{datemode}}" ng-model="conowModel" is-open="opened" min-date="minDate" max-date="maxDate" datepicker-options="dateOptions" date-disabled="dateDisabled({date:date,mode:mode})" click-fn="clickFn({date:date})" ng-required="ngRequired" ng-click="open($event)" />
+		<span class="input-group-btn">
+			<button type="button" class="btn btn-default {{iClass}}" ng-click="open($event)">
+				<i class="glyphicon glyphicon-calendar"></i>
+			</button>
+		</span>
+	</span>
+	<span ng-show="popup">
+		<button type="button" class="btn btn-default" conowdatepicker-popup="{{dateformat}}" ng-blur="ngBlur()" date-mode="{{datemode}}" ng-model="conowModel" is-open="opened" min-date="minDate" max-date="maxDate" datepicker-options="dateOptions" date-disabled="dateDisabled({date:date,mode:mode})" click-fn="clickFn({date:date})" ng-click="open($event)">{{ngModel?ngModel:(value?value:"选择")}}</button>
+	</span>
+</span>

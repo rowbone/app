@@ -1,0 +1,148 @@
+
+<title-Bar name="日期选择"></title-Bar>
+<div class="wrapper-md pos-rlt" ng-controller="arpDatepickerDemoCtrl">
+  <div class="row">
+    <div class="col-md-6">
+      <div class="panel panel-default">
+        <div class="panel-heading font-bold">组件演示</div>
+        <div class="panel-body">
+            <p class="row">
+			  	 	<div class="col-md-3">
+			  	 		默认模式：
+			  	 	</div>
+			  	 	<div class="col-md-5">
+			  	 		<conow-datepicker ng-model="arpDate.date1"></conow-datepicker>
+			  	 	</div>
+			  	 	<div class="col-md-4">
+			  	 		选中：{{arpDate.date1 }}
+			  	 	</div>
+	  			 </p>
+	  			 
+	  			 <p class="row">
+			  	 	<div class="col-md-3">
+			  	 		日期+时间模式：
+			  	 	</div>
+			  	 	<div class="col-md-5">
+			  	 		<conow-datepicker ng-model="arpDate.date2" format="yyyy-MM-dd HH:mm"></conow-datepicker>
+			  	 	</div>
+			  	 	<div class="col-md-4">
+			  	 		选中：{{arpDate.date2}}
+			  	 	</div>
+	  			 </p>
+	  			 
+	  			 <p class="row">
+			  	 	<div class="col-md-3">
+			  	 		月份模式：
+			  	 	</div>
+			  	 	<div class="col-md-5">
+			  	 		<conow-datepicker ng-model="arpDate.date3" format="yyyy-MM"></conow-datepicker>
+			  	 	</div>
+			  	 	<div class="col-md-4">
+			  	 		选中：{{arpDate.date3}}
+			  	 	</div>
+	  			 </p>
+	  			 
+	  			 <p class="row">
+			  	 	<div class="col-md-3">
+			  	 		年份模式：
+			  	 	</div>
+			  	 	<div class="col-md-5">
+			  	 		<conow-datepicker ng-model="arpDate.date4" format="yyyy"></conow-datepicker>
+			  	 	</div>
+			  	 	<div class="col-md-4">
+			  	 		选中：{{arpDate.date4}}
+			  	 	</div>
+	  			 </p>
+	  			 
+	  			 <p class="row">
+			  	 	<div class="col-md-3">
+			  	 		时间模式：
+			  	 	</div>
+			  	 	<div class="col-md-5">
+			  	 		<conow-datepicker ng-model="arpDate.date5" format="HH:mm"></conow-datepicker>
+			  	 	</div>
+			  	 	<div class="col-md-4">
+			  	 		选中：{{arpDate.date5}}
+			  	 	</div>
+	  			 </p>
+	  			 
+	  			  <p class="row">
+			  	 	<div class="col-md-3">
+			  	 		附加功能：
+			  	 	</div>
+			  	 	<div class="col-md-5">
+			  	 		<conow-datepicker ng-model="arpDate.date6" min-date="'2015-03-04'" max-date="arpDate.date1" ng-required="true" click="arpDate.query(date)" date-disabled="arpDate.disabled(date,mode)"></conow-datepicker>
+			  	 	</div>
+			  	 	<div class="col-md-4">
+			  	 		选中：{{arpDate.date6}}
+			  	 	</div>
+	  			 </p>
+	  			 
+	  			 <p class="row">
+			  	 	<div class="col-md-3">
+			  	 		不带input框模式：
+			  	 	</div>
+			  	 	<div class="col-md-5">
+			  	 		<conow-datepicker popup="true" value="选择年份" click="arpDate.query(date)" ng-model="arpDate.date7" format="yyyy"></conow-datepicker>
+			  	 	</div>
+			  	 	<div class="col-md-4">
+			  	 		选中：{{arpDate.date7}}
+			  	 	</div>
+	  			 </p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="panel panel-default">
+        <div class="panel-heading font-bold">组件描述</div>
+        <div class="panel-body">
+        	
+        	<span>1.默认模式</span>
+        	<pre><span>如：&lt;conow-datepicker ng-model="date"&gt;&lt;/conow-datepicker&gt;</span></pre>
+        	
+        	<hr>
+            <span>2.如果用其他的模式，则需要添加format属性，<br>
+					&nbsp;&nbsp;&nbsp;&nbsp;值可取：yyyy-MM-dd 等angular大部分支持的时间格式<br>
+					&nbsp;&nbsp;&nbsp;&nbsp;如：<br>
+					&nbsp;&nbsp;&nbsp;&nbsp;1、时间日期模式：yyyy-MM-dd HH:mm:ss <br>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;或者 yyyy-MM-dd HH:mm<br>
+					&nbsp;&nbsp;&nbsp;&nbsp;2、日期模式：yyyy-MM-dd （默认模式也是该模式）<br>
+					&nbsp;&nbsp;&nbsp;&nbsp;3、月份模式：yyyy-MM<br>
+					&nbsp;&nbsp;&nbsp;&nbsp;4、年份模式：yyyy<br>
+					&nbsp;&nbsp;&nbsp;&nbsp;5、时间模式：HH:mm:ss 或者 HH:mm<br></span>
+            <pre><span>如：&lt;conow-datepicker ng-model="date" format="yyyy-MM-dd HH:mm:ss"&gt;
+&lt;/conow-datepicker&gt;</span></pre>
+            
+            <hr>
+            <span>3.不带input框模式：<br>
+					&nbsp;&nbsp;&nbsp;&nbsp;添加属性：<br>
+					&nbsp;&nbsp;&nbsp;&nbsp;1、popup="true" <br>
+					&nbsp;&nbsp;&nbsp;&nbsp;2、value="选择年份" -- 没有选择年份的时候显示的文字<br></span>
+            <pre><span>如：&lt;conow-datepicker popup="true" value="选择年份" ng-model="date" 
+format="yyyy"&gt;&lt;/conow-datepicker&gt;</span></pre>
+       
+       		<hr>
+       		<span>4.附加功能：可参考如下<br>
+					&nbsp;&nbsp;&nbsp;&nbsp;min-date="'2015-03-04'"  ---- 最小可选日期<br>
+					&nbsp;&nbsp;&nbsp;&nbsp;max-date="" ---- 最大可选日期<br>
+					&nbsp;&nbsp;&nbsp;&nbsp;ng-required="true" 	---- 是否必填<br>
+					&nbsp;&nbsp;&nbsp;&nbsp;click="query(date)"  ---- 选择时间后的处理方法<br>
+					<!-- date-disabled="disabled(date,mode)"  ---- 禁用匹配的日期 --></span>
+            <pre><span>如：&lt;conow-datepicker ng-model="date" min-date="'2015-03-04'" max-date=
+"date" ng-required="true" click="query(date)" &gt;&lt;/conow-datepicker&gt;</span></pre>
+        
+        	<hr>
+        	<span>5.注意事项：<br>
+        			&nbsp;&nbsp;&nbsp;&nbsp;ng-model绑定的必须是一个字符串。<br>
+					&nbsp;&nbsp;&nbsp;&nbsp;min-date 和max-date属性可以是时间对象也可以是字符串，<br>
+					&nbsp;&nbsp;&nbsp;&nbsp;如果是直接写字符串的话需要用单引号括起来<br>
+					&nbsp;&nbsp;&nbsp;&nbsp;（如min-date="'2015-03-04'"）<br>
+			</span>
+            <pre><span>如：&lt;conow-datepicker ng-model="date" min-date="'2015-03-04'"
+max-date="date" &gt;&lt;/conow-datepicker&gt;</span></pre>
+        
+        </div>
+      </div>
+    </div>
+</div>
+</div>

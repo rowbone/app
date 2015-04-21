@@ -19,20 +19,36 @@ app.directive('conowArea', ['$modal', '$parse', '$interval', '$http',
       link: function(scope, elem, attrs, ctrl) {
         // 地区 CODE 转换获取地区名称
         elem.val('');
-        var handler = $interval(function() {
-          if(!angular.equals(ctrl.$modelValue, NaN)) {
-            $interval.cancel(handler);
 
-            $http.get('data/bz/region-map.js')
-              .success(function(data, status) {
-                data = scope.$eval(data);
+        $http.get('data/bz/region-map.js')
+          .success(function(data, status) {
+            data = scope.$eval(data);
+
+            var handler = $interval(function() {
+              if(!angular.equals(ctrl.$modelValue, NaN)) {
+                $interval.cancel(handler);
                 elem.val(data[ctrl.$viewValue][0]);
-              })
-              .error(function(data, status) {
-                console.log('Load region.js data wrong...');
-              })
-          }
-        }, 10);
+              }
+            }, 100);
+          })
+          .error(function(data, status) {
+            console.log('Load region.js data wrong...');
+          })
+
+        // var handler = $interval(function() {
+        //   if(!angular.equals(ctrl.$modelValue, NaN)) {
+        //     $interval.cancel(handler);
+
+        //     $http.get('data/bz/region-map.js')
+        //       .success(function(data, status) {
+        //         data = scope.$eval(data);
+        //         elem.val(data[ctrl.$viewValue][0]);
+        //       })
+        //       .error(function(data, status) {
+        //         console.log('Load region.js data wrong...');
+        //       })
+        //   }
+        // }, 10);
 
         elem.bind('click', function(e) {
           e.preventDefault();
