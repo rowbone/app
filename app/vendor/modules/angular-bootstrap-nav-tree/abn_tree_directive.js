@@ -6,7 +6,7 @@
 //   module = angular.module('angularBootstrapNavTree', []);
   /*searchOnSelect:'&', //点击搜索结果事件*/  
   app.directive('conowAreaTree', ['$timeout','$http', 
-    function($timeout,$http) {
+    function($timeout, $http) {
       return {
         restrict: 'E',
         replace: true,
@@ -18,8 +18,8 @@
           treeData : '=',//树的数据对象
           arrSelected: '=',//多选返回的数组
         },
-        templateUrl:function(telem, tattrs) {
-          return 'vendor/modules/angular-bootstrap-nav-tree/abn_tree_tpl.html'
+        templateUrl: function(tElem, tAttrs) {
+          return 'vendor/modules/angular-bootstrap-nav-tree/abn_tree_tpl.html';
         },
         link: function(scope, element, attrs) {
           var error, expand_all_parents, expand_level, for_all_ancestors, 
@@ -32,7 +32,6 @@
             debugger;
             return void 0;
           };
-
           // 配置项
           var options = scope.options = {
             showSearch: true,
@@ -42,7 +41,8 @@
             expandLevel: 2,
             showTree: true,
             deviceType: 'PC',
-            multiSelect: false
+            multiSelect: false,
+            selectLevel: 1
           };
           if((attrs.multiSelect !== undefined && attrs.multiSelect !== 'false') || attrs.multiSelect === 'true') {
             options.multiSelect = true;
@@ -73,6 +73,10 @@
             options.showTree = false;
           } else {
             options.showTree = true;
+          }
+          // 选择树的层级,默认为1
+          if(attrs.selectLevel) {
+            options.selectLevel = attrs.selectLevel;
           }
           // 节点可展开图标初始化
           if (attrs.iconExpand === undefined || attrs.iconExpand === '') {
@@ -255,7 +259,9 @@
           // 选择多个节点
           var arrResults = [];
           select_branch_mutiple = function(branch) {
-            arrResults.push(branch);
+            if(options.strMunicipalitiesCode.indexOf(branch.CODE) > -1 || branch.level == 2) {
+              arrResults.push(branch);
+            }
           };
           // 点击搜索结果
           scope.searchResultClick = function(branch) {
@@ -286,15 +292,26 @@
             });
           };
 
-          //点击一个节点
+          // 北京市、上海市、天津市、重庆市
+          options.arrMunicipalitiesCode = ['11000000', '31000000', '12000000', '50000000'];
+          options.strMunicipalitiesCode = options.arrMunicipalitiesCode.toString();
+
+
+          // 点击一个节点
           select_branch = function(branch) {
-            console.log('in select_branch');
-            console.log(branch);
             branch.expanded = !branch.expanded
             // if(branch.id == undefined){
               tree.expand_branch(branch);
               // return;
             // }
+            // 
+            var level = branch.level;
+            if(options.strMunicipalitiesCode.indexOf(branch.CODE) > -1) {
+              level = level + 1;
+            }
+            if(level != options.selectLevel) {
+              return;
+            }
             //清空所有选择
             for_each_branch(function(b) {
               if (b.selected) {
@@ -421,101 +438,107 @@
             });
           };
           scope.tree_rows = [];
-          on_treeData_change = function() {
-            var add_branch_to_list, root_branch, _i, _len, _ref, _results;
-            for_each_branch(function(b, level) {
-              if (!b.uid) {
-                return b.uid = "" + Math.random();
-              }
-            });
-            for_each_branch(function(b) {
-              var child, _i, _len, _ref, _results;
-              if (angular.isArray(b.children)) {
-                _ref = b.children;
-                _results = [];
-                for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-                  child = _ref[_i];
-                  _results.push(child.parent_uid = b.uid);
-                }
-                return _results;
-              }
-            });
-            scope.tree_rows = [];
-            for_each_branch(function(branch) {
-              var child, f;
-              if (branch.children) {
-                if (branch.children.length > 0) {
-                  f = function(e) {
-                    if (typeof e === 'string') {
-                      return {
-                        label: e,
-                        children: []
-                      };
-                    } else {
-                      return e;
-                    }
-                  };
-                  return branch.children = (function() {
-                    var _i, _len, _ref, _results;
-                    _ref = branch.children;
-                    _results = [];
-                    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-                      child = _ref[_i];
-                      _results.push(f(child));
-                    }
-                    return _results;
-                  })();
-                }
+    on_treeData_change = function() {
+      var add_branch_to_list, root_branch, _i, _len, _ref, _results;
+      for_each_branch(function(b, level) {
+        if (!b.uid) {
+          return b.uid = "" + Math.random();
+        }
+      });
+      for_each_branch(function(b) {
+        var child, _i, _len, _ref, _results;
+        if (angular.isArray(b.children)) {
+          _ref = b.children;
+          _results = [];
+          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+            child = _ref[_i];
+            _results.push(child.parent_uid = b.uid);
+          }
+          return _results;
+        }
+      });
+      scope.tree_rows = [];
+      for_each_branch(function(branch) {
+        var child, f;
+        if (branch.children) {
+          if (branch.children.length > 0) {
+            f = function(e) {
+              if (typeof e === 'string') {
+                return {
+                  label: e,
+                  children: []
+                };
               } else {
-                return branch.children = [];
-              }
-            });
-            add_branch_to_list = function(level, branch, visible) {
-              var child, child_visible, tree_icon, _i, _len, _ref, _results,check;
-              if (branch.expanded == null) {
-                branch.expanded = false;
-              }
-              if (!branch.children || branch.children.length === 0) {
-                tree_icon = options.iconLeaf;
-              } else {
-                if (branch.expanded) {
-                  tree_icon = options.iconCollapse;
-                } else {
-                  tree_icon = options.iconExpand;
-                }
-              }
-
-              scope.tree_rows.push({
-                level: level,
-                branch: branch,
-                label: branch.label,
-                tree_icon: tree_icon,
-                visible: visible
-              });
-              if (branch.children != null) {
-                _ref = branch.children;
-                _results = [];
-                for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-                  child = _ref[_i];
-                  child_visible = visible && branch.expanded;
-                  _results.push(add_branch_to_list(level + 1, child, child_visible));
-                }
-                return _results;
+                return e;
               }
             };
-            _ref = scope.treeData;
-            _results = [];
-            for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-              root_branch = _ref[_i];
-              _results.push(add_branch_to_list(1, root_branch, true));
-            }
-            return _results;
-          };
+            return branch.children = (function() {
+              var _i, _len, _ref, _results;
+              _ref = branch.children;
+              _results = [];
+              for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+                child = _ref[_i];
+                _results.push(f(child));
+              }
+              return _results;
+            })();
+          }
+        } else {
+          return branch.children = [];
+        }
+      });
+      add_branch_to_list = function(level, branch, visible) {
+        // 对直辖市做特殊判断，去掉其下级节点
+        if(options.strMunicipalitiesCode.indexOf(root_branch.CODE) > -1) {
+          branch.children = null; 
+        }
+        var child, child_visible, tree_icon, _i, _len, _ref, _results,check;
+        if (branch.expanded == null) {
+          branch.expanded = false;
+        }
+        if (!branch.children || branch.children.length === 0) {
+          tree_icon = options.iconLeaf;
+        } else {
+          if (branch.expanded) {
+            tree_icon = options.iconCollapse;
+          } else {
+            tree_icon = options.iconExpand;
+          }
+        }
+
+        scope.tree_rows.push({
+          level: level,
+          branch: branch,
+          label: branch.label,
+          tree_icon: tree_icon,
+          visible: visible
+        });
+        if (branch.children != null) {
+          _ref = branch.children;
+          _results = [];
+          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+            child = _ref[_i];
+            child_visible = visible && branch.expanded;
+            _results.push(add_branch_to_list(level + 1, child, child_visible));
+          }
+          return _results;
+        }
+      };
+
+      _ref = scope.treeData;
+      _results = [];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        root_branch = _ref[_i];
+        _results.push(add_branch_to_list(1, root_branch, true));
+      }
+      return _results;
+    };
+
           // 监听 treeData 变化，触发相应方法 on_treeData_change
           scope.$watch('treeData', on_treeData_change, true);
           if (attrs.initialSelection != null) {
             for_each_branch(function(b) {
-              if (b.label === attrs.initialSelection) {
+              if (b.label == attrs.initialSelection) {
                 return $timeout(function() {
                   return select_branch(b);
                 });

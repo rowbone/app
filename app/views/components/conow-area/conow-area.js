@@ -9,7 +9,6 @@ app.controller('AreaSelCtrl', ['$scope', '$http',
   }
 ]); 
 
-
 app.directive('conowArea', ['$modal', '$parse', '$interval', '$http', 
   function($modal, $parse, $interval, $http) {
     return {
@@ -32,7 +31,7 @@ app.directive('conowArea', ['$modal', '$parse', '$interval', '$http',
             }, 100);
           })
           .error(function(data, status) {
-            console.log('Load region.js data wrong...');
+            console.log('Load region-map.js data wrong...');
           })
 
         // var handler = $interval(function() {
@@ -55,7 +54,20 @@ app.directive('conowArea', ['$modal', '$parse', '$interval', '$http',
 
           var modalInstance = $modal.open({
             templateUrl: 'views/components/conow-area/tpls/area-tpl.html',
-            controller: 'AreaTreeCtrl'
+            controller: 'AreaTreeCtrl',
+            resolve: {
+              modalParams: function() {
+                var options = {};
+                var selectLevel = attrs.selectLevel;
+                if(selectLevel === undefined || selectLevel === '') {
+                  options.selectLevel = 2;
+                } else {
+                  options.selectLevel = 1;
+                }
+
+                return options;
+              }
+            }
           });
 
           modalInstance.result.then(function(rtnVal) {
@@ -73,16 +85,19 @@ app.directive('conowArea', ['$modal', '$parse', '$interval', '$http',
   }
 ]);
 
-app.controller('ConowAreaCtrl', ['$scope', 
-  function($scope) {
-    console.log($scope.ngModel);
-  }
-])
-app.controller('AreaTreeCtrl', ['$scope', '$timeout', '$http', '$modalInstance',  
-  function($scope, $timeout, $http, $modalInstance) {
+// app.controller('ConowAreaCtrl', ['$scope', 
+//   function($scope) {
+//     console.log($scope.ngModel);
+//   }
+// ]);
+
+app.controller('AreaTreeCtrl', ['$scope', '$timeout', '$http', '$modalInstance', 'modalParams',
+  function($scope, $timeout, $http, $modalInstance, modalParams) {
     var tree = $scope.my_tree = {};
 
     var selectedData;
+
+    $scope.treeOptions = modalParams;
 
     $scope.my_tree_handler = function(branch) {
       selectedData = branch;

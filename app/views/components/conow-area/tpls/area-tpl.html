@@ -12,7 +12,6 @@
             <div class="text-center text-lg text-2x sel-title font-bold">请选择</div>
           </div>
         </div>
-
         <div class="modal-body">
           <conow-area-tree 
             show-search
@@ -28,6 +27,7 @@
             icon-expand
             device-type="phone"
             initial-selection="广东省"
+            select-level="{{ treeOptions.selectLevel }}"
             >
           </conow-area-tree>
         </div>
