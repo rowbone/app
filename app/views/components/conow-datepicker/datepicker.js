@@ -21,11 +21,17 @@ app.controller('arpDatepickerDemoCtrl', function ($scope, $filter,$rootScope) {
 			  //}
 	  };
 
-	  $scope.test = function() {
-	  	var $overlayer = angular.element('.overlayer');
-	  	$overlayer.removeClass('hidden')
+	  $scope.layerClose = function() {
+	  	console.log('111');
 	  }
 });
+
+app.controller('TestCtrl', ['$scope', function($scope) {
+	$scope.layerClose = function() {
+		var $overlayer = angular.element('.overlayer');
+		$overlayer.addClass('hidden');
+	}
+}])
 
 
 

@@ -951,12 +951,12 @@ function ($compile, $parse, $document, $conowposition, dateFilter, conowdatePars
         }
       };
 
-      // element.bind('click', function() {
-      //   var $overLayer = angular.element('.overlayer');
-      //   // console.log($overLayer.attr('class'));
+      element.bind('click', function() {
+        var $overLayer = angular.element('.overlayer');
+        // console.log($overLayer.attr('class'));
         
-      //   $overLayer.removeClass('hidden');
-      // })
+        $overLayer.removeClass('hidden');
+      })
 
       scope.$watch('isOpen', function(value) {
         if (value) {
@@ -1493,7 +1493,7 @@ angular.module("template/conowdatepicker/day.html", []).run(["$templateCache", f
     "    <tr ng-repeat=\"row in rows track by $index\">\n" +
     "      <td ng-show=\"showWeeks\" class=\"text-center h6\"><em>{{ weekNumbers[$index] }}</em></td>\n" +
     "      <td ng-repeat=\"dt in row track by dt.date\" class=\"text-center\" role=\"gridcell\" id=\"{{dt.uid}}\" aria-disabled=\"{{!!dt.disabled}}\">\n" +
-    "        <button type=\"button\" style=\"width:100%;\" class=\"btn btn-default btn-sm\" ng-class=\"{'btn-info': dt.selected, active: isActive(dt)}\" ng-click=\"select(dt.date)\" ng-disabled=\"dt.disabled\" tabindex=\"-1\"><span ng-class=\"{'text-muted': dt.secondary, 'text-info': dt.current}\">{{dt.label}}</span></button>\n" +
+    "        <button type=\"button\" style=\"width:80%;\" class=\"btn btn-default btn-sm\" ng-class=\"{'btn-info': dt.selected, active: isActive(dt)}\" ng-click=\"select(dt.date)\" ng-disabled=\"dt.disabled\" tabindex=\"-1\"><span ng-class=\"{'text-muted': dt.secondary, 'text-info': dt.current}\">{{dt.label}}</span></button>\n" +
     "      </td>\n" +
     "    </tr>\n" +
     "		<tr ng-if=\"dateSelect.mode==\'datetime\'\" class=\"text-center\">\n" +
