@@ -20,6 +20,11 @@ app.controller('arpDatepickerDemoCtrl', function ($scope, $filter,$rootScope) {
 				//    return (mode === 'day' && (date.getDay() === 0 || date.getDay() === 6));
 			  //}
 	  };
+
+	  $scope.test = function() {
+	  	var $overlayer = angular.element('.overlayer');
+	  	$overlayer.removeClass('hidden')
+	  }
 });
 
 

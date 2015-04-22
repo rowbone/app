@@ -418,9 +418,6 @@ angular.module('conow.datepicker.conowdatepicker', ['conow.datepicker.dateparser
   $scope.selectDay = false;
   $scope.select = function( date ) {
 
-    var $overLayer = angular.element('.overlayer');
-    $overLayer.addClass('hidden');
-
     if ( $scope.datepickerMode === self.minMode ) {
     	$scope.selectDay = !$scope.selectDay;
       var dt = ngModelCtrl.$modelValue ? new Date( ngModelCtrl.$modelValue ) : new Date(0, 0, 0, 0, 0, 0, 0);
@@ -516,11 +513,12 @@ angular.module('conow.datepicker.conowdatepicker', ['conow.datepicker.dateparser
   };
 }])
 
-.directive( 'conowdatepicker', function () {
+.directive('conowdatepicker', function () {
   return {
     restrict: 'EA',
     replace: true,
     templateUrl: 'template/conowdatepicker/conowdatepicker.html',
+    // templateUrl: 'views/components/conow-datepicker/tpls/conowdatepicker.html',
     scope: {
       datepickerMode: '=?',
       dateDisabled: '&',
@@ -546,6 +544,7 @@ angular.module('conow.datepicker.conowdatepicker', ['conow.datepicker.dateparser
     restrict: 'EA',
     replace: true,
     templateUrl: 'template/conowdatepicker/day.html',
+    // templateUrl: 'views/components/conow-datepicker/tpls/day.html',
     require: '^conowdatepicker',
     link: function(scope, element, attrs, ctrl) {
       scope.showWeeks = ctrl.showWeeks;
@@ -654,6 +653,7 @@ angular.module('conow.datepicker.conowdatepicker', ['conow.datepicker.dateparser
     restrict: 'EA',
     replace: true,
     templateUrl: 'template/conowdatepicker/month.html',
+    // templateUrl: 'views/components/conow-datepicker/tpls/month.html',
     require: '^conowdatepicker',
     link: function(scope, element, attrs, ctrl) {
       ctrl.step = { years: 1 };
@@ -773,8 +773,8 @@ angular.module('conow.datepicker.conowdatepicker', ['conow.datepicker.dateparser
   showButtonBar: true
 })
 
-.directive('conowdatepickerPopup', ['$compile', '$parse', '$document', '$conowposition', 'dateFilter', 'conowdateParser', 'conowdatepickerPopupConfig',
-function ($compile, $parse, $document, $conowposition, dateFilter, conowdateParser, conowdatepickerPopupConfig) {
+.directive('conowdatepickerPopup', ['$compile', '$parse', '$document', '$conowposition', 'dateFilter', 'conowdateParser', 'conowdatepickerPopupConfig', '$modal',
+function ($compile, $parse, $document, $conowposition, dateFilter, conowdateParser, conowdatepickerPopupConfig, $modal) {
   return {
     restrict: 'EA',
     require: 'ngModel',
@@ -788,7 +788,6 @@ function ($compile, $parse, $document, $conowposition, dateFilter, conowdatePars
       dateMode: '@'
     },
     link: function(scope, element, attrs, ngModel) {
-    	
       var dateFormat,
           closeOnDateSelection = angular.isDefined(attrs.closeOnDateSelection) ? scope.$parent.$eval(attrs.closeOnDateSelection) : conowdatepickerPopupConfig.closeOnDateSelection,
           appendToBody = angular.isDefined(attrs.datepickerAppendToBody) ? scope.$parent.$eval(attrs.datepickerAppendToBody) : conowdatepickerPopupConfig.appendToBody;
@@ -809,22 +808,22 @@ function ($compile, $parse, $document, $conowposition, dateFilter, conowdatePars
     	        'ng-model': 'date',
     	        'ng-change': 'dateSelection()'
     	      };
-      if(scope.dateMode === 'year'){
-    	  eleStr = '<div conowdatepicker-popup-wrap><div conowdatepicker date-mode=\"'+scope.dateMode+'\" datepicker-mode=\"\''+scope.dateMode+'\'\"></div></div>';
-      }else if(scope.dateMode === 'month'){
-    	  eleStr = '<div conowdatepicker-popup-wrap><div conowdatepicker date-mode=\"'+scope.dateMode+'\" datepicker-mode=\"\''+scope.dateMode+'\'\"></div></div>';
-      }else if(scope.dateMode === 'time'){
-    	  popupElAttrObj = {
-      	        'ng-model': 'date'
-      	      };
-    	  eleStr = '<div conowdatepicker-popup-wrap><div conowtimepicker></div></div>';
-      }else if(scope.dateMode === 'datetime'){	  
-    	  popupElAttrObj = {
-      	        'ng-model': 'date'
-      	      };
-    	  eleStr = '<div conowdatepicker-popup-wrap><div conowdatepicker date-mode=\"'+scope.dateMode+'\" datepicker-mode=\"\'day\'\"></div></div>';
-      }else{
-    	  eleStr = '<div conowdatepicker-popup-wrap><div conowdatepicker date-mode=\"'+scope.dateMode+'\" datepicker-mode=\"\'day\'\"></div></div>';
+      if (scope.dateMode === 'year') {
+        eleStr = '<div conowdatepicker-popup-wrap><div conowdatepicker date-mode=\"' + scope.dateMode + '\" datepicker-mode=\"\'' + scope.dateMode + '\'\"></div></div>';
+      } else if (scope.dateMode === 'month') {
+        eleStr = '<div conowdatepicker-popup-wrap><div conowdatepicker date-mode=\"' + scope.dateMode + '\" datepicker-mode=\"\'' + scope.dateMode + '\'\"></div></div>';
+      } else if (scope.dateMode === 'time') {
+        popupElAttrObj = {
+          'ng-model': 'date'
+        };
+        eleStr = '<div conowdatepicker-popup-wrap><div conowtimepicker></div></div>';
+      } else if (scope.dateMode === 'datetime') {
+        popupElAttrObj = {
+          'ng-model': 'date'
+        };
+        eleStr = '<div conowdatepicker-popup-wrap><div conowdatepicker date-mode=\"' + scope.dateMode + '\" datepicker-mode=\"\'day\'\"></div></div>';
+      } else {
+        eleStr = '<div conowdatepicker-popup-wrap><div conowdatepicker date-mode=\"' + scope.dateMode + '\" datepicker-mode=\"\'day\'\"></div></div>';
       }
       scope.dateSelect={mode:scope.dateMode};
       // popup element used to display calendar
@@ -931,6 +930,7 @@ function ($compile, $parse, $document, $conowposition, dateFilter, conowdatePars
       var documentClickBind = function(event) {
         if (scope.isOpen && event.target !== element[0]) {
           scope.$apply(function() {
+            console.log('set isOpen false')
             scope.isOpen = false;
           });
         }
@@ -940,42 +940,58 @@ function ($compile, $parse, $document, $conowposition, dateFilter, conowdatePars
         scope.keydown(evt);
       };
       element.bind('keydown', keydown);
-
       scope.keydown = function(evt) {
         if (evt.which === 27) {
           evt.preventDefault();
           evt.stopPropagation();
           scope.close();
         } else if (evt.which === 40 && !scope.isOpen) {
-          scope.isOpen = true;
+          // scope.isOpen = true;
         }
       };
 
       // element.bind('click', function() {
-      //   var $overLayer = angular.element('.overlayer');
-      //   // console.log($overLayer.attr('class'));
-        
-      //   $overLayer.removeClass('hidden');
+      //   var divLayer = angular.element('.dropdown-menu');
+      //   console.log(divLayer.length)
+      //   console.log(divLayer.width());
+      //   console.log(divLayer.height());
+      //   console.log(document.documentElement.clientWidth)
+      //   angular.element('.overlay').removeClass('hidden');
       // })
+      
+      // 点击弹出层显示选择
+      // element.bind('click', function(e) {
+      //   $modal.open({
+      //     // 属性指令 conowdatepicker-popup-wrap 调用了模板 popup.html
+      //     template: '<div ng-model="date">' + eleStr + "</div>",
+      //     controller: function($scope) {
+      //       $scope.isOpen = true;
+      //       $scope.showButtonBar = scope.showButtonBar;
+      //       $scope.dateSelect = {
+      //         mode: 'year'
+      //       };
+      //       $scope.getText = function( key ) {
+      //         return $scope[key + 'Text'] || conowdatepickerPopupConfig[key + 'Text'];
+      //       }
+      //     }
+      //     // templateUrl: 'views/components/conow-datepicker/tpls/popup.html'
+      //   });
+        
+      // });
 
       scope.$watch('isOpen', function(value) {
         if (value) {
           scope.$broadcast('conowdatepicker.focus');
           scope.position = appendToBody ? $conowposition.offset(element) : $conowposition.position(element);
           scope.position.top = scope.position.top + element.prop('offsetHeight');
-          
-          var $body = angular.element('body');
-          var $dropdownMenu = angular.element('.dropdown-menu');
-
-          scope.position.left = ($body.prop('clientWidth') - 300) / 2;
-
+console.log(scope.position)
           $document.bind('click', documentClickBind);
         } else {
           $document.unbind('click', documentClickBind);
         }
       });
 
-      scope.select = function( date ) {
+      scope.select = function(date) {
 
         if (date === 'today') {
           var today = new Date();
@@ -985,17 +1001,17 @@ function ($compile, $parse, $document, $conowposition, dateFilter, conowdatePars
           } else {
             date = new Date(today.setHours(0, 0, 0, 0));
           }
-        }else if(date === 'now'){
-//	    	 var today = new Date();
-//	         if (angular.isDate(ngModel.$modelValue)) {
-//	           date = new Date(ngModel.$modelValue);
-//	           date.setHours(today.getHours(),today.getMinutes(),today.getSeconds(), 0)
-//	         } else {
-//	           date = new Date(today.setHours(today.getHours(),today.getMinutes(),today.getSeconds(), 0));
-//	         }
-        	date = new Date();
+        } else if (date === 'now') {
+//         var today = new Date();
+//           if (angular.isDate(ngModel.$modelValue)) {
+//             date = new Date(ngModel.$modelValue);
+//             date.setHours(today.getHours(),today.getMinutes(),today.getSeconds(), 0)
+//           } else {
+//             date = new Date(today.setHours(today.getHours(),today.getMinutes(),today.getSeconds(), 0));
+//           }
+          date = new Date();
         }
-        scope.dateSelection( date );
+        scope.dateSelection(date);
       };
 
       scope.close = function() {
@@ -1021,6 +1037,12 @@ function ($compile, $parse, $document, $conowposition, dateFilter, conowdatePars
     }
   };
 }])
+
+.controller('OpenCtrl', ['$scope', 
+  function($scope) {
+    // $scope.isOpen = true;
+  }
+])
 
 .directive('conowdatepickerPopupWrap', function() {
   return {
@@ -1159,7 +1181,7 @@ function ($compile, $parse, $document, $conowposition, dateFilter, conowdatePars
 
 }])
 
-.directive('conowDatepicker', function() {
+.directive('conowDatepicker', function($modal) {
   return {
 	restrict: 'E',
     replace: true,
@@ -1177,7 +1199,18 @@ function ($compile, $parse, $document, $conowposition, dateFilter, conowdatePars
     	clickFn:'&?click',
         iClass:'@iClass'
     },
-    templateUrl: 'template/conowdatepicker/conowDatepicker.html'
+    templateUrl: 'template/conowdatepicker/conowDatepicker.html',
+    // templateUrl: 'views/components/conow-datepicker/tpls/conow-Datepicker.html'
+    link: function(scope, elem, attrs) {
+
+      elem.bind('click', function(e) {
+        e.preventDefault();
+
+        $modal.open({
+          templateUrl: 'template/conowdatepicker/conowDatepicker.html'
+        });
+      });
+    }
   };
 })
 ;
