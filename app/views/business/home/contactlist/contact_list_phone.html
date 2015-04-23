@@ -2,50 +2,146 @@
   .blank {
   	letter-spacing: 10px;
   }
+  .r-l25 {
+  	border-radius: 25px 0 0 25px !important;
+  }
+  .r-r25 {
+  	border-radius: 0 25px 25px 0 !important;
+  }
 </style>
 <div ng-controller="contactListCtrl">
-	<div class="panel panel-default no-padder">
-	  <div class="panel-body r-l bg-primary">
-	  	<div class="text-center">
-	  	  <button type="button" class="btn m-b-xs w-xs btn-primary btn-rounded dker text-center">联系人</button> 
-	  	  <button type="button" class="btn m-b-xs w-xs btn-default btn-rounded blank text-center">组织</button>
-	  	</div>
-	  	<div class="pull-right">
-	  		<i class="fa fa-search-plus"></i>
-	  	</div>	
-	  </div>
-	</div>
-
-	<div class="panel panel-default no-padder">
-	  <div class="panel-body">
-		  <div class="input-group">
-			<input type="text" class="form-control btn-rounded input-lg" placeholder="搜索">
-			<div class="input-group-btn">
-			  <button type="button" class="btn btn-primary btn-rounded input-lg" tabindex=-1>
-				<i class="fa fa-search"></i>
-			  </button>  	  	
-			</div>
+	<!-- page1 collection-page start -->
+	<div ng-if="options.page == 1">
+		<!-- header-btn start -->
+		<div class="panel panel-default no-padder">
+		  <div class="panel-body r-l bg-primary">
+		  	<div class="text-center">
+		  		<div class=" btn-group btn-group-lg">
+			  	  <button type="button" class="btn w-sm r-l25" ng-class="{'bg-light': options.headerBtn == 1, 'dker': options.headerBtn == 1, 'bg-dark': options.headerBtn != 1, 'dker': options.headerBtn != 1}" ng-click="options.headerBtn = 1">联系人</button> 
+			  	  <button type="button" class="btn w-sm r-r25 blank" ng-class="{'bg-light': options.headerBtn != 1, 'dker': options.headerBtn != 1, 'bg-dark': options.headerBtn == 1, 'dker': options.headerBtn == 1}" ng-click="options.headerBtn = 2">组织</button>
+		  		</div>
+		  		<a class="v-bottom" ng-click="options.page = 2; options.headerBtn = 1"><i class="fa fa-search-plus text-2x pull-right v-bottom"></i></a>
+		  	</div>
 		  </div>
-	  </div>
-	</div>
-
-	<div class="panel panel-default no-padder">
-	  <div class="panel-body">
-	  	<div ng-if="options.collectionPersonNone" class="text-center">
+		</div>
+		<!-- header-btn end -->
+		<!-- search start -->
+		<div class="panel panel-default no-padder">
+		  <div class="panel-body">
+			  <div class="input-group">
+				<input type="text" class="form-control btn-rounded input-lg" placeholder="搜索">
+				<div class="input-group-btn">
+				  <button type="button" class="btn btn-primary btn-rounded input-lg" tabindex=-1>
+					<i class="fa fa-search"></i>
+				  </button>  	  	
+				</div>
+			  </div>
+		  </div>
+		</div>
+		<!-- search end -->
+		<!-- collection-person-none start -->
+		<div class="panel panel-default no-padder" ng-if="options.headerBtn == 1  && options.collectionPersonNone">
+		  <div class="panel-body text-center">
 	  	  <div ng-bind="options.collectionPersonMsg"></div>
 	  	  <i class="fa fa-plus-circle text-2x m-t m-b text-info dk"></i>
 	  	  <div ng-bind="options.collectionPersonAdd" class="text-info dk"></div>
-	  	</div>
-	  	<div ng-if="!options.collectionPersonNone">
-
+		  </div>
+		</div>
+		<!-- collection-person-none end -->
+		<!-- collection-person start -->
+		<div class="panel panel-default no-padder" ng-if="options.headerBtn == 1 && !options.collectionPersonNone">
+			<div class="panel-body">
 	  		<div ng-repeat="group in entity.collectionPerson" class="list-group">
 	  			{{ group.index }}
 	  			<div ng-repeat="person in group.members" class="list-group-item">
 	  				{{ person.name }}
 	  			</div>
 	  		</div>
-	  	</div>
-	  </div>
+			</div>
+		</div>
+		<!-- collection-person end -->
+		<!-- collection-org-none start -->
+		<div class="panel panel-default no-padder" ng-if="options.headerBtn == 2 && options.collectionOrgNone">
+		  <div class="panel-body">
+		  	<div class="text-center">
+		  	  <div ng-bind="options.collectionOrgMsg"></div>
+		  	  <i class="fa fa-plus-circle text-2x m-t m-b text-info dk"></i>
+		  	  <div ng-bind="options.collectionOrgAdd" class="text-info dk"></div>
+		  	</div>
+		  </div>
+		</div>
+		<!-- collection-org-none end -->
+		<!-- collection-org start -->
+		<div class="panel panel-default no-padder" ng-if="options.headerBtn == 2 && !options.collectionOrgNone">
+			<div class="panel-body">
+	  		<div ng-repeat="group in entity.collectionOrg" class="list-group">
+	  			{{ group.index }}
+	  			<div ng-repeat="org in group.members" class="list-group-item">
+	  				{{ org.name }}
+	  			</div>
+	  		</div>
+			</div>
+		</div>
+		<!-- collection-org end -->
 	</div>
+	<!-- page1 collection-page end -->
 
+	<div ng-if="options.page == 2">
+		<!-- header-btn start -->
+		<div class="panel panel-default no-padder">
+		  <div class="panel-body r-l bg-primary">
+		  	<div class="text-center">		  			
+		  		<a class="v-bottom" ng-click="options.page = 1; options.headerBtn = 1"><i class="fa fa-angle-left text-2x pull-left v-bottom"></i></a>
+		  		<div class=" btn-group btn-group-lg">
+			  	  <button type="button" class="btn w-sm r-l25 blank" ng-class="{'bg-light': options.headerBtn == 1, 'dker': options.headerBtn == 1, 'bg-dark': options.headerBtn != 1, 'dker': options.headerBtn != 1}" ng-click="options.headerBtn = 1">找人</button> 
+			  	  <button type="button" class="btn w-sm r-r25" ng-class="{'bg-light': options.headerBtn != 1, 'dker': options.headerBtn != 1, 'bg-dark': options.headerBtn == 1, 'dker': options.headerBtn == 1}" ng-click="options.headerBtn = 2">找组织</button>
+		  		</div>
+		  	</div>
+		  </div>
+		</div>
+		<!-- header-btn end -->
+		<!-- search start -->
+		<div class="panel panel-default no-padder">
+		  <div class="panel-body">
+			  <div class="input-group">
+				<input type="text" class="form-control btn-rounded input-lg" placeholder="搜索">
+				<div class="input-group-btn">
+				  <button type="button" class="btn btn-primary btn-rounded input-lg" tabindex=-1>
+					<i class="fa fa-search"></i>
+				  </button>  	  	
+				</div>
+			  </div>
+		  </div>
+		</div>
+		<!-- search end -->
+
+		<div class="form-group">
+			<label class="label-control font-bold">区域</label>
+			<!-- <div class="btn-group">
+				<label ng-repeat="(key, value) in dataset"></label>
+			</div> -->
+
+			<div class="btn-group">
+				<label ng-repeat="BRC in entity.radioArea" class="btn btn-default" ng-model="entity.radioArea"
+				btn-radio="'{{BRC.id}}'" uncheckable>{{BRC.name}}</label>
+			</div>
+		</div>
+		<hr class="b-b">
+		<div class="form-group">
+			<label class="label-control font-bold">分类</label>
+		</div>
+		<hr class="b-b">
+		<div class="form-group">
+			<label class="label-control font-bold">所属组织</label>
+		</div>
+		<hr class="b-b">
+		<div class="form-group">
+			<label class="label-control font-bold">研究方向</label>
+		</div>
+		<hr class="b-b">
+		<div class="form-group">
+			<label class="label-control font-bold">所学专业</label>
+		</div>
+		
+	</div>
 </div>
