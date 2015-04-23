@@ -1,0 +1,5 @@
+
+1、JavaScript闭包详解
+	http://www.xprogrammer.com/1491.html
+
+2、

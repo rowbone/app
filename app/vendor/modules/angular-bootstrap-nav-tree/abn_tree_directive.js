@@ -196,7 +196,6 @@
             searchIf = searchIf + "|| b." + searchKeyArr[i] + ".indexOf(label)>=0 ";
           };
           searchIf = searchIf.substring(3, searchIf.length);
-
           var select_branchs = function(label) {
 
             scope.searchResults = {}; //树的搜索返回结果显示对象

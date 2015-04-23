@@ -521,6 +521,7 @@ angular.module('conow.datepicker.conowdatepicker', ['conow.datepicker.dateparser
     restrict: 'EA',
     replace: true,
     templateUrl: 'template/conowdatepicker/conowdatepicker.html',
+    // templateUrl: 'views/components/conow-datepicker/tpls/conowdatepicker'
     scope: {
       datepickerMode: '=?',
       dateDisabled: '&',
@@ -951,12 +952,12 @@ function ($compile, $parse, $document, $conowposition, dateFilter, conowdatePars
         }
       };
 
-      element.bind('click', function() {
-        var $overLayer = angular.element('.overlayer');
-        // console.log($overLayer.attr('class'));
+      // element.bind('click', function() {
+      //   var $overLayer = angular.element('.overlayer');
+      //   // console.log($overLayer.attr('class'));
         
-        $overLayer.removeClass('hidden');
-      })
+      //   $overLayer.removeClass('hidden');
+      // })
 
       scope.$watch('isOpen', function(value) {
         if (value) {

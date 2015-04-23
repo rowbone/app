@@ -1,0 +1,215 @@
+<div class="panel panel-default no-padder">
+	<div class="panel-body r-l">
+		<!-- 找人、找组织、条件找人 -->
+		<div>
+				<a class="pull-right m-r-sm m-t-xs"
+					ng-click="changeToTree('true')" ng-if="backToTree"><i class="fa fa-mail-reply"></i>返回树</a>
+	        <tabset class="tab-container">
+	         <!--默认按下tab active="tab.active" -->
+	          <tab active="tab.active" heading="找人" ng-click="changeToTree('true')">
+	          	<form class="input-group">
+					<input dropdown-toggle ng-model="normalStaff.normalSearchInput" type="text"
+						class="form-control input-sm btn-rounded"
+						placeholder="请输入人员的关键字...">
+					<div class="input-group-btn dropdown" dropdown>
+						<button type="submit" class="btn btn-primary btn-sm btn-rounded"
+							ng-click="normalSearchPeople()" tabindex="-1">
+							<i class="fa fa-search"></i>
+						</button>
+					</div>
+				</form>
+				<!-- 满足条件的人员层 class="block {{staffDivIsDisplay}}"-->
+				<div ng-if="staffDivIsDisplay">
+					<accordion close-others="oneAtATime">
+						<accordion-group is-open="statusStaff.openStaff" class="m-t">
+							<accordion-heading>
+							<label class="font-bold">人员</label>
+								<span ng-if="doing_async_searchStaff"> <i class="fa fa-spin fa-spinner"></i>...loading...</span>
+							</accordion-heading>
+							<div ng-if="staffLength > 0">
+								<div class="pull-left-sm" ng-repeat="searchStaff in staffRepeat">
+									<div> <a ng-click="app.settings.equSwitch = !app.settings.equSwitch" ui-sref="app.cam.staffdetail({staffId:'{{searchStaff.ID}}'})">
+											<div class='font-bold'>{{searchStaff.NAME}}</div>
+											<div class=''>{{searchStaff.totalName}}</div>
+											</a> 
+									</div>
+								</div>
+								<!-- <pagination total-items="staffTotalItems" ng-model="page.staffCurrentPage" max-size="staffMaxSize" class="pagination-sm m-t-none m-b" boundary-links="true" rotate="false" num-pages="numPages" items-per-page="staffPageSize"></pagination> -->
+								<pagination ng-if="staffTotalItems >= staffPageSize" boundary-links="true" total-items="staffTotalItems" max-size="staffMaxSize" ng-model="page.staffCurrentPage"  items-per-page="staffPageSize" class="pagination-sm m-t-none m-b" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></pagination>
+							</div>
+							<div ng-if="!(staffLength > 0)">{{isFindStaff}}</div>
+						</accordion-group>
+					</accordion>
+				</div>
+	          </tab>
+	          <tab heading="找组织" ng-click="changeToTree()">
+		           <form class="input-group">
+						<input dropdown-toggle ng-model="normalOrg.searchOrgInput" type="text"
+							class="form-control input-sm btn-rounded"
+							placeholder="请输入组织的关键字...">
+						<div class="input-group-btn dropdown" dropdown>
+							<button type="submit" class="btn btn-primary btn-sm btn-rounded"
+								ng-click="searchOrg()" tabindex="-1">
+								<i class="fa fa-search"></i>
+							</button>
+						</div>
+					</form>
+					<!-- 满足条件的组织层class="block {{orgDivIsDisplay}}" -->
+					<div ng-show="orgDivIsDisplay">
+						<accordion close-others="oneAtATime"> 
+							<accordion-group is-open="statusOrg.openOrg" class="m-t"> 
+								<accordion-heading>
+								<label class="font-bold">组织</label>
+									<span ng-if="doing_async_orgSearch"> <i class="fa fa-spin fa-spinner"></i>...loading...</span>
+								</accordion-heading>
+								<div ng-if="orgLength > 0">
+									<div ng-repeat="org in orgDivRepeat" class="b-a b-3x b-white">
+										<div class=''><a ng-click="app.settings.equSwitch = !app.settings.equSwitch" ui-sref="app.cam.organdstaff({orgUnitId:'{{org.ID}}'})">{{org.totalName}}</a></div>
+									</div>
+									<pagination ng-if="orgTotalItems >= orgPageSize" boundary-links="true" total-items="orgTotalItems" max-size="staffMaxSize" ng-model="page.orgCurrentPage"  items-per-page="orgPageSize" class="pagination-sm m-t-none m-b" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></pagination>
+								</div>
+								<div ng-if="!(orgLength > 0)">{{isFindOrg}}</div>
+							</accordion-group>
+						</accordion>
+					</div>
+	          </tab>
+	          <tab heading="条件找人" ng-click="conditionSearchStaffTab()">
+	          		 <!-- ng-show="conditionShow" -->
+					<div ng-if="conditionShow">
+						<form name="searchForm" class="form-validation">
+							<input type="text" ng-model="conditionInput.staffNameInput" class="form-control input-sm rounded m-b" placeholder="请输入人员关键字...">
+							<div class="form-group">
+								<label class="font-bold">区域</label>
+								<!-- <div>{{radioModel = null}}</div> -->
+								<!-- <input type="text" value="{{$parent.radioModel || 'null'}}"> -->
+								<div class="btn-group">
+									<label ng-repeat="BRC in BRCRepeat" class="btn btn-default" ng-model="conditionRadioRgn.radioModelArea"
+									btn-radio="'{{BRC.ID}}'" uncheckable>{{BRC.ORG_UNIT_RGN}}</label>
+								</div>
+	
+	
+							</div>
+							<div class="form-group">
+								<label class="font-bold">分类</label>
+								 <!-- <input type="text" value="{{radioModel2 || 'null'}}"> -->
+								<div class="btn-group">
+									<label ng-repeat="orgClass in orgClassRepeat" class="btn btn-default" ng-model="conditionRadioClass.radioModelClass"
+									btn-radio="'{{orgClass.OPTION_KEY}}'" uncheckable>{{orgClass.OPTION_VALUE}}</label>
+								</div>
+							</div>
+							<div class="form-group">
+							<label class="font-bold">所属组织</label><span ng-if="doing_async_select"> <i class="fa fa-spin fa-spinner"></i>...loading...</span>
+							  <div class="form-group">
+						    	<div class="input-group">
+						            <ui-select ng-model="org.selected" theme="bootstrap">
+						            	<!-- 提示信息 popover="请选择组织所属区域或分类"  popover-trigger="mouseout" -->
+							            <ui-select-match placeholder="选择或查询..." ng-focus="filterSelect()">{{$select.selected.ORG_UNIT_SHORT_NAME}}</ui-select-match>
+							            <ui-select-choices repeat="item in org | filter: {ORG_UNIT_SHORT_NAME:$select.search}">
+							              <div ng-bind-html="item.ORG_UNIT_SHORT_NAME | highlight: $select.search"></div>
+							              <small ng-click="showSelect('{{item.totalName}}')" ng-bind-html="item.totalName"></small>
+							            </ui-select-choices>
+						            </ui-select>
+						            <span class="input-group-btn">
+						              <button ng-click="org.selected = undefined" class="btn btn-default">
+						                <span class="glyphicon glyphicon-trash"></span>
+						              </button>
+						            </span>
+						        </div>
+						      </div>
+							</div>
+	
+							<div class="form-group">
+								<label class="font-bold">研究方向</label> <input
+									ng-model="conditionResearch.researchInput" type="text" class="form-control"
+									placeholder="如：力学">
+							</div>
+							<div class="form-group">
+								<label class="font-bold">所学专业</label> <input
+									ng-model="conditionProfessional.professionalInput" type="text" class="form-control"
+									placeholder="如：计算机">
+							</div>
+							<footer class="panel-footer text-right bg-light lter">
+								<button type="submit" class="btn btn-sm btn-primary"
+									ng-click="conditionForStaff()" ng-disabled="allConditionIsNull">搜索</button>
+							</footer>
+						</form>
+					</div>
+					<!-- 满足找人条件的人员 ng-show="conditionConsole"-->
+					<div ng-show="conditionConsole">
+						<accordion close-others="oneAtATime">
+							<accordion-group is-open="statusConditionStaff.openConditionStaff" class="m-t">
+								<accordion-heading>
+								<label class="font-bold">人员</label>
+									<span ng-if="doing_async_condition"> <i class="fa fa-spin fa-spinner"></i>...loading...</span>
+									<!-- &nbsp;&nbsp;&nbsp;&nbsp;--> <i ng-click="changeToCondition()" class="pull-right fa fa-times"></i> 
+								</accordion-heading>
+								<div ng-if="conditionStaffLength > 0">
+									<div class="pull-left-sm" ng-repeat="conditionStaff in conditionStaffRepeat">
+										<div> <a ng-click="app.settings.equSwitch = !app.settings.equSwitch" ui-sref="app.cam.staffdetail({staffId:'{{conditionStaff.ID}}'})">
+												<div class='font-bold'>{{conditionStaff.NAME}}</div>
+												<div class=''>{{conditionStaff.totalName}}</div>
+												</a> 
+										</div>
+									</div>
+									<pagination ng-if="staffConditionsTotalItems >= staffConditionsPageSize" boundary-links="true" total-items="staffConditionsTotalItems" max-size="staffConditionsMaxSize" ng-model="page.staffConditionsCurrentPage"  items-per-page="staffConditionsPageSize" class="pagination-sm m-t-none m-b" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></pagination>
+								</div>
+								<div ng-if="!(conditionStaffLength > 0)">{{isFindStaff}}</div>
+							</accordion-group>
+						</accordion>
+					</div>
+	          </tab>
+	        </tabset>
+		</div>
+	</div>
+	
+	<div class="panel-body" ng-show="treeIsDisplay">
+		<tabset  class="tab-container">
+          <tab heading="分类">
+			<abn-tree 
+	          req_url        = "/service/orgUnit!querySortOfTree"
+	          tree-control   = "my_tree" 
+	          tree-data      = "tree_data"
+	          on-select      = "org_select_load(branch)"
+	          arr-selected   = "arrBranchs"
+	          >
+	        </abn-tree>
+          </tab>
+          
+          <tab heading="行政" ng-click="querySourceOfTree()">
+          	<div ng-if="adminTreeDisplay">
+				<abn-tree 
+		          req_url        = "/service/orgUnit!querySourceOfTree"
+		          tree-control   = "my_tree"
+		          tree-data      = "tree_data" 
+		          on-select      = "org_select_load(branch)"
+		          arr-selected   = "arrBranchs"
+		          >
+		        </abn-tree>
+	        </div>
+          </tab>
+          <tab heading="区域" ng-click="getAreaTree()">
+          	<div ng-if="areaTreeDisplay">
+	          	<abn-tree 
+		          req_url        = "/service/orgUnit!queryAreaOfTree"
+		          tree-control   = "my_tree"
+		          tree-data      = "tree_data" 
+		          on-select      = "org_select_load(branch)"
+		          expand-level   = "1"
+		          arr-selected   = "arrBranchs"
+		          >
+		        </abn-tree>
+	        </div>
+		  </tab>
+        </tabset>
+        
+		
+	</div>
+
+</div>
+
+
+
+
+							
+
+

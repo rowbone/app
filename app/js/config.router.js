@@ -89,10 +89,6 @@ angular.module('demoApp')
 				// 	}]
 				// }
 			})
-			// .state('app.home', {
-			// 	url: 'home',
-			// 	temp
-			// })
 			.state('app.tree', {
 				url: '/tree',
 				templateUrl: 'views/demo/tpls/ui_tree.html'
@@ -114,6 +110,14 @@ angular.module('demoApp')
 			.state('app.abnTree', {
 				url: '/abnTree',
 				templateUrl: 'views/demo/conow-abn-tree/abn_tree.html'
+			})
+			.state('app.icons', {
+				url: '/icons',
+				templateUrl: 'views/demo/tpls/ui_icons.html'
+			})
+			.state('app.docs', {
+				url: '/docs',
+				templateUrl: 'views/demo/tpls/docs.html'
 			});
 		}
 	);

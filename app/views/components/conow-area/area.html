@@ -25,6 +25,14 @@
   					</div>
 
             <pre>{{ entity | json }}</pre>
+
+            <!-- <pre>{{ regionMap | json }}</pre> -->
+
+            <ul>
+              <li ng-repeat="city in regionMap | orderBy: 'SPELL'">
+                {{ city.label }}
+              </li>
+            </ul>
   				</form>
   			</div>
   		</div>

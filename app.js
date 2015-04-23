@@ -7,6 +7,7 @@ var bodyParser = require('body-parser');
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
+var components = require('./routes/components')
 
 var ejs = require('ejs');
 
@@ -34,6 +35,7 @@ app.use(express.static(path.join(__dirname, 'app')));
 app.use('/', routes);
 */
 app.use('/users', users);
+app.use('/components', components);
 
 // app.get('/userlist', users.userlist(db));
 

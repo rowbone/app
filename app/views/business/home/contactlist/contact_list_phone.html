@@ -1,0 +1,51 @@
+<style>
+  .blank {
+  	letter-spacing: 10px;
+  }
+</style>
+<div ng-controller="contactListCtrl">
+	<div class="panel panel-default no-padder">
+	  <div class="panel-body r-l bg-primary">
+	  	<div class="text-center">
+	  	  <button type="button" class="btn m-b-xs w-xs btn-primary btn-rounded dker text-center">联系人</button> 
+	  	  <button type="button" class="btn m-b-xs w-xs btn-default btn-rounded blank text-center">组织</button>
+	  	</div>
+	  	<div class="pull-right">
+	  		<i class="fa fa-search-plus"></i>
+	  	</div>	
+	  </div>
+	</div>
+
+	<div class="panel panel-default no-padder">
+	  <div class="panel-body">
+		  <div class="input-group">
+			<input type="text" class="form-control btn-rounded input-lg" placeholder="搜索">
+			<div class="input-group-btn">
+			  <button type="button" class="btn btn-primary btn-rounded input-lg" tabindex=-1>
+				<i class="fa fa-search"></i>
+			  </button>  	  	
+			</div>
+		  </div>
+	  </div>
+	</div>
+
+	<div class="panel panel-default no-padder">
+	  <div class="panel-body">
+	  	<div ng-if="options.collectionPersonNone" class="text-center">
+	  	  <div ng-bind="options.collectionPersonMsg"></div>
+	  	  <i class="fa fa-plus-circle text-2x m-t m-b text-info dk"></i>
+	  	  <div ng-bind="options.collectionPersonAdd" class="text-info dk"></div>
+	  	</div>
+	  	<div ng-if="!options.collectionPersonNone">
+
+	  		<div ng-repeat="group in entity.collectionPerson" class="list-group">
+	  			{{ group.index }}
+	  			<div ng-repeat="person in group.members" class="list-group-item">
+	  				{{ person.name }}
+	  			</div>
+	  		</div>
+	  	</div>
+	  </div>
+	</div>
+
+</div>

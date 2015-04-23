@@ -1,11 +1,58 @@
 'use strict';
 
-app.controller('AreaSelCtrl', ['$scope', '$http',
-  function($scope, $http) {
+app.controller('AreaSelCtrl', ['$scope', '$http', '$filter', 
+  function($scope, $http, $filter) {
     $scope.entity = {
       area: '广东',
       area2: '44000000'
     };
+
+    $http.get('data/components/area/cities.json')
+      .success(function(data, status, headers, config) {
+        var iLen = data.length;
+        var arr1 = [], arr2 = [], arr3 = [], arr4 = [], arr5 = [], arr6 = [];
+
+        for(var i=0; i<iLen; i++) {
+          // 
+        }
+      })
+      .error(function(data, status, headers, config) {
+        console.log('Load cities.json data wrong...')
+      })
+
+    // $http.get('data/bz/region.json')
+    //   .success(function(data, status) {
+    //     var iLen = data.length;
+    //     var arrCities = [];
+    //     var arrMunicipalitiesCode = ['11000000', '31000000', '12000000', '50000000'];
+    //     var strMunicipalitiesCode = arrMunicipalitiesCode.toString();
+    //     var indexGroup = ['abcde', 'fghij', 'klmno', 'pqrst', 'uvwxy', 'z'];
+    //     // 获取所有 "市" 一级的城市名称 arrCities
+    //     for(var i=0; i<iLen; i++) {
+    //       // console.log(data[i].children);
+    //       if(strMunicipalitiesCode.indexOf(data[i].CODE) > -1) {
+    //         delete data[i]['children'];
+    //         arrCities = arrCities.concat(data[i]);
+    //       } else {
+    //         arrCities =  arrCities.concat(data[i].children);
+    //       }
+    //     }
+    //     // 按照拼音对其排序
+    //     var arr = $filter('orderBy')(arrCities, 'SPELL');
+    //     console.log(arr)
+    //     $scope.regionMap = arrCities;
+
+    //     $http.post('components', {data: arr})
+    //       .success(function(data, status, headers, config) {
+    //         console.log(data);
+    //       })
+    //       .error(function(data, status, headers, config) {
+    //         console.log('post error');
+    //       })
+    //   })
+    //   .error(function(data, status) {
+    //     console.log('Load region-map.js wrong...');
+    //   })
   }
 ]); 
 

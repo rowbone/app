@@ -82,6 +82,10 @@ angular.module('app.form', ['ui.router'])
 				// 	templateUrl: 'views/business/form/test.html',
 				// 	controller: 'TestCtrl'
 				// })
+				.state('app.form.tripReq', {
+					url: '/tripReq',
+					templateUrl: 'views/business/form/tripReq.html'
+				})
 
 	}]);
 

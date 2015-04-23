@@ -44,26 +44,26 @@
 //     }]);
 // })();
 
-    app.service('ClickService', ['$http', function($http){
-      this.properties = {
-        'name': 'abc',
-        'age': 8
-      };
+    // app.service('ClickService', ['$http', function($http){
+    //   this.properties = {
+    //     'name': 'abc',
+    //     'age': 8
+    //   };
 
-      this.clickFunc = function() {
-        var self = this;
-        console.log('service clickFunc');
-        self.properties.name = 'new name';
-      };
+    //   this.clickFunc = function() {
+    //     var self = this;
+    //     console.log('service clickFunc');
+    //     self.properties.name = 'new name';
+    //   };
 
-      this.reset = function() {
-        var self = this;
-        self.properties = {
-          'name': 'abc',
-          'age': 8
-        };
-      }
-    }]);
+    //   this.reset = function() {
+    //     var self = this;
+    //     self.properties = {
+    //       'name': 'abc',
+    //       'age': 8
+    //     };
+    //   }
+    // }]);
 
     // app.filter('preSubstr', function() {
     //     return function(input, num) {

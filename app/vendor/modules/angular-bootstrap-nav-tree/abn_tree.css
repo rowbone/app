@@ -85,6 +85,8 @@ ul.abn-tree i.indented {
 }
 .level-1 .indented {
   position: relative;
+  font-weight: bold;
+  font-size: 1.2em;
   left: 0px;
 }
 .level-2 .indented {

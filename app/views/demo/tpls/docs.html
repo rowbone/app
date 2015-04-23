@@ -1,0 +1,794 @@
+<div class="hbox hbox-auto-xs hbox-auto-sm">
+  <!-- .aside -->
+  <div class="col w w-auto-xs bg-light inherit dk b-r">
+    <div class="wrapper-md b-b">
+      <a class="btn btn-link pull-right m-t-n-xs m-r-n-sm visible-sm visible-xs" ui-toggle-class="show" data-target="#nav-docs">
+        <i class="fa fa-bars"></i>
+      </a>
+      <span class="h4">帮助指南</span>
+    </div>
+    <div class="hidden-sm hidden-xs" id="nav-docs">
+      <ul class="nav">
+        <li class="padder b-b l-h-2x bg text-success"><em>CSS</em></li>
+        <li><a ui-scroll="bootstrap">Bootstrap</a></li>
+        <li><a ui-scroll="icons">Icons</a></li>
+        <li><a ui-scroll="animate">Animate动画</a></li>
+        <li><a ui-scroll="colors">颜色</a></li>
+        <li><a ui-scroll="layout">布局</a></li>
+        <li><a ui-scroll="utilities">公共CSS</a></li>
+
+        <li ui-scroll="core" class="padder b-b b-t l-h-2x bg text-danger"><em>核心</em></li>
+        <li><a ui-scroll="ui-router">ui-router</a></li>
+        <li><a ui-scroll="ui-load">ui-load</a></li>
+        <li><a ui-scroll="ui-jq">ui-jq</a></li>
+        <li><a ui-scroll="ui-validate">ui-validate</a></li>
+
+        <li ui-scroll="directives" class="padder b-b b-t l-h-2x bg text-primary"><em>指令</em></li>
+        <li><a ui-scroll="ui-toggle-class">ui-toggle-class</a></li>
+        <li><a ui-scroll="ui-shift">ui-shift</a></li>
+        <li><a ui-scroll="ui-scroll">ui-scroll</a></li>
+        <li><a ui-scroll="ui-fullscreen">ui-fullscreen</a></li>
+
+        <li ui-scroll="plugins" class="padder b-b b-t l-h-2x bg text-info"><em>插件</em></li>
+        <li><a ui-scroll="plugins">相关插件文档</a></li>
+      </ul>
+    </div>
+  </div>
+  <!-- /.aside -->
+  <div class="col">
+    <div class="clearfix padder-md">
+
+      <h3 class="text-success m-t-xl font-thin m-b-none">CSS </h3>
+      <div>扩展类</div>
+
+      <div id="bootstrap" class="wrapper"></div>
+      <div class="line b-b"></div>
+      <h4 class="m-t-xl">Bootstrap CSS</h4>
+      <p>
+        <a href="http://getbootstrap.com" class="text-info font-bold">Bootstrap 3</a>
+      </p>
+      <p>项目使用了<strong>Angular UI Bootstrap</strong>, 更多详情请查看 <a ui-sref="app.ui.bootstrap" class="text-info font-bold">UI Boostrap</a> 和 <a href="http://angular-ui.github.io/bootstrap" class="text-info font-bold">Official Documents</a></p>
+
+
+      <div id="icons" class="wrapper"></div>
+      <div class="line b-b"></div>
+      <h4 class="m-t-xl">图标</h4>
+      <ul>
+        <li>FontAwesome icons <label class="label bg-info">4.1</label>
+          <p>详情可进入 <strong><a href="http://fortawesome.github.io/Font-Awesome/">FontAwesome</a></strong> 官方网站。</p>
+          <p><code>&lt;i class="fa fa-arrows-alt">&lt;/i></code></p>
+        </li>
+        <li>Glyphicons
+          <p>Bootstrap默认的图标库</p>
+          <p><code>&lt;i class="glyphicon glyphicon-asterisk">&lt;/i></code></p>
+        </li>
+        <li>Simple Line Icons
+          <p><code>&lt;i class="icon-user">&lt;/i></code></p>
+        </li>
+      </ul>
+
+
+      <div id="animate" class="wrapper"></div>
+      <div class="line b-b"></div>
+      <h4  class="m-t-xl">动画效果</h4>
+      <p><a href="http://daneden.me/animate/"><strong>animate.css</strong></a></p>
+      <p><strong>页面视图过渡效果</strong>，可以在<strong>ui-view</strong>中使用 <code>.fade-in, .fade-in-left, .fade-in-right, .fade-in-up, .fade-in-down, .fade-in-right-big, .fade-in-left-big, .fade-in-up-big, .fade-in-down-big</code>。如果想整体平滑移动，可以使用 <code>.smooth</code></p>
+
+
+      <div id="colors" class="wrapper"></div>
+      <div class="line b-b"></div>
+      <h4  class="m-t-xl">颜色</h4>
+
+       <p><strong>8种默认调试板</strong>，使用方法：<code>&lt;div class="bg-warning dker">&lt;/div></code></p>
+
+      <div class="row">
+        <div class="col-sm-6">
+          <p>.bg-light</p>
+          <div class="m-b">
+            <span class="bg-light hbox">
+              <span class="col padder-v text-center dker">.dker</span><span class="col padder-v text-center dk">.dk</span><span class="col padder-v text-center bg">.bg</span><span class="col padder-v text-center lt">.lt</span><span class="col padder-v text-center lter">.lter</span>
+            </span>
+          </div>
+          <p>.bg-dark</p>
+          <div class="m-b">
+            <span class="bg-dark hbox">
+              <span class="col padder-v text-center dker">.dker</span><span class="col padder-v text-center dk">.dk</span><span class="col padder-v text-center bg">.bg</span><span class="col padder-v text-center lt">.lt</span><span class="col padder-v text-center lter">.lter</span>
+            </span>
+          </div>
+          <p>.bg-black</p>
+          <div class="m-b">
+            <span class="bg-black hbox">
+              <span class="col padder-v text-center dker">.dker</span><span class="col padder-v text-center dk">.dk</span><span class="col padder-v text-center bg">.bg</span><span class="col padder-v text-center lt">.lt</span><span class="col padder-v text-center lter">.lter</span>
+            </span>
+          </div>
+          <p>.bg-primary</p>
+          <div class="m-b">
+            <span class="bg-primary hbox">
+              <span class="col padder-v text-center dker">.dker</span><span class="col padder-v text-center dk">.dk</span><span class="col padder-v text-center bg">.bg</span><span class="col padder-v text-center lt">.lt</span><span class="col padder-v text-center lter">.lter</span>
+            </span>
+          </div>
+        </div>
+        <div class="col-sm-6">
+          <p>.bg-info</p>
+          <div class="m-b">
+            <span class="bg-info hbox">
+              <span class="col padder-v text-center dker">.dker</span><span class="col padder-v text-center dk">.dk</span><span class="col padder-v text-center bg">.bg</span><span class="col padder-v text-center lt">.lt</span><span class="col padder-v text-center lter">.lter</span>
+            </span>
+          </div>
+          <p>.bg-success</p>
+          <div class="m-b">
+            <span class="bg-success hbox">
+              <span class="col padder-v text-center dker">.dker</span><span class="col padder-v text-center dk">.dk</span><span class="col padder-v text-center bg">.bg</span><span class="col padder-v text-center lt">.lt</span><span class="col padder-v text-center lter">.lter</span>
+            </span>
+          </div>
+          <p>.bg-warning</p>
+          <div class="m-b">
+            <span class="bg-warning hbox">
+              <span class="col padder-v text-center dker">.dker</span><span class="col padder-v text-center dk">.dk</span><span class="col padder-v text-center bg">.bg</span><span class="col padder-v text-center lt">.lt</span><span class="col padder-v text-center lter">.lter</span>
+            </span>
+          </div>
+          <p>.bg-danger</p>
+          <div class="m-b">
+            <span class="bg-danger hbox">
+              <span class="col padder-v text-center dker">.dker</span><span class="col padder-v text-center dk">.dk</span><span class="col padder-v text-center bg">.bg</span><span class="col padder-v text-center lt">.lt</span><span class="col padder-v text-center lter">.lter</span>
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div id="layout" class="wrapper"></div>
+      <div class="line b-b"></div>
+      <h4  class="m-t-xl">布局</h4>
+      <p><strong>盒子</strong>，使用 <code>.hbox</code> 和 <code>.col</code> 来定义列。可以使用 <code>.w-lg, .w-md, .w, .w-sm, .w-xs</code> 来固定列宽。使用 <code>.hbox-auto-sm, .hbox-auto-xs</code> 使盒子在小屏幕中失效。</p>
+
+      <div id="utilities" class="wrapper"></div>
+      <div class="line b-b"></div>
+      <h4  class="m-t-xl">公共CSS</h3>
+      <table class="table table-border bg-white-only b-a">
+        <tbody>
+          <tr class="bg-light lt">
+            <td colspan="2">外边距</td>
+          </tr>
+          <tr>
+            <td>.m</td>
+            <td>margin: 15px</td>
+          </tr>
+          <tr>
+            <td>.m-xs</td>
+            <td>margin: 5px</td>
+          </tr>
+          <tr>
+            <td>.m-sm</td>
+            <td>margin: 10px</td>
+          </tr>
+          <tr>
+            <td>.m-md</td>
+            <td>margin: 20px</td>
+          </tr>
+          <tr>
+            <td>.m-lg</td>
+            <td>margin: 30px</td>
+          </tr>
+          <tr>
+            <td>.m-n</td>
+            <td>margin: 0px</td>
+          </tr>
+          <tr>
+            <td>.m-l</td>
+            <td>margin-left: 15px</td>
+          </tr>
+          <tr>
+            <td>.m-l-xs</td>
+            <td>margin-left: 5px</td>
+          </tr>
+          <tr>
+            <td>.m-l-sm</td>
+            <td>margin-left: 10px</td>
+          </tr>
+          <tr>
+            <td>.m-l-md</td>
+            <td>margin-left: 20px</td>
+          </tr>
+          <tr>
+            <td>.m-l-lg</td>
+            <td>margin-left: 30px</td>
+          </tr>
+          <tr>
+            <td>.m-l-xl</td>
+            <td>margin-left: 40px</td>
+          </tr>
+          <tr>
+            <td>.m-l-xxl</td>
+            <td>margin-left: 50px</td>
+          </tr>
+          <tr>
+            <td>.m-l-none</td>
+            <td>margin-left: 0px</td>
+          </tr>
+          <tr>
+            <td>.m-l-n</td>
+            <td>margin-left: -15px</td>
+          </tr>
+          <tr>
+            <td>.m-l-n-xxs</td>
+            <td>margin-left: -1px</td>
+          </tr>
+          <tr>
+            <td>.m-l-n-xs</td>
+            <td>margin-left: -5px</td>
+          </tr>
+          <tr>
+            <td>.m-l-n-sm</td>
+            <td>margin-left: -10px</td>
+          </tr>
+          <tr>
+            <td>.m-l-n-md</td>
+            <td>margin-left: -20px</td>
+          </tr>
+          <tr>
+            <td>.m-l-n-lg</td>
+            <td>margin-left: -30px</td>
+          </tr>
+          <tr>
+            <td>.m-l-n-xl</td>
+            <td>margin-left: -40px</td>
+          </tr>
+          <tr>
+            <td>.m-l-n-xxl</td>
+            <td>margin-left: -50px</td>
+          </tr>
+          <tr>
+            <td colspan="2">.m-r, m-t, m-b写法与.m-l.一致</td>
+          </tr>
+          <tr class="bg-light lt">
+            <td colspan="2">边框线</td>
+          </tr>
+          <tr>
+            <td>.b-a</td>
+            <td>border:1px solid #e1eaf1</td>
+          </tr>
+          <tr>
+            <td>.b-l</td>
+            <td>左边框</td>
+          </tr>
+          <tr>
+            <td>.b-t</td>
+            <td>上边框</td>
+          </tr>
+          <tr>
+            <td>.b-r</td>
+            <td>右边框</td>
+          </tr>
+          <tr>
+            <td>.b-b</td>
+            <td>下边框</td>
+          </tr>
+          <tr>
+            <td>.b-light, .b-dark, .b-primary, .b-success, .b-info, .b-warning, .b-danger, .b-black, .b-white</td>
+            <td>指定了颜色的边框</td>
+          </tr>
+          <tr>
+            <td>.b-2x</td>
+            <td>边框粗细为2px</td>
+          </tr>
+          <tr>
+            <td>.b-3x</td>
+            <td>边框粗细为3px</td>
+          </tr>
+          <tr>
+            <td>.no-border</td>
+            <td>没有边框</td>
+          </tr>
+          <tr>
+            <td>.no-border-xs</td>
+            <td>在最小屏幕时边框为0</td>
+          </tr>
+          <tr class="bg-light lt">
+            <td colspan="2">圆角</td>
+          </tr>
+          <tr>
+            <td>.r</td>
+            <td>border-radius: 2px</td>
+          </tr>
+          <tr>
+            <td>.r-l</td>
+            <td>border-radius: 2px 0 0 2px</td>
+          </tr>
+          <tr>
+            <td>.r-r</td>
+            <td>border-radius: 0 2px 2px 0</td>
+          </tr>
+          <tr>
+            <td>.r-t</td>
+            <td>border-radius: 2px 2px 0 0</td>
+          </tr>
+          <tr>
+            <td>.r-b</td>
+            <td>border-radius: 0 0 2px 2px</td>
+          </tr>
+          <tr>
+            <td>.r-2x</td>
+            <td>border-radius: 4px</td>
+          </tr>
+          <tr>
+            <td>.r-3x</td>
+            <td>border-radius: 6px</td>
+          </tr>
+          <tr class="bg-light lt">
+            <td colspan="2">内边距</td>
+          </tr>
+          <tr>
+            <td>.padder</td>
+            <td>padding-left: 15px; padding-right: 15px</td>
+          </tr>
+          <tr>
+            <td>.padder-md</td>
+            <td>padding-left: 20px; padding-right: 20px</td>
+          </tr>
+          <tr>
+            <td>.padder-lg</td>
+            <td>padding-left: 30px; padding-right: 30px</td>
+          </tr>
+          <tr>
+            <td>.no-padder</td>
+            <td>padding: 0</td>
+          </tr>
+          <tr class="bg-light lt">
+            <td colspan="2">容器，一般情况使用 <code>.header-md h</code> <code>.wrapper-md</code> 定义内容页的顶部和内容。</td>
+          </tr>
+          <tr>
+            <td>.wrapper</td>
+            <td>padding: 15px</td>
+          </tr>
+          <tr>
+            <td>.wrapper-sm</td>
+            <td>padding: 10px</td>
+          </tr>
+          <tr>
+            <td>.wrapper-xs</td>
+            <td>padding: 5px</td>
+          </tr>
+          <tr>
+            <td>.wrapper-md</td>
+            <td>padding: 20px</td>
+          </tr>
+          <tr>
+            <td>.wrapper-lg</td>
+            <td>padding: 30px</td>
+          </tr>
+          <tr>
+            <td>.wrapper-xl</td>
+            <td>padding: 50px</td>
+          </tr>
+          <tr>
+            <td>.header-md</td>
+            <td>padding: 18px</td>
+          </tr>
+          <tr class="bg-light lt">
+            <td colspan="2">文本</td>
+          </tr>
+          <tr>
+            <td>.text-u-c</td>
+            <td>转换大写字母</td>
+          </tr>
+          <tr>
+            <td>.text-l-t</td>
+            <td>文本删除线</td>
+          </tr>
+          <tr>
+            <td>.text-u-l</td>
+            <td>文本下划线</td>
+          </tr>
+          <tr>
+            <td>.text-ellipsis</td>
+            <td>文本一行显示，多出部分用 “...” 代替</td>
+          </tr>
+          <tr>
+            <td>.text-center-xs</td>
+            <td>屏幕宽度在767像素以下的，文本居中显示</td>
+          </tr>
+          <tr>
+            <td>.text-left-xs</td>
+            <td>屏幕宽度在767像素以下的，文本左对齐</td>
+          </tr>
+          <tr>
+            <td>.text-right-xs</td>
+            <td>屏幕宽度在767像素以下的，文本右对齐</td>
+          </tr>
+          <tr class="bg-light lt">
+            <td colspan="2">元素宽度和高度</td>
+          </tr>
+          <tr>
+            <td>.w-xxl</td>
+            <td>width: 360px</td>
+          </tr>
+          <tr>
+            <td>.w-xl</td>
+            <td>width: 320px</td>
+          </tr>
+          <tr>
+            <td>.w-lg</td>
+            <td>width: 280px</td>
+          </tr>
+          <tr>
+            <td>.w-md</td>
+            <td>width: 240px</td>
+          </tr>
+          <tr>
+            <td>.w</td>
+            <td>width: 200px</td>
+          </tr>
+          <tr>
+            <td>.w-sm</td>
+            <td>width: 158px</td>
+          </tr>
+          <tr>
+            <td>.w-xs</td>
+            <td>width: 90px</td>
+          </tr>
+          <tr>
+            <td>.w-xxs</td>
+            <td>width: 60px</td>
+          </tr>
+          <tr>
+            <td>.w-full</td>
+            <td>width: 100%</td>
+          </tr>
+          <tr>
+            <td>.w-auto-xs</td>
+            <td>width: auto on extremely small screen.</td>
+          </tr>
+          <tr>
+            <td>.h</td>
+            <td>height: 62px</td>
+          </tr>
+          <tr>
+            <td>.h-full</td>
+            <td>height: 100%</td>
+          </tr>
+          <tr class="bg-light lt">
+            <td colspan="2">用于定义元素宽度，且具有内联块级模式，使元素显示在同一行。</td>
+          </tr>
+          <tr>
+            <td>.thumb-xl</td>
+            <td>width: 128px</td>
+          </tr>
+          <tr>
+            <td>.thumb-lg</td>
+            <td>width: 96px</td>
+          </tr>
+          <tr>
+            <td>.thumb-md</td>
+            <td>width: 64px</td>
+          </tr>
+          <tr>
+            <td>.thumb</td>
+            <td>width: 50px</td>
+          </tr>
+          <tr>
+            <td>.thumb-sm</td>
+            <td>width: 48px</td>
+          </tr>
+          <tr>
+            <td>.thumb-xs</td>
+            <td>width: 34px</td>
+          </tr>
+          <tr>
+            <td>.thumb-xxs</td>
+            <td>width: 30px</td>
+          </tr>
+          <tr>
+            <td>.img-full</td>
+            <td>width: 100%</td>
+          </tr>
+          <tr class="bg-light lt">
+            <td colspan="2"><code>.avatar</code>一般用于头像，也可定义头像的状态，使用 <code>&lt;i>&lt;/i></code> 配合
+              <code>.on, .off, .busy, .away, .left, .right, .bottom</code>类使用</td>
+          </tr>
+          <tr>
+            <td>.avatar</td>
+            <td>定义圆形图片</td>
+          </tr>
+          <tr>
+            <td>.on</td>
+            <td>绿色</td>
+          </tr>
+          <tr>
+            <td>.off</td>
+            <td>灰色</td>
+          </tr>
+          <tr>
+            <td>.busy</td>
+            <td>红色</td>
+          </tr>
+          <tr>
+            <td>.away</td>
+            <td>黄色</td>
+          </tr>
+          <tr>
+            <td>.left</td>
+            <td>左下角</td>
+          </tr>
+          <tr>
+            <td>.right</td>
+            <td>右上角</td>
+          </tr>
+          <tr>
+            <td>.bottom</td>
+            <td>右下角</td>
+          </tr>
+          <tr class="bg-light lt">
+            <td colspan="2">箭头，一般用在聊天或评论，可以使用 <code>&lt;span>&lt;/span></code> 配合以下类使用</td>
+          </tr>
+          <tr>
+            <td>.arrow</td>
+            <td>基础类，必须先引用该类</td>
+          </tr>
+          <tr>
+            <td>.left</td>
+            <td>左箭头，居中显示</td>
+          </tr>
+          <tr>
+            <td>.right</td>
+            <td>右箭头，居中显示</td>
+          </tr>
+          <tr>
+            <td>.top</td>
+            <td>上箭头，居中显示</td>
+          </tr>
+          <tr>
+            <td>.bottom</td>
+            <td>下箭头，居中显示</td>
+          </tr>
+          <tr>
+            <td>.pull-left</td>
+            <td><code>.top</code> 和 <code>.bottom</code> 可以使用该类显示在左边</td>
+          </tr>
+          <tr>
+            <td>.pull-right</td>
+            <td><code>.top</code> 和 <code>.bottom</code> 可以使用该类显示在右边</td>
+          </tr>
+          <tr>
+            <td>.pull-up</td>
+            <td><code>.left</code> 和 <code>.right</code> 可以使用该类显示在上边</td>
+          </tr>
+          <tr>
+            <td>.pull-down</td>
+            <td><code>.left</code> 和 <code>.right</code> 可以使用该类显示在下边</td>
+          </tr>
+          <tr class="bg-light lt">
+            <td colspan="2">叠加元素</td>
+          </tr>
+          <tr>
+            <td>.item-overlay</td>
+            <td>叠加元素在另一个元素上，默认是隐藏的，当调用了元素的'.active'类之后将显示。</td>
+          </tr>
+          <tr>
+            <td>.top</td>
+            <td>显示在元素的顶部</td>
+          </tr>
+          <tr>
+            <td>.bottom</td>
+            <td>显示在元素的底部</td>
+          </tr>
+          <tr>
+            <td>.center</td>
+            <td>显示在元素的中间</td>
+          </tr>
+          <tr class="bg-light lt">
+            <td colspan="2">按钮</td>
+          </tr>
+          <tr>
+            <td class="w">.btn-rounded</td>
+            <td>圆形按钮</td>
+          </tr>
+          <tr>
+            <td>.btn-icon</td>
+            <td>只有图标的按钮</td>
+          </tr>
+          <tr>
+            <td>.btn-addon</td>
+            <td>带图标的按钮，需 <code>a</code> 和 <code>i</code> 配合使用，同时可以在<code>i</code>中使用 <code>.pull-left</code> 和 <code>.pull-right</code> 定义图标位置。</td>
+          </tr>
+          <tr class="bg-light lt">
+            <td colspan="2">时间轴</td>
+          </tr>
+          <tr>
+            <td class="w">.timeline</td>
+            <td>时间轴容器</td>
+          </tr>
+          <tr>
+            <td class="w">.timeline-center</td>
+            <td>时间轴居中展示</td>
+          </tr>
+          <tr>
+            <td class="w">.tl-header</td>
+            <td>时间轴节头</td>
+          </tr>
+          <tr>
+            <td class="w">.tl-item</td>
+            <td>时间轴分支</td>
+          </tr>
+          <tr>
+            <td class="w">.tl-wrap</td>
+            <td>时间轴分支容器</td>
+          </tr>
+          <tr>
+            <td class="w">.tl-date</td>
+            <td>时间轴分支时间</td>
+          </tr>
+          <tr>
+            <td class="w">.tl-content</td>
+            <td>时间轴分支内容</td>
+          </tr>
+          <tr class="bg-light lt">
+            <td colspan="2">流线</td>
+          </tr>
+          <tr>
+            <td class="w">.streamline</td>
+            <td>流线容器</td>
+          </tr>
+          <tr>
+            <td class="w">.sl-item</td>
+            <td>流线分支，可以使用 <code>.b-l</code> 和 <code>.b-info, b-danger...</code> 颜色类定义。</td>
+          </tr>
+          <tr class="bg-light lt">
+            <td colspan="2">盒子</td>
+          </tr>
+          <tr>
+            <td>.hbox</td>
+            <td>display: table</td>
+          </tr>
+          <tr>
+            <td>.col</td>
+            <td>display: table-cell</td>
+          </tr>
+          <tr>
+            <td>.v-middle</td>
+            <td>元素垂直方向居中</td>
+          </tr>
+          <tr>
+            <td>.v-top</td>
+            <td>元素垂直方向靠上</td>
+          </tr>
+          <tr>
+            <td>.v-bottom</td>
+            <td>元素垂直方向靠下</td>
+          </tr>
+        </tbody>
+      </table>
+
+
+      <div id="core" class="wrapper"></div>
+      <div class="line b-b"></div>
+      <h3 class="text-danger font-thin m-t-xl m-b-none">核心</h3>
+      <div>需了解AngularJS, “ui-router” 和 “ui-jq”。</div>
+
+      <div id="ui-router" class="wrapper"></div>
+      <div class="line b-b"></div>
+      <h4 class="m-t-xl">ui-router</h4>
+      <p>
+        ui-router 的 <strong>嵌套路由</strong> 和 <strong>嵌套视图</strong>, 请查看 <a href="http://angular-ui.github.io/ui-router/" class="text-info">官方文档</a>
+      </p>
+
+      <div id="ui-load" class="wrapper"></div>
+      <div class="line b-b"></div>
+      <h4 class="m-t-xl">ui-load</h4>
+      <p>ui-load 的 <strong>延时加载</strong> js 和 css 文件。 </p>
+      <p class="well text-black bg-light lter">        
+        angular.module('myModule', ['ui.load']);<br><br>
+        uiLoad.load( 
+          ['path/style.css', 'path/script.js']
+        ).then(function() {<br>
+          <span class="text-muted m-l">// 加载完成后执行。</span><br>
+        }).catch(function() {<br>
+          <span class="text-muted m-l">// 错误时执行。</span><br>
+        });<br>
+      </p>
+      <p>ui-load 还可以使用在 ui-router 中，利用<code>resolve:{}</code> 来加载指令、控制器和服务。</p>
+
+      <div id="ui-jq" class="wrapper"></div>
+      <div class="line b-b"></div>
+      <h4 class="m-t-xl">ui-jq</h4>
+      <p>
+        <code>ui-jq</code> 调用元素上指定的jQuery函数或插件。 请查看 <a href="http://angular-ui.github.io/ui-utils/#/jq" class="text-info">官方文档</a>
+      </p>
+
+      <div id="ui-validate" class="wrapper"></div>
+      <div class="line b-b"></div>
+      <h4 class="m-t-xl">ui-validate</h4>
+      <p>
+        <code>ui-validate</code> 验证指令可以很容易地创建自定义的验证表达式。 请查看 <a href="http://angular-ui.github.io/ui-utils/#/validate" class="text-info">官方文档</a>
+      </p>
+
+      <div id="directives" class="wrapper"></div>
+      <div class="line b-b"></div>
+      <h3 class="text-primary font-thin m-t-xl m-b-none">指令</h3>
+
+      <div id="ui-toggle-class" class="wrapper"></div>
+      <div class="line b-b"></div>
+      <h4 class="m-t-xl">ui-toggle-class</h4>
+      <p>
+        切换到定义了指定 <code>target</code> 的元素。
+        <code>&lt;a ui-toggle-class="show" data-target=".nav">&lt;/a></code>
+      </p>
+
+      <div id="ui-shift" class="wrapper"></div>
+      <div class="line b-b"></div>
+      <h4 class="m-t-xl">ui-shift</h4>
+      <p>
+        替换小屏幕制定了 <code>target</code> 的元素。
+        <code>&lt;div ui-shift="append" target="#nav">&lt;/div></code>
+      </p>
+
+      <div id="ui-scroll" class="wrapper"></div>
+      <div class="line b-b"></div>
+      <h4 class="m-t-xl">ui-scroll</h4>
+      <p>
+        滚动到定义了指定 <code>target</code> 的元素。
+        <code>&lt;a ui-scroll="target">&lt;/a></code>
+      </p>
+
+      <div id="ui-fullscreen" class="wrapper"></div>
+      <div class="line b-b"></div>
+      <h4 class="m-t-xl">ui-fullscreen</h4>
+      <p>
+        将元素以全屏的方式显示。
+        <code>&lt;a ui-fullscreen>&lt;/a></code> 或 <code>&lt;a ui-fullscreen target="#target">&lt;/a></code>
+      </p>
+
+      <div id="plugins" class="wrapper"></div>
+      <div class="line b-b"></div>
+      <h3 class="text-info font-thin m-t-xl m-b-lg">jQuery插件</h3>
+      <p>所有jQuery插件都依赖于<code>ui-jq</code>，不需要创建Angular指令。 你可以在js/config.lazyload.js中加入链接到 <code>JQ_CONFIG</code>, <code>functionName => pluginPath</code>, 将插件的js和css文件引入进来。</p>
+      <div class="row m-b-xl">
+        <div class="col-md-6">
+            <h4 class="m-t-md">FullCalendar 日历</h4>
+            <p><a href="http://arshaw.com/fullcalendar/" class="text-info"><strong>官方文档</strong></a> 和 <a href="http://angular-ui.github.io/ui-calendar/" class="text-info"><strong>Angular Fullcalendar Wrapper</strong></a></p>
+
+            <h4 class="m-t-md">Datatables 数据表格</h4>
+            <p><a href="http://datatables.net/" class="text-info"><strong>官方文档</strong></a></p>
+            
+            <h4 class="m-t-md">Chosen 选择框</h4>
+            <p><a href="http://github.com/harvesthq/chosen" class="text-info"><strong>官方文档</strong></a></p>
+            
+            <h4 class="m-t-md">File-input 选择附件</h4>
+            <p><a href="http://dev.tudosobreweb.com.br/bootstrap-filestyle/" class="text-info"><strong>官方文档</strong></a></p>
+
+            <h4 class="m-t-md">Slider 滑块</h4>
+            <p><a href="http://www.eyecon.ro/bootstrap-slider" class="text-info"><strong>官方文档</strong></a></p>
+
+            <h4 class="m-t-md">TouchSpin 数字大小调整</h4>
+            <p><a href="http://www.virtuosoft.eu/code/bootstrap-touchspin/" class="text-info"><strong>官方文档</strong></a></p>
+
+            <h4 class="m-t-md">WYSISYG 富文本编辑器</h4>
+            <p><a href="http://github.com/mindmup/bootstrap-wysiwyg" class="text-info"><strong>官方文档</strong></a></p>
+        </div>
+        <div class="col-md-6">
+
+            <h4 class="m-t-md">Flotchart 线状图、柱状图</h4>
+            <p><a href="http://www.flotcharts.org/" class="text-info"><strong>官方文档</strong></a></p>
+
+            <h4 class="m-t-md">Sparklines 微线图</h4>
+            <p><a href="http://omnipotent.net/jquery.sparkline" class="text-info"><strong>官方文档</strong></a></p>
+
+            <h4 class="m-t-md">Easy pie chart 动画饼图</h4>
+            <p><a href="http://rendro.github.io/easy-pie-chart" class="text-info"><strong>官方文档</strong></a></p>
+
+            <h4 class="m-t-md">Sortable 实现拖放效果</h4>
+            <p><a href="http://farhadi.ir/projects/html5sortable" class="text-info"><strong>官方文档</strong></a></p>
+
+            <h4 class="m-t-md">Nestable 嵌套列表，可拖放重新排列</h4>
+            <p><a href="http://dbushell.github.io/Nestable/" class="text-info"><strong>官方文档</strong></a></p>
+
+            <h4 class="m-t-md">SlimScroll 滚动条</h4>
+            <p><a href="http://rocha.la" class="text-info"><strong>官方文档</strong></a></p>
+
+            <h4 class="m-t-md">JvectorMap 矢量地图插件</h4>
+            <p><a href="http://jvectormap.com/" class="text-info"><strong>官方文档</strong></a></p>
+        </div>
+      </div>
+ 
+    </div>
+  </div>
+</div>

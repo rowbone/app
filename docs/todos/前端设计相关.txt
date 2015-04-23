@@ -1,0 +1,5 @@
+
+1、设计师的DPI指南
+	http://www.w3cplus.com/design/designer-guide-to-dpi.html
+
+2、
