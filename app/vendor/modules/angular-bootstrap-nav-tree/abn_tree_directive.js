@@ -55,6 +55,12 @@
           } else {
             options.showSearch = true;
           }
+          // searchElement: default label.搜索字段
+          if(attrs.searchElement === undefined) {
+            options.searchElement = 'label';
+          } else {
+            options.searchElement = attrs.searchElement;
+          }
 
           // deviceType:default PC.展示类型，默认为PC
           if(attrs.deviceType === 'phone') {
@@ -137,6 +143,15 @@
           // 异步加载数据
           getTreeData(attrs.reqUrl);
 
+          scope.treeSelect = function(row) {
+            console.log(row);
+            if(row.level === 1) {
+              row.branch.expanded = !row.branch.expanded;
+            } else {
+              scope.user_clicks_branch(row.branch);
+            }
+          };
+
           // Enter 触发搜索事件
           scope.enterPress = function(e) {
             if(e.keyCode === 13) {
@@ -148,7 +163,31 @@
 
           scope.treeSearchFunc = function() {
             options.showTree = false;
+            options.searchLoading = true;
             select_branchs(scope.treeSearch.inputName);
+            // var searchElement = options.searchElement;
+            // var arrSearch = searchElement.split(';');
+            // var searchVal = scope.treeSearch.inputName;
+            // var arrResults = [];
+            
+            // $http.get('data/components/area/cities.json')
+            //   .success(function(data, status, headers, config) {
+            //     var iLen = data.length;
+            //     var iLenElem = arrSearch.length;
+            //     for(var i=0; i<iLen; i++) {
+            //       for(var j=0; j<iLenElem; j++) {
+            //         if(data[i][arrSearch[j]] == searchVal) {
+            //           arrResults.push(data[i]);
+            //           continue;
+            //         }
+            //       }
+            //     }
+            //   })
+            //   .error(function(data, status, headers, config) {
+            //     //
+            //   });
+
+            // console.log('abc');
           };
 
           scope.showTreeFunc = function(){
@@ -192,8 +231,10 @@
           var searchKeyArr = new Array();
           searchKeyArr = searchKey.split(";");
           var searchIf = "";
+          var arrSearch = [];
           for (var i = 0; i < searchKeyArr.length; i++) {
             searchIf = searchIf + "|| b." + searchKeyArr[i] + ".indexOf(label)>=0 ";
+            arrSearch.push("b." + searchKeyArr[i] + ".indexOf(label)>=0");
           };
           searchIf = searchIf.substring(3, searchIf.length);
           var select_branchs = function(label) {
@@ -207,6 +248,7 @@
               }
             });
             arrResults = [];
+
             for_each_branch(function(b) {
               // eval将字符串转换为条件
               if (eval(searchIf)) {
@@ -294,7 +336,6 @@
           // 北京市、上海市、天津市、重庆市
           options.arrMunicipalitiesCode = ['11000000', '31000000', '12000000', '50000000'];
           options.strMunicipalitiesCode = options.arrMunicipalitiesCode.toString();
-
 
           // 点击一个节点
           select_branch = function(branch) {

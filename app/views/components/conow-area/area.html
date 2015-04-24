@@ -39,3 +39,13 @@
   	</div>
   </div>
 </div>
+
+<div ng-controller="TestCtrl"></div>
+
+<script>
+  app.controller('TestCtrl', ['$scope', function($scope){
+    $scope.$on('broadcast', function(e, newVal) {
+      console.log(newVal);
+    })
+  }])
+</script>

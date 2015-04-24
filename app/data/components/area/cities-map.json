@@ -1,5 +1,7 @@
 [{
 	"label": "A-E",
+	"SPELL": "A-E",
+	"SIMPLE_SPELL": "A-E",
 	"children": [{
 		"RN": "1",
 		"NAME": "阿坝藏族羌族自治州",
@@ -587,6 +589,8 @@
 	}]
 }, {
 	"label": "F-J",
+	"SPELL": "F-J",
+	"SIMPLE_SPELL": "F-J",
 	"children": [{
 		"RN": "4",
 		"NAME": "防城港市",
@@ -1182,6 +1186,8 @@
 	}]
 }, {
 	"label": "K-O",
+	"SPELL": "K-O",
+	"SIMPLE_SPELL": "K-O",
 	"children": [{
 		"RN": "4",
 		"NAME": "开封市",
@@ -1625,6 +1631,8 @@
 	}]
 }, {
 	"label": "P-T",
+	"SPELL": "P-T",
+	"SIMPLE_SPELL": "P-T",
 	"children": [{
 		"RN": "11",
 		"NAME": "盘锦市",
@@ -2228,6 +2236,8 @@
 	}]
 }, {
 	"label": "U-Z",
+	"SPELL": "U-Z",
+	"SIMPLE_SPELL": "U-Z",
 	"children": [{
 		"RN": "17",
 		"NAME": "万宁市",
