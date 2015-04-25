@@ -18,8 +18,7 @@ app.controller('contactListCtrl', ['$scope', '$http', '$rootScope',
   		areaNoneMsg: '未获取到区域信息',
   		typeUrl: 'data/bz/home/contactlist/type.json',
   		typeNoneMsg: '未获取到分类信息',
-  		userSearch: false,
-  		orgSearch: false
+  		search: false
   	};
 
   	var entity = $scope.entity = {};  	
@@ -108,15 +107,23 @@ console.log(entity.areas);
 
 		$scope.searchFunc = function() {
 			console.log(options)
-			// 第二页，找人按钮
-			if(options.page == 2 && options.headerBtn == 1) {
-				options.userSearch = true;	
-				options.orgSearch = false;			
-			}
-			if(options.page == 2 && options.headerBtn == 2) {
-				options.userSearch = false;
-				options.orgSearch = true;
-			}
+			options.search = true;
+		};
+
+		$scope.cancelSearchFunc = function() {
+			console.log(options)
+			options.search = false;
+
+		};
+
+		$scope.searchUser = function() {
+			options.headerBtn = 1;
+			options.search = false;
+		};
+
+		$scope.searchOrg = function() {
+			options.headerBtn = 2;
+			options.search = false;
 		};
   }
 ]);

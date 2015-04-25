@@ -1,0 +1,48 @@
+
+  信息滚动效果制作
+  http://www.imooc.com/view/17
+
+  焦点图轮播特效
+  http://www.imooc.com/view/18
+
+  信息列表制作
+  http://www.imooc.com/view/8
+
+  图片展示特效
+  http://www.imooc.com/view/31
+
+  固定边栏滚动特效
+  http://www.imooc.com/view/52
+
+   弹出层效果
+  http://www.imooc.com/view/58
+
+  展开与收起效果
+  http://www.imooc.com/view/90
+
+  倒计时效果
+  http://www.imooc.com/view/59
+
+  分页页码制作
+  http://www.imooc.com/learn/15
+
+  搜索框制作
+  http://www.imooc.com/view/21
+
+  回到顶部效果
+  http://www.imooc.com/view/65
+
+  用JS实现放大镜特效
+  http://www.imooc.com/learn/32
+
+  用JavaScript实现图片缓慢缩放效果
+  http://www.imooc.com/view/80
+
+  人人网评论功能
+  http://www.imooc.com/learn/81
+
+  固定层效果
+  http://www.imooc.com/view/55
+
+  Tooltip浮动提示框效果
+  http://www.imooc.com/view/120

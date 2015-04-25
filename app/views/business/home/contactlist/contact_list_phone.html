@@ -11,6 +11,13 @@
   .text-4x {
   	font-size: 4em;
   }
+  .search-bg {
+  	background-color: black;
+  	opacity: 0.8;
+  }
+  .text-default {
+  	color: white;
+  }
 </style>
 <div ng-controller="contactListCtrl">
 	<!-- page1 collection-page start -->
@@ -20,8 +27,8 @@
 		  <div class="panel-body r-l bg-primary">
 		  	<div class="text-center">
 		  		<div class=" btn-group btn-group-lg">
-			  	  <button type="button" class="btn w-sm r-l25" ng-class="{'bg-light': options.headerBtn == 1, 'dker': options.headerBtn == 1, 'bg-dark': options.headerBtn != 1, 'dker': options.headerBtn != 1}" ng-click="showBtn1()">联系人</button> 
-			  	  <button type="button" class="btn w-sm r-r25 blank" ng-class="{'bg-light': options.headerBtn != 1, 'dker': options.headerBtn != 1, 'bg-dark': options.headerBtn == 1, 'dker': options.headerBtn == 1}" ng-click="showBtn2()">组织</button>
+			  	  <button type="button" class="btn w-sm r-l25" ng-class="{true: 'bg-dark text-default', false: 'bg-light'}[options.headerBtn == 1]" ng-click="showBtn1()">联系人</button> 
+			  	  <button type="button" class="btn w-sm r-r25 blank" ng-class="{true: 'bg-dark text-default', false: 'bg-light'}[options.headerBtn != 1]" ng-click="showBtn2()">组织</button>
 		  		</div>
 		  		<a class="v-bottom" ng-click="showPage2()"><i class="fa fa-search-plus text-2x pull-right v-bottom"></i></a>
 		  	</div>
@@ -97,8 +104,8 @@
 		  	<div class="text-center">		  			
 		  		<a class="v-bottom" ng-click="showPage1()"><i class="fa fa-angle-left text-2x pull-left v-bottom"></i></a>
 		  		<div class=" btn-group btn-group-lg">
-			  	  <button type="button" class="btn w-sm r-l25 blank" ng-class="{'bg-light': options.headerBtn == 1, 'dker': options.headerBtn == 1, 'bg-dark': options.headerBtn != 1, 'dker': options.headerBtn != 1}" ng-click="options.headerBtn = 1">找人</button> 
-			  	  <button type="button" class="btn w-sm r-r25" ng-class="{'bg-light': options.headerBtn != 1, 'dker': options.headerBtn != 1, 'bg-dark': options.headerBtn == 1, 'dker': options.headerBtn == 1}" ng-click="options.headerBtn = 2">找组织</button>
+			  	  <button type="button" class="btn w-sm r-l25 blank" ng-class="{true: 'bg-dark', false: 'bg-light'}[options.headerBtn == 1]" ng-click="searchUser()">找人</button> 
+			  	  <button type="button" class="btn w-sm r-r25" ng-class="{true: 'bg-dark', false: 'bg-light'}[options.headerBtn != 1]" ng-click="searchOrg()">找组织</button>
 		  		</div>
 		  	</div>
 		  </div>
@@ -109,7 +116,7 @@
 		  <div class="panel-body">
 		  	<div class="form-group">
 			  	<input type="text" class="form-control btn-rounded input-lg btn-rounded pull-left" placeholder="搜索" ng-focus="searchFunc()" style="width:80%;">
-			  	<span class="text-2x text-primary pull-right" ng-click="cancelSearchFunc()" style="20%">取消</span>
+			  	<a class="text-2x text-primary pull-right" ng-click="cancelSearchFunc()" ng-if="options.search" style="20%">取消</a>
 		  	</div>
 			  <!-- <div class="input-group">
 					<input type="text" class="form-control btn-rounded input-lg" placeholder="搜索">
@@ -122,30 +129,59 @@
 		  </div>
 		</div>
 		<!-- search end -->
+		<!-- 找人 start -->
+		<div ng-if="options.headerBtn == 1">
+			<div ng-if="!options.search">
+				<div class="form-group">
+					<label class="label-control font-bold">区域：</label>
+					<!-- <div class="btn-group">
+						<label ng-repeat="(key, value) in dataset"></label>
+					</div> -->
 
-		<div>
-			<div class="form-group">
-				<label class="label-control font-bold">区域：</label>
-				<!-- <div class="btn-group">
-					<label ng-repeat="(key, value) in dataset"></label>
-				</div> -->
-
-				<div class="btn-group">
-					<label ng-repeat="area in entity.areas" class="btn btn-default" ng-model="entity.area"
-					btn-radio="'{{area.id}}'" uncheckable>{{area.name}}</label>
-					<!-- <button ng-repeat="(key, value) in dataset"></button> -->
+					<div class="btn-group">
+						<label ng-repeat="area in entity.areas" class="btn btn-default" ng-model="entity.area"
+						btn-radio="'{{area.id}}'" uncheckable>{{area.name}}</label>
+						<!-- <button ng-repeat="(key, value) in dataset"></button> -->
+					</div>
+				</div>
+				<hr class="b-b">
+				<div class="form-group">
+					<label class="label-control font-bold">分类：</label>
+					<label ng-repeat="orgType in entity.orgTypes" class="btn btn-default" ng-bind="orgType.name"></label>
+				</div>
+				<hr class="b-b">
+			</div>
+			<div class="text-center text-2x text-primary h-full bg-dark lter" ng-if="options.search">
+				请输入姓名<br>进行搜索
+			</div>
+		</div>
+		<!-- 找人 end -->
+		<!-- 找组织 start -->
+		<div ng-if="options.headerBtn == 2">
+			<div ng-if="!options.search">
+				<ul class="nav nav-tabs" role="tablist">
+					<li role="presentation" class="active">
+						<a role="tab" data-toggle="tab">类型</a>
+					</li>
+					<li role="presentation" class="">
+						<a role="tab" data-toggle="tab">行政</a>
+					</li>
+					<li role="presentation" class="">
+						<a role="tab" data-toggle="tab">区域</a>
+					</li>
+				</ul>
+				<div class="form-group">
+					<div class="b-l b-primary b-3x col-xs-12 hbox">
+						<span class="col-xs-4 v-middle">院机关</span>
+						<span class="col-xs-2 v-middle">详情</span>
+						<button type="button" class="btn btn-default col-xs-2 ">关注</button>
+					</div>
 				</div>
 			</div>
-			<hr class="b-b">
-			<div class="form-group">
-				<label class="label-control font-bold">分类：</label>
-				<label ng-repeat="orgType in entity.orgTypes" class="btn btn-default" ng-bind="orgType.name"></label>
+			<div class="text-center text-2x text-primary h-full bg-dark lter" ng-if="options.search">
+				请输入机构名<br>进行搜索
 			</div>
-			<hr class="b-b">
 		</div>
-		<div class="text-center text-2x text-primary" ng-if="options.userSearch">
-			请输入姓名作为关键字进行搜索
-		</div>
-		
+		<!-- 找组织 end -->
 	</div>
 </div>
