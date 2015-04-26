@@ -104,8 +104,8 @@
 		  	<div class="text-center">		  			
 		  		<a class="v-bottom" ng-click="showPage1()"><i class="fa fa-angle-left text-2x pull-left v-bottom"></i></a>
 		  		<div class=" btn-group btn-group-lg">
-			  	  <button type="button" class="btn w-sm r-l25 blank" ng-class="{true: 'bg-dark', false: 'bg-light'}[options.headerBtn == 1]" ng-click="searchUser()">找人</button> 
-			  	  <button type="button" class="btn w-sm r-r25" ng-class="{true: 'bg-dark', false: 'bg-light'}[options.headerBtn != 1]" ng-click="searchOrg()">找组织</button>
+			  	  <button type="button" class="btn w-sm r-l25 blank" ng-class="{true: 'bg-dark', false: 'bg-light'}[options.headerBtn == 1]" ng-click="showBtn1()">找人</button> 
+			  	  <button type="button" class="btn w-sm r-r25" ng-class="{true: 'bg-dark', false: 'bg-light'}[options.headerBtn != 1]" ng-click="showBtn2()">找组织</button>
 		  		</div>
 		  	</div>
 		  </div>
@@ -161,19 +161,33 @@
 			<div ng-if="!options.search">
 				<ul class="nav nav-tabs" role="tablist">
 					<li role="presentation" class="active">
-						<a role="tab" data-toggle="tab">类型</a>
+						<a role="tab" data-toggle="tab" ng-click="orgTreeChange(1)">类型</a>
 					</li>
 					<li role="presentation" class="">
-						<a role="tab" data-toggle="tab">行政</a>
+						<a role="tab" data-toggle="tab" ng-click="orgTreeChange(2)">行政</a>
 					</li>
 					<li role="presentation" class="">
-						<a role="tab" data-toggle="tab">区域</a>
+						<a role="tab" data-toggle="tab" ng-click="orgTreeChange(3)">区域</a>
 					</li>
 				</ul>
-				<div class="form-group">
-					<div class="b-l b-primary b-3x col-xs-12 hbox">
-						<span class="col-xs-4 v-middle">院机关</span>
-						<span class="col-xs-2 v-middle">详情</span>
+				<div class="form-group" ng-if="options.orgTree == 1">
+					<div ng-repeat="org in entity.orgTreeType track by $index" class="b-l b-primary b-3x col-xs-12 hbox">
+						<span class="col-xs-4 v-middle">{{ org.name }}</span>
+						<span class="col-xs-2 v-middle">{{ org.id }}</span>
+						<button type="button" class="btn btn-default col-xs-2 ">关注</button>
+					</div>
+				</div>
+				<div class="form-group" ng-if="options.orgTree == 2">
+					<div ng-repeat="org in entity.orgTreeAdmin track by $index" class="b-l b-primary b-3x col-xs-12 hbox">
+						<span class="col-xs-4 v-middle">{{ org.name }}</span>
+						<span class="col-xs-2 v-middle">{{ org.id }}</span>
+						<button type="button" class="btn btn-default col-xs-2 ">关注</button>
+					</div>
+				</div>
+				<div class="form-group" ng-if="options.orgTree == 3">
+					<div ng-repeat="org in entity.orgTreeArea track by $index" class="b-l b-primary b-3x col-xs-12 hbox">
+						<span class="col-xs-4 v-middle">{{ org.name }}</span>
+						<span class="col-xs-2 v-middle">{{ org.id }}</span>
 						<button type="button" class="btn btn-default col-xs-2 ">关注</button>
 					</div>
 				</div>
