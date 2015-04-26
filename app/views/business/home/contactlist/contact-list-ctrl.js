@@ -145,10 +145,21 @@ app.controller('contactListCtrl', ['$scope', '$http', '$rootScope',
 		$scope.orgTreeChange = function(num) {
 			if(num == 1) {
 				options.orgTree = 1;
-			} else if(num == 2) {
-				if(!entity.orgTreeAdmin) {
-					options.orgTree = 2;
+				
+				if(!entity.orgTreeType) {
+					$http.get(options.orgTreeTypeUrl)
+						.success(function(data, status, headers, config) {
+							entity.orgTreeType = data;
+						})
+						.error(function(data, status, headers, config) {
+							console.log('error');
+						})
+				}
 
+			} else if(num == 2) {
+				options.orgTree = 2;
+
+				if(!entity.orgTreeAdmin) {
 					$http.get(options.orgTreeAdminUrl)
 						.success(function(data, status, headers, config) {
 							entity.orgTreeAdmin = data;
