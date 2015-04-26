@@ -307,6 +307,14 @@
 		"SIMPLE_SPELL": "cjhzzzz",
 		"label": "昌吉回族自治州"
 	}, {
+		"RN": "31",
+		"NAME": "重庆市",
+		"CODE": "50000000",
+		"PARANT_CODE": "156",
+		"SPELL": "chongqingshi",
+		"SIMPLE_SPELL": "cqs",
+		"label": "重庆市"
+	}, {
 		"RN": "2",
 		"NAME": "长沙市",
 		"CODE": "43010000",
@@ -2846,14 +2854,6 @@
 		"SPELL": "zhenjiangshi",
 		"SIMPLE_SPELL": "zjs",
 		"label": "镇江市"
-	}, {
-		"RN": "31",
-		"NAME": "重庆市",
-		"CODE": "50000000",
-		"PARANT_CODE": "156",
-		"SPELL": "zhongqingshi",
-		"SIMPLE_SPELL": "zqs",
-		"label": "重庆市"
 	}, {
 		"RN": "20",
 		"NAME": "中山市",

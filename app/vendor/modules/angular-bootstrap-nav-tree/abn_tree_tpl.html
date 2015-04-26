@@ -1,6 +1,19 @@
 
 <div>
-  
+  <style>
+  .sub-label {
+  	display: inline-block;
+  	width: 15%;
+  	height: 80%;
+  	vertical-align: middle;
+  	margin-right: 10px;
+  	background-color: orange;
+  	text-align: center;
+  }
+  .sub-label.active {
+  	background-color: blue;
+  }
+  </style>
 	<!-- 搜索框 -->
 	<div class="m-t m-b-sm" ng-if="options.showSearch">
 		<div class="input-group">
@@ -58,9 +71,10 @@
 		<!-- <div class="b-b padder-v hbox nav nav-list abn-tree list-group-item" ng-repeat="row in tree_rows | filter:{visible:true} track by row.branch.uid" ng-animate="'abn-tree-animate'" ng-class="'level-' + {{ row.level }} + (row.branch.selected ? ' active':'')" ng-click="row.branch.expanded=!row.branch.expanded;user_clicks_branch(row.branch);"> -->
 			<!-- <a> -->
 				<!-- 当不存在子节点图标时不出现i -->
+				<span class="sub-label" ng-repeat="subLabel in row.subLabels" ng-show="row.branch.expanded" ng-class="{'active': options.subLabelSelect == subLabel}" ng-click="filterByLetter($event, row, subLabel)">{{ subLabel }}</span>
 				<i ng-if="row.tree_icon != ''" ng-class="row.tree_icon" class="indented tree-icon pull-right"></i>
-				<span ng-if="row.tree_icon == ''" class="m-l-md"></span>
-				<span class="indented tree-label pull-left">{{ row.label }}</span> 
+				<!-- <span ng-if="row.tree_icon == ''" class="m-l-md"></span> -->
+				<span class="indented tree-label pull-left" ng-hide="row.subLabels != undefined && row.branch.expanded">{{ row.label }}</span> 
 			<!-- </a>    -->
 		</div>
 	</div>

@@ -144,12 +144,39 @@
           getTreeData(attrs.reqUrl);
 
           scope.treeSelect = function(row) {
-            console.log(row);
             if(row.level === 1) {
+              // 一级节点展开，选择了对应字母，树的节点已经被过滤，故应该在收起时还原回所有节点
+              if(row.branch.expanded && row.branch.origChildren) {
+                row.branch.children = row.branch.origChildren;
+              }
+
               row.branch.expanded = !row.branch.expanded;
             } else {
               scope.user_clicks_branch(row.branch);
             }
+          };
+
+          // 字母过滤每组的市级节点
+          scope.filterByLetter = function(e, row, subLabel) {
+            options.subLabelSelect = subLabel;
+            // row.branch.origChildren 用于保存每组过滤前的子节点，用于还原操作
+            if(!row.branch.origChildren) {
+              row.branch.origChildren = row.branch.children;
+            }
+
+            var arrOrigChildren = row.branch.origChildren,
+                iLen = arrOrigChildren.length,
+                arrChildren = [];
+
+            for(var i=0; i<iLen; i++) {
+              if(arrOrigChildren[i].SPELL.charAt(0) === subLabel.toLowerCase()) {
+                arrChildren.push(arrOrigChildren[i]);
+              }
+            }
+
+            row.branch.children = arrChildren;
+
+            e.stopPropagation();
           };
 
           // Enter 触发搜索事件
@@ -165,37 +192,16 @@
             options.showTree = false;
             options.searchLoading = true;
             select_branchs(scope.treeSearch.inputName);
-            // var searchElement = options.searchElement;
-            // var arrSearch = searchElement.split(';');
-            // var searchVal = scope.treeSearch.inputName;
-            // var arrResults = [];
-            
-            // $http.get('data/components/area/cities.json')
-            //   .success(function(data, status, headers, config) {
-            //     var iLen = data.length;
-            //     var iLenElem = arrSearch.length;
-            //     for(var i=0; i<iLen; i++) {
-            //       for(var j=0; j<iLenElem; j++) {
-            //         if(data[i][arrSearch[j]] == searchVal) {
-            //           arrResults.push(data[i]);
-            //           continue;
-            //         }
-            //       }
-            //     }
-            //   })
-            //   .error(function(data, status, headers, config) {
-            //     //
-            //   });
-
-            // console.log('abc');
           };
 
+          // 关闭搜索结果，返回选择树
           scope.showTreeFunc = function(){
             return $timeout(function(){
               scope.treeSearch.inputName = '';
               options.showTree = true;
             });
           };
+
           //根据数据源拼凑树
           for_each_branch = function(f) {
             var do_f, root_branch, _i, _len, _ref, _results;
@@ -527,6 +533,13 @@
           return branch.children = [];
         }
       });
+      var subLabelMap = {
+        'A-E': ['A', 'B', 'C', 'D', 'E'],
+        'F-J': ['F', 'G', 'H', 'I', 'J'],
+        'K-O': ['K', 'L', 'M', 'N', 'O'],
+        'P-T': ['P', 'Q', 'R', 'S', 'T'],
+        'U-Z': ['U', 'V', 'W', 'X', 'Y', 'Z']
+      };
       add_branch_to_list = function(level, branch, visible) {
         // 对直辖市做特殊判断，去掉其下级节点
         if(options.strMunicipalitiesCode.indexOf(root_branch.CODE) > -1) {
@@ -550,6 +563,7 @@
           level: level,
           branch: branch,
           label: branch.label,
+          subLabels: subLabelMap[branch.label],   // 子标题
           tree_icon: tree_icon,
           visible: visible
         });
