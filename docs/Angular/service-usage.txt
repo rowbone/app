@@ -1,0 +1,12 @@
+
+from:http://www.cnblogs.com/whitewolf/p/angular-services.html
+
+1、constant：设置的值不能被改变
+	app.constant('options', {
+		options1: true,
+		options2: 'str'
+	});
+
+	app.constant('name', value);
+
+2、value：在赋值后还可以被改变。它也被常用于directive配置信息。Value service只会保留values，我们不会在service中计算其值。
