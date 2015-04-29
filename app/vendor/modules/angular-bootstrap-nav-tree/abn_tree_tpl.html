@@ -1,17 +1,21 @@
 
 <div>
-  <style>
+  <style>	
   .sub-label {
   	display: inline-block;
-  	width: 15%;
-  	height: 80%;
+  	width: 12%;
+  	
+  	/* height: 80%; */
   	vertical-align: middle;
   	margin-right: 10px;
-  	background-color: orange;
-  	text-align: center;
+  	color: #58666E;
+  	font-size: 1.2em;
+  	/*background-color: #898787;*/
+/*   	text-align: center; */
   }
   .sub-label.active {
-  	background-color: blue;
+  	color: #5BB9E7;
+  	/*background-color: #FAFAFB;*/
   }
   </style>
 	<!-- 搜索框 -->
@@ -67,11 +71,11 @@
 		<span>加载中...</span>
 	</div>
 	<div class="list-group" ng-if="options.showTree">
-		<div class="b-b padder-v hbox nav nav-list abn-tree list-group-item" ng-repeat="row in tree_rows | filter:{visible:true} track by row.branch.uid" ng-animate="'abn-tree-animate'" ng-class="'level-' + {{ row.level }} + (row.branch.selected ? ' active':'')" ng-click="treeSelect(row)">
+		<div class="b-b hbox nav nav-list abn-tree list-group-item" ng-repeat="row in tree_rows | filter:{visible:true} track by row.branch.uid" ng-animate="'abn-tree-animate'" ng-class="'level-' + {{ row.level }} + (row.branch.selected ? ' active':'')" ng-click="treeSelect($event, row)">
 		<!-- <div class="b-b padder-v hbox nav nav-list abn-tree list-group-item" ng-repeat="row in tree_rows | filter:{visible:true} track by row.branch.uid" ng-animate="'abn-tree-animate'" ng-class="'level-' + {{ row.level }} + (row.branch.selected ? ' active':'')" ng-click="row.branch.expanded=!row.branch.expanded;user_clicks_branch(row.branch);"> -->
 			<!-- <a> -->
 				<!-- 当不存在子节点图标时不出现i -->
-				<span class="sub-label" ng-repeat="subLabel in row.subLabels" ng-show="row.branch.expanded" ng-class="{'active': options.subLabelSelect == subLabel}" ng-click="filterByLetter($event, row, subLabel)">{{ subLabel }}</span>
+				<span class="font-bold sub-label col pull-left" ng-repeat="subLabel in row.subLabels" ng-show="row.branch.expanded" ng-class="{'active': options.subLabelSelect == subLabel}" ng-click="filterByLetter($event, row, subLabel)">{{ subLabel }}</span>
 				<i ng-if="row.tree_icon != ''" ng-class="row.tree_icon" class="indented tree-icon pull-right"></i>
 				<!-- <span ng-if="row.tree_icon == ''" class="m-l-md"></span> -->
 				<span class="indented tree-label pull-left" ng-hide="row.subLabels != undefined && row.branch.expanded">{{ row.label }}</span> 

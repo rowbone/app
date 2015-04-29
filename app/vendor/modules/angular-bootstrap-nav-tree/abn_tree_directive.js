@@ -143,7 +143,7 @@
           // 异步加载数据
           getTreeData(attrs.reqUrl);
 
-          scope.treeSelect = function(row) {
+          scope.treeSelect = function(e, row) {console.log(row);
             if(row.level === 1) {
               // 一级节点展开，选择了对应字母，树的节点已经被过滤，故应该在收起时还原回所有节点
               if(row.branch.expanded && row.branch.origChildren) {
@@ -151,6 +151,9 @@
               }
 
               row.branch.expanded = !row.branch.expanded;
+              if(row.subLabels) {
+                scope.filterByLetter(e, row, row.subLabels[0]);
+              }
             } else {
               scope.user_clicks_branch(row.branch);
             }
@@ -306,9 +309,21 @@
           // 选择多个节点
           var arrResults = [];
           select_branch_mutiple = function(branch) {
-            if(options.strMunicipalitiesCode.indexOf(branch.CODE) > -1 || branch.level == 2) {
+            if(branch.level == 1) {
+              return;
+            }
+            var iLen = arrResults.length;
+
+            for(var i=0; i<iLen; i++) {
+              if(branch.CODE == arrResults[i].CODE) {
+                break;
+              }
+            }
+            // if(options.strMunicipalitiesCode.indexOf(branch.CODE) > -1 || branch.level == 2) {
+            if(i == iLen) {
               arrResults.push(branch);
             }
+            // }
           };
           // 点击搜索结果
           scope.searchResultClick = function(branch) {
@@ -344,7 +359,7 @@
           options.strMunicipalitiesCode = options.arrMunicipalitiesCode.toString();
 
           // 点击一个节点
-          select_branch = function(branch) {
+          select_branch = function(branch) {console.log(branch);
             branch.expanded = !branch.expanded
             // if(branch.id == undefined){
               tree.expand_branch(branch);
@@ -352,9 +367,9 @@
             // }
             // 
             var level = branch.level;
-            if(options.strMunicipalitiesCode.indexOf(branch.CODE) > -1) {
-              level = level + 1;
-            }
+            // if(options.strMunicipalitiesCode.indexOf(branch.CODE) > -1) {
+            //   level = level + 1;
+            // }
             if(level != options.selectLevel) {
               return;
             }
