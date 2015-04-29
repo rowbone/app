@@ -21,7 +21,7 @@
 	<!-- 搜索框 -->
 	<div class="m-t m-b-sm" ng-if="options.showSearch">
 		<div class="input-group">
-			<input dropdown-toggle ng-model="treeSearch.inputName" type="text" class="form-control" ng-keyup="enterPress($event)" placeholder="请输入关键字...">
+			<input dropdown-toggle ng-model="treeSearch.inputName" type="text" class="form-control" ng-change="enterPress($event)" placeholder="请输入关键字...">
 			<div class="input-group-btn dropdown" dropdown>
 				<button type="button" class="btn btn-primary" ng-click="treeSearchFunc()" tabindex="-1">
 					<i class="fa fa-search"></i>

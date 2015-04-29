@@ -184,9 +184,10 @@
 
           // Enter 触发搜索事件
           scope.enterPress = function(e) {
-            if(e.keyCode === 13) {
+            // enter keycode == 13
+            // if(e.keyCode === 13) {
               scope.treeSearchFunc();
-            }
+            // }
           };
         
           scope.treeSearch = {};

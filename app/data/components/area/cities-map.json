@@ -1,9 +1,8 @@
-[	
-	{
-		"label": "热门",
-		"SPELL": "zba",
-		"SIMPLE_SPELL": "zba",
-		"children": [{
+[{
+    "label": "热门",
+    "SPELL": "zba",
+    "SIMPLE_SPELL": "zba",
+    "children": [{
         "RN": "2",
         "NAME": "北京",
         "CODE": "11000000",
@@ -11,7 +10,7 @@
         "SPELL": "beijing",
         "SIMPLE_SPELL": "bj",
         "label": "北京"
-			}, {
+    }, {
         "RN": "22",
         "NAME": "上海",
         "CODE": "31000000",
@@ -19,7 +18,7 @@
         "SPELL": "shanghai",
         "SIMPLE_SPELL": "sh",
         "label": "上海"
-			}, {
+    }, {
         "RN": "26",
         "NAME": "天津",
         "CODE": "12000000",
@@ -156,7 +155,7 @@
         "SIMPLE_SPELL": "wh",
         "label": "武汉"
     }]
-	}, {
+}, {
     "label": "A-E",
     "SPELL": "A-E",
     "SIMPLE_SPELL": "A-E",

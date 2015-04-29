@@ -1,0 +1,19 @@
+from:http://www.tuicool.com/articles/ueUZBv
+
+1、在模板中使用
+	{{ expression | filter1:arg1:arg2 | filter2 | filter3}}
+
+2、在controller和service中使用
+	注入 $filter 服务
+	$filter('date')(new Date())
+	$filter('filterName')(data, arg1, arg2)
+
+3、内置filter
+	currency
+	date
+	filter[匹配子字符串]
+	json
+	limitTo[限制数组长度或字符串长度]
+	lowercase
+	number
+	orderBy

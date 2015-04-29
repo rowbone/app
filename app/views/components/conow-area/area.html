@@ -24,15 +24,16 @@
   						<input type="text" class="form-control" name="area2" id="area2" conow-area ng-model="entity.area2" select-level >
   					</div>
 
-            <pre>{{ entity | json }}</pre>
+            <!-- <pre>{{ entity.arr | json }}</pre> -->
+            <!-- <pre>{{ entity.arr | areaFilter: 'province' | json }}</pre> -->
 
             <!-- <pre>{{ regionMap | json }}</pre> -->
 
-            <ul>
-              <li ng-repeat="city in regionMap | orderBy: 'SPELL'">
-                {{ city.label }}
-              </li>
-            </ul>
+            <div class="form-group">
+              <button type="button" class="btn btn-primary" ng-click="test()">测试</button>
+            </div>
+            <pre>{{ entity.cityGroup | json }}</pre>
+
   				</form>
   			</div>
   		</div>
@@ -40,12 +41,6 @@
   </div>
 </div>
 
-<div ng-controller="TestCtrl"></div>
-
-<script>
-  app.controller('TestCtrl', ['$scope', function($scope){
-    $scope.$on('broadcast', function(e, newVal) {
-      console.log(newVal);
-    })
-  }])
-</script>
+<div>
+  
+</div>
