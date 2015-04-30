@@ -5,8 +5,8 @@
 
 //   module = angular.module('angularBootstrapNavTree', []);
   /*searchOnSelect:'&', //点击搜索结果事件*/  
-  app.directive('conowAreaTree', ['$timeout','$http', 
-    function($timeout, $http) {
+  app.directive('conowAreaTree', ['$timeout','$http', '$filter', 
+    function($timeout, $http, $filter) {
       return {
         restrict: 'E',
         replace: true,
@@ -121,21 +121,68 @@
           // scope.treeData = scope.$eval(attrs.treeDataShow);
 
           var getTreeData = function(location){
+            var location = 'data/components/area/region.js';
+
             var treeData = [];
+            // $http.get(location)
+            //   .success(function(data){
+            //     if(data.obj) {
+            //       data = data.obj;
+            //     }
+            //     options.isLoading = false;
+            //     scope.treeData = data;
+            //     return $timeout(function() {
+            //       tree.expand_level();
+            //     }, 1000);
+            //   })
+            //   .error(function() {
+            //     console.log('Load tree data wrong...');
+            //   });
+            
+
             $http.get(location)
-              .success(function(data){
-                if(data.obj) {
-                  data = data.obj;
+              .success(function(data, status, headers, config) {
+                var arr = [];
+                var aData = [];
+                if(typeof data === 'string') {
+                  data = scope.$eval(data);
                 }
+                // 生成 object array 类型的数据 --> arr
+                angular.forEach(data, function(value, key) {
+                  this.push({
+                    "code": key,
+                    "label": value[0],
+                    "name": value[0],
+                    "spell": value[1],
+                    "simple_spell": value[2]
+                  });
+                }, arr);
+                arr = $filter('orderBy')($filter('areaFilter')(arr, 'city'), 'spell');
+                var arrIndex = $filter('cityGroup')(arr);
+                var arrCities = [];
+                // arrCities.push(entity.cityHotTopic);
+                var arrGroup = ['A-E', 'F-J', 'K-O', 'P-T', 'U-Z'];
+                for(var i=1; i<arrIndex.length; i++) {
+                  var label = arrGroup[i - 1];
+                  arrCities.push({
+                    'label': label,
+                    'spell': label,
+                    'simple_spell': label,
+                    'children': arr.slice(arrIndex[i - 1], arrIndex[i])
+                  });
+                }
+                arr = arrCities;
+
                 options.isLoading = false;
-                scope.treeData = data;
+                scope.treeData = arr;
                 return $timeout(function() {
                   tree.expand_level();
                 }, 1000);
               })
-              .error(function() {
-                console.log('Load tree data wrong...');
+              .error(function(data, status, headers, config) {
+                console.log('Get ' + url + ' data wrong...');
               });
+
           };
 
           options.isLoading = true;
@@ -143,7 +190,7 @@
           // 异步加载数据
           getTreeData(attrs.reqUrl);
 
-          scope.treeSelect = function(e, row) {console.log(row);
+          scope.treeSelect = function(e, row) {
             if(row.level === 1) {
               // 一级节点展开，选择了对应字母，树的节点已经被过滤，故应该在收起时还原回所有节点
               if(row.branch.expanded && row.branch.origChildren) {
@@ -172,7 +219,7 @@
                 arrChildren = [];
 
             for(var i=0; i<iLen; i++) {
-              if(arrOrigChildren[i].SPELL.charAt(0) === subLabel.toLowerCase()) {
+              if(arrOrigChildren[i].spell.charAt(0) === subLabel.toLowerCase()) {
                 arrChildren.push(arrOrigChildren[i]);
               }
             }
@@ -360,7 +407,7 @@
           options.strMunicipalitiesCode = options.arrMunicipalitiesCode.toString();
 
           // 点击一个节点
-          select_branch = function(branch) {console.log(branch);
+          select_branch = function(branch) {
             branch.expanded = !branch.expanded
             // if(branch.id == undefined){
               tree.expand_branch(branch);
@@ -579,6 +626,7 @@
           level: level,
           branch: branch,
           label: branch.label,
+          // label: branch.name,
           subLabels: subLabelMap[branch.label],   // 子标题
           tree_icon: tree_icon,
           visible: visible

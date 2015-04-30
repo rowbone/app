@@ -7,10 +7,18 @@ app.controller('AreaSelCtrl', ['$scope', '$http', '$filter',
       area2: '32010000'
     };
 
+    var urlHotTopic = 'data/components/area/hot-topic.json';
+    $http.get(urlHotTopic)
+      .success(function(data, status, headers, config) {
+        entity.cityHotTopic = data[0];
+      })
+      .error(function(data, status, headers, config) {
+        console.log('Get ' + urlHotTopic + ' wrong...');
+      })
+
     var url = 'data/components/area/region.js';
     $http.get(url)
       .success(function(data, status, headers, config) {
-        // console.log(data);
         var arr = [];
         var aData = [];
         if(typeof data === 'string') {
@@ -20,6 +28,7 @@ app.controller('AreaSelCtrl', ['$scope', '$http', '$filter',
         angular.forEach(data, function(value, key) {
           this.push({
             "code": key,
+            'label': value[0],
             "name": value[0],
             "spell": value[1],
             "simple_spell": value[2]
@@ -35,9 +44,11 @@ app.controller('AreaSelCtrl', ['$scope', '$http', '$filter',
     $scope.test = function() {
 
       entity.city = $filter('orderBy')($filter('areaFilter')(entity.arr, 'city'), 'spell');
+      // entity.province = $filter('orderBy')($filter('areaFilter')(entity.arr, 'county'), 'spell');
       // var arrIndex = $filter('cityGroup')($filter('orderBy')($filter('areaFilter')(entity.arr, 'city'), 'spell'));
       var arrIndex = $filter('cityGroup')(entity.city);
       var arr = [];
+      arr.push(entity.cityHotTopic);
       var arrGroup = ['A-E', 'F-J', 'K-O', 'P-T', 'U-Z'];
       for(var i=1; i<arrIndex.length; i++) {
         var label = arrGroup[i - 1];
@@ -45,7 +56,7 @@ app.controller('AreaSelCtrl', ['$scope', '$http', '$filter',
           'label': label,
           'spell': label,
           'simple_spell': label,
-          'children': entity.city.slice(arrIndex[i-1], arrIndex[i])
+          'children': entity.city.slice(arrIndex[i - 1], arrIndex[i])
         });
       }
       entity.cityGroup = arr;
@@ -55,7 +66,7 @@ app.controller('AreaSelCtrl', ['$scope', '$http', '$filter',
 
 // 对市一级数据进行分组
 app.filter('cityGroup', function() {
-  return function(input, letterSplit) {
+  return function(input) {
     var arr = [0];
     var arrSplit = ['f', 'k', 'p', 'w'];
     for(var i=0; i<arrSplit.length; i++) {
@@ -74,9 +85,15 @@ app.filter('cityGroup', function() {
   }
 });
 
-app.service('CityGroupService', ['', function(){
-  
-}])
+// app.service('CityGroupService', ['$http', '$filter', 
+//   function($http, $filter) {
+//     var cityGroup = this.cityGroup;
+
+//     if(!cityGroup) {
+
+//     }
+//   }
+// ])
 
 // 根据参数分别获取省、市、区的数据
 app.filter('areaFilter', function() {
