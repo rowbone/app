@@ -301,11 +301,35 @@ app.filter('areaFilterByParent', function() {
   }
 });
 
-app.controller('test', ['$scope', function($scope) {
-  var entity = $scope.entity = {};
+app.controller('test', ['$scope', 
+  function($scope) {
+console.log($scope.$parent);
 
-  entity.provinces = ['abc', '111'];
-}]);
+    var entity = $scope.entity = {};
+    entity.provinces = ['广东省', '广州市'];
+
+    $scope.show = function(val){
+      $scope.getShowTabs(val);
+    };
+
+    $scope.hide = function(val){
+      $scope.getHideTabs(val);
+    };
+
+    $scope.skip = function(val){
+      $scope.getNumTabs(val);
+    };
+
+    $scope.sample = function(){
+      console.log("is tabs");
+    };
+
+    $scope.sample2 = function(){
+      console.log("is tabs2");
+    };
+
+  }
+]);
 
 // 获取根路径
 function getRegionWithRoot(code){

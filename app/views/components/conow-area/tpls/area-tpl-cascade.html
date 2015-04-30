@@ -27,9 +27,10 @@
               <conow-tabs-content-text>
                 <a href="" class="btn btn-primary m" ng-repeat="province in entity.provinces" ng-click="areaSelect(province, 'province')">{{ province.name }}</a>
               </conow-tabs-content-text>
-              <conow-tabs-content-text>
+              <!-- <conow-tabs-content-text>
                 <a href="" class="btn btn-primary m" ng-repeat="city in entity.cities" ng-click="areaSelect(city, 'city')">{{ city.name }}</a>
-              </conow-tabs-content-text>
+              </conow-tabs-content-text> -->
+              <conow-tabs-content-url url="views/components/conow-area/tpls/province.html">111</conow-tabs-content-url>
               <conow-tabs-content-text>
                 <a href="" class="btn btn-primary m" ng-repeat="county in entity.counties" ng-click="areaSelect(county, 'county')">{{ county.name }}</a>
               </conow-tabs-content-text>
