@@ -1,0 +1,269 @@
+<title-Bar name="页签"></title-Bar>
+<div class="wrapper-md pos-rlt" ng-controller="tabsTestCtrl">
+	<div class="col-lg-6">
+		<conow-tabs>
+			<conow-tabs-titles pills="true">
+				<conow-tabs-titles-diy show="true">
+					<i class="fa fa-music"></i>
+				</conow-tabs-titles-diy>
+				<conow-tabs-titles-text title="标签1" fn="sample()"></conow-tabs-titles-text>
+				<conow-tabs-titles-text title="标签2"></conow-tabs-titles-text>
+				<conow-tabs-titles-text title="标签3"></conow-tabs-titles-text>
+				<conow-tabs-titles-text title="标签4"></conow-tabs-titles-text>
+			</conow-tabs-titles>
+			<conow-tabs-content>
+				<conow-tabs-content-url url="other/demo/conow-tabs/conow-tabsTest.html"></conow-tabs-content-url>
+				<conow-tabs-content-url url="other/demo/conow-tabs/conow-tabsTest2.html"></conow-tabs-content-url>
+				<conow-tabs-content-text>
+					<button class="btn btn-primary" skip-click="1">上一页</button>
+				</conow-tabs-content-text>
+				<conow-tabs-content-url url="other/demo/conow-tabs/conow-tabsTest3.html"></conow-tabs-content-url>
+				<conow-tabs-content-text>
+					<div><span>自定义内容</span></div>
+				</conow-tabs-content-text>
+			</conow-tabs-content>
+		</conow-tabs>
+		<br>
+		<conow-tabs>
+			<conow-tabs-titles>
+				<conow-tabs-titles-text title="标签0" show="true"></conow-tabs-titles-text>
+				<conow-tabs-titles-text title="标签1"></conow-tabs-titles-text>
+				<conow-tabs-titles-text title="标签2" fn="sample2()"></conow-tabs-titles-text>
+				<conow-tabs-titles-text title="标签3"></conow-tabs-titles-text>
+				<conow-tabs-titles-text title="标签4"></conow-tabs-titles-text>
+			</conow-tabs-titles>
+			<conow-tabs-content>
+				<conow-tabs-content-url url="views/components/conow-tabs/tpls/tab1.html"></conow-tabs-content-url>
+				<conow-tabs-content-url url="views/components/conow-tabs/tpls/tab2.html"></conow-tabs-content-url>
+				<conow-tabs-content-text>
+					<button class="btn btn-primary" skip-click="1">上一页</button>
+				</conow-tabs-content-text>
+				<conow-tabs-content-url url="views/components/conow-tabs/tpls/tab3.html"></conow-tabs-content-url>
+				<conow-tabs-content-text>
+					<div><span>自定义内容</span></div>
+				</conow-tabs-content-text>
+			</conow-tabs-content>
+		</conow-tabs>
+	</div>
+	<div class="col-lg-6">
+		<p class="font-bold">页签使用方法(同个页面可以使用多个页签)：</p>
+		<ul class="nav">
+			<li>
+				<p class="text-danger">版本维护说明</p>
+				<table class="table table-bordered table-hover table-cell">
+					<thead>
+						<tr>
+							<th class="text-center text-primary"  style="border:1px solid #bbb">更新时间</th>
+							<th class="text-center text-primary"  style="border:1px solid #bbb">更新内容</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td class="text-danger" style="border:1px solid #bbb">
+								2015/04/16
+							</td>
+							<td style="border:1px solid #bbb">
+								添加点击标签头时触发一个回调函数，使用方式:在
+								<span class="text-danger">conow-tabs-titles-text</span>
+								标签配置fn属性，例如<span class="text-primary">fn="function()"</span>
+							</td>
+						</tr>
+						<tr>
+							<td class="text-danger" style="border:1px solid #bbb">
+								2015/04/27
+							</td>
+							<td style="border:1px solid #bbb">
+								添加配置样式功能，共有两种标签头的样式，具体看左边demo，上面是使用了pills属性的样式，使用方式：在
+								<span class="text-danger">conow-tabs-titles</span>
+								标签配置pills属性，例如<span class="text-primary">pills="true"</span>
+								，不配置该属性为默认样式，如左边demo下面的标签
+							</td>
+						</tr>
+						<tr>
+							<td class="text-danger" style="border:1px solid #bbb">
+								2015/04/28
+							</td>
+							<td style="border:1px solid #bbb">
+								添加配置<span class="text-danger">conow-tabs-titles-diy</span>标签，
+								属性跟<span class="text-danger">conow-tabs-titles-text</span>差不多，
+								唯一的差别在于<span class="text-danger">conow-tabs-titles-diy</span>
+								没有<span class="text-primary">title</span>属性，而是改为自定义标签头内容，
+								例如图标等都可以使用。使用方式：
+								<span class="text-danger">&lt;conow-tabs-titles-diy&gt;</span>
+								自定义内容
+								<span class="text-danger">&lt;/conow-tabs-titles-diy&gt;</span>
+								,添加自定义图标后，效果如左边demo所示
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</li>
+			<li>
+				<table class="table table-bordered table-hover table-cell">
+					<thead>
+						<tr>
+							<th class="text-center"  style="border:1px solid #bbb">标签</th>
+							<th class="text-center"  style="border:1px solid #bbb">使用说明</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td class="font-bold" style="border:1px solid #bbb">conow-tabs</td>
+							<td style="border:1px solid #bbb">最外层标签</td>
+						</tr>
+						<tr>
+							<td class="font-bold" style="border:1px solid #bbb">conow-tabs-titles</td>
+							<td style="border:1px solid #bbb">第二层标签</td>
+						</tr>
+						<tr>
+							<td class="font-bold" style="border:1px solid #bbb">conow-tabs-content</td>
+							<td style="border:1px solid #bbb">第二层标签</td>
+						</tr>
+						<tr>
+							<td class="font-bold" style="border:1px solid #bbb">conow-tabs-titles-text</td>
+							<td style="border:1px solid #bbb">conow-tabs-titles的子标签(可引入多个)</td>
+						</tr>
+						<tr>
+							<td class="font-bold" style="border:1px solid #bbb">conow-tabs-content-url</td>
+							<td style="border:1px solid #bbb">conow-tabs-content的子标签(可引入多个)</td>
+						</tr>
+						<tr>
+							<td class="font-bold" style="border:1px solid #bbb">conow-tabs-content-text</td>
+							<td style="border:1px solid #bbb">conow-tabs-content的子标签(可引入多个)</td>
+						</tr>
+					</tbody>
+				</table>
+			</li>
+			<li class="h4">
+				PS:需在父页面初始化时引入标签页内容所需JS
+			</li>
+			<li class="h4">
+				例子：<br>
+				<pre>
+&lt;conow-tabs&gt;
+	&lt;conow-tabs-titles&gt;
+		&lt;conow-tabs-titles-text &nbsp;title="标签0" show="true"&gt;&lt;/conow-tabs-titles-text&gt;
+		&lt;conow-tabs-titles-text &nbsp;title="标签1" hide="true"&gt;&lt;/conow-tabs-titles-text&gt;
+	&lt;/conow-tabs-titles&gt;
+	&lt;conow-tabs-content&gt;
+		&lt;conow-tabs-content-url &nbsp;url="other/demo/conow-tabs/conow-tabsTest.html"&gt;&lt;/conow-tabs-content-url&gt;
+		&lt;conow-tabs-content-text&gt;
+		&lt;button&gt;自定义内容&lt;/button&gt;
+		&lt;/conow-tabs-content-text&gt;
+	&lt;/conow-tabs-content&gt;
+&lt;/conow-tabs&gt;
+				</pre>
+			</li>
+			<li class="m-t-xl">
+				<table class="table table-bordered table-cell table-hover text-center">
+					<thead>
+						<tr>
+							<th class="text-center" style="border:1px solid #bbb">conow-tabs-titles-text标签属性</th>
+							<th class="text-center" style="border:1px solid #bbb">使用说明</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td class="font-bold text-danger" style="border:1px solid #bbb">title</td>
+							<td style="border:1px solid #bbb">标签页的名称,使用：<span class="text-primary">title="标签页0"</span></td>
+						</tr>
+						<tr>
+							<td class="font-bold text-danger" style="border:1px solid #bbb">show</td>
+							<td style="border:1px solid #bbb">默认显示第几个标签页,在该标签添加这个属性即可(只能出现一次且必须出现),使用：<span class="text-primary">show="true"</span></td>
+						</tr>
+						<tr>
+							<td class="font-bold text-danger" style="border:1px solid #bbb">hide</td>
+							<td style="border:1px solid #bbb">隐藏第几个标签页,在该标签添加这个属性即可(可在多个标签添加该属性，但不能与show重复使用),使用：<span class="text-primary">hide="true"</span></td>
+						</tr>
+						<tr>
+							<td class="font-bold text-danger" style="border:1px solid #bbb">load</td>
+							<td style="border:1px solid #bbb">初始化加载当前标签页内容,不延迟加载<span class="text-primary">load="true"</span></td>
+						</tr>
+					</tbody>
+				</table>
+			</li>
+			<li class="h4">
+				例子：<br>
+				<pre>
+&lt;conow-tabs-titles-text title="标签0" show="true"&gt;&lt;/conow-tabs-titles-text&gt;
+&lt;conow-tabs-titles-text title="标签1" hide="true"&gt;&lt;/conow-tabs-titles-text&gt;
+&lt;conow-tabs-titles-text title="标签2" load="true"&gt;&lt;/conow-tabs-titles-text&gt;
+				</pre>
+			</li>
+			<li class="m-t-xl">
+				<table class="table table-bordered text-center table-hover table-cell">
+					<thead>
+						<tr>
+							<th class="text-center" style="border:1px solid #bbb">conow-tabs-content-url标签属性</th>
+							<th class="text-center" style="border:1px solid #bbb">使用说明</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td class="font-bold text-danger" style="border:1px solid #bbb">url</td>
+							<td style="border:1px solid #bbb">标签头对应的标签页内容,使用：<span class="text-primary">url=".../other/demo/test.html"</span></td>
+						</tr>
+					</tbody>
+				</table>
+			</li>
+			<li class="h4">
+				例子：<br>
+				<pre>
+&lt;conow-tabs-content-url url="other/demo/tabs/conow-tabs.html"&gt;<br>&lt;/conow-tabs-content-url&gt;
+				</pre>
+			</li>
+			<li class="m-t-xl">
+				<table class="table table-bordered text-center table-hover table-cell">
+					<thead>
+						<tr>
+							<th class="text-center" style="border:1px solid #bbb">conow-tabs-content-text标签</th>
+							<th class="text-center" style="border:1px solid #bbb">使用该标签,可以自定义标签页的内容</th>
+						</tr>
+					</thead>
+				</table>
+			</li>
+			<li class="h4">
+				例子：<br>
+				<pre>
+&lt;conow-tabs-content-text&gt;
+自定义内容
+&lt;/conow-tabs-content-text&gt;
+				</pre>
+			</li>
+			<li class="m-t-xl">
+				<table class="table table-bordered text-center table-hover table-cell">
+					<thead>
+						<tr>
+							<th class="text-center" style="border:1px solid #bbb">标签页内容可使用属性和方法</th>
+							<th class="text-center" style="border:1px solid #bbb">使用说明</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td class="font-bold text-danger" style="border:1px solid #bbb">skip-click</td>
+							<td style="border:1px solid #bbb">点击后跳转到哪个标签页,使用：<span class="text-primary">skip-click="1"</span>(0代表第一个标签页，依次增加)</td>
+						</tr>
+						<tr>
+							<td class="font-bold text-danger" style="border:1px solid #bbb">$scope.getNumTabs(val)</td>
+							<td style="border:1px solid #bbb">JS可调用该方法跳转到相应标签页,val表示第几个标签页(0代表第一个)</td>
+						</tr>
+						<tr>
+							<td class="font-bold text-danger" style="border:1px solid #bbb">$scope.getHideTabs(val)</td>
+							<td style="border:1px solid #bbb">JS可调用该方法隐藏标签页,val表示第几个标签页(0代表第一个)</td>
+						</tr>
+						<tr>
+							<td class="font-bold text-danger" style="border:1px solid #bbb">$scope.getShowTabs(val)</td>
+							<td style="border:1px solid #bbb">JS可调用该方法显示标签页,val表示第几个标签页(0代表第一个)</td>
+						</tr>
+					</tbody>
+				</table>
+			</li>
+			<li class="h4">
+				例子：<br>
+				<pre>
+&lt;button skip-click="1"&gt;&lt;/button&gt;
+				</pre>
+			</li>
+		</ul>
+	</div>
+</div>

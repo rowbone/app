@@ -95,28 +95,6 @@ app.filter('cityGroup', function() {
 //   }
 // ])
 
-// 根据参数分别获取省、市、区的数据
-app.filter('areaFilter', function() {
-  return function(input, type) {
-    var arr = [];
-    var code = '';
-    var regExpCity = /0{4}$/;
-    var regExpProvince = /0{6}$/;
-    angular.forEach(input, function(value, key) {
-      code = value.code;
-      if(type == 'county' && !regExpCity.test(code)) {
-        this.push(value);
-      } else if(type == 'city' && regExpCity.test(code) && !regExpProvince.test(code)) {
-        this.push(value);
-      } else if (type == 'province' && regExpProvince.test(code)) {
-        this.push(value);
-      }
-    }, arr);
-
-    return arr;
-  }
-})
-
 app.directive('conowArea', ['$modal', '$parse', '$interval', '$http', 
   function($modal, $parse, $interval, $http) {
     return {
@@ -152,11 +130,17 @@ app.directive('conowArea', ['$modal', '$parse', '$interval', '$http',
           console.log('Load region-map.json data wrong...');
         });
 
+        var templateUrl = 'views/components/conow-area/tpls/area-tpl.html';
+        console.log(attrs.selectType);
+        if(attrs.selectType == 2) {
+          templateUrl = 'views/components/conow-area/tpls/area-tpl-cascade.html';
+        }
+
         elem.bind('click', function(e) {
           e.preventDefault();
 
           var modalInstance = $modal.open({
-            templateUrl: 'views/components/conow-area/tpls/area-tpl.html',
+            templateUrl: templateUrl,
             controller: 'AreaTreeCtrl',
             resolve: {
               modalParams: function() {
@@ -177,7 +161,7 @@ app.directive('conowArea', ['$modal', '$parse', '$interval', '$http',
             if(rtnVal && rtnVal.label) {
               var value = rtnVal.label;
               elem.val(value);
-              ctrl.$setViewValue(rtnVal.CODE);
+              ctrl.$setViewValue(rtnVal.code);
             }
           }, function(rtnVal) {
             console.log(rtnVal);
@@ -194,8 +178,11 @@ app.directive('conowArea', ['$modal', '$parse', '$interval', '$http',
 //   }
 // ]);
 
-app.controller('AreaTreeCtrl', ['$scope', '$timeout', '$http', '$modalInstance', 'modalParams',
-  function($scope, $timeout, $http, $modalInstance, modalParams) {
+app.controller('AreaTreeCtrl', ['$scope', '$timeout', '$http', '$modalInstance', 'modalParams', '$filter', 
+  function($scope, $timeout, $http, $modalInstance, modalParams, $filter) {
+
+    var entity = $scope.entity = {};
+
     var tree = $scope.my_tree = {};
 
     var selectedData;
@@ -220,5 +207,118 @@ app.controller('AreaTreeCtrl', ['$scope', '$timeout', '$http', '$modalInstance',
       $modalInstance.dismiss('cancel');
     };
 
+    // area-cascade
+    var url = 'data/components/area/region.js';        
+    var arrProvinces = [],
+        arrCities = [],
+        arrCounties = [];
+
+    $http.get(url)
+      .success(function(data, status, headers, config) {
+        var arr = [];
+        if(typeof data === 'string') {
+          data = $scope.$eval(data);
+        }
+        // 得到 object array 格式的数据
+        angular.forEach(data, function(value, key) {
+          this.push({
+            "code": key,
+            'label': value[0],
+            "name": value[0],
+            "spell": value[1],
+            "simple_spell": value[2]
+          });
+        }, arr);
+        // 获取到的所有数据
+        entity.data = arr;
+
+        entity.provinces = $filter('orderBy')($filter('areaFilter')(arr, 'province'), 'spell');
+        entity.cities = $filter('orderBy')($filter('areaFilter')(arr, 'city'), 'spell');
+        entity.counties = $filter('orderBy')($filter('areaFilter')(arr, 'county'), 'spell');
+      })
+      .error(function(data, status, headers, config) {
+        console.log('Get ' + url + ' wrong...');
+      })
+
+      entity.selectedArea = '';
+      // 点击选择地区
+      $scope.areaSelect = function(obj, selectType) {
+        if(selectType == 'province') {
+          entity.cities = $filter('areaFilterByParent')($filter('areaFilter')(entity.data, 'city'), 'province', obj.code);
+          entity.selectedArea = obj.name;
+          selectedData = {};
+        } else if(selectType == 'city') {
+          entity.counties = $filter('areaFilterByParent')($filter('areaFilter')(entity.data, 'county'), 'city', obj.code);
+          entity.selectedArea += '-' + obj.name;
+        } else if(selectType == 'county') {
+          console.log(obj);
+          entity.selectedArea += '-' + obj.name;
+          selectedData = {'label': entity.selectedArea, 'code': obj.code};
+console.log(selectedData)
+        } else {
+          console.log('Get a wrong selectType: ' + selectType);
+        }
+      };
   }
 ]);
+
+// 根据参数分别获取省、市、区的数据
+app.filter('areaFilter', function() {
+  return function(input, type) {
+    var arr = [];
+    var code = '';
+    var regExpCity = /0{4}$/;
+    var regExpProvince = /0{6}$/;
+    angular.forEach(input, function(value, key) {
+      code = value.code;
+      if(type == 'county' && !regExpCity.test(code)) {
+        this.push(value);
+      } else if(type == 'city' && regExpCity.test(code) && !regExpProvince.test(code)) {
+        this.push(value);
+      } else if (type == 'province' && regExpProvince.test(code)) {
+        this.push(value);
+      }
+    }, arr);
+
+    return arr;
+  }
+});
+
+app.filter('areaFilterByParent', function() {
+  return function(input, type, parentCode) {
+    var arr = [];
+    var code = '';
+    var str = (type == 'province') ? parentCode.substr(0, 2) : ((type == 'city') ? parentCode.substr(0, 4) : '');
+    var regExp = new RegExp('^' + str);
+    angular.forEach(input, function(value, key) {
+      code = value.code;
+      if(regExp.test(code)) {
+        this.push(value);
+      }
+    }, arr);
+
+    return arr;
+  }
+});
+
+app.controller('test', ['$scope', function($scope) {
+  var entity = $scope.entity = {};
+
+  entity.provinces = ['abc', '111'];
+}]);
+
+// 获取根路径
+function getRegionWithRoot(code){
+  var regionForDisplay = null;
+  if(new RegExp("[0-9][0-9][0-9][0-9][0-9][0-9]00").test(code) && !new RegExp("[0-9][0-9][0-9][0-9]0000").test(code)){
+      var province = code.substr(0,2)+"000000";
+      var city =code.substr(0,4)+"0000";
+      regionForDisplay = (region[province]!=null?region[province][0]+"-":"")+(region[city]!=null?region[city][0]+"-":"")+region[code][0];
+    }else if(new RegExp("[0-9][0-9][0-9][0-9]0000").test(code) && !new RegExp("[0-9][0-9]000000").test(code)){
+      var province = code.substr(0,2)+"000000";
+      regionForDisplay = (region[province]!=null?region[province][0]+"-":"")+region[code][0];
+    }else if(new RegExp("[0-9][0-9]000000").test(code)){
+      regionForDisplay = region[code][0];
+    }
+  return regionForDisplay;
+}
