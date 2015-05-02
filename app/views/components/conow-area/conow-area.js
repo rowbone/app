@@ -1,48 +1,13 @@
 'use strict';
 
-app.controller('AreaSelCtrl', ['$scope', '$http', '$filter', 
-  function($scope, $http, $filter) {
+app.controller('AreaSelCtrl', ['$scope', '$http', '$filter', 'AreaService', 
+  function($scope, $http, $filter, AreaService) {
     var entity = $scope.entity = {
       area: '广东',
-      area2: '32010000'
+      area2: '44010600'
     };
 
-    var urlHotTopic = 'data/components/area/hot-topic.json';
-    $http.get(urlHotTopic)
-      .success(function(data, status, headers, config) {
-        entity.cityHotTopic = data[0];
-      })
-      .error(function(data, status, headers, config) {
-        console.log('Get ' + urlHotTopic + ' wrong...');
-      })
-
-    var url = 'data/components/area/region.js';
-    $http.get(url)
-      .success(function(data, status, headers, config) {
-        var arr = [];
-        var aData = [];
-        if(typeof data === 'string') {
-          data = $scope.$eval(data);
-        }
-        // 生成 object array 类型的数据 --> arr
-        angular.forEach(data, function(value, key) {
-          this.push({
-            "code": key,
-            'label': value[0],
-            "name": value[0],
-            "spell": value[1],
-            "simple_spell": value[2]
-          });
-        }, arr);
-
-        entity.arr = arr;
-      })
-      .error(function(data, status, headers, config) {
-        console.log('Get ' + url + ' data wrong...');
-      });
-
     $scope.test = function() {
-
       entity.city = $filter('orderBy')($filter('areaFilter')(entity.arr, 'city'), 'spell');
       // entity.province = $filter('orderBy')($filter('areaFilter')(entity.arr, 'county'), 'spell');
       // var arrIndex = $filter('cityGroup')($filter('orderBy')($filter('areaFilter')(entity.arr, 'city'), 'spell'));
@@ -64,16 +29,6 @@ app.controller('AreaSelCtrl', ['$scope', '$http', '$filter',
 
   }
 ]);
-
-// app.service('CityGroupService', ['$http', '$filter', 
-//   function($http, $filter) {
-//     var cityGroup = this.cityGroup;
-
-//     if(!cityGroup) {
-
-//     }
-//   }
-// ])
 
 app.directive('conowArea', ['$modal', '$parse', '$interval', '$http', 
   function($modal, $parse, $interval, $http) {
@@ -152,8 +107,8 @@ app.directive('conowArea', ['$modal', '$parse', '$interval', '$http',
   }
 ]);
 
-app.controller('AreaTreeCtrl', ['$scope', '$timeout', '$http', '$modalInstance', 'modalParams', '$filter', 
-  function($scope, $timeout, $http, $modalInstance, modalParams, $filter) {
+app.controller('AreaTreeCtrl', ['$scope', '$timeout', '$http', '$modalInstance', 'modalParams', '$filter', 'AreaService', 
+  function($scope, $timeout, $http, $modalInstance, modalParams, $filter, AreaService) {
 
     var entity = $scope.entity = {};
 
@@ -181,76 +136,44 @@ app.controller('AreaTreeCtrl', ['$scope', '$timeout', '$http', '$modalInstance',
       $modalInstance.dismiss('cancel');
     };
 
-    // area-cascade
-    var url = 'data/components/area/region.js';        
-    var arrProvinces = [],
-        arrCities = [],
-        arrCounties = [];
+    // entity.selectedArea = '';
+    var arrRegion = AreaService.getArrRegion();
+    entity.arrRegion = arrRegion;
+    var arrProvinces = AreaService.getProvinces();
+    entity.provinces = arrProvinces;
 
-    $http.get(url)
-      .success(function(data, status, headers, config) {
-        var arr = [];
-        if(typeof data === 'string') {
-          data = $scope.$eval(data);
-        }
-        // 得到 object array 格式的数据
-        angular.forEach(data, function(value, key) {
-          this.push({
-            "code": key,
-            'label': value[0],
-            "name": value[0],
-            "spell": value[1],
-            "simple_spell": value[2]
-          });
-        }, arr);
-        // 获取到的所有数据
-        entity.data = arr;
-
-        entity.provinces = $filter('orderBy')($filter('areaFilter')(arr, 'province'), 'spell');
-        entity.cities = $filter('orderBy')($filter('areaFilter')(arr, 'city'), 'spell');
-        entity.counties = $filter('orderBy')($filter('areaFilter')(arr, 'county'), 'spell');
-      })
-      .error(function(data, status, headers, config) {
-        console.log('Get ' + url + ' wrong...');
-      })
-
-      // entity.selectedArea = '';
-      var areaSelected = entity.areaSelected = {};
-
-      // 点击选择地区
-      $scope.areaSelect = function(obj, selectType) {
-        if(selectType == 'province') {
-          entity.cities = $filter('areaFilterByParent')($filter('areaFilter')(entity.data, 'city'), 'province', obj.code);
-          areaSelected.province = obj;
-          // entity.selectedArea = obj.name;
-          selectedData = {};
-        } else if(selectType == 'city') {
-          entity.counties = $filter('areaFilterByParent')($filter('areaFilter')(entity.data, 'county'), 'city', obj.code);
-          areaSelected.city = obj;
-          // entity.selectedArea += '-' + obj.name;
-        } else if(selectType == 'county') {
-          areaSelected.county = obj;
-          console.log(obj);
-          // entity.selectedArea += '-' + obj.name;
-          entity.selectedLabel = areaSelected.province.name + '-' + areaSelected.city.name + '-' + areaSelected.county.name;
-          selectedData = {'label': entity.selectedLabel, 'code': obj.code};
-console.log(selectedData)
-        } else {
-          console.log('Get a wrong selectType: ' + selectType);
-        }
-      };
+    var areaSelected = entity.areaSelected = {};
+    // 点击选择地区
+    $scope.areaSelect = function(obj, selectType) {
+      if(selectType == 'province') {
+        entity.cities = $filter('areaFilterByParent')($filter('areaFilter')(entity.arrRegion, 'city'), 'province', obj.code);
+        areaSelected.province = obj;
+        // entity.selectedArea = obj.name;
+        selectedData = {};
+      } else if(selectType == 'city') {
+        entity.counties = $filter('areaFilterByParent')($filter('areaFilter')(entity.arrRegion, 'county'), 'city', obj.code);
+        areaSelected.city = obj;
+        // entity.selectedArea += '-' + obj.name;
+      } else if(selectType == 'county') {
+        areaSelected.county = obj;
+        console.log(obj);
+        // entity.selectedArea += '-' + obj.name;
+        entity.selectedLabel = areaSelected.province.name + '-' + areaSelected.city.name + '-' + areaSelected.county.name;
+        selectedData = {'label': entity.selectedLabel, 'code': obj.code};
+      } else {
+        console.log('Get a wrong selectType: ' + selectType);
+      }
+    };
   }
 ]);
 
 app.controller('ProvinceCtrl', ['$scope', 
   function($scope) {
-console.log($scope.$parent);
 
     var entity = $scope.entity = {};
-    entity.provinces = ['广东省', '广州市'];
 
     $scope.provinceClick = function() {
-      $scope.skip(2)
+      $scope.skip(2);
     };
 
     $scope.show = function(val){
@@ -275,19 +198,3 @@ console.log($scope.$parent);
 
   }
 ]);
-
-// 获取根路径
-function getRegionWithRoot(code){
-  var regionForDisplay = null;
-  if(new RegExp("[0-9][0-9][0-9][0-9][0-9][0-9]00").test(code) && !new RegExp("[0-9][0-9][0-9][0-9]0000").test(code)){
-      var province = code.substr(0,2)+"000000";
-      var city =code.substr(0,4)+"0000";
-      regionForDisplay = (region[province]!=null?region[province][0]+"-":"")+(region[city]!=null?region[city][0]+"-":"")+region[code][0];
-    }else if(new RegExp("[0-9][0-9][0-9][0-9]0000").test(code) && !new RegExp("[0-9][0-9]000000").test(code)){
-      var province = code.substr(0,2)+"000000";
-      regionForDisplay = (region[province]!=null?region[province][0]+"-":"")+region[code][0];
-    }else if(new RegExp("[0-9][0-9]000000").test(code)){
-      regionForDisplay = region[code][0];
-    }
-  return regionForDisplay;
-}

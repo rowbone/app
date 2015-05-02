@@ -5,8 +5,8 @@
 
 //   module = angular.module('angularBootstrapNavTree', []);
   /*searchOnSelect:'&', //点击搜索结果事件*/  
-  app.directive('conowAreaTree', ['$timeout','$http', '$filter', 
-    function($timeout, $http, $filter) {
+  app.directive('conowAreaTree', ['$timeout','$http', '$filter', 'AreaService', 
+    function($timeout, $http, $filter, AreaService) {
       return {
         restrict: 'E',
         replace: true,
@@ -140,48 +140,54 @@
             //   });
             
 
-            $http.get(location)
-              .success(function(data, status, headers, config) {
-                var arr = [];
-                var aData = [];
-                if(typeof data === 'string') {
-                  data = scope.$eval(data);
-                }
-                // 生成 object array 类型的数据 --> arr
-                angular.forEach(data, function(value, key) {
-                  this.push({
-                    "code": key,
-                    "label": value[0],
-                    "name": value[0],
-                    "spell": value[1],
-                    "simple_spell": value[2]
-                  });
-                }, arr);
-                arr = $filter('orderBy')($filter('areaFilter')(arr, 'city'), 'spell');
-                var arrIndex = $filter('cityGroup')(arr);
-                var arrCities = [];
-                // arrCities.push(entity.cityHotTopic);
-                var arrGroup = ['A-E', 'F-J', 'K-O', 'P-T', 'U-Z'];
-                for(var i=1; i<arrIndex.length; i++) {
-                  var label = arrGroup[i - 1];
-                  arrCities.push({
-                    'label': label,
-                    'spell': label,
-                    'simple_spell': label,
-                    'children': arr.slice(arrIndex[i - 1], arrIndex[i])
-                  });
-                }
-                arr = arrCities;
+            // $http.get(location)
+            //   .success(function(data, status, headers, config) {
+            //     var arr = [];
+            //     var aData = [];
+            //     if(typeof data === 'string') {
+            //       data = scope.$eval(data);
+            //     }
+            //     // 生成 object array 类型的数据 --> arr
+            //     angular.forEach(data, function(value, key) {
+            //       this.push({
+            //         "code": key,
+            //         "label": value[0],
+            //         "name": value[0],
+            //         "spell": value[1],
+            //         "simple_spell": value[2]
+            //       });
+            //     }, arr);
+            //     arr = $filter('orderBy')($filter('areaFilter')(arr, 'city'), 'spell');
+            //     var arrIndex = $filter('cityGroup')(arr);
+            //     var arrCities = [];
+            //     // arrCities.push(entity.cityHotTopic);
+            //     var arrGroup = ['A-E', 'F-J', 'K-O', 'P-T', 'U-Z'];
+            //     for(var i=1; i<arrIndex.length; i++) {
+            //       var label = arrGroup[i - 1];
+            //       arrCities.push({
+            //         'label': label,
+            //         'spell': label,
+            //         'simple_spell': label,
+            //         'children': arr.slice(arrIndex[i - 1], arrIndex[i])
+            //       });
+            //     }
+            //     arr = arrCities;
 
-                options.isLoading = false;
-                scope.treeData = arr;
-                return $timeout(function() {
-                  tree.expand_level();
-                }, 1000);
-              })
-              .error(function(data, status, headers, config) {
-                console.log('Get ' + url + ' data wrong...');
-              });
+            //     options.isLoading = false;
+            //     scope.treeData = arr;
+            //     return $timeout(function() {
+            //       tree.expand_level();
+            //     }, 1000);
+            //   })
+            //   .error(function(data, status, headers, config) {
+            //     console.log('Get ' + url + ' data wrong...');
+            //   });
+            
+            options.isLoading = false;
+            scope.treeData = AreaService.getCityGroup();
+            return $timeout(function() {
+              tree.expand_level();
+            }, 1000);
 
           };
 
