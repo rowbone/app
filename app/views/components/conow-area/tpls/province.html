@@ -1,5 +1,5 @@
-<div ng-controller="test">
-	<a href="" ng-repeat="province in entity.provinces">{{ province}}</a>
+<div ng-controller="ProvinceCtrl">
+	<a href="" ng-repeat="province in entity.provinces" ng-click="provinceClick()">{{ province}}</a>
 	<div>111111</div>
 	<pre>{{ entity.provinces | json }}</pre>
 </div>

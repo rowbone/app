@@ -1,0 +1,10 @@
+
+1、AngularJS中controller和service的继承与扩展
+	http://pinkyjie.com/2015/02/11/inheritance-or-extension-for-controller-and-service-in-angularjs/
+
+2、在AngularJS中使用$q同步读取服务器数据
+	http://blog.csdn.net/lglgsy456/article/details/32335127
+
+3、我看到的最好的解释AngularJs中Factory和Service和Provide不同
+	http://blog.csdn.net/lglgsy456/article/details/36902179
+

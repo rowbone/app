@@ -61,29 +61,9 @@ app.controller('AreaSelCtrl', ['$scope', '$http', '$filter',
       }
       entity.cityGroup = arr;
     };
-  }
-]); 
 
-// 对市一级数据进行分组
-app.filter('cityGroup', function() {
-  return function(input) {
-    var arr = [0];
-    var arrSplit = ['f', 'k', 'p', 'w'];
-    for(var i=0; i<arrSplit.length; i++) {
-      for(var j=0; j<input.length; j++) {
-        if(input[j].spell.charAt(0) == arrSplit[i]) {
-          // 有的字母没有对应的市一级名称，此行代码可获取到对应的字母和开始index
-          // arr.push(arrSplit[i] + ':' + j);
-          arr.push(j);
-          break;
-        }
-      }
-    }
-    arr.push(input.length);
-
-    return arr;
   }
-});
+]);
 
 // app.service('CityGroupService', ['$http', '$filter', 
 //   function($http, $filter) {
@@ -172,12 +152,6 @@ app.directive('conowArea', ['$modal', '$parse', '$interval', '$http',
   }
 ]);
 
-// app.controller('ConowAreaCtrl', ['$scope', 
-//   function($scope) {
-//     console.log($scope.ngModel);
-//   }
-// ]);
-
 app.controller('AreaTreeCtrl', ['$scope', '$timeout', '$http', '$modalInstance', 'modalParams', '$filter', 
   function($scope, $timeout, $http, $modalInstance, modalParams, $filter) {
 
@@ -240,20 +214,26 @@ app.controller('AreaTreeCtrl', ['$scope', '$timeout', '$http', '$modalInstance',
         console.log('Get ' + url + ' wrong...');
       })
 
-      entity.selectedArea = '';
+      // entity.selectedArea = '';
+      var areaSelected = entity.areaSelected = {};
+
       // 点击选择地区
       $scope.areaSelect = function(obj, selectType) {
         if(selectType == 'province') {
           entity.cities = $filter('areaFilterByParent')($filter('areaFilter')(entity.data, 'city'), 'province', obj.code);
-          entity.selectedArea = obj.name;
+          areaSelected.province = obj;
+          // entity.selectedArea = obj.name;
           selectedData = {};
         } else if(selectType == 'city') {
           entity.counties = $filter('areaFilterByParent')($filter('areaFilter')(entity.data, 'county'), 'city', obj.code);
-          entity.selectedArea += '-' + obj.name;
+          areaSelected.city = obj;
+          // entity.selectedArea += '-' + obj.name;
         } else if(selectType == 'county') {
+          areaSelected.county = obj;
           console.log(obj);
-          entity.selectedArea += '-' + obj.name;
-          selectedData = {'label': entity.selectedArea, 'code': obj.code};
+          // entity.selectedArea += '-' + obj.name;
+          entity.selectedLabel = areaSelected.province.name + '-' + areaSelected.city.name + '-' + areaSelected.county.name;
+          selectedData = {'label': entity.selectedLabel, 'code': obj.code};
 console.log(selectedData)
         } else {
           console.log('Get a wrong selectType: ' + selectType);
@@ -262,51 +242,16 @@ console.log(selectedData)
   }
 ]);
 
-// 根据参数分别获取省、市、区的数据
-app.filter('areaFilter', function() {
-  return function(input, type) {
-    var arr = [];
-    var code = '';
-    var regExpCity = /0{4}$/;
-    var regExpProvince = /0{6}$/;
-    angular.forEach(input, function(value, key) {
-      code = value.code;
-      if(type == 'county' && !regExpCity.test(code)) {
-        this.push(value);
-      } else if(type == 'city' && regExpCity.test(code) && !regExpProvince.test(code)) {
-        this.push(value);
-      } else if (type == 'province' && regExpProvince.test(code)) {
-        this.push(value);
-      }
-    }, arr);
-
-    return arr;
-  }
-});
-
-app.filter('areaFilterByParent', function() {
-  return function(input, type, parentCode) {
-    var arr = [];
-    var code = '';
-    var str = (type == 'province') ? parentCode.substr(0, 2) : ((type == 'city') ? parentCode.substr(0, 4) : '');
-    var regExp = new RegExp('^' + str);
-    angular.forEach(input, function(value, key) {
-      code = value.code;
-      if(regExp.test(code)) {
-        this.push(value);
-      }
-    }, arr);
-
-    return arr;
-  }
-});
-
-app.controller('test', ['$scope', 
+app.controller('ProvinceCtrl', ['$scope', 
   function($scope) {
 console.log($scope.$parent);
 
     var entity = $scope.entity = {};
     entity.provinces = ['广东省', '广州市'];
+
+    $scope.provinceClick = function() {
+      $scope.skip(2)
+    };
 
     $scope.show = function(val){
       $scope.getShowTabs(val);

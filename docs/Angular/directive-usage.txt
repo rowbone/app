@@ -1,0 +1,4 @@
+
+from：http://www.cnblogs.com/whitewolf/archive/2013/05/22/3092184.html
+
+ng-class
