@@ -4,12 +4,15 @@ app.service('AreaService', ['$http', '$filter', '$rootScope',
   function($http, $filter, $rootScope) {
     var $scope = $rootScope.$new();
 
+    var objData = null;
     var cityHotTopic = [];
     var cityGroup = [];
     var arrRegion = [];
     var provinces = [];
     var cities = [];
     var counties = [];
+    // 地区的全路径字符串
+    var areaPath = '';
 
     // 获取热门城市
     var urlHotTopic = 'data/components/area/hot-topic.json';
@@ -27,10 +30,10 @@ app.service('AreaService', ['$http', '$filter', '$rootScope',
         var arr = [];
         var aData = [];
         if(typeof data === 'string') {
-          data = $scope.$eval(data);
+          objData = $scope.$eval(data);
         }
         // 生成 object array 类型的数据 --> arr
-        angular.forEach(data, function(value, key) {
+        angular.forEach(objData, function(value, key) {
           this.push({
             "code": key,
             'label': value[0],
@@ -70,6 +73,8 @@ app.service('AreaService', ['$http', '$filter', '$rootScope',
     // 获取根路径
     var getRegionWithRoot = function(code) {
       var regionForDisplay = null;
+      var region = objData;
+console.log(region)
       if(new RegExp("[0-9][0-9][0-9][0-9][0-9][0-9]00").test(code) && !new RegExp("[0-9][0-9][0-9][0-9]0000").test(code)){
         var province = code.substr(0,2)+"000000";
         var city =code.substr(0,4)+"0000";
@@ -107,6 +112,12 @@ app.service('AreaService', ['$http', '$filter', '$rootScope',
 	  this.getCounties = function() {
 	  	return counties;
 	  };
-      
+
+	  this.getAreaPath = function(code) {
+	  	console.log(code);
+	  	areaPath = getRegionWithRoot(code);
+	  	return areaPath;
+	  };
+    
   }
 ]);

@@ -30,8 +30,8 @@ app.controller('AreaSelCtrl', ['$scope', '$http', '$filter', 'AreaService',
   }
 ]);
 
-app.directive('conowArea', ['$modal', '$parse', '$interval', '$http', 
-  function($modal, $parse, $interval, $http) {
+app.directive('conowArea', ['$modal', '$parse', '$interval', '$http', 'AreaService', 
+  function($modal, $parse, $interval, $http, AreaService) {
     return {
       restrict: 'A',
       require: '?ngModel',
@@ -39,6 +39,16 @@ app.directive('conowArea', ['$modal', '$parse', '$interval', '$http',
       link: function(scope, elem, attrs, ctrl) {
         // 地区 CODE 转换获取地区名称
         elem.val('');
+        var handler = $interval(function() {
+          if(!angular.equals(ctrl.$modelValue, NaN)) {
+            $interval.cancel(handler);
+            // 如果赋值不是8位数字不进行转换
+            var regExp = /^\d{8}$/;
+            if(regExp.test(ctrl.$modelValue)) {
+              elem.val(AreaService.getAreaPath(ctrl.$modelValue));
+            }
+          }
+        }, 100);
 
         $http.get('data/components/area/cities-map.json')
           .success(function(data, status) {
