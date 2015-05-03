@@ -1,7 +1,5 @@
 'use strict';
 
-
-
 // 对市一级数据进行分组
 app.filter('cityGroup', function() {
   return function(input) {
@@ -24,7 +22,7 @@ app.filter('cityGroup', function() {
 });
 
 // 根据参数分别获取省、市、区的数据
-// params：type，
+// params：type --> province、city、county
 app.filter('areaFilter', function() {
   return function(input, type) {
     var arr = [];
@@ -46,6 +44,7 @@ app.filter('areaFilter', function() {
   }
 });
 
+// 根据上级过滤得到下级：省 --> 市/市 --> 区
 app.filter('areaFilterByParent', function() {
   return function(input, type, parentCode) {
     var arr = [];
@@ -60,5 +59,33 @@ app.filter('areaFilterByParent', function() {
     }, arr);
 
     return arr;
+  }
+});
+
+// 过滤地区数据源的数据，规范名称
+app.filter('areaNameFilter', function() {
+  return function(input, type) {
+    var arr = [];
+    var arrCitiesFilter = ['藏族羌族自治州', '地区', '市', '蒙古自治州', '回族自治州', '彝族自治州', 
+      '白族自治州', '傣族景颇族自治州', '藏族自治州', '土家族苗族自治州', '蒙古族藏族自治州', '尼族彝族自治州', 
+      '自治', '傈傈族自治州', '苗族侗族自治州', '布依族苗族自治州', '壮族苗族自治州', '土家族苗族自治州', 
+      '傣族自治州', '朝鲜族自治州', '哈萨克自治州'];
+
+    // for(var i=0; i<arrCitiesFilter.length; i++) {
+    //   angular.forEach(input, function(value, key) {
+    //     if(value.indexOf)
+    //   })
+    // }
+    var iLen = arrCitiesFilter.length;
+    var index = -1;
+    angular.forEach(input, function(value, key) {
+      for(var i=0; i<iLen; i++) {console.log(value.name.indexOf(arrCitiesFilter[i]));
+        if((index = value.name.indexOf(arrCitiesFilter[i])) > -1) {
+          value = value.substring(0, index);
+          this.push(value);
+          // break;
+        }
+      }
+    }, arr);
   }
 });

@@ -13,6 +13,7 @@ app.service('AreaService', ['$http', '$filter', '$rootScope',
     var counties = [];
     // 地区的全路径字符串
     var areaPath = '';
+    var area = '';
 
     // 获取热门城市
     var urlHotTopic = 'data/components/area/hot-topic.json';
@@ -42,6 +43,9 @@ app.service('AreaService', ['$http', '$filter', '$rootScope',
             "simple_spell": value[2]
           });
         }, arr);
+// console.log(arr);
+//         arr = $filter('areaNameFilter')(arr, 'city');
+// console.log(arr);
 
         var arrCityGroup = [];
         arrCityGroup = $filter('orderBy')($filter('areaFilter')(arr, 'city'), 'spell');
@@ -114,10 +118,17 @@ console.log(region)
 	  };
 
 	  this.getAreaPath = function(code) {
-	  	console.log(code);
+console.log(code);
 	  	areaPath = getRegionWithRoot(code);
 	  	return areaPath;
 	  };
+
+	  this.getArea = function(code) {
+console.log(code);
+console.log(objData)
+	  	area = objData[code][0];
+	  	return area;
+	  }
     
   }
 ]);

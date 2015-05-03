@@ -3,7 +3,7 @@
 app.controller('AreaSelCtrl', ['$scope', '$http', '$filter', 'AreaService', 
   function($scope, $http, $filter, AreaService) {
     var entity = $scope.entity = {
-      area: '广东',
+      area: '44010000',
       area2: '44010600'
     };
 
@@ -45,38 +45,41 @@ app.directive('conowArea', ['$modal', '$parse', '$interval', '$http', 'AreaServi
             // 如果赋值不是8位数字不进行转换
             var regExp = /^\d{8}$/;
             if(regExp.test(ctrl.$modelValue)) {
-              elem.val(AreaService.getAreaPath(ctrl.$modelValue));
+              if(attrs.selectType == 2) {
+                elem.val(AreaService.getAreaPath(ctrl.$modelValue));
+              } else {
+                elem.val(AreaService.getArea(ctrl.$modelValue));
+              }
             }
           }
         }, 100);
 
-        $http.get('data/components/area/cities-map.json')
-          .success(function(data, status) {
-            // data = scope.$eval(data);
-            var children = [];
-            var handler = $interval(function() {
-              if (!angular.equals(ctrl.$modelValue, NaN)) {
-                $interval.cancel(handler);
-                // label 用于跳出外层循环
-                label: for (var i = 0; i < data.length; i++) {
-                    children = data[i].children;
-                    for (var j = 0; j < children.length; j++) {
-                      if (children[j].CODE == ctrl.$viewValue) {
-                        elem.val(children[j].NAME);
-                        break label;
-                      }
-                    }
-                  }
-                  // elem.val(data[ctrl.$viewValue][0]);
-              }
-            }, 100);
-          })
-        .error(function(data, status) {
-          console.log('Load region-map.json data wrong...');
-        });
+        // $http.get('data/components/area/cities-map.json')
+        //   .success(function(data, status) {
+        //     // data = scope.$eval(data);
+        //     var children = [];
+        //     var handler = $interval(function() {
+        //       if (!angular.equals(ctrl.$modelValue, NaN)) {
+        //         $interval.cancel(handler);
+        //         // label 用于跳出外层循环
+        //         label: for (var i = 0; i < data.length; i++) {
+        //             children = data[i].children;
+        //             for (var j = 0; j < children.length; j++) {
+        //               if (children[j].CODE == ctrl.$viewValue) {
+        //                 elem.val(children[j].NAME);
+        //                 break label;
+        //               }
+        //             }
+        //           }
+        //           // elem.val(data[ctrl.$viewValue][0]);
+        //       }
+        //     }, 100);
+        //   })
+        // .error(function(data, status) {
+        //   console.log('Load region-map.json data wrong...');
+        // });
 
         var templateUrl = 'views/components/conow-area/tpls/area-tpl.html';
-        console.log(attrs.selectType);
         if(attrs.selectType == 2) {
           templateUrl = 'views/components/conow-area/tpls/area-tpl-cascade.html';
         }
