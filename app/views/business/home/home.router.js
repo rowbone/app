@@ -26,5 +26,9 @@ angular.module('app.home', ['ui.router'])
 						]
 					}
 				})
+				.state('app.home.contactlist2', {
+					url: '/contactlist2',
+					templateUrl: 'views/business/home/contactlist/contact-list-phone2.html'
+				})
 
 	}]);
