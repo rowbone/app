@@ -268,6 +268,7 @@
     "52038100": ["赤水市", "chishuishi", "css"],
     "34170000": ["池州市", "chizhoushi", "czs"],
     "32020200": ["崇安区", "chonganqu", "caq"],
+    "50000000": ["重庆市", "chongqingshi", "cqs"],
     "32060200": ["崇川区", "chongchuanqu", "ccq"],
     "13073300": ["崇礼县", "chonglixian", "clx"],
     "31023000": ["崇明县", "chongmingxian", "cmx"],
@@ -3175,7 +3176,6 @@
     "32040400": ["钟楼区", "zhonglouqu", "zlq"],
     "41012200": ["中牟县", "zhongmouxian", "zmx"],
     "64052100": ["中宁县", "zhongningxian", "znx"],
-    "50000000": ["重庆市", "zhongqingshi", "zqs"],
     "21020200": ["中山区", "zhongshanqu", "zsq"],
     "52020100": ["钟山区", "zhongshanqu", "zsq"],
     "44200000": ["中山市", "zhongshanshi", "zss"],
@@ -3237,5 +3237,9 @@
     "54212800": ["左贡县", "zuogongxian", "zgx"],
     "14072200": ["左权县", "zuoquanxian", "zqx"],
     "61102600": ["柞水县", "zuoshuixian", "zsx"],
-    "14022600": ["左云县", "zuoyunxian", "zyx"]
+    "14022600": ["左云县", "zuoyunxian", "zyx"],
+    "11010000": ["北京市", "beijing", "bj"],
+    "12010000": ["天津市", "tianjin", "tj"],
+    "31010000": ["上海市", "shanghai", "sh"],
+    "50010000": ["重庆市", "chongqing", "cq"]
 };

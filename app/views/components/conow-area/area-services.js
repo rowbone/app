@@ -5,7 +5,7 @@ app.service('AreaService', ['$http', '$filter', '$rootScope',
     var $scope = $rootScope.$new();
 
     var objData = null;
-    var cityHotTopic = [];
+    var cityHotTopic = {};
     var cityGroup = [];
     var arrRegion = [];
     var provinces = [];
@@ -38,17 +38,17 @@ app.service('AreaService', ['$http', '$filter', '$rootScope',
           this.push({
             "code": key,
             'label': value[0],
-            "name": value[0],
-            "spell": value[1],
-            "simple_spell": value[2]
+            'name': value[0],
+            'spell': value[1],
+            'simple_spell': value[2]
           });
         }, arr);
-// console.log(arr);
-//         arr = $filter('areaNameFilter')(arr, 'city');
-// console.log(arr);
-
+        arr = $filter('areaNameFilter')(arr, 'province');
         var arrCityGroup = [];
+        // 过滤获取市一级地区：areaFilter，并按拼音排序：orderBy
         arrCityGroup = $filter('orderBy')($filter('areaFilter')(arr, 'city'), 'spell');
+        // 市一级名称过滤：areaNameFilter
+        arrCityGroup = $filter('areaNameFilter')(arrCityGroup, 'city');
         var arrIndex = $filter('cityGroup')(arrCityGroup);
         var arrCities = [];
         // arrCities.push(entity.cityHotTopic);
@@ -59,26 +59,49 @@ app.service('AreaService', ['$http', '$filter', '$rootScope',
             'label': label,
             'spell': label,
             'simple_spell': label,
-            'children': arr.slice(arrIndex[i - 1], arrIndex[i])
+            'children': arrCityGroup.slice(arrIndex[i - 1], arrIndex[i])
           });
         }
         cityGroup = arrCities;
 
         arrRegion = arr;
+        // arrRegion = $filter('areaNameFilter')(arr, 'province');
+        // arrRegion = $filter('areaNameFilter')(arrRegion, 'county');
 
-        provinces = $filter('orderBy')($filter('areaFilter')(arr, 'province'), 'spell');
-        cities = $filter('orderBy')($filter('areaFilter')(arr, 'city'), 'spell');
-        counties = $filter('orderBy')($filter('areaFilter')(arr, 'county'), 'spell');
+        // provinces = $filter('orderBy')($filter('areaFilter')(arr, 'province'), 'spell');
+        // cities = $filter('orderBy')($filter('areaFilter')(arr, 'city'), 'spell');
+        // counties = $filter('orderBy')($filter('areaFilter')(arr, 'county'), 'spell');
+        provinces = $filter('orderBy')($filter('areaNameFilter')($filter('areaFilter')(arr, 'province'), 'province'), 'spell');
+        cities = $filter('orderBy')($filter('areaNameFilter')($filter('areaFilter')(arr, 'city'), 'city'), 'spell');
+        counties = $filter('orderBy')($filter('areaNameFilter')($filter('areaFilter')(arr, 'county'), 'county'), 'spell');
       })
       .error(function(data, status, headers, config) {
         console.log('Get ' + url + ' data wrong...');
       });
 
+    var getRegionNodes = function(code) {
+      var regionNodes = {};
+      var city = code.substr(0, 4) + '0000';
+      var province = code.substr(0, 2) + '000000';
+      angular.forEach(arrRegion, function(value, key) {
+        if(value.code == code) {
+          this.county = value;
+        }
+        if(value.code == city) {
+          this.city = value;
+        }
+        if(value.code == province) {
+          this.province = value;
+        }
+      }, regionNodes);
+
+      return regionNodes;
+    }
+
     // 获取根路径
     var getRegionWithRoot = function(code) {
       var regionForDisplay = null;
       var region = objData;
-console.log(region)
       if(new RegExp("[0-9][0-9][0-9][0-9][0-9][0-9]00").test(code) && !new RegExp("[0-9][0-9][0-9][0-9]0000").test(code)){
         var province = code.substr(0,2)+"000000";
         var city =code.substr(0,4)+"0000";
@@ -101,6 +124,11 @@ console.log(region)
 	  	return cityGroup;
 	  };
 
+    this.getAllCityGroup = function() {
+      var arr = [];
+      return arr.concat(cityHotTopic, cityGroup);
+    };
+
 	  this.getArrRegion = function() {
 	  	return arrRegion;
 	  };
@@ -116,19 +144,20 @@ console.log(region)
 	  this.getCounties = function() {
 	  	return counties;
 	  };
-
+    // 获取地区名称全路径
 	  this.getAreaPath = function(code) {
-console.log(code);
 	  	areaPath = getRegionWithRoot(code);
 	  	return areaPath;
 	  };
-
+    // 获取市的名称
 	  this.getArea = function(code) {
-console.log(code);
-console.log(objData)
 	  	area = objData[code][0];
 	  	return area;
 	  }
+
+    this.getRegionNodes = function(code) {
+      return getRegionNodes(code);
+    }
     
   }
 ]);

@@ -66,26 +66,65 @@ app.filter('areaFilterByParent', function() {
 app.filter('areaNameFilter', function() {
   return function(input, type) {
     var arr = [];
-    var arrCitiesFilter = ['藏族羌族自治州', '地区', '市', '蒙古自治州', '回族自治州', '彝族自治州', 
-      '白族自治州', '傣族景颇族自治州', '藏族自治州', '土家族苗族自治州', '蒙古族藏族自治州', '尼族彝族自治州', 
-      '自治', '傈傈族自治州', '苗族侗族自治州', '布依族苗族自治州', '壮族苗族自治州', '土家族苗族自治州', 
-      '傣族自治州', '朝鲜族自治州', '哈萨克自治州'];
 
-    // for(var i=0; i<arrCitiesFilter.length; i++) {
-    //   angular.forEach(input, function(value, key) {
-    //     if(value.indexOf)
-    //   })
-    // }
-    var iLen = arrCitiesFilter.length;
+    var arrCitiesFilter = ['藏族羌族自治州', '地区', '市', '蒙古自治州', '回族自治州', '彝族自治州', 
+      '白族自治州', '傣族景颇族自治州', '藏族自治州', '土家族苗族自治州', '蒙古族藏族自治州', '尼族彝族自治州',
+      '傈傈族自治州', '苗族侗族自治州', '布依族苗族自治州', '壮族苗族自治州', '土家族苗族自治州', 
+      '傣族自治州', '朝鲜族自治州', '哈萨克自治州', '自治'];
+
+    var arrProvincesFilter = ['省', '市', '壮族自治区', '回族自治区', '维吾尔自治区', '自治区'];
+    var arrCountiesFilter = ['区', '县', '市'];
+
+    var iLenCities = arrCitiesFilter.length;
+    var iLenProvinces = arrProvincesFilter.length;
+    var iLenCounties = arrCountiesFilter.length;
+    
     var index = -1;
+    var flag = false;
+
     angular.forEach(input, function(value, key) {
-      for(var i=0; i<iLen; i++) {console.log(value.name.indexOf(arrCitiesFilter[i]));
-        if((index = value.name.indexOf(arrCitiesFilter[i])) > -1) {
-          value = value.substring(0, index);
-          this.push(value);
-          // break;
+      flag = false;
+
+      if(type == 'province') {
+        for(var i=0; i<iLenProvinces; i++) {
+          if(value.label.indexOf(arrProvincesFilter[i]) > -1) {
+            flag = true;
+            break;
+          }
+        }
+        if(flag) {
+          index =  value.label.indexOf(arrProvincesFilter[i]);
+          value.label = value.label.substring(0, index);
         }
       }
-    }, arr);
+      if(type == 'city') {
+        for(var i=0; i<iLenCities; i++) {
+          if(value.label.indexOf(arrCitiesFilter[i]) > -1) {
+            flag = true;
+            break;
+          }
+        }
+        if(flag) {
+          index = value.label.indexOf(arrCitiesFilter[i]);
+          value.label = value.label.substring(0, index);
+        }
+      }
+      if(type == 'county') {
+        for(var i=0; i<iLenCounties; i++) {
+          if(value.label.indexOf(arrCountiesFilter[i]) > -1) {
+            flag = true;
+            break;
+          }
+        }
+        if(flag) {
+          index =  value.label.indexOf(arrCountiesFilter[i]);
+          value.label = value.label.substring(0, index);
+        }
+      }
+
+      arr.push(value);
+    });
+
+    return arr;
   }
 });

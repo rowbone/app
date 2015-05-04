@@ -7,26 +7,6 @@ app.controller('AreaSelCtrl', ['$scope', '$http', '$filter', 'AreaService',
       area2: '44010600'
     };
 
-    $scope.test = function() {
-      entity.city = $filter('orderBy')($filter('areaFilter')(entity.arr, 'city'), 'spell');
-      // entity.province = $filter('orderBy')($filter('areaFilter')(entity.arr, 'county'), 'spell');
-      // var arrIndex = $filter('cityGroup')($filter('orderBy')($filter('areaFilter')(entity.arr, 'city'), 'spell'));
-      var arrIndex = $filter('cityGroup')(entity.city);
-      var arr = [];
-      arr.push(entity.cityHotTopic);
-      var arrGroup = ['A-E', 'F-J', 'K-O', 'P-T', 'U-Z'];
-      for(var i=1; i<arrIndex.length; i++) {
-        var label = arrGroup[i - 1];
-        arr.push({
-          'label': label,
-          'spell': label,
-          'simple_spell': label,
-          'children': entity.city.slice(arrIndex[i - 1], arrIndex[i])
-        });
-      }
-      entity.cityGroup = arr;
-    };
-
   }
 ]);
 
@@ -39,49 +19,28 @@ app.directive('conowArea', ['$modal', '$parse', '$interval', '$http', 'AreaServi
       link: function(scope, elem, attrs, ctrl) {
         // 地区 CODE 转换获取地区名称
         elem.val('');
+        var selectedCode = '';
         var handler = $interval(function() {
           if(!angular.equals(ctrl.$modelValue, NaN)) {
             $interval.cancel(handler);
             // 如果赋值不是8位数字不进行转换
             var regExp = /^\d{8}$/;
+            selectedCode = ctrl.$modelValue;
             if(regExp.test(ctrl.$modelValue)) {
               if(attrs.selectType == 2) {
+                // 获取层级关系的地区名称
                 elem.val(AreaService.getAreaPath(ctrl.$modelValue));
               } else {
+                // 获取地区名称
                 elem.val(AreaService.getArea(ctrl.$modelValue));
               }
             }
           }
         }, 100);
 
-        // $http.get('data/components/area/cities-map.json')
-        //   .success(function(data, status) {
-        //     // data = scope.$eval(data);
-        //     var children = [];
-        //     var handler = $interval(function() {
-        //       if (!angular.equals(ctrl.$modelValue, NaN)) {
-        //         $interval.cancel(handler);
-        //         // label 用于跳出外层循环
-        //         label: for (var i = 0; i < data.length; i++) {
-        //             children = data[i].children;
-        //             for (var j = 0; j < children.length; j++) {
-        //               if (children[j].CODE == ctrl.$viewValue) {
-        //                 elem.val(children[j].NAME);
-        //                 break label;
-        //               }
-        //             }
-        //           }
-        //           // elem.val(data[ctrl.$viewValue][0]);
-        //       }
-        //     }, 100);
-        //   })
-        // .error(function(data, status) {
-        //   console.log('Load region-map.json data wrong...');
-        // });
-
         var templateUrl = 'views/components/conow-area/tpls/area-tpl.html';
         if(attrs.selectType == 2) {
-          templateUrl = 'views/components/conow-area/tpls/area-tpl-cascade.html';
+          templateUrl = 'views/components/conow-area/tpls/area-cascade-tpl.html';
         }
 
         elem.bind('click', function(e) {
@@ -99,8 +58,13 @@ app.directive('conowArea', ['$modal', '$parse', '$interval', '$http', 'AreaServi
                 } else {
                   options.selectLevel = 1;
                 }
+                var selectedArea = {};
+                selectedArea.code = ctrl.$modelValue;
 
-                return options;
+                return {
+                  'options': options,
+                  'selectedArea': selectedArea
+                };
               }
             }
           });
@@ -129,7 +93,7 @@ app.controller('AreaTreeCtrl', ['$scope', '$timeout', '$http', '$modalInstance',
 
     var selectedData;
 
-    $scope.treeOptions = modalParams;
+    $scope.treeOptions = modalParams.options;
 
     $scope.my_tree_handler = function(branch) {
       selectedData = branch;
@@ -156,23 +120,64 @@ app.controller('AreaTreeCtrl', ['$scope', '$timeout', '$http', '$modalInstance',
     entity.provinces = arrProvinces;
 
     var areaSelected = entity.areaSelected = {};
+
+    // 获取已选择的项
+    if (modalParams.selectedArea.code) {
+      var regionNodes = AreaService.getRegionNodes(modalParams.selectedArea.code);
+      if(regionNodes.province) {
+        areaSelected.province = regionNodes.province;
+        entity.cities = $filter('areaFilterByParent')($filter('areaFilter')(entity.arrRegion, 'city'), 'province', areaSelected.province.code);
+      }
+      if(regionNodes.city) {
+        areaSelected.city = regionNodes.city;
+        entity.counties = $filter('areaFilterByParent')($filter('areaFilter')(entity.arrRegion, 'county'), 'city', areaSelected.city.code);
+      }
+      areaSelected.county = regionNodes.county;
+    };
+    // 页面显示已选择
+    $scope.$watch('entity.areaSelected', function(newVal, oldVal) {
+      var areaSelected = newVal;
+      if(areaSelected.province) {
+        entity.selectedLabel = areaSelected.province.name;
+      }
+      if(areaSelected.city) {
+        entity.selectedLabel += '-' + areaSelected.city.name;
+      }
+      if(areaSelected.county) {
+        entity.selectedLabel += '-' + areaSelected.county.name;
+      }
+      if(areaSelected.province && areaSelected.city && areaSelected.county) {
+        // entity.selectedLabel = areaSelected.province.name + '-' + areaSelected.city.name + '-' + areaSelected.county.name;
+        selectedData = {'label': entity.selectedLabel, 'code': areaSelected.county.code};
+      } else {
+        selectedData = {};
+      }
+    }, true);
+    entity.arrProvinces = AreaService.getProvinces();
+    entity.arrCities = AreaService.getProvinces();
+    entity.arrCounties = AreaService.getProvinces();
+
     // 点击选择地区
     $scope.areaSelect = function(obj, selectType) {
       if(selectType == 'province') {
+        // entity.cities = $filter('areaFilterByParent')($filter('areaFilter')(entity.arrRegion, 'city'), 'province', obj.code);
         entity.cities = $filter('areaFilterByParent')($filter('areaFilter')(entity.arrRegion, 'city'), 'province', obj.code);
+        entity.counties = null;
         areaSelected.province = obj;
-        // entity.selectedArea = obj.name;
-        selectedData = {};
+        areaSelected.city = null;
+        areaSelected.county = null;
+        var objCode = obj.code;
+        // if(objCode == '11000000' || objCode == '12000000' || objCode == '31000000' || objCode == '50000000') {
+        //   areaSelected.city = entity.cities[0];
+        // }
       } else if(selectType == 'city') {
         entity.counties = $filter('areaFilterByParent')($filter('areaFilter')(entity.arrRegion, 'county'), 'city', obj.code);
         areaSelected.city = obj;
+        areaSelected.county = null;
         // entity.selectedArea += '-' + obj.name;
       } else if(selectType == 'county') {
         areaSelected.county = obj;
-        console.log(obj);
         // entity.selectedArea += '-' + obj.name;
-        entity.selectedLabel = areaSelected.province.name + '-' + areaSelected.city.name + '-' + areaSelected.county.name;
-        selectedData = {'label': entity.selectedLabel, 'code': obj.code};
       } else {
         console.log('Get a wrong selectType: ' + selectType);
       }
