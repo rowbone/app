@@ -113,15 +113,6 @@ app.controller('AreaTreeCtrl', ['$scope', '$timeout', '$http', '$modalInstance',
       $modalInstance.dismiss('cancel');
     };
 
-    $scope.clearSelect = function() {
-      // console.log('clearSelect')
-      // areaSelected = {
-      //   province: null,
-      //   city: null,
-      //   county: null
-      // };
-    };
-
     // entity.selectedArea = '';
     var arrRegion = AreaService.getArrRegion();
     entity.arrRegion = arrRegion;
@@ -136,11 +127,32 @@ app.controller('AreaTreeCtrl', ['$scope', '$timeout', '$http', '$modalInstance',
 
     entity.selectedTab = 0;
 
+    $scope.clearSelect = function() {
+// console.log(entity.selectedTab)
+// console.log(entity.areaSelected)
+//       entity.selectedTab = 0;
+
+//       entity.cities = null;
+//       entity.counties = null;
+
+      // entity.areaSelected = {
+      //   province: null,
+      //   city: null,
+      //   county: null
+      // };
+    };
+
     // 获取已选择的项
     if (modalParams.selectedArea.code) {
       // entity.selectedTab = 2;
       var regionNodes = AreaService.getRegionNodes(modalParams.selectedArea.code);
-console.log(regionNodes)
+      if(regionNodes.county || regionNodes.city) {
+        entity.selectedTab = 2;
+      } else if(regionNodes.province) {
+        entity.selectedTab = 1;
+      } else {
+        entity.selectedTab = 0;
+      }
       if(regionNodes.province) {
         areaSelected.province = regionNodes.province;
         entity.cities = $filter('areaFilterByParent')($filter('areaFilter')(entity.arrRegion, 'city'), 'province', areaSelected.province.code);
