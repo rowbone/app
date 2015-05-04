@@ -2,6 +2,9 @@
   .province-sel:hover, .city-sel:hover, .county-sel:hover {
     color: #F99696;
   }
+  li a.active {
+    color: red;
+  }
 </style>
 <div class="row">
   <div >
@@ -23,10 +26,10 @@
           </div>
           <div class="area-cascade-sel">
             <conow-tabs>
-              <conow-tabs-titles>
-                <conow-tabs-titles-text title="省份" show="true"></conow-tabs-titles-text>
-                <conow-tabs-titles-text title="城市"></conow-tabs-titles-text>
-                <conow-tabs-titles-text title="县区"></conow-tabs-titles-text>
+              <conow-tabs-titles pills="true">
+                <conow-tabs-titles-text title="省份" show="entity.selectedTab == 0"></conow-tabs-titles-text>
+                <conow-tabs-titles-text title="城市" show="entity.selectedTab == 1"></conow-tabs-titles-text>
+                <conow-tabs-titles-text title="县区" show="entity.selectedTab == 2" disabled></conow-tabs-titles-text>
               </conow-tabs-titles>
 
               <conow-tabs-content>

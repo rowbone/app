@@ -121,8 +121,11 @@ app.controller('AreaTreeCtrl', ['$scope', '$timeout', '$http', '$modalInstance',
 
     var areaSelected = entity.areaSelected = {};
 
+    entity.selectedTab = 0;
+
     // 获取已选择的项
     if (modalParams.selectedArea.code) {
+      entity.selectedTab = 2;
       var regionNodes = AreaService.getRegionNodes(modalParams.selectedArea.code);
       if(regionNodes.province) {
         areaSelected.province = regionNodes.province;
@@ -158,7 +161,7 @@ app.controller('AreaTreeCtrl', ['$scope', '$timeout', '$http', '$modalInstance',
     entity.arrCounties = AreaService.getProvinces();
 
     // 点击选择地区
-    $scope.areaSelect = function(obj, selectType) {
+    $scope.areaSelect = function(obj, selectType) {console.log(obj)
       if(selectType == 'province') {
         // entity.cities = $filter('areaFilterByParent')($filter('areaFilter')(entity.arrRegion, 'city'), 'province', obj.code);
         entity.cities = $filter('areaFilterByParent')($filter('areaFilter')(entity.arrRegion, 'city'), 'province', obj.code);

@@ -257,26 +257,37 @@
             arrSearch.push("b." + searchKeyArr[i] + ".indexOf(label)>=0");
           };
           searchIf = searchIf.substring(3, searchIf.length);
+          
           var select_branchs = function(label) {
+            var arrSearch = AreaService.getArrCityGroup();
 
             scope.searchResults = {}; //树的搜索返回结果显示对象
             scope.searchResults.success = true;
+
+            arrResults = [];
+
+            angular.forEach(arrSearch, function(value, key) {
+
+              if(value['name'].indexOf(label) > -1 || value['spell'].indexOf(label) > -1 
+                || value['simple_spell'].indexOf(label) > -1) {
+                arrResults.push(value);
+              }
+            });
 
             for_each_branch(function(b) {
               if (b.selected) {
                 b.selected = false;
               }
             });
-            arrResults = [];
 
-            for_each_branch(function(b) {
-              // eval将字符串转换为条件
-              if (eval(searchIf)) {
-                return $timeout(function() {
-                  select_branch_mutiple(b);
-                });
-              }
-            });
+            // for_each_branch(function(b) {
+            //   // eval将字符串转换为条件
+            //   if (eval(searchIf)) {
+            //     return $timeout(function() {
+            //       select_branch_mutiple(b);
+            //     });
+            //   }
+            // });
 
             // 搜索返回对象
             return $timeout(function() {

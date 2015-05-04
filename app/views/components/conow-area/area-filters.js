@@ -63,16 +63,19 @@ app.filter('areaFilterByParent', function() {
 });
 
 // 过滤地区数据源的数据，规范名称
-app.filter('areaNameFilter', function() {
+app.filter('areaNameFilter', function($rootScope) {
   return function(input, type) {
     var arr = [];
+    var $scope = $rootScope.$new();
 
     var arrProvincesFilter = ['省', '市', '壮族自治区', '回族自治区', '维吾尔自治区', '自治区'];
     var arrCitiesFilter = ['藏族羌族自治州', '地区', '市', '蒙古自治州', '回族自治州', '彝族自治州', 
       '白族自治州', '傣族景颇族自治州', '藏族自治州', '土家族苗族自治州', '蒙古族藏族自治州', '尼族彝族自治州',
       '傈傈族自治州', '苗族侗族自治州', '布依族苗族自治州', '壮族苗族自治州', '土家族苗族自治州', 
       '傣族自治州', '朝鲜族自治州', '哈萨克自治州', '自治'];
-    var arrCountiesFilter = ['瑶族自治县', '苗族自治县', '侗族自治县', '区', '县', '市'];
+    var arrCountiesFilter = ['土家族苗族自治县', '土家族自治县', '瑶族自治县', '仡佬族苗族自治县', '布依族苗族自治县',
+      '苗族布依族自治县', '苗族自治县', '侗族自治县', '满族蒙古族自治县', '蒙古族自治县', '满族自治县', 
+      '特区', '矿区', '区', '县', '市'];
 
 
     var iLenCities = arrCitiesFilter.length;
@@ -109,9 +112,13 @@ app.filter('areaNameFilter', function() {
           value.label = value.label.substring(0, index);
         }
       }
+      // var regExp = '/' + '' + '$/';
       if(type == 'county') {
         for(var i=0; i<iLenCounties; i++) {
-          if(value.label.indexOf(arrCountiesFilter[i]) > -1) {
+          // regExp = '/' + arrCountiesFilter[i] + '$/';
+          // regExp = $scope.$eval(regExp);
+          if(value.label.length > 2 && value.label.indexOf(arrCountiesFilter[i]) > -1) {
+          // if(regExp.test(value.label)) {
             flag = true;
             break;
           }

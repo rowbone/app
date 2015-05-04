@@ -38,6 +38,25 @@
   			</div>
   		</div>
   	</div>
+
+    <div class="col-sm-12 col-md-6">
+      <div class="panel panel-info">
+        <div class="panel-heading">
+          <div class="panel-title">使用说明</div>
+        </div>
+        <div class="panel-body">
+          <ol>
+            <li>使用属性 <code>conow-area</code> 可使用地区选择组件</li>
+            <li>选择分为市一级选择（不提供 <code>select-type</code> 或者 <code>select-type != 2</code>）
+              和省-市-区分段选择（<code>select-type = 2</code>）</li>
+            <li>只选择市的功能使用了<code>conowAreaTree</code>指令，类似于树的节点数据</li>
+            <li>省-市-区分段选择的功能用到了<code>conowTabs</code>指令，提供分段的标签</li>
+            <li>用到的数据通过服务<code>AreaService</code>读取对应的数据文件提供，方法位于<code>area-services.js</code></li>
+            <li><code>controller</code>和<code>service</code>中用到的数据过滤的方法位于<code>area-filters.js</code></li>
+          </ol>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 

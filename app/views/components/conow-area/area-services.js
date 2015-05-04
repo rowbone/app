@@ -11,6 +11,8 @@ app.service('AreaService', ['$http', '$filter', '$rootScope',
     var provinces = [];
     var cities = [];
     var counties = [];
+    // 按字母分组前的城市名称
+    var arrCityGroup = [];
 
     var arrMunipalities = [];
     var urlMunipality = 'data/components/area/municipalities.json';
@@ -54,10 +56,10 @@ app.service('AreaService', ['$http', '$filter', '$rootScope',
             'simple_spell': value[2]
           });
         }, arr);
-        arr = $filter('areaNameFilter')(arr, 'province');
-        var arrCityGroup = [];
+        // arr = $filter('areaNameFilter')(arr, 'province');
         // 过滤获取市一级地区：areaFilter，并按拼音排序：orderBy
         arrCityGroup = $filter('areaFilter')(arr, 'city');
+        // 增加直辖市
         arrCityGroup = arrCityGroup.concat(arrMunipalities);
         arrCityGroup = $filter('orderBy')(arrCityGroup, 'spell');
         // 市一级名称过滤：areaNameFilter
@@ -139,6 +141,11 @@ app.service('AreaService', ['$http', '$filter', '$rootScope',
 	  this.getHotTopicCity = function() {
 	   	return cityHotTopic;
 	  };
+
+    // 获取按字母分组前的城市
+    this.getArrCityGroup = function() {
+      return arrCityGroup;
+    };
 
     // 获取按字母分组的数据
 	  this.getCityGroup = function() {

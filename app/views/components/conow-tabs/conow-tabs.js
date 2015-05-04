@@ -109,6 +109,7 @@ app.directive('conowTabsTitlesText',function() {
 			hide : '=hide',
 			show : '=show',
 			load : '=load',
+			disabled: '=disabled',
 			fn : '&'
 		},
 		template : '<li ng-click="changeUrls(iden)" ng-class="{\'active\':shows[iden] || active[iden]}" ng-hide="hides[iden]">\
