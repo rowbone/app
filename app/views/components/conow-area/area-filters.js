@@ -67,13 +67,13 @@ app.filter('areaNameFilter', function() {
   return function(input, type) {
     var arr = [];
 
+    var arrProvincesFilter = ['省', '市', '壮族自治区', '回族自治区', '维吾尔自治区', '自治区'];
     var arrCitiesFilter = ['藏族羌族自治州', '地区', '市', '蒙古自治州', '回族自治州', '彝族自治州', 
       '白族自治州', '傣族景颇族自治州', '藏族自治州', '土家族苗族自治州', '蒙古族藏族自治州', '尼族彝族自治州',
       '傈傈族自治州', '苗族侗族自治州', '布依族苗族自治州', '壮族苗族自治州', '土家族苗族自治州', 
       '傣族自治州', '朝鲜族自治州', '哈萨克自治州', '自治'];
+    var arrCountiesFilter = ['瑶族自治县', '苗族自治县', '侗族自治县', '区', '县', '市'];
 
-    var arrProvincesFilter = ['省', '市', '壮族自治区', '回族自治区', '维吾尔自治区', '自治区'];
-    var arrCountiesFilter = ['区', '县', '市'];
 
     var iLenCities = arrCitiesFilter.length;
     var iLenProvinces = arrProvincesFilter.length;

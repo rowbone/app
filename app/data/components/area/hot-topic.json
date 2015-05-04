@@ -5,25 +5,25 @@
     "spell": "hot-topic",
     "simple_spell": "hot-topic",
     "children": [{
-        "code": "11000000",
+        "code": "11010000",
         "spell": "beijing",
         "simple_spell": "bj",
         "name": "北京",
         "label": "北京"
     }, {
-        "code": "31000000",
+        "code": "31010000",
         "spell": "shanghai",
         "simple_spell": "sh",
         "name": "上海",
         "label": "上海"
     }, {
-        "code": "12000000",
+        "code": "12010000",
         "spell": "tianjin",
         "simple_spell": "tj",
         "name": "天津",
         "label": "天津"
     }, {
-        "code": "50000000",
+        "code": "50010000",
         "spell": "chongqing",
         "simple_spell": "cq",
         "name": "重庆",
