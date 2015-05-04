@@ -4,7 +4,7 @@ app.controller('AreaSelCtrl', ['$scope', '$http', '$filter', 'AreaService',
   function($scope, $http, $filter, AreaService) {
     var entity = $scope.entity = {
       area: '44010000',
-      area2: '44010600'
+      area2: '32010000'
     };
 
   }
@@ -113,20 +113,34 @@ app.controller('AreaTreeCtrl', ['$scope', '$timeout', '$http', '$modalInstance',
       $modalInstance.dismiss('cancel');
     };
 
+    $scope.clearSelect = function() {
+      // console.log('clearSelect')
+      // areaSelected = {
+      //   province: null,
+      //   city: null,
+      //   county: null
+      // };
+    };
+
     // entity.selectedArea = '';
     var arrRegion = AreaService.getArrRegion();
     entity.arrRegion = arrRegion;
     var arrProvinces = AreaService.getProvinces();
     entity.provinces = arrProvinces;
 
-    var areaSelected = entity.areaSelected = {};
+    var areaSelected = entity.areaSelected = {
+      province: null,
+      city: null,
+      county: null
+    };
 
     entity.selectedTab = 0;
 
     // 获取已选择的项
     if (modalParams.selectedArea.code) {
-      entity.selectedTab = 2;
+      // entity.selectedTab = 2;
       var regionNodes = AreaService.getRegionNodes(modalParams.selectedArea.code);
+console.log(regionNodes)
       if(regionNodes.province) {
         areaSelected.province = regionNodes.province;
         entity.cities = $filter('areaFilterByParent')($filter('areaFilter')(entity.arrRegion, 'city'), 'province', areaSelected.province.code);
@@ -140,28 +154,33 @@ app.controller('AreaTreeCtrl', ['$scope', '$timeout', '$http', '$modalInstance',
     // 页面显示已选择
     $scope.$watch('entity.areaSelected', function(newVal, oldVal) {
       var areaSelected = newVal;
+      entity.selectedLabel = '';
       if(areaSelected.province) {
         entity.selectedLabel = areaSelected.province.name;
+        selectedData = {'label': entity.selectedLabel, 'code': areaSelected.province.code};
       }
       if(areaSelected.city) {
         entity.selectedLabel += '-' + areaSelected.city.name;
+        selectedData = {'label': entity.selectedLabel, 'code': areaSelected.city.code};
       }
       if(areaSelected.county) {
         entity.selectedLabel += '-' + areaSelected.county.name;
-      }
-      if(areaSelected.province && areaSelected.city && areaSelected.county) {
-        // entity.selectedLabel = areaSelected.province.name + '-' + areaSelected.city.name + '-' + areaSelected.county.name;
         selectedData = {'label': entity.selectedLabel, 'code': areaSelected.county.code};
-      } else {
-        selectedData = {};
       }
+      // if(areaSelected.province && areaSelected.city && areaSelected.county) {
+      //   // entity.selectedLabel = areaSelected.province.name + '-' + areaSelected.city.name + '-' + areaSelected.county.name;
+      //   selectedData = {'label': entity.selectedLabel, 'code': areaSelected.county.code};
+      // } else {
+      //   selectedData = {};
+      // }
     }, true);
     entity.arrProvinces = AreaService.getProvinces();
     entity.arrCities = AreaService.getProvinces();
     entity.arrCounties = AreaService.getProvinces();
 
     // 点击选择地区
-    $scope.areaSelect = function(obj, selectType) {console.log(obj)
+    $scope.areaSelect = function(obj, selectType) {
+      // entity.selectedTab = entity.selectedTab + 1;
       if(selectType == 'province') {
         // entity.cities = $filter('areaFilterByParent')($filter('areaFilter')(entity.arrRegion, 'city'), 'province', obj.code);
         entity.cities = $filter('areaFilterByParent')($filter('areaFilter')(entity.arrRegion, 'city'), 'province', obj.code);

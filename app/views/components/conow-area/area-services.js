@@ -96,20 +96,36 @@ app.service('AreaService', ['$http', '$filter', '$rootScope',
       });
 
     var getRegionNodes = function(code) {
+// 32000000
+// 32010000
+// 32010200
       var regionNodes = {};
+      var regExpCity = /0{4}$/;
+      var regExpProvince = /0{6}$/;
       var city = code.substr(0, 4) + '0000';
       var province = code.substr(0, 2) + '000000';
       angular.forEach(arrRegion, function(value, key) {
-        if(value.code == code) {
-          this.county = value;
-        }
-        if(value.code == city) {
-          this.city = value;
-        }
-        if(value.code == province) {
-          this.province = value;
-        }
-      }, regionNodes);
+        // if(regExpProvince.test(code) && value.code == code) {
+        //   regionNodes.province = value;
+        // } else if(regExpCity.test(value.code)) {
+        //   if(value.code == code) {
+        //     regionNodes.city = value;
+        //   }
+        //   if(value.code = province) {
+        //     regionNodes.province = value;
+        //   }
+        // } else {
+          if(value.code == code) {
+            regionNodes.county = value;
+          }
+          if(value.code == city) {
+            regionNodes.city = value;
+          }
+          if(value.code == province) {
+            regionNodes.province = value;
+          }
+        // }
+      });
 
       return regionNodes;
     }

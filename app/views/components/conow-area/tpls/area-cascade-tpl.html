@@ -2,8 +2,8 @@
   .province-sel:hover, .city-sel:hover, .county-sel:hover {
     color: #F99696;
   }
-  li a.active {
-    color: red;
+  area-selected:hover {
+    cursor: pointer;
   }
 </style>
 <div class="row">
@@ -22,9 +22,20 @@
         <div class="modal-body">
           <div class="m-sm m-l-xs">
             <span class="m-sm">已选择：</span>
-            <span class="text-primary">{{ entity.selectedLabel }}</span>
+            <a class="area-selected text-primary" ng-click="clearSelect()">{{ entity.selectedLabel }}</a>
           </div>
           <div class="area-cascade-sel">
+            <!-- <tabset class="tab-container">
+              <tab heading="省份" active="entity.selectedTab == 0">
+                <a href="" class="btn m province-sel" ng-class="{true: 'btn-success', false: ''}[entity.areaSelected.province.code == province.code]" ng-repeat="province in entity.provinces track by $index" skip-click=1 ng-click="areaSelect(province, 'province')">{{ province.label }}</a>
+              </tab>
+              <tab heading="城市" active="entity.selectedTab == 1">
+                <a href="" class="btn m city-sel" ng-class="{true: 'btn-success', false: ''}[entity.areaSelected.city.code == city.code]" ng-repeat="city in entity.cities track by $index" skip-click=2 ng-click="areaSelect(city, 'city')">{{ city.label }}</a>
+              </tab>
+              <tab heading="县区" active="entity.selectedTab == 2">
+                <a href="" class="btn m county-sel" ng-class="{true: 'btn-success', false: ''}[entity.areaSelected.county.code == county.code]" ng-repeat="county in entity.counties track by $index" ng-click="areaSelect(county, 'county')">{{ county.label }}</a>
+              </tab>
+            </tabset> -->
             <conow-tabs>
               <conow-tabs-titles pills="true">
                 <conow-tabs-titles-text title="省份" show="entity.selectedTab == 0"></conow-tabs-titles-text>
@@ -33,14 +44,12 @@
               </conow-tabs-titles>
 
               <conow-tabs-content>
-                <!-- <conow-tabs-content-url url="views/components/conow-area/tpls/province.html">111</conow-tabs-content-url> -->
                 <conow-tabs-content-text>
                   <a href="" class="btn m province-sel" ng-class="{true: 'btn-success', false: ''}[entity.areaSelected.province.code == province.code]" ng-repeat="province in entity.provinces track by $index" skip-click=1 ng-click="areaSelect(province, 'province')">{{ province.label }}</a>
                 </conow-tabs-content-text>
                 <conow-tabs-content-text>
                   <a href="" class="btn m city-sel" ng-class="{true: 'btn-success', false: ''}[entity.areaSelected.city.code == city.code]" ng-repeat="city in entity.cities track by $index" skip-click=2 ng-click="areaSelect(city, 'city')">{{ city.label }}</a>
                 </conow-tabs-content-text>
-                <!-- <conow-tabs-content-url url="views/components/conow-area/tpls/province.html">111</conow-tabs-content-url> -->
                 <conow-tabs-content-text>
                   <a href="" class="btn m county-sel" ng-class="{true: 'btn-success', false: ''}[entity.areaSelected.county.code == county.code]" ng-repeat="county in entity.counties track by $index" ng-click="areaSelect(county, 'county')">{{ county.label }}</a>
                 </conow-tabs-content-text>
