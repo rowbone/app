@@ -63,6 +63,7 @@ app.controller('PersonSearchCtrl', ['$scope', '$http',
 				$http.get(personSearchUrl)
 					.success(function(data, status, headers, config) {
 						console.log(data);
+						entity.searchResults = data.obj;
 					})
 					.error(function(data, status, headers, config) {
 						console.log('Get ' + personSearchUrl + ' wrong...');

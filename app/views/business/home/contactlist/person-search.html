@@ -1,4 +1,9 @@
 
+<style>
+	.text-title {
+		font-size: 20px;
+	}
+</style>
 <div>
 	<div class="hbox m-b">
 		<div>
@@ -18,5 +23,11 @@
 				<input type="radio" name="personSearchType" ng-model="entity.searchType" value="fullText">全文模糊搜索
 			</label>
 		</div>
+	</div>
+	<div class="hbox m-b">
+		<div class="h bg-primary font-bold text-title padder-v-sm">
+			<span class="v-middle m-sm">搜索结果</span>
+		</div>
+		<div ng-repeat="result in entity.searchResults track by $index">{{ result.NAME }}</div>
 	</div>
 </div>
