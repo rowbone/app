@@ -1,0 +1,19 @@
+
+分类树：orgUnit-querySortOfTree.json
+行政树：orgUnit-querySourceOfTree.json
+区域树：orgUnit-queryAreaOfTree.json
+
+
+获取组织数据：orgUnit-queryOrgUnitInfoInCam-id-1421924106089631410343354.json
+获取组织的人员信息：staffInfo-queryActStaffByOrgUnitId.json
+获取组织的岗位信息：jobInfo-queryActJobsByOrgUnitId.json
+获取组织的下级组织：orgUnit-queryNextContactTreeById.json
+
+找人：staffInfo-queryStaffInfoByNameByPage.json
+
+找组织：orgUnit-queryListOrgByNameOrShortNameByPage.json
+
+
+条件找人:
+	区域：orgUnit-query12BranchCourts.json
+	分类：common-queryOptions-type-DICT_OPTION-DICT_CODE-HR_ORG_CLASS.json

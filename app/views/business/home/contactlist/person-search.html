@@ -1,0 +1,22 @@
+
+<div>
+	<div class="hbox m-b">
+		<div>
+			<input type="text" class="form-control input-lg r-3x" ng-model="entity.searchKey" placeholder="搜索" ng-keyup="enterPress($event)">
+			<!-- <span class="input-group-btn fa fa-search"></span> -->
+		</div>
+	</div>
+
+	<div class="hbox m-b">
+		<div class="col radio">
+			<label >
+				<input type="radio" name="personSearchType" ng-model="entity.searchType" value="name">姓名快速搜索
+			</label>
+		</div>
+		<div class="col radio">
+			<label >
+				<input type="radio" name="personSearchType" ng-model="entity.searchType" value="fullText">全文模糊搜索
+			</label>
+		</div>
+	</div>
+</div>

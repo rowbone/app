@@ -1,8 +1,5 @@
 
 <style>
-	.m-l-r-40 {
-		margin: 0 40px;
-	}
 </style>
 <div ng-controller="contactListCtrl2">
 	<div class="panel panel-default no-padder">
@@ -10,23 +7,16 @@
 	</div>
 	<div class="panel panel-default no-padder">
 		<div class="panel-body text-center text-2x">
-			<div class="btn-group m-l-r-40">
-				<button type="button" class="btn btn-default">关注</button>
-				<button type="button" class="btn btn-default">找人</button>
-				<button type="button" class="btn btn-default">找组织</button>
-				<button type="button" class="btn btn-default">组织树</button>
+			<div class="btn-group">
+				<a class="btn btn-lg b-primary text-primary r-3x" ng-class="{'btn-primary': contactListTabs[0]}" ng-click="tabsChange('0')">关&nbsp;&nbsp;注</a>
+				<a class="btn btn-lg b-primary text-primary r-3x" ng-class="{'btn-primary': contactListTabs[1]}" ng-click="tabsChange('1')">找&nbsp;&nbsp;人</a>
+				<a class="btn btn-lg b-primary text-primary r-3x" ng-class="{'btn-primary': contactListTabs[2]}" ng-click="tabsChange('2')">找组织</a>
+				<a class="btn btn-lg b-primary text-primary r-3x" ng-class="{'btn-primary': contactListTabs[3]}" ng ng-click="tabsChange('3')">组织树</a>
 			</div>
 		</div>
 	</div>
-	<div class="no-padder">
-		<input type="text" class="form-control btn-rounded input-lg" placeholder="搜索">
-	</div>
-	<div class="no-padder">
-		<div>关注的组织（<span class="text-primary"> {{ collections.org.length }}</span>）</div>
-		<div ng-repeat="org in collections.org track by $index">
-			<span>{{ org.name }}</span>
-			<small>{{ org.name }}</small>
-		</div>
-		<div>关注的人（）</div>
-	</div>
+	<div ng-include="'views/business/home/contactlist/collection.html'" ng-controller="CollectionCtrl" ng-if="contactListTabs[0]"></div>
+	<div ng-include="'views/business/home/contactlist/person-search.html'" ng-controller="PersonSearchCtrl" ng-if="contactListTabs[1]"></div>
+	<div ng-include="'views/business/home/contactlist/org-search.html'" ng-controller="OrgSearchCtrl" ng-if="contactListTabs[2]"></div>
+	<div ng-include="'views/business/home/contactlist/org-tree.html'" ng-controller="OrgTreeCtrl" ng-if="contactListTabs[3]"></div>
 </div>

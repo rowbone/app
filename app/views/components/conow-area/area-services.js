@@ -96,9 +96,6 @@ app.service('AreaService', ['$http', '$filter', '$rootScope',
       });
 
     var getRegionNodes = function(code) {
-// 32000000
-// 32010000
-// 32010200
       var regionNodes = {};
       var regExpCity = /0{4}$/;
       var regExpProvince = /0{6}$/;

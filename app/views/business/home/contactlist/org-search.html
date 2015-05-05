@@ -1,0 +1,29 @@
+
+<style>
+	.btn-hover-red:hover {
+		color: #EB6565;
+	}
+</style>
+<div>
+	<div class="hbox m-b">
+		<input type="text" class="form-control input-lg r-3x" placeholder="搜索">
+	</div>
+
+	<div class="hbox m-b">
+		<div class="col col-xs-2 col-md-1 m-n v-middle">
+			<label for="" class="control-label">区域</label>
+		</div>
+		<div class="col col-xs-10 col-md-11">
+			<a class="btn m-xs r-3x btn-hover-red" ng-class="{'btn-success': entity.areaSelected == area}" ng-repeat="area in entity.area track by $index" ng-click="areaSelect(area)">{{ area }}</a>
+		</div>
+	</div>
+
+	<div class="hbox m-b">
+		<div class="col col-xs-2 col-md-1 m-n v-middle">
+			<label for="" class="control-label">分类</label>
+		</div>
+		<div class="col col-xs-10 col-md-11">
+			<a class="btn m-xs r-3x btn-hover-red" ng-class="{'btn-success': entity.classifySelected == classify}" ng-repeat="classify in entity.classify track by $index" ng-click="classifySelect(classify)">{{ classify }}</a>
+		</div>
+	</div>
+</div>

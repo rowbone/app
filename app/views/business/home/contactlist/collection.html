@@ -1,0 +1,36 @@
+
+<style>
+	.text-4x {
+		font-size: 4em;
+	}
+	.h-full {
+		height: 100px;
+	}
+</style>
+<div class="h-full"></div>
+<div class="no-padder">
+	<div ng-if="options.collectionNone" class="text-center v-middle">
+		<div class="">您目前还没有任何关注的人或组织</div>
+		<div>
+			<a class="text-success" ng-click="addCollection()">
+				<div>
+					<i class="fa fa-plus-circle text-4x"></i>
+				</div>
+				<div>
+					添加联系人或组织
+				</div>
+			</a>
+		</div>
+	</div>
+
+	<div ng-if="!options.collectionNone">
+		<input type="text" class="form-control input-lg r-3x" placeholder="搜索">
+
+		<div>关注的组织（<span class="text-primary"> {{ collections.orgs.length }}</span>）</div>
+		<div ng-repeat="org in collections.org track by $index">
+			<span>{{ org.name }}</span>
+			<small>{{ org.name }}</small>
+		</div>
+		<div>关注的人（<span class="text-primary"> {{ collections.persons.length }}</span>）</div>
+	</div>
+</div>
