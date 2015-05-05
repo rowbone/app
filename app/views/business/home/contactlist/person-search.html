@@ -3,11 +3,17 @@
 	.text-title {
 		font-size: 20px;
 	}
+	.text-32 {
+		font-size: 32px;
+	}
+	.text-22 {
+		font-size: 22px;
+	}
 </style>
 <div>
 	<div class="hbox m-b">
 		<div>
-			<input type="text" class="form-control input-lg r-3x" ng-model="entity.searchKey" placeholder="搜索" ng-keyup="enterPress($event)">
+			<input type="text" class="form-control input-lg r-3x" ng-model="entity.searchKey" placeholder="搜索" ng-keyup="enterPress($event)" autofocus>
 			<!-- <span class="input-group-btn fa fa-search"></span> -->
 		</div>
 	</div>
@@ -24,10 +30,25 @@
 			</label>
 		</div>
 	</div>
-	<div class="hbox m-b">
-		<div class="h bg-primary font-bold text-title padder-v-sm">
-			<span class="v-middle m-sm">搜索结果</span>
+	<div class="m-b" ng-if="options.search">
+		<div ng-if="!entity.searchResults">
+			<i class="fa fa-spin fa-spinner"></i>
+			<span>加载中</span>
 		</div>
-		<div ng-repeat="result in entity.searchResults track by $index">{{ result.NAME }}</div>
+		<div ng-if="entity.searchResults">
+			<div class="h bg-primary font-bold text-title padder-v-sm">
+				<span class="v-middle m-sm">搜索结果</span>
+			</div>
+			<div>
+				<div ng-repeat="result in entity.searchResults track by $index">
+					<div class="hbox">
+						<span class="col-xs-8 text-32">{{ result.NAME }}</span>
+						<span class="col-xs-8 text-22 m-t-sm">{{ result.totalName }}</span>
+						<a class="btn btn-default pull-right v-middle" ng-click="collectionConfirm(result)">关注</a>
+					</div>
+					<hr class="b-b b-primary b-2x">
+				</div>
+			</div>
+		</div>
 	</div>
 </div>
