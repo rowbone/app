@@ -1,0 +1,13 @@
+<div ng-controller="ChildOrgsCtrl">
+	<div class="m-t">
+		<div ng-repeat="org in orgs track by $index">
+			<div class="hbox">
+				<a ng-click="showDetailInfo(org)">
+					<span class="col-xs-8 text-base">{{ org.ORG_UNIT_NAME }}</span>
+				</a>
+				<a class="btn btn-default pull-right v-middle" ng-click="collectionConfirm(org)">关注</a>
+			</div>
+			<hr class="b-b b-primary b-2x">
+		</div>
+	</div>
+</div>

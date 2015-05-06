@@ -124,7 +124,10 @@ app.controller('PersonSearchCtrl', ['$scope', '$http', '$timeout', '$modal',
 		};
 		// 人员详细信息
 		$scope.showDetailInfo = function(obj) {
-			$state.go('app.hr.staffInfo', { staffId: obj.id });
+			// $state.go('app.hr.staffInfo', { staffId: obj.id });
+			var modalInstance = $modal.open({
+				templateUrl: 'views/business/hr/staff/staff-info.html'
+			})
 		};
 		// 添加关注确认
 		$scope.collectionConfirm = function(user) {
@@ -180,15 +183,17 @@ app.controller('ConfirmCtrl', ['$scope', '$modalInstance', 'modalParams',
 	}
 ])
 
-app.controller('OrgSearchCtrl', ['$scope', '$http', '$timeout', 
-	function($scope, $http, $timeout) {
+app.controller('OrgSearchCtrl', ['$scope', '$http', '$timeout', '$modal', 
+	function($scope, $http, $timeout, $modal) {
 		var entity = $scope.entity = {};
 		var options = $scope.options = {
-			search: false
+			search: false,
+			showDetail: false
 		};
 		var orgAreaUrl = 'data/bz/home/contactlist2/orgUnit-query12BranchCourts.json';
 		var orgClassifyUrl = 'data/bz/home/contactlist2/common-queryOptions-type-DICT_OPTION-DICT_CODE-HR_ORG_CLASS.json';
 		var orgSearchUrl = 'data/bz/home/contactlist2/orgUnit-queryListOrgByNameOrShortNameByPage.json';
+		var orgDetailUrl = 'data/bz/home/contactlist2/orgUnit-queryOrgUnitInfoInCam-id-1421924106089631410343354.json';
 
 		$http.get(orgAreaUrl)
 			.success(function(data, status, headers, config) {
@@ -233,6 +238,7 @@ app.controller('OrgSearchCtrl', ['$scope', '$http', '$timeout',
 					.success(function(data, status, headers, config) {
 						if(params.searchArea == '北京' && params.searchClassify == '大科学中心') {
 							$timeout(function() {
+console.log(data)
 								entity.searchResults = data.obj;
 							}, 2000);
 						} else {
@@ -248,11 +254,43 @@ app.controller('OrgSearchCtrl', ['$scope', '$http', '$timeout',
 
 			e.stopPropagation();
 		};
+
+		$scope.showDetailInfo = function(org) {
+			// var modalInstance = $modal.open({
+			// 	templateUrl: 'views/business/hr/org/org-info.html'
+			// })
+			options.showDetail = true;
+			$http.get(orgDetailUrl)
+				.success(function(data, status, headers, config) {
+console.log(data);
+					$scope.orgInfo = data.obj;
+				})
+				.error(function(data, status, headers, config) {
+					console.log('Get ' + orgDetailUrl + ' wrong...');
+				})
+		};
 	}
 ]);
 
 app.controller('OrgTreeCtrl', ['$scope', 
 	function($scope) {
 		
+	}
+]);
+
+app.controller('ChildOrgsCtrl', ['$scope', '$http', 
+	function($scope, $http) {
+		$scope.orgs = [];
+
+		var childOrgsUrl = 'data/bz/home/contactlist2/orgUnit-queryNextContactTreeById.json';
+
+		$http.get(childOrgsUrl)
+			.success(function(data, status, headers, config) {
+				console.log(data.obj);
+				$scope.orgs = data.obj;
+			})
+			.error(function(data, status, headers, config) {
+				console.log('Get ' + childOrgsUrl + ' wrong...');
+			})
 	}
 ]);

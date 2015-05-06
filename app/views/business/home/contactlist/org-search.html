@@ -4,7 +4,7 @@
 		color: #EB6565;
 	}
 </style>
-<div>
+<div class="search" ng-if="!options.showDetail">
 	<div class="hbox m-b">
 		<input type="text" class="form-control input-lg r-3x" placeholder="搜索" ng-keyup="enterPress($event)" autofocus>
 	</div>
@@ -17,7 +17,9 @@
 			<a class="btn m-xs r-3x btn-hover-red" ng-class="{'btn-success': entity.areaSelected == area}" ng-repeat="area in entity.area track by $index" ng-click="areaSelect(area)">{{ area }}</a>
 		</div>
 	</div>
-
+	<div class="hbox m-b">
+		<button class="btn btn-primary" ng-click="showDetailInfo()">测试</button>
+	</div>
 	<div class="hbox m-b">
 		<div class="col col-xs-2 col-md-1 m-n v-middle">
 			<label for="" class="control-label">分类</label>
@@ -37,13 +39,13 @@
 				<span class="v-middle m-sm">搜索结果</span>
 			</div>
 			<div class="padder-sm padder-v-sm text-info" ng-if="entity.searchResults && entity.searchResults.length == 0">
-				没有符合条件的人员信息
+				没有符合条件的组织信息
 			</div>
 			<div>
 				<div ng-repeat="result in entity.searchResults track by $index">
 					<div class="hbox">
-						<a ui-sref="app.hr.staffInfo({staffId:result.id})">
-							<span class="col-xs-8 text-32">{{ result.NAME }}</span>
+						<a ng-click="showDetailInfo(result)">
+							<span class="col-xs-8 text-32">{{ result.ORG_UNIT_SHORT_NAME }}</span>
 							<small class="col-xs-8 text-22 m-t-sm">{{ result.totalName }}</small>
 						</a>
 						<a class="btn btn-default pull-right v-middle" ng-click="collectionConfirm(result)">关注</a>
@@ -53,4 +55,39 @@
 			</div>
 		</div>
 	</div>
+</div>
+
+<div class="result-search" ng-if="options.showDetail">
+	<div class="hbox m-b bg-primary font-bold text-title padder-v-sm">
+		<span class="v-middle m-sm">中科院/广州生物院</span>
+	</div>
+	<div class="hbox m-b">
+		<input type="text" class="form-control input-lg r-3x" placeholder="搜索" ng-keyup="enterPress($event)" autofocus>
+	</div>
+	<div class="hbox m-b">
+		<conow-tabs>
+			<conow-tabs-titles>
+				<conow-tabs-titles-text title="下级组织" show="true"></conow-tabs-titles-text>
+				<conow-tabs-titles-text title="人员信息"></conow-tabs-titles-text>
+				<conow-tabs-titles-text title="组织信息"></conow-tabs-titles-text>
+			</conow-tabs-titles>
+			<conow-tabs-content>
+				<conow-tabs-content-url url="views/business/hr/org/child-orgs.html">1</conow-tabs-content-url>
+				<conow-tabs-content-url>2</conow-tabs-content-url>
+				<conow-tabs-content-text>
+					<span class="col-xs-12 m-t-sm">组织名称：11111</span>
+					<span class="col-xs-12 m-t-sm">组织简称：11111</span>
+					<span class="col-xs-12 m-t-sm">英文名称：11111</span>
+					<span class="col-xs-12 m-t-sm">部门职责类型：11111</span>
+					<span class="col-xs-12 m-t-sm">部门负责人：11111</span>
+					<span class="col-xs-12 m-t-sm">联系地址：11111</span>
+					<span class="col-xs-12 m-t-sm">邮政编码：11111</span>
+					<span class="col-xs-12 m-t-sm">电话号码：11111</span>
+					<span class="col-xs-12 m-t-sm">传真：11111</span>
+					<span class="col-xs-12 m-t-sm">网址：11111</span>
+				</conow-tabs-content-text>
+			</conow-tabs-content>
+		</conow-tabs>
+	</div>
+	
 </div>

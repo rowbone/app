@@ -45,7 +45,7 @@
 			<div>
 				<div ng-repeat="result in entity.searchResults track by $index">
 					<div class="hbox">
-						<a ui-sref="app.hr.staffInfo({staffId:result.id})">
+						<a ng-click="showDetailInfo(result)">
 							<span class="col-xs-8 text-32">{{ result.NAME }}</span>
 							<small class="col-xs-8 text-22 m-t-sm">{{ result.totalName }}</small>
 						</a>
