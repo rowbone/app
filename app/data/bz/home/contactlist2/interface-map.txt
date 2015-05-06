@@ -1,13 +1,19 @@
 
-分类树：orgUnit-querySortOfTree.json
-行政树：orgUnit-querySourceOfTree.json
-区域树：orgUnit-queryAreaOfTree.json
+page1：
 
+已关注：
+	人员：collections-persons.json
+
+	组织：collections-orgs.json
 
 获取组织数据：orgUnit-queryOrgUnitInfoInCam-id-1421924106089631410343354.json
 获取组织的人员信息：staffInfo-queryActStaffByOrgUnitId.json
 获取组织的岗位信息：jobInfo-queryActJobsByOrgUnitId.json
 获取组织的下级组织：orgUnit-queryNextContactTreeById.json
+
+获取人员信息：staffInfo-queryStaffInfoAndTotalnameAndJobs-ID-1422945768950299610293279.json
+
+page2 & page3：
 
 找人：staffInfo-queryStaffInfoByNameByPage.json
 
@@ -17,3 +23,10 @@
 条件找人:
 	区域：orgUnit-query12BranchCourts.json
 	分类：common-queryOptions-type-DICT_OPTION-DICT_CODE-HR_ORG_CLASS.json
+
+
+page4：
+
+分类树：orgUnit-querySortOfTree.json
+行政树：orgUnit-querySourceOfTree.json
+区域树：orgUnit-queryAreaOfTree.json

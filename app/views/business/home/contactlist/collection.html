@@ -6,10 +6,25 @@
 	.h-full {
 		height: 100px;
 	}
+	.text-32 {
+		font-size: 32px;
+	}
+	.btn-danger-square {
+		background-color: #FFFFFF;
+		color: #F05050;
+		border: 1px solid #F05050;
+	}
+	.btn-danger-square:hover {
+		color: #F05050;
+		font-weight: bold;
+	}
+	.collections-items:hover {
+		background-color: #D4CCCC;
+	}
 </style>
-<div class="h-full"></div>
 <div class="no-padder">
 	<div ng-if="options.collectionNone" class="text-center v-middle">
+		<div class="h-full"></div>
 		<div class="">您目前还没有任何关注的人或组织</div>
 		<div>
 			<a class="text-success" ng-click="addCollection()">
@@ -24,13 +39,48 @@
 	</div>
 
 	<div ng-if="!options.collectionNone">
-		<input type="text" class="form-control input-lg r-3x" placeholder="搜索">
-
-		<div>关注的组织（<span class="text-primary"> {{ collections.orgs.length }}</span>）</div>
-		<div ng-repeat="org in collections.org track by $index">
-			<span>{{ org.name }}</span>
-			<small>{{ org.name }}</small>
+		<div class="hbox m-b">
+			<input type="text" class="form-control input-lg r-3x" placeholder="搜索">
 		</div>
-		<div>关注的人（<span class="text-primary"> {{ collections.persons.length }}</span>）</div>
+
+		<div class="hbox m-b bg-primary lter h padder-v-sm padder-sm text-32">
+			<span>关注的组织(</span>
+			<span class="text-danger font-bold"> {{ collections.orgs.length }}</span>
+			<span>)</span>
+		</div>
+		<div class="collections">
+			<div class="padder-xs" ng-repeat="org in collections.orgs track by $index">
+				<div class="hbox">
+					<a class="col col-xs-10 collections-items" ng-click="showDetailInfo(org, 'org')">
+						<span class="col-xs-8 m-b-xs">{{ org.name }}</span>
+						<small class="col-xs-8">{{ org.fullName }}</small>	
+					</a>
+					<div class="col">
+						<button type="button" class="btn btn-danger-square pull-right inline padder-lg v-middle">取消关注</button>
+					</div>
+				</div>
+				<hr class="b-b b-primary b-2x">
+			</div>
+		</div>
+
+		<div class="hbox m-b bg-primary lter h padder-v-sm padder-sm text-32">
+			<span>关注的人(</span>
+			<span class="text-danger font-bold"> {{ collections.persons.length }}</span>
+			<span>)</span>
+		</div>
+		<div class="collections">
+			<div class="padder-xs" ng-repeat="person in collections.persons track by $index">
+				<div class="hbox">
+					<a class="col col-xs-10 collections-items" ng-click="showDetailInfo(person, 'person')">
+						<span class="col-xs-8 m-b-xs">{{ person.name }}</span>
+						<small class="col-xs-8">{{ person.fullName }}</small>
+					</a>
+					<div class="col">
+						<button type="button" class="btn btn-danger-square pull-right padder-lg v-middle">取消关注</button>
+					</div>
+				</div>
+				<hr class="b-b b-primary b-2x">
+			</div>
+		</div>
 	</div>
 </div>

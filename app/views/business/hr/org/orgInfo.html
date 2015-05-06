@@ -1,0 +1,649 @@
+
+<div ng-controller="OrgInfoCtrl">
+	
+	<div class="panel-body">
+
+			<div class="col-md-12">
+				<p class="form-control-static text-#000000-bger font-bold">
+				</p><ul class="breadcrumb bg-white m-n">
+					<!-- ngRepeat: org in orgunit.orgAndFatherOrgs --><li ng-repeat="org in orgunit.orgAndFatherOrgs" class="ng-scope"><a ui-sref="app.cam.organdstaff({orgUnitId:'4321141681691813123941027'})" href="#/app/cam/organdstaff/4321141681691813123941027"><strong class="text-primary ng-binding">中科院</strong>
+					</a>
+					</li><!-- end ngRepeat: org in orgunit.orgAndFatherOrgs --><li ng-repeat="org in orgunit.orgAndFatherOrgs" class="ng-scope"><a ui-sref="app.cam.organdstaff({orgUnitId:'4321133316914437935071115'})" href="#/app/cam/organdstaff/4321133316914437935071115"><strong class="text-primary ng-binding">广州分院</strong>
+					</a>
+					</li><!-- end ngRepeat: org in orgunit.orgAndFatherOrgs --><li ng-repeat="org in orgunit.orgAndFatherOrgs" class="ng-scope"><a ui-sref="app.cam.organdstaff({orgUnitId:'1421924106089631410343354'})" href="#/app/cam/organdstaff/1421924106089631410343354"><strong class="text-primary ng-binding">科南软件</strong>
+					</a>
+					</li><!-- end ngRepeat: org in orgunit.orgAndFatherOrgs -->
+				</ul>
+				<p></p>
+				<div class="line line-dashed b-b"></div>
+				<form class="form-horizontal col-md-12 ng-pristine ng-valid">
+
+					<div class="form-group m-n ">
+
+						<label class="col-md-3 control-label">组织名称：</label>
+						<div class="col-md-3  ">
+							<p class="form-control-static text-#000000-bger font-bold ng-binding">科南软件</p>
+						</div>
+						<label class="col-md-3 control-label">组织单元代码：</label>
+						<div class="col-md-3  ">
+							<p class="form-control-static text-#000000-bger font-bold ng-binding">conowCN</p>
+						</div>
+
+					</div>
+				</form>
+			</div>
+
+			<div class="panel  col-md-12 no-padder m-n">
+
+				<div class="panel-body no-padder">
+					<button class="btn btn-default  pull-right m-r-sm m-t-xs" ng-click="tabC()" ng-show="tabOrgInfo">收起</button>
+					<button class="btn btn-default  pull-right m-r-sm m-t-xs ng-hide" ng-click="tabO()" ng-show="!tabOrgInfo">展开</button>
+					<div class="bg-light bg  no-padder ng-isolate-scope">
+	  <ul class="nav nav-tabs" ng-class="{'nav-stacked': vertical, 'nav-justified': justified}" ng-transclude=""><li ng-class="{active: active, disabled: disabled}" active="tabOrg.active" class="ng-isolate-scope active">
+	  <a href="" ng-click="select()" tab-heading-transclude="" class="ng-binding"><tab-heading ng-click="changeT()" class="ng-scope"> <strong>基本信息</strong>
+					</tab-heading></a>
+	</li> <li ng-class="{active: active, disabled: disabled}" ng-show="orgunitCorpInfo" active="tabCorp.active" class="ng-isolate-scope">
+	  <a href="" ng-click="select()" tab-heading-transclude="" class="ng-binding"><tab-heading ng-click="changeT()" class="ng-scope">
+					<strong>法人信息</strong> </tab-heading></a>
+	</li> </ul>
+	  <div class="tab-content">
+	    <!-- ngRepeat: tab in tabs --><div class="tab-pane ng-scope active" ng-repeat="tab in tabs" ng-class="{active: tab.active}" tab-content-transclude="tab">
+	    
+
+
+					<form class="form-horizontal bg-light lter b-light  b-l b-r b-b ng-pristine ng-valid ng-scope">
+
+						<div class="form-group m-n ">
+							<label class="col-md-3 control-label ">组织简称：</label>
+							<div class="col-md-3  ">
+								<p class="form-control-static text-#000000-bger font-bold ng-binding">科南软件</p>
+							</div>
+
+							<label class="col-md-3 control-label">组织单元速记码：</label>
+							<div class="col-md-3  ">
+								<p class="form-control-static text-#000000-bger font-bold ng-binding">CN</p>
+							</div>
+						</div>
+						<div class="form-group m-n">
+							<label class="col-md-3 control-label ">英文名称：</label>
+							<div class="col-md-3  ">
+								<p class="form-control-static text-#000000-bger font-bold ng-binding">conow</p>
+							</div>
+							<label class="col-md-3 control-label ">第二名称：</label>
+							<div class="col-md-3  ">
+								<p class="form-control-static text-#000000-bger font-bold ng-binding">科南</p>
+							</div>
+						</div>
+
+						<div class="form-group m-n">
+							<label class="col-md-3 control-label ">组织负责人：</label>
+							<div class="col-md-3 ">
+								<a href="#/app/cam/staffdetail/1419848023781429546481034">
+								<p class="form-control-static text-#000000-bger font-bold v-middle ng-binding">
+								
+										<!-- ngIf: orgunit.CHARGE_MAN.length>0 --><img ng-if="orgunit.CHARGE_MAN.length>0" ng-src="img/person/person_photo_1.png" class="avatar thumb-xs ng-scope" src="img/person/person_photo_1.png"><!-- end ngIf: orgunit.CHARGE_MAN.length>0 -->
+										奉继承
+								</p>
+								</a>
+							</div>
+
+							<label class="col-md-3 control-label ">联系地址：</label>
+							<div class="col-md-3">
+
+								<p class="form-control-static text-#000000-bger font-bold ng-binding">广东省广州市越秀区先烈中路100号</p>
+							</div>
+						</div>
+						<div class="form-group m-n">
+							<label class="col-md-3 control-label ">邮政编码：</label>
+							<div class="col-md-3">
+
+								<p class="form-control-static text-#000000-bger font-bold ng-binding">510000</p>
+							</div>
+
+							<label class="col-md-3 control-label ">电话：</label>
+							<div class="col-md-3">
+								<p class="form-control-static text-#000000-bger font-bold ng-binding">0750-78511555</p>
+							</div>
+
+
+						</div>
+						<div class="form-group m-n">
+							<label class="col-md-3 control-label ">传真：</label>
+							<div class="col-md-3">
+								<p class="form-control-static text-#000000-bger font-bold ng-binding">0750-78511555</p>
+							</div>
+
+							<label class="col-md-3 control-label ">网址：</label>
+							<div class="col-md-3">
+								<p class="form-control-static text-#000000-bger font-bold">
+									<a href="http://www.conow.cn" class="ng-binding">http://www.conow.cn</a>
+								</p>
+							</div>
+						</div>
+
+						<div class="form-group m-n">
+							<label class="col-md-3 control-label ">上级行政组织：</label>
+							<div class="col-md-3">
+								<p class="form-control-static text-#000000-bger font-bold ng-binding">广州分院</p>
+							</div>
+
+							<label class="col-md-3 control-label ">组织类型：</label>
+							<div class="col-md-3">
+								<p class="form-control-static text-#000000-bger font-bold ng-binding">法人单位</p>
+							</div>
+						</div>
+						<div class="form-group m-n">
+							<div ng-hide="orgunitClass">
+								<label class="col-md-3 control-label ">机构分类：</label>
+								<div class="col-md-3">
+									<p class="form-control-static text-#000000-bger font-bold ng-binding">其他</p>
+								</div>
+							</div>
+							<div ng-hide="orgunitFunc" class="ng-hide">
+								<label class="col-md-3 control-label ">部室职责类型：</label>
+								<div class="col-md-3">
+									<p class="form-control-static text-#000000-bger font-bold ng-binding"></p>
+								</div>
+
+							</div>
+							<label class="col-md-3 control-label ">业务主管/联系单位：</label>
+							<div class="col-md-3">
+								<p class="form-control-static text-#000000-bger font-bold ng-binding">广州分院</p>
+							</div>
+						</div>
+						<div class="form-group m-n">
+							<div ng-hide="orgunitCorp" class="ng-hide">
+								<label class="col-md-3 control-label ">所属法人：</label>
+								<div class="col-md-3">
+									<p class="form-control-static text-#000000-bger font-bold ng-binding"></p>
+								</div>
+							</div>
+							<div ng-hide="orgunitRgn">
+								<label class="col-md-3 control-label ">所属区域组织：</label>
+								<div class="col-md-3">
+									<p class="form-control-static text-#000000-bger font-bold ng-binding">广州</p>
+								</div>
+							</div>
+						</div>
+
+					</form>
+
+					</div><!-- end ngRepeat: tab in tabs --><div class="tab-pane ng-scope" ng-repeat="tab in tabs" ng-class="{active: tab.active}" tab-content-transclude="tab">
+	     
+
+					<form class="form-horizontal bg-light lter b-light  b-l b-r b-b ng-pristine ng-valid ng-scope">
+						<!-- 法人信息 -->
+
+						<div class="form-group m-n">
+							<label class="col-md-3 control-label ">组织机构代码：</label>
+							<div class="col-md-3">
+								<p class="form-control-static text-#000000-bger font-bold ng-binding">CN001</p>
+							</div>
+
+							<label class="col-md-3 control-label ">中科院代码：</label>
+							<div class="col-md-3">
+								<p class="form-control-static text-#000000-bger font-bold ng-binding">CAS0000122</p>
+							</div>
+						</div>
+						<div class="form-group m-n">
+							<label class="col-md-3 control-label ">科技部代码：</label>
+							<div class="col-md-3">
+								<p class="form-control-static text-#000000-bger font-bold ng-binding">KJB0000013</p>
+							</div>
+
+							<label class="col-md-3 control-label ">教育部代码：</label>
+							<div class="col-md-3">
+								<p class="form-control-static text-#000000-bger font-bold ng-binding">JYB0001000</p>
+							</div>
+						</div>
+						<div class="form-group m-n">
+							<label class="col-md-3 control-label ">财政部代码：</label>
+							<div class="col-md-3">
+								<p class="form-control-static text-#000000-bger font-bold ng-binding">CZB0000123</p>
+							</div>
+
+							<label class="col-md-3 control-label ">中编委批准文号：</label>
+							<div class="col-md-3">
+								<p class="form-control-static text-#000000-bger font-bold ng-binding">ZBW0000017</p>
+							</div>
+						</div>
+						<div class="form-group m-n">
+							<label class="col-md-3 control-label ">中科院批准文号：</label>
+							<div class="col-md-3">
+								<p class="form-control-static text-#000000-bger font-bold ng-binding">ZKY1544858</p>
+							</div>
+
+							<label class="col-md-3 control-label ">法人代表：</label>
+							<div class="col-md-3">
+								<p class="form-control-static text-#000000-bger font-bold ng-binding">奉继承</p>
+							</div>
+						</div>
+						<div class="form-group m-n">
+							<label class="col-md-3 control-label ">成立时间：</label>
+							<div class="col-md-3">
+								<p class="form-control-static text-#000000-bger font-bold ng-binding">2015-03-17 00:00:00.0</p>
+							</div>
+
+							<label class="col-md-3 control-label ">所在政区：</label>
+							<div class="col-md-3">
+								<p class="form-control-static text-#000000-bger font-bold ng-binding">广东省广州市</p>
+							</div>
+						</div>
+						<div class="form-group m-n">
+							<label class="col-md-3 control-label ">业务范围/经营范围：</label>
+							<div class="col-md-3">
+								<p class="form-control-static text-#000000-bger font-bold ng-binding">中科院ARP3.0研发。</p>
+							</div>
+
+							<label class="col-md-3 control-label ">开办资金/注册资金：</label>
+							<div class="col-md-3">
+								<p class="form-control-static text-#000000-bger font-bold ng-binding">1000000011</p>
+							</div>
+						</div>
+						<div class="form-group m-n">
+							<label class="col-md-3 control-label ">挂靠(依托)/共建单位名称：</label>
+							<div class="col-md-3">
+								<p class="form-control-static text-#000000-bger font-bold ng-binding">广州分院</p>
+							</div>
+
+							<label class="col-md-3 control-label ">领导班子：</label>
+							<div class="col-md-3">
+								<p class="form-control-static text-#000000-bger font-bold ng-binding">1</p>
+							</div>
+						</div>
+						<div class="form-group m-n">
+							<label class="col-md-3 control-label ">备注：</label>
+							<div class="col-md-3">
+								<p class="form-control-static text-#000000-bger font-bold ng-binding">十三五规划重点单位11111111111</p>
+							</div>
+						</div>
+						<div class="form-group m-n">
+								<label class="col-md-3 control-label">证照附件:</label>
+								<div class="col-md-3">
+								<!-- ngRepeat: file in corpOrg.APPENDIX --><p class="form-control-static text-#000000-bger font-bold ng-scope" ng-repeat="file in corpOrg.APPENDIX">
+									<a class="text-primary" href="appendix/M00/00/23/CgACPlVB1KuAclWlAArtjZdWzDk541.jpg" target="_blank"><span class="m-r ng-binding">1. 头脑风暴第1期.jpg</span></a>
+								</p><!-- end ngRepeat: file in corpOrg.APPENDIX --><p class="form-control-static text-#000000-bger font-bold ng-scope" ng-repeat="file in corpOrg.APPENDIX">
+									<a class="text-primary" href="appendix/M00/00/25/CgACPVVB1N-AFseJAAAZoHG4DzI374.png" target="_blank"><span class="m-r ng-binding">2. QQ图片20150323185628.png</span></a>
+								</p><!-- end ngRepeat: file in corpOrg.APPENDIX --><p class="form-control-static text-#000000-bger font-bold ng-scope" ng-repeat="file in corpOrg.APPENDIX">
+									<a class="text-primary" href="appendix/M00/00/24/CgACPlVIk5eASc8VAAGqmcJulBU165.png" target="_blank"><span class="m-r ng-binding">3. Alogo.png</span></a>
+								</p><!-- end ngRepeat: file in corpOrg.APPENDIX --><p class="form-control-static text-#000000-bger font-bold ng-scope" ng-repeat="file in corpOrg.APPENDIX">
+									<a class="text-primary" href="appendix/M00/00/26/CgACPVVIk7uAU1bEAAGqmcJulBU703.png" target="_blank"><span class="m-r ng-binding">4. Alogo.png</span></a>
+								</p><!-- end ngRepeat: file in corpOrg.APPENDIX --><p class="form-control-static text-#000000-bger font-bold ng-scope" ng-repeat="file in corpOrg.APPENDIX">
+									<a class="text-primary" href="appendix/M00/00/24/CgACPlVIk76AMzr_AAGqmcJulBU677.png" target="_blank"><span class="m-r ng-binding">5. Alogo.png</span></a>
+								</p><!-- end ngRepeat: file in corpOrg.APPENDIX -->
+								</div>
+							</div>
+
+					</form>
+
+					</div><!-- end ngRepeat: tab in tabs -->
+	  </div>
+	</div>
+
+				</div>
+			</div>
+
+
+
+			<!-- 人员信息 -->
+
+			<div class="line line-dashed b-b line-lg m-t-sm"></div>
+			<div class="tab-container col-md-12 bg-light bg no-padder ng-isolate-scope">
+	  <ul class="nav nav-tabs" ng-class="{'nav-stacked': vertical, 'nav-justified': justified}" ng-transclude="">
+			<li ng-class="{active: active, disabled: disabled}" class="ng-isolate-scope active">
+	  <a href="" ng-click="select()" tab-heading-transclude="" class="ng-binding"><tab-heading class="ng-scope"> <strong>人员信息</strong> </tab-heading></a>
+	</li> <li ng-class="{active: active, disabled: disabled}" ng-show="orgunitCorpInfo" class="ng-isolate-scope">
+	  <a href="" ng-click="select()" tab-heading-transclude="" class="ng-binding"><tab-heading class="ng-scope"> <strong>岗位信息</strong> </tab-heading></a>
+	</li> <li ng-class="{active: active, disabled: disabled}" class="ng-isolate-scope">
+	  <a href="" ng-click="select()" tab-heading-transclude="" class="ng-binding"><tab-heading class="ng-scope"> <strong>下级组织</strong> </tab-heading></a>
+	</li> </ul>
+	  <div class="tab-content">
+	    <!-- ngRepeat: tab in tabs --><div class="tab-pane ng-scope active" ng-repeat="tab in tabs" ng-class="{active: tab.active}" tab-content-transclude="tab">
+	     
+			<div class="ng-scope">
+
+				<div ng-hide="staffCollections.length<1">搜索人员:<input id="filter" type="text" class="form-control input-sm w-sm inline m-r " placeholder="关键字..."></div>
+				<table class="table m-b-none footable-loaded footable no-paging" id="table-staff" ui-jq="footable" data-filter="#filter" data-page-size="10">
+					<thead ng-hide="staffCollections.length<1">
+						<tr>
+
+							<th class="footable-sortable">姓名<span class="footable-sort-indicator"></span></th>
+							<th class="footable-sortable">岗位<span class="footable-sort-indicator"></span></th>
+							<th class="footable-sortable">职称<span class="footable-sort-indicator"></span></th>
+
+						</tr>
+					</thead>
+					<tbody>
+						<!-- ngRepeat: staff in staffCollections --><tr ng-repeat="staff in staffCollections" class="ng-scope footable-even" style="display: table-row;">
+
+							<td class="v-middle"><a ui-sref="app.cam.staffdetail({'staffId':'1421997098520698910393279'})" class="ng-binding" href="#/app/cam/staffdetail/1421997098520698910393279">HR</a>
+							</td>
+							<td class="v-middle ng-binding">java工程师</td>
+							<td class="v-middle ng-binding"></td>
+
+
+
+						</tr><!-- end ngRepeat: staff in staffCollections --><tr ng-repeat="staff in staffCollections" class="ng-scope footable-odd" style="display: table-row;">
+
+							<td class="v-middle"><a ui-sref="app.cam.staffdetail({'staffId':'1422006550634656510294750'})" class="ng-binding" href="#/app/cam/staffdetail/1422006550634656510294750">廖国君</a>
+							</td>
+							<td class="v-middle ng-binding">代码检测师</td>
+							<td class="v-middle ng-binding"></td>
+
+
+
+						</tr><!-- end ngRepeat: staff in staffCollections --><tr ng-repeat="staff in staffCollections" class="ng-scope footable-even" style="display: table-row;">
+
+							<td class="v-middle"><a ui-sref="app.cam.staffdetail({'staffId':'1429515522554104305717583'})" class="ng-binding" href="#/app/cam/staffdetail/1429515522554104305717583">黎山</a>
+							</td>
+							<td class="v-middle ng-binding">java工程师</td>
+							<td class="v-middle ng-binding"></td>
+
+
+
+						</tr><!-- end ngRepeat: staff in staffCollections --><tr ng-repeat="staff in staffCollections" class="ng-scope footable-odd" style="display: table-row;">
+
+							<td class="v-middle"><a ui-sref="app.cam.staffdetail({'staffId':'1419848023781429546481034'})" class="ng-binding" href="#/app/cam/staffdetail/1419848023781429546481034">奉继承</a>
+							</td>
+							<td class="v-middle ng-binding">CEO</td>
+							<td class="v-middle ng-binding"></td>
+
+
+
+						</tr><!-- end ngRepeat: staff in staffCollections --><tr ng-repeat="staff in staffCollections" class="ng-scope footable-even" style="display: table-row;">
+
+							<td class="v-middle"><a ui-sref="app.cam.staffdetail({'staffId':'1427095919904103854559691'})" class="ng-binding" href="#/app/cam/staffdetail/1427095919904103854559691">liaofei</a>
+							</td>
+							<td class="v-middle ng-binding">程序测试</td>
+							<td class="v-middle ng-binding"></td>
+
+
+
+						</tr><!-- end ngRepeat: staff in staffCollections -->
+
+
+					</tbody>
+
+					<tfoot class="hide-if-no-paging">
+						<!-- ngIf: staffCollections.length<1 -->
+						<tr>
+							<td colspan="5" class="text-center">
+								<ul class="pagination"><li class="footable-page-arrow disabled"><a data-page="first" href="#first">«</a></li><li class="footable-page-arrow disabled"><a data-page="prev" href="#prev">‹</a></li><li class="footable-page active"><a data-page="0" href="#">1</a></li><li class="footable-page-arrow disabled"><a data-page="next" href="#next">›</a></li><li class="footable-page-arrow disabled"><a data-page="last" href="#last">»</a></li></ul>
+							</td>
+						</tr>
+					</tfoot>
+				</table>
+			</div>
+			</div><!-- end ngRepeat: tab in tabs --><div class="tab-pane ng-scope" ng-repeat="tab in tabs" ng-class="{active: tab.active}" tab-content-transclude="tab">
+	    
+			
+			<div class="ng-scope">
+
+				<div>
+					<!-- <div class="col-lg-3 " ng-repeat="job in jobsCollections">
+						<div class="panel panel-default b-a b-primary bg-light It r-2x">
+							<div class="panel-body text-center  text-md">
+								<a ng-click="showJobsDetail('','{{job.ID}}',true)">{{job.JOBS_NAME}}</a>
+								&nbsp;<a ng-click="showJobsDetail('','{{job.ID}}',false)"><span class="badge bg-primary">{{job.staffCount}}</span></a>
+							</div>
+						</div>
+					</div>
+					<div ng-if="jobsCollections.length<1">该部门下无岗位</div>
+					&nbsp; -->
+					<!-- <div class="m-b-xs text-white">&nbsp;</div> -->
+					<table class="table m-b-none footable-loaded footable" id="table-jobs" ui-jq="footable" data-filter="#filter_jobs" data-page-size="6">
+						<thead>
+							<tr ng-hide="jobsCollections.length<1">
+								<th class="text-center footable-sortable">岗位名称<span class="footable-sort-indicator"></span></th>
+								
+								<th class="text-center footable-sortable">在岗人数<span class="footable-sort-indicator"></span></th>
+								
+								
+							</tr>
+						</thead>
+						<tbody>
+							  <!-- ngRepeat: job in jobsCollections --><tr ng-repeat="job in jobsCollections" class="ng-scope footable-even" style="display: table-row;">
+								<td class="v-middle text-center">
+									<a><span ng-click="showJobsDetail('','1421997828298804910413279',true)" class="ng-binding">程序测试</span></a>
+								</td>
+								
+								<td class="v-middle text-center">
+									<a><!-- <span ng-click="showJobsDetail('','{{job.ID}}',false)">{{job.staffCount}}</span> --><span ng-click="showJobsDetail('','1421997828298804910413279',false)" class="badge bg-primary ng-binding">14</span></a>
+								</td>
+								
+								
+								
+							</tr><!-- end ngRepeat: job in jobsCollections --><tr ng-repeat="job in jobsCollections" class="ng-scope footable-odd" style="display: table-row;">
+								<td class="v-middle text-center">
+									<a><span ng-click="showJobsDetail('','1422944196055377610303354',true)" class="ng-binding">前端工程师</span></a>
+								</td>
+								
+								<td class="v-middle text-center">
+									<a><!-- <span ng-click="showJobsDetail('','{{job.ID}}',false)">{{job.staffCount}}</span> --><span ng-click="showJobsDetail('','1422944196055377610303354',false)" class="badge bg-primary ng-binding">6</span></a>
+								</td>
+								
+								
+								
+							</tr><!-- end ngRepeat: job in jobsCollections --><tr ng-repeat="job in jobsCollections" class="ng-scope footable-even" style="display: table-row;">
+								<td class="v-middle text-center">
+									<a><span ng-click="showJobsDetail('','1421981877685502310333279',true)" class="ng-binding">java工程师</span></a>
+								</td>
+								
+								<td class="v-middle text-center">
+									<a><!-- <span ng-click="showJobsDetail('','{{job.ID}}',false)">{{job.staffCount}}</span> --><span ng-click="showJobsDetail('','1421981877685502310333279',false)" class="badge bg-primary ng-binding">25</span></a>
+								</td>
+								
+								
+								
+							</tr><!-- end ngRepeat: job in jobsCollections --><tr ng-repeat="job in jobsCollections" class="ng-scope footable-odd" style="display: table-row;">
+								<td class="v-middle text-center">
+									<a><span ng-click="showJobsDetail('','1422925890384466310313354',true)" class="ng-binding">系统架构师</span></a>
+								</td>
+								
+								<td class="v-middle text-center">
+									<a><!-- <span ng-click="showJobsDetail('','{{job.ID}}',false)">{{job.staffCount}}</span> --><span ng-click="showJobsDetail('','1422925890384466310313354',false)" class="badge bg-primary ng-binding">3</span></a>
+								</td>
+								
+								
+								
+							</tr><!-- end ngRepeat: job in jobsCollections --><tr ng-repeat="job in jobsCollections" class="ng-scope footable-even" style="display: table-row;">
+								<td class="v-middle text-center">
+									<a><span ng-click="showJobsDetail('','1425625736899103247507246',true)" class="ng-binding">程序员鼓励师</span></a>
+								</td>
+								
+								<td class="v-middle text-center">
+									<a><!-- <span ng-click="showJobsDetail('','{{job.ID}}',false)">{{job.staffCount}}</span> --><span ng-click="showJobsDetail('','1425625736899103247507246',false)" class="badge bg-primary ng-binding">0</span></a>
+								</td>
+								
+								
+								
+							</tr><!-- end ngRepeat: job in jobsCollections --><tr ng-repeat="job in jobsCollections" class="ng-scope footable-odd" style="display: table-row;">
+								<td class="v-middle text-center">
+									<a><span ng-click="showJobsDetail('','1421981733184474810343279',true)" class="ng-binding">程序员</span></a>
+								</td>
+								
+								<td class="v-middle text-center">
+									<a><!-- <span ng-click="showJobsDetail('','{{job.ID}}',false)">{{job.staffCount}}</span> --><span ng-click="showJobsDetail('','1421981733184474810343279',false)" class="badge bg-primary ng-binding">4</span></a>
+								</td>
+								
+								
+								
+							</tr><!-- end ngRepeat: job in jobsCollections --><tr ng-repeat="job in jobsCollections" class="ng-scope footable-even" style="display: none;">
+								<td class="v-middle text-center">
+									<a><span ng-click="showJobsDetail('','1429702482086103282768923',true)" class="ng-binding">用户体验设计师</span></a>
+								</td>
+								
+								<td class="v-middle text-center">
+									<a><!-- <span ng-click="showJobsDetail('','{{job.ID}}',false)">{{job.staffCount}}</span> --><span ng-click="showJobsDetail('','1429702482086103282768923',false)" class="badge bg-primary ng-binding">0</span></a>
+								</td>
+								
+								
+								
+							</tr><!-- end ngRepeat: job in jobsCollections --><tr ng-repeat="job in jobsCollections" class="ng-scope footable-odd" style="display: none;">
+								<td class="v-middle text-center">
+									<a><span ng-click="showJobsDetail('','1429955097014103921972471',true)" class="ng-binding">搬砖工</span></a>
+								</td>
+								
+								<td class="v-middle text-center">
+									<a><!-- <span ng-click="showJobsDetail('','{{job.ID}}',false)">{{job.staffCount}}</span> --><span ng-click="showJobsDetail('','1429955097014103921972471',false)" class="badge bg-primary ng-binding">0</span></a>
+								</td>
+								
+								
+								
+							</tr><!-- end ngRepeat: job in jobsCollections --><tr ng-repeat="job in jobsCollections" class="ng-scope footable-even" style="display: none;">
+								<td class="v-middle text-center">
+									<a><span ng-click="showJobsDetail('','1421991949000935810413279',true)" class="ng-binding">需求分析师</span></a>
+								</td>
+								
+								<td class="v-middle text-center">
+									<a><!-- <span ng-click="showJobsDetail('','{{job.ID}}',false)">{{job.staffCount}}</span> --><span ng-click="showJobsDetail('','1421991949000935810413279',false)" class="badge bg-primary ng-binding">8</span></a>
+								</td>
+								
+								
+								
+							</tr><!-- end ngRepeat: job in jobsCollections --><tr ng-repeat="job in jobsCollections" class="ng-scope footable-odd" style="display: none;">
+								<td class="v-middle text-center">
+									<a><span ng-click="showJobsDetail('','1423623195027103432791266',true)" class="ng-binding">测试岗位2.11</span></a>
+								</td>
+								
+								<td class="v-middle text-center">
+									<a><!-- <span ng-click="showJobsDetail('','{{job.ID}}',false)">{{job.staffCount}}</span> --><span ng-click="showJobsDetail('','1423623195027103432791266',false)" class="badge bg-primary ng-binding">0</span></a>
+								</td>
+								
+								
+								
+							</tr><!-- end ngRepeat: job in jobsCollections --><tr ng-repeat="job in jobsCollections" class="ng-scope footable-even" style="display: none;">
+								<td class="v-middle text-center">
+									<a><span ng-click="showJobsDetail('','1423098649067478310283279',true)" class="ng-binding">测试岗位255</span></a>
+								</td>
+								
+								<td class="v-middle text-center">
+									<a><!-- <span ng-click="showJobsDetail('','{{job.ID}}',false)">{{job.staffCount}}</span> --><span ng-click="showJobsDetail('','1423098649067478310283279',false)" class="badge bg-primary ng-binding">0</span></a>
+								</td>
+								
+								
+								
+							</tr><!-- end ngRepeat: job in jobsCollections --><tr ng-repeat="job in jobsCollections" class="ng-scope footable-odd" style="display: none;">
+								<td class="v-middle text-center">
+									<a><span ng-click="showJobsDetail('','1421999407322307210383279',true)" class="ng-binding">代码检测师</span></a>
+								</td>
+								
+								<td class="v-middle text-center">
+									<a><!-- <span ng-click="showJobsDetail('','{{job.ID}}',false)">{{job.staffCount}}</span> --><span ng-click="showJobsDetail('','1421999407322307210383279',false)" class="badge bg-primary ng-binding">1</span></a>
+								</td>
+								
+								
+								
+							</tr><!-- end ngRepeat: job in jobsCollections --> 
+						
+						</tbody>
+						<tfoot class="hide-if-no-paging">
+							<!-- ngIf: jobsCollections.length<1 -->
+							<tr>
+								<td colspan="5" class="text-center">
+									<ul class="pagination"><li class="footable-page-arrow disabled"><a data-page="first" href="#first">«</a></li><li class="footable-page-arrow disabled"><a data-page="prev" href="#prev">‹</a></li><li class="footable-page active"><a data-page="0" href="#">1</a></li><li class="footable-page"><a data-page="1" href="#">2</a></li><li class="footable-page-arrow"><a data-page="next" href="#next">›</a></li><li class="footable-page-arrow"><a data-page="last" href="#last">»</a></li></ul></td>
+							</tr>
+						</tfoot>
+					</table>
+				</div>
+			</div>
+			</div><!-- end ngRepeat: tab in tabs --><div class="tab-pane ng-scope" ng-repeat="tab in tabs" ng-class="{active: tab.active}" tab-content-transclude="tab">
+	    
+			
+			<div class="ng-scope">
+				<div>
+					<!-- <div class="col-lg-3 " ng-repeat="nextOrg in nextOrgCollections">
+						<div class="panel panel-default b-a b-primary bg-light It r-2x">
+							<div class="panel-body text-center  text-md">
+								<a ui-sref="app.cam.organdstaff({orgUnitId:'{{nextOrg.ID}}'})">{{nextOrg.ORG_UNIT_NAME}}</a>
+							</div>
+						</div>
+					</div>
+					<div ng-if="nextOrgCollections.length<1">该组织无下级组织</div>
+					&nbsp;
+					<div class="m-b-xs text-white">&nbsp;</div> -->
+					<table class="table m-b-none footable-loaded footable" id="table-org" ui-jq="footable" data-filter="#filterOrg" data-page-size="6">
+						<thead>
+							<tr ng-hide="nextOrgCollections.length<1">
+								<th class="text-center footable-sortable">组织名称<span class="footable-sort-indicator"></span></th>
+								
+								
+								
+							</tr>
+						</thead>
+						<tbody>
+							<!-- ngRepeat: nextOrg in nextOrgCollections --><tr ng-repeat="nextOrg in nextOrgCollections" class="ng-scope footable-even" style="display: table-row;">
+								
+								<td class="v-middle text-center"><a ui-sref="app.cam.organdstaff({orgUnitId:'1421924918293539010273354'})" class="ng-binding" href="#/app/cam/organdstaff/1421924918293539010273354">后台一组</a></td>
+								
+								
+								
+							</tr><!-- end ngRepeat: nextOrg in nextOrgCollections --><tr ng-repeat="nextOrg in nextOrgCollections" class="ng-scope footable-odd" style="display: table-row;">
+								
+								<td class="v-middle text-center"><a ui-sref="app.cam.organdstaff({orgUnitId:'1421924950435942510293354'})" class="ng-binding" href="#/app/cam/organdstaff/1421924950435942510293354">后台二组</a></td>
+								
+								
+								
+							</tr><!-- end ngRepeat: nextOrg in nextOrgCollections --><tr ng-repeat="nextOrg in nextOrgCollections" class="ng-scope footable-even" style="display: table-row;">
+								
+								<td class="v-middle text-center"><a ui-sref="app.cam.organdstaff({orgUnitId:'1421924987288261310273354'})" class="ng-binding" href="#/app/cam/organdstaff/1421924987288261310273354">后台三组</a></td>
+								
+								
+								
+							</tr><!-- end ngRepeat: nextOrg in nextOrgCollections --><tr ng-repeat="nextOrg in nextOrgCollections" class="ng-scope footable-odd" style="display: table-row;">
+								
+								<td class="v-middle text-center"><a ui-sref="app.cam.organdstaff({orgUnitId:'1421925182611371310303354'})" class="ng-binding" href="#/app/cam/organdstaff/1421925182611371310303354">技术研发组</a></td>
+								
+								
+								
+							</tr><!-- end ngRepeat: nextOrg in nextOrgCollections --><tr ng-repeat="nextOrg in nextOrgCollections" class="ng-scope footable-even" style="display: table-row;">
+								
+								<td class="v-middle text-center"><a ui-sref="app.cam.organdstaff({orgUnitId:'1421925129420748010293354'})" class="ng-binding" href="#/app/cam/organdstaff/1421925129420748010293354">业务需求组</a></td>
+								
+								
+								
+							</tr><!-- end ngRepeat: nextOrg in nextOrgCollections --><tr ng-repeat="nextOrg in nextOrgCollections" class="ng-scope footable-odd" style="display: table-row;">
+								
+								<td class="v-middle text-center"><a ui-sref="app.cam.organdstaff({orgUnitId:'1421925067559226910363354'})" class="ng-binding" href="#/app/cam/organdstaff/1421925067559226910363354">前端四组</a></td>
+								
+								
+								
+							</tr><!-- end ngRepeat: nextOrg in nextOrgCollections --><tr ng-repeat="nextOrg in nextOrgCollections" class="ng-scope footable-even" style="display: none;">
+								
+								<td class="v-middle text-center"><a ui-sref="app.cam.organdstaff({orgUnitId:'1427271857066103166901317'})" class="ng-binding" href="#/app/cam/organdstaff/1427271857066103166901317">前端二组</a></td>
+								
+								
+								
+							</tr><!-- end ngRepeat: nextOrg in nextOrgCollections --><tr ng-repeat="nextOrg in nextOrgCollections" class="ng-scope footable-odd" style="display: none;">
+								
+								<td class="v-middle text-center"><a ui-sref="app.cam.organdstaff({orgUnitId:'1430205286200103921979708'})" class="ng-binding" href="#/app/cam/organdstaff/1430205286200103921979708">基础平台组</a></td>
+								
+								
+								
+							</tr><!-- end ngRepeat: nextOrg in nextOrgCollections --><tr ng-repeat="nextOrg in nextOrgCollections" class="ng-scope footable-even" style="display: none;">
+								
+								<td class="v-middle text-center"><a ui-sref="app.cam.organdstaff({orgUnitId:'1430895546211104005711783'})" class="ng-binding" href="#/app/cam/organdstaff/1430895546211104005711783">XXX中心</a></td>
+								
+								
+								
+							</tr><!-- end ngRepeat: nextOrg in nextOrgCollections -->
+							
+						</tbody>
+						<tfoot class="hide-if-no-paging">
+						<!-- ngIf: nextOrgCollections.length<1 -->
+							<tr>
+								<td colspan="5" class="text-center">
+									<ul class="pagination"><li class="footable-page-arrow disabled"><a data-page="first" href="#first">«</a></li><li class="footable-page-arrow disabled"><a data-page="prev" href="#prev">‹</a></li><li class="footable-page active"><a data-page="0" href="#">1</a></li><li class="footable-page"><a data-page="1" href="#">2</a></li><li class="footable-page-arrow"><a data-page="next" href="#next">›</a></li><li class="footable-page-arrow"><a data-page="last" href="#last">»</a></li></ul></td>
+							</tr>
+						</tfoot>
+					</table>
+				</div>
+			</div>
+			</div><!-- end ngRepeat: tab in tabs -->
+	  </div>
+	</div>
+
+
+
+		</div>
+</div>

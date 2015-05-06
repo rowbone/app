@@ -1,0 +1,26 @@
+{
+    "message": null,
+    "obj": {
+        "ID": "1422945768950299610293279",
+        "NAME": "陈盛波",
+        "ENG_NAME": null,
+        "GENDER": "M",
+        "ORG_UNIT_ID": "1421924950435942510293354",
+        "CORP_ORG_ID": "1421924106089631410343354",
+        "JOBS_ID": "1421981877685502310333279",
+        "MOBILE": "18825159879",
+        "OFFICE_TEL": "020-66666666",
+        "MAIL": "chenshengbo@conow.cn",
+        "OFFICE_ADDR": "广东省广州市越秀区先烈中路100号大院广州教育基地大厦307",
+        "PHOTO": "img/person_photo_2.png",
+        "QR_CODE": "img/qrcode-img.png",
+        "PERSONAL_NO": "440785199209300011",
+        "PASSPORT_NO": "4",
+        "TITLE_NAME": null,
+        "TotalORG_UNIT_NAME": "中科院/广州分院/科南软件/二组",
+        "GENDER_HR_STAFF_GENDER": "男性",
+        "JOBS_ID_HR_JOBS_INFO": "java工程师"
+    },
+    "pageInfo": null,
+    "success": true
+}

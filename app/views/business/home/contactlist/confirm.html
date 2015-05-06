@@ -2,8 +2,12 @@
 <div class="modal-header">
 	<style>
 		.modal-dialog {
-			margin-left: 20px;
-			margin-right: 20px;
+			width: 80%;
+			margin-left: 10%;
+			margin-right: 10%;
+		}
+		.modal-body {
+			overflow: hidden;
 		}
 	</style>
 	<div class="modal-op">
@@ -19,7 +23,7 @@
 		<span class="col">确认关注</span>
 	</div>
 	<div class="hbox text-center m">
-		<span class="col">abc</span>
+		<span class="col">{{ entity.NAME }}</span>
 	</div>
 	<div class="hbox text-2x text-center m">
 		<a class="glyphicon glyphicon-ok text-success m" ng-click="confirm()"></a>

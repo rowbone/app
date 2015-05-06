@@ -39,11 +39,16 @@
 			<div class="h bg-primary font-bold text-title padder-v-sm">
 				<span class="v-middle m-sm">搜索结果</span>
 			</div>
+			<div class="padder-sm padder-v-sm text-info" ng-if="entity.searchResults && entity.searchResults.length == 0">
+				没有符合条件的人员信息
+			</div>
 			<div>
 				<div ng-repeat="result in entity.searchResults track by $index">
 					<div class="hbox">
-						<span class="col-xs-8 text-32">{{ result.NAME }}</span>
-						<span class="col-xs-8 text-22 m-t-sm">{{ result.totalName }}</span>
+						<a ui-sref="app.hr.staffInfo({staffId:result.id})">
+							<span class="col-xs-8 text-32">{{ result.NAME }}</span>
+							<small class="col-xs-8 text-22 m-t-sm">{{ result.totalName }}</small>
+						</a>
 						<a class="btn btn-default pull-right v-middle" ng-click="collectionConfirm(result)">关注</a>
 					</div>
 					<hr class="b-b b-primary b-2x">
