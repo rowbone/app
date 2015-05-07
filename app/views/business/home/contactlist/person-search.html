@@ -1,57 +1,79 @@
 
 <style>
-	.text-title {
-		font-size: 20px;
-	}
 	.text-32 {
 		font-size: 32px;
 	}
 	.text-22 {
 		font-size: 22px;
 	}
+	.btn-danger-square {
+		background-color: #FFFFFF;
+		color: #F05050;
+		border: 1px solid #F05050;
+	}
+	.btn-danger-square:hover {
+		color: #F05050;
+		font-weight: bold;
+		border: 2px solid #F05050;
+	}
+	.b-split {
+		border-color: #dcedf5;
+	}
 </style>
 <div>
-	<div class="hbox m-b">
-		<div>
-			<input type="text" class="form-control input-lg r-3x" ng-model="entity.searchKey" placeholder="搜索" ng-keyup="enterPress($event)" autofocus>
-			<!-- <span class="input-group-btn fa fa-search"></span> -->
-		</div>
+	<div class="hbox padder-md">
+		<div class="input-group">
+			<input type="text" class="form-control input-lg r-3x" ng-model="entity.searchKey" ng-keyup="enterPress($event)" placeholder="搜索" autofocus>
+			<div class="input-group-btn">
+			  <button type="button" class="btn btn-primary input-lg r-3x" tabindex=-1>
+					<i class="fa fa-search"></i>
+			  </button>  	  	
+			</div>
+	  </div>
 	</div>
 
-	<div class="hbox m-b">
+	<div class="hbox m-t-sm m-b-md padder-md">
 		<div class="col radio">
-			<label >
+			<label class="text-md">
 				<input type="radio" name="personSearchType" ng-model="entity.searchType" value="name">姓名快速搜索
 			</label>
 		</div>
 		<div class="col radio">
-			<label >
+			<label class="text-md">
 				<input type="radio" name="personSearchType" ng-model="entity.searchType" value="fullText">全文模糊搜索
 			</label>
 		</div>
 	</div>
-	<div class="m-b" ng-if="options.search">
-		<div ng-if="!entity.searchResults">
+	<div class="hbox m-b" ng-if="options.search">
+		<div class="padder-md" ng-if="!entity.searchResults">
 			<i class="fa fa-spin fa-spinner"></i>
 			<span>加载中</span>
 		</div>
 		<div ng-if="entity.searchResults">
-			<div class="h bg-primary font-bold text-title padder-v-sm">
-				<span class="v-middle m-sm">搜索结果</span>
+			<div class="hbox bg-primary text-base font-bold padder-sm padder-v-sm">
+				<div class="col">
+					<span>搜索结果</span>
+				</div>
 			</div>
-			<div class="padder-sm padder-v-sm text-info" ng-if="entity.searchResults && entity.searchResults.length == 0">
+			<div class="hbox padder-sm padder-v-sm text-info" ng-if="entity.searchResults && entity.searchResults.length == 0">
 				没有符合条件的人员信息
 			</div>
-			<div>
+			<div class="search-result m-t">
 				<div ng-repeat="result in entity.searchResults track by $index">
-					<div class="hbox">
-						<a ng-click="showDetailInfo(result)">
-							<span class="col-xs-8 text-32">{{ result.NAME }}</span>
-							<small class="col-xs-8 text-22 m-t-sm">{{ result.totalName }}</small>
+					<div class="hbox padder">
+						<a class="col" ng-click="showDetailInfo(result)">
+							<div>
+								<span class="text-md">{{ result.NAME }}</span>
+							</div>
+							<div>
+								<span class="text-xs m-t-sm">{{ result.totalName }}</span>
+							</div>
 						</a>
-						<a class="btn btn-default pull-right v-middle" ng-click="collectionConfirm(result)">关注</a>
+						<div class="col v-middle">
+							<a class="btn pull-right btn-danger-square" ng-click="collectionConfirm(result)">关注</a>
+						</div>
 					</div>
-					<hr class="b-b b-primary b-2x">
+					<hr class="b-b b-split">
 				</div>
 			</div>
 		</div>

@@ -1,3 +1,11 @@
+
+<style>
+	.b-split {
+		border-color: #dcedf5;
+	}
+	
+</style>
+
 <div ng-controller="ChildOrgsCtrl">
 	<div class="m-t">
 		<div ng-repeat="org in orgs track by $index">
@@ -7,7 +15,7 @@
 				</a>
 				<a class="btn btn-default pull-right v-middle" ng-click="collectionConfirm(org)">关注</a>
 			</div>
-			<hr class="b-b b-primary b-2x">
+			<hr class="b-b b-split">
 		</div>
 	</div>
 </div>

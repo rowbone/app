@@ -26,7 +26,9 @@ app.controller('CollectionCtrl', ['$scope', '$http', '$timeout', '$filter', '$st
 		var urlCollectionsPersons = 'data/bz/home/contactlist2/collections-persons.json';
 
 		var options = $scope.options = {
-			collectionNone: false
+			collectionNone: false,
+			collectionOrgExpand: false,
+			collectionPersonExpand: true
 		};
 
 		var collections = $scope.collections = {
@@ -37,7 +39,7 @@ app.controller('CollectionCtrl', ['$scope', '$http', '$timeout', '$filter', '$st
 		$http.get(urlCollectionsOrgs) 
 			.success(function(data, status, headers, config) {
 				var orgs = data.obj;
-				collections.orgs = $filter('orderBy')(orgs, 'groupCode');
+				collections.orgs = orgs;
 			})
 			.error(function(data, status, headers, config) {
 				console.log('Get ' + urlCollectionsOrgs + ' wrong...');
@@ -46,7 +48,7 @@ app.controller('CollectionCtrl', ['$scope', '$http', '$timeout', '$filter', '$st
 		$http.get(urlCollectionsPersons) 
 			.success(function(data, status, headers, config) {
 				var persons = data.obj;
-				collections.persons = $filter('orderBy')(persons, 'groupCode');
+				collections.persons = persons;
 			})
 			.error(function(data, status, headers, config) {
 				console.log('Get ' + urlCollectionsPersons + ' wrong...');
@@ -72,13 +74,13 @@ app.controller('CollectionCtrl', ['$scope', '$http', '$timeout', '$filter', '$st
 		$scope.showDetailInfo = function(obj, showType) {
 			var state = '';
 
-			if(showType == 'org') {
-				$state.go('app.hr.orgInfo', { orgId: obj.id });
-			} else if(showType == 'person') {
-				$state.go('app.hr.staffInfo', { staffId: obj.id });
-			} else {
-				// 
-			}
+			// if(showType == 'org') {
+			// 	$state.go('app.hr.orgInfo', { orgId: obj.id });
+			// } else if(showType == 'person') {
+			// 	$state.go('app.hr.staffInfo', { staffId: obj.id });
+			// } else {
+			// 	// 
+			// }
 		};
 	}
 ]);
@@ -217,11 +219,11 @@ app.controller('OrgSearchCtrl', ['$scope', '$http', '$timeout', '$modal',
 		entity.classify = ['大科学中心', '创新研究院', '卓越创新中心', '特色研究所', '其他'];
 
 		$scope.areaSelect = function(obj) {
-			entity.areaSelected = obj;
+			entity.areaSelected = (entity.areaSelected == obj) ? null : obj;
 		};
 
 		$scope.classifySelect = function(obj) {
-			entity.classifySelected = obj;
+			entity.classifySelected = (entity.classifySelected == obj) ? null : obj;
 		};
 
 		// 搜索框 enter 触发搜索事件
@@ -278,6 +280,7 @@ app.controller('OrgTreeCtrl', ['$scope',
 	}
 ]);
 
+// 下级组织页签
 app.controller('ChildOrgsCtrl', ['$scope', '$http', 
 	function($scope, $http) {
 		$scope.orgs = [];
@@ -286,7 +289,7 @@ app.controller('ChildOrgsCtrl', ['$scope', '$http',
 
 		$http.get(childOrgsUrl)
 			.success(function(data, status, headers, config) {
-				console.log(data.obj);
+console.log(data.obj);
 				$scope.orgs = data.obj;
 			})
 			.error(function(data, status, headers, config) {
@@ -294,3 +297,40 @@ app.controller('ChildOrgsCtrl', ['$scope', '$http',
 			})
 	}
 ]);
+
+// 人员信息页签
+app.controller('OrgStaffsCtrl', ['$scope', '$http', 
+	function($scope, $http) {
+		$scope.orgStaffs = [];
+
+		var orgStaffsUrl = 'data/bz/home/contactlist2/staffInfo-queryActStaffByOrgUnitId.json';
+
+		$http.get(orgStaffsUrl)
+			.success(function(data, status, headers, config) {
+console.log(data.obj);
+				$scope.orgStaffs = data.obj;
+			})
+			.error(function(data, status, headers, config) {
+				console.log('Get ' + orgStaffsUrl + ' wrong...');
+			})
+	}
+]);
+
+// 组织信息页签
+app.controller('OrgInfoCtrl', ['$scope', '$http', 
+	function($scope, $http) {
+		$scope.orgInfo = {};
+
+		var orgInfoUrl = 'data/bz/home/contactlist2/orgUnit-queryOrgUnitInfoInCam-id-1421924106089631410343354.json';
+
+		$http.get(orgInfoUrl)
+			.success(function(data, status, headers, config) {
+console.log(data.obj);
+				$scope.orgInfo = data.obj.orgUnit;
+			})
+			.error(function(data, status, headers, config) {
+				console.log('Get ' + orgInfoUrl + ' wrong...');
+			})
+	}
+]);
+

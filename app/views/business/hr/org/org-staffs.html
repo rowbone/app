@@ -1,0 +1,22 @@
+
+<style>
+	.b-split {
+		border-color: #dcedf5;
+	}
+	
+</style>
+
+<div ng-controller="OrgStaffsCtrl">
+	<div class="m-t">
+		<div ng-repeat="staff in orgStaffs track by $index">
+			<div class="hbox">
+				<a ng-click="showDetailInfo(staff)">
+					<span class="col-xs-3 text-base">{{ staff.NAME }}</span>
+					<small class="col-xs-3">{{ staff.JOBS_ID_HR_JOBS_INFO }}</small>
+				</a>
+				<a class="btn btn-default pull-right v-middle" ng-click="collectionConfirm(staff)">关注</a>
+			</div>
+			<hr class="b-b b-split">
+		</div>
+	</div>
+</div>
