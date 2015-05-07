@@ -149,13 +149,15 @@ app.controller('PersonSearchCtrl', ['$scope', '$http', '$timeout', '$modal',
 
 			var modalInstance2 = null;
 
-			modalInstance.result.then(function(rtnVal) {
-				console.log(rtnVal);
-				// if(rtnVal == 'confirm') {
-				// 	modalInstance2 = $modal.open({
-				// 		templateUrl: 'views/business/home/contactlist/result.html',
-				// 	});
-				// }
+			modalInstance.result.then(function(rtnVal) {				
+				modalInstance2 = $modal.open({
+					templateUrl: 'views/business/home/contactlist/result.html',
+					controller: 'ConfirmResultCtrl'
+				})
+
+				$timeout(function() {
+					modalInstance2.close();
+				}, 3000);
 			}, function(rtnVal) {
 				console.log(rtnVal)
 			})
@@ -167,8 +169,8 @@ app.controller('PersonSearchCtrl', ['$scope', '$http', '$timeout', '$modal',
 	}
 ]);
 
-app.controller('ConfirmCtrl', ['$scope', '$modalInstance', 'modalParams', 
-	function($scope, $modalInstance, modalParams) {
+app.controller('ConfirmCtrl', ['$scope', '$modalInstance', 'modalParams', '$modal', '$timeout', 
+	function($scope, $modalInstance, modalParams, $modal, $timeout) {
 		$scope.entity = modalParams.user;
 
 		$scope.confirm = function() {
@@ -183,7 +185,11 @@ app.controller('ConfirmCtrl', ['$scope', '$modalInstance', 'modalParams',
 			$modalInstance.close('close');
 		};
 	}
-])
+]);
+
+app.controller('ConfirmResultCtrl', ['$scope', function($scope){
+	
+}])
 
 app.controller('OrgSearchCtrl', ['$scope', '$http', '$timeout', '$modal', 
 	function($scope, $http, $timeout, $modal) {
@@ -270,6 +276,38 @@ console.log(data);
 				.error(function(data, status, headers, config) {
 					console.log('Get ' + orgDetailUrl + ' wrong...');
 				})
+		};
+
+		// 添加关注确认
+		$scope.collectionConfirm = function(org) {
+			var modalInstance = $modal.open({
+				templateUrl: 'views/business/home/contactlist/confirm.html',
+				controller: 'ConfirmCtrl',
+				resolve: {
+					modalParams: function() {
+						var objParams = {
+							user: org
+						};
+
+						return objParams;		
+					}
+				}
+			});
+
+			var modalInstance2 = null;
+
+			modalInstance.result.then(function(rtnVal) {				
+				modalInstance2 = $modal.open({
+					templateUrl: 'views/business/home/contactlist/result.html',
+					controller: 'ConfirmResultCtrl'
+				})
+
+				$timeout(function() {
+					modalInstance2.close();
+				}, 3000);
+			}, function(rtnVal) {
+				console.log(rtnVal)
+			})
 		};
 	}
 ]);

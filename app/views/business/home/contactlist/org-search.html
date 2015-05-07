@@ -34,15 +34,16 @@
 			<label for="" class="control-label text-md">区域：</label>
 		</div>
 		<div class="col col-xs-10 col-md-11">
-			<a class="btn m-xs r-3x btn-hover-red text-md" ng-class="{'btn-success': entity.areaSelected == area}" ng-repeat="area in entity.area track by $index" ng-click="areaSelect(area)">{{ area }}</a>
+			<a class="btn m-xxs r-3x btn-hover-red text-md" ng-class="{'btn-success': entity.areaSelected == area}" ng-repeat="area in entity.area track by $index" ng-click="areaSelect(area)">{{ area }}</a>
 		</div>
 	</div>
+	<!-- <hr class="b-b b-split"> -->
 	<div class="hbox m-b">
 		<div class="col col-xs-2 col-md-1 p-t-sm p-l-md">
 			<label for="" class="control-label text-md">分类：</label>
 		</div>
 		<div class="col col-xs-10 col-md-11">
-			<a class="btn m-xs r-3x btn-hover-red text-md" ng-class="{'btn-success': entity.classifySelected == classify}" ng-repeat="classify in entity.classify track by $index" ng-click="classifySelect(classify)">{{ classify }}</a>
+			<a class="btn m-xxs r-3x btn-hover-red text-md" ng-class="{'btn-success': entity.classifySelected == classify}" ng-repeat="classify in entity.classify track by $index" ng-click="classifySelect(classify)">{{ classify }}</a>
 		</div>
 	</div>
 
@@ -52,7 +53,7 @@
 			<span>加载中</span>
 		</div>
 		<div ng-if="entity.searchResults">
-			<div class="hbox bg-primary text-base font-bold padder-sm padder-v-sm">
+			<div class="hbox v-middle bg-primary font-bold text-md padder-v-xxs p-l-sm">
 				<div class="col">
 					<span>搜索结果</span>
 				</div>
