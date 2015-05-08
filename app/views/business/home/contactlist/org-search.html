@@ -13,6 +13,16 @@
 		font-weight: bold;
 		border: 2px solid #F05050;
 	}
+	.btn-primary-square {		
+		background-color: #FFFFFF;
+		color: #23B7E5;
+		border: 1px solid #23B7E5;
+	}
+	.btn-primary-square:hover {
+		color: #23B7E5;
+		font-weight: bold;
+		border: 2px solid #23B7E5;
+	}
 	.b-split {
 		border-color: #dcedf5;
 	}
@@ -20,9 +30,9 @@
 <div class="search" ng-if="!options.showDetail">
 	<div class="hbox padder-md">
 		<div class="input-group">
-			<input type="text" class="form-control input-lg r-3x" ng-model="entity.searchKey" ng-keyup="enterPress($event)" placeholder="搜索" autofocus>
+			<input type="text" class="form-control input-lg r-3x" ng-model="entity.searchKey" placeholder="搜索" autofocus>
 			<div class="input-group-btn">
-			  <button type="button" class="btn btn-primary input-lg r-3x" tabindex=-1>
+			  <button type="button" class="btn btn-primary input-lg r-3x" tabindex=-1 ng-click="enterPress($event)">
 					<i class="fa fa-search"></i>
 			  </button>  	  	
 			</div>
@@ -58,7 +68,7 @@
 					<span>搜索结果</span>
 				</div>
 			</div>
-			<div class="padder-sm padder-v-sm text-info" ng-if="entity.searchResults && entity.searchResults.length == 0">
+			<div class="padder-sm padder-v-sm font-bold" ng-if="entity.searchResults && entity.searchResults.length == 0">
 				没有符合条件的组织信息
 			</div>
 			<div class="m-t">
@@ -85,10 +95,17 @@
 
 <div class="result-search" ng-if="options.showDetail">
 	<div class="hbox m-b bg-primary font-bold text-title padder-v-sm">
-		<span class="v-middle m-sm">中科院/广州生物院</span>
+		<span class="v-middle m-sm">{{ selectedOrg.totalName }}</span>
 	</div>
-	<div class="hbox m-b">
-		<input type="text" class="form-control input-lg r-3x" placeholder="搜索" ng-keyup="enterPress($event)" autofocus>
+	<div class="hbox padder-md">
+		<div class="input-group">
+			<input type="text" class="form-control input-lg r-3x" ng-model="entity.searchKey" placeholder="搜索" autofocus>
+			<div class="input-group-btn">
+			  <button type="button" class="btn btn-primary input-lg r-3x" tabindex=-1 ng-click="enterPress($event)">
+					<i class="fa fa-search"></i>
+			  </button>  	  	
+			</div>
+	  </div>
 	</div>
 	<div class="hbox m-b">
 		<conow-tabs>
@@ -100,21 +117,13 @@
 			<conow-tabs-content>
 				<conow-tabs-content-url url="views/business/hr/org/child-orgs.html"></conow-tabs-content-url>
 				<conow-tabs-content-url url="views/business/hr/org/org-staffs.html"></conow-tabs-content-url>
-				<!-- <conow-tabs-content-text>
-					<span class="col-xs-12 m-t-sm">组织名称：11111</span>
-					<span class="col-xs-12 m-t-sm">组织简称：11111</span>
-					<span class="col-xs-12 m-t-sm">英文名称：11111</span>
-					<span class="col-xs-12 m-t-sm">部门职责类型：11111</span>
-					<span class="col-xs-12 m-t-sm">部门负责人：11111</span>
-					<span class="col-xs-12 m-t-sm">联系地址：11111</span>
-					<span class="col-xs-12 m-t-sm">邮政编码：11111</span>
-					<span class="col-xs-12 m-t-sm">电话号码：11111</span>
-					<span class="col-xs-12 m-t-sm">传真：11111</span>
-					<span class="col-xs-12 m-t-sm">网址：11111</span>
-				</conow-tabs-content-text> -->
 				<conow-tabs-content-url url="views/business/hr/org/org-info.html"></conow-tabs-content-url>
 			</conow-tabs-content>
 		</conow-tabs>
+
+		<div class="m-t-sm text-center">
+			<button class="btn btn-primary-square r-3x text-md" ng-click="backContactlist()">返回通讯录列表</button>
+		</div>
 	</div>
 	
 </div>

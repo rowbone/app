@@ -17,7 +17,7 @@ app.controller('StaffInfoCtrl', ['$scope', '$stateParams', '$http',
 
 		// 返回
 		$scope.goBack = function() {
-			history.back();
+			// history.back();
 			// $scope.$apply();
 		};
 	}

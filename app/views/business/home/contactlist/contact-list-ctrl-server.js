@@ -1,6 +1,6 @@
 'use strict';
 
-app.controller('contactListCtrl2', ['$scope', 
+app.controller('contactListCtrl', ['$scope', 
 	function($scope) {
 		$scope.contactListTabs = [true, false, false, false];
 
@@ -15,15 +15,15 @@ app.controller('contactListCtrl2', ['$scope',
 				}
 			}
 
-			console.log($scope.contactListTabs)
+			console.log($scope.contactListTabs);
 		};
 	}
 ]);
 
 app.controller('CollectionCtrl', ['$scope', '$http', '$timeout', '$filter', '$state', 
 	function($scope, $http, $timeout, $filter, $state) {
-		var urlCollectionsOrgs = 'data/bz/home/contactlist2/collections-orgs.json';
-		var urlCollectionsPersons = 'data/bz/home/contactlist2/collections-persons.json';
+		var urlCollectionsOrgs = 'app/business/home/contactlist/data/collections-orgs.json';
+		var urlCollectionsPersons = 'app/business/home/contactlist/data/collections-persons.json';
 
 		var options = $scope.options = {
 			collectionNone: false,
@@ -91,36 +91,60 @@ app.controller('PersonSearchCtrl', ['$scope', '$http', '$timeout', '$modal',
 		var options = $scope.options = {
 			search: false
 		};
-		var personSearchUrl = 'data/bz/home/contactlist2/staffInfo-queryStaffInfoByNameByPage.json';
+//		var personSearchUrl = 'app/business/home/contactlist/data/persons-search.json';
+		var personSearchUrl = '/service/staffInfo!queryStaffInfoByNameByPage';
 
 		entity.searchType = 'name';
+		
+//		var params = {NAME:name,page:$scope.staffCurrentPage,pagesize:$scope.staffPageSize};
+//	   	   $http.post('/service/staffInfo!queryStaffInfoByNameByPage',params).success(function(result){
+//	   			var obj = result.obj;
+//	   			$scope.staffLength = obj.length;
+//	   			$scope.staffTotalItems = result.pageInfo.count;
+//	   			$scope.staffRepeat = obj;
+//	   			/*隐藏树*/
+//	   			$scope.treeIsDisplay = false;
+//	   			$scope.backToTree = true;
+//	   			$scope.statusStaff = {
+//	   	    	      openStaff:true
+//	   	    	    };
+//	   	  	    $scope.doing_async_searchStaff = false;
+//	   		});
 
 		// 搜索框 enter 触发搜索事件
 		$scope.enterPress = function(e) {
-			var params = {};
-			// if(e.keyCode === 13) {
+			   
+		   //初始化当前页码对象（用对象的方式解决跨作用域的问题）
+		   $scope.page = {};
+		    /*查询人员*/
+		   $scope.page.staffCurrentPage = 1;//当前页
+		   $scope.staffMaxSize = 5;//显示的最大页码
+		   $scope.staffPageSize = 10;//每页显示记录条数
+		   
+			var params = {NAME:entity.searchKey,page:1,pagesize:10};
+			if(e.keyCode === 13) {
 				options.search = true;
 				entity.searchResults = null;
 
 				params.searchKey = entity.searchKey;
 				params.searchType = entity.searchType;
 
-				$http.get(personSearchUrl)
+				$http.post(personSearchUrl, params)
 					.success(function(data, status, headers, config) {
-						if(params.searchKey == '张' && params.searchType == 'name') {
+//						if(params.searchKey == '张' && params.searchType == 'name') {
 							$timeout(function() {
 								entity.searchResults = data.obj;
 							}, 2000);
-						} else {
-							$timeout(function() {
-								entity.searchResults = [];
-							}, 2000);
-						}
+//						} else {
+//							$timeout(function() {
+//								entity.searchResults = [];
+//							}, 2000);
+//						}
 					})
 					.error(function(data, status, headers, config) {
 						console.log('Get ' + personSearchUrl + ' wrong...');
 					})
-			// }
+			}
 
 			e.stopPropagation();
 		};
@@ -128,14 +152,23 @@ app.controller('PersonSearchCtrl', ['$scope', '$http', '$timeout', '$modal',
 		$scope.showDetailInfo = function(obj) {
 			// $state.go('app.hr.staffInfo', { staffId: obj.id });
 			var modalInstance = $modal.open({
-				templateUrl: 'views/business/hr/staff/staff-info.html',
-				controller: 'StaffInfoCtrl'
-			});
+				templateUrl: 'app/business/cam/staffdetail/staff-info.html',
+				controller: 'StaffInfoCtrl',
+				resolve: {
+					modalParams: function() {
+						var objParams = {
+							user: obj
+						};
+
+						return objParams;		
+					}
+				}
+			})
 		};
 		// 添加关注确认
 		$scope.collectionConfirm = function(user) {
 			var modalInstance = $modal.open({
-				templateUrl: 'views/business/home/contactlist/confirm.html',
+				templateUrl: 'app/business/home/contactlist/confirm.html',
 				controller: 'ConfirmCtrl',
 				resolve: {
 					modalParams: function() {
@@ -150,21 +183,17 @@ app.controller('PersonSearchCtrl', ['$scope', '$http', '$timeout', '$modal',
 
 			var modalInstance2 = null;
 
-			modalInstance.result.then(function(rtnVal) {
-				if(user.inCollection) {
-					return;
-				}
+			modalInstance.result.then(function(rtnVal) {				
 				if(rtnVal == 'confirm') {
-					user.inCollection = true;
 					modalInstance2 = $modal.open({
-						templateUrl: 'views/business/home/contactlist/result.html',
+						templateUrl: 'app/business/home/contactlist/result.html',
 						controller: 'ConfirmResultCtrl'
 					})
 
 					$timeout(function() {
 						modalInstance2.close();
 					}, 1000);
-				}				
+				}
 			}, function(rtnVal) {
 				console.log(rtnVal)
 			})
@@ -198,8 +227,8 @@ app.controller('ConfirmResultCtrl', ['$scope', function($scope){
 	
 }])
 
-app.controller('OrgSearchCtrl', ['$scope', '$http', '$timeout', '$modal', 'OrgSearch', 
-	function($scope, $http, $timeout, $modal, OrgSearch) {
+app.controller('OrgSearchCtrl', ['$scope', '$http', '$timeout', '$modal', 
+	function($scope, $http, $timeout, $modal) {
 		var entity = $scope.entity = {};
 		var options = $scope.options = {
 			search: false,
@@ -207,26 +236,26 @@ app.controller('OrgSearchCtrl', ['$scope', '$http', '$timeout', '$modal', 'OrgSe
 		};
 		var orgAreaUrl = 'data/bz/home/contactlist2/orgUnit-query12BranchCourts.json';
 		var orgClassifyUrl = 'data/bz/home/contactlist2/common-queryOptions-type-DICT_OPTION-DICT_CODE-HR_ORG_CLASS.json';
-		var orgSearchUrl = 'data/bz/home/contactlist2/orgUnit-queryListOrgByNameOrShortNameByPage.json';
-		var orgDetailUrl = 'data/bz/home/contactlist2/orgUnit-queryOrgUnitInfoInCam-id-1421924106089631410343354.json';
+		var orgSearchUrl = 'app/business/home/contactlist/data/orgs-search.json';
+		var orgDetailUrl = 'app/business/home/contactlist/data/org-info.json';
 
-		$http.get(orgAreaUrl)
-			.success(function(data, status, headers, config) {
-				console.log(data);
-				// entity.area = data.obj;
-			})
-			.error(function(data, status, headers, config) {
-				console.log('Get ' + orgAreaUrl + ' wrong...');
-			})
-
-		$http.get(orgClassifyUrl)
-			.success(function(data, status, headers, config) {
-				console.log(data);
-				// entity.classify = data.obj;
-			})
-			.error(function(data, status, headers, config) {
-				console.log('Get ' + orgClassifyUrl + ' wrong...');
-			})
+//		$http.get(orgAreaUrl)
+//			.success(function(data, status, headers, config) {
+//				console.log(data);
+//				// entity.area = data.obj;
+//			})
+//			.error(function(data, status, headers, config) {
+//				console.log('Get ' + orgAreaUrl + ' wrong...');
+//			})
+//
+//		$http.get(orgClassifyUrl)
+//			.success(function(data, status, headers, config) {
+//				console.log(data);
+//				// entity.classify = data.obj;
+//			})
+//			.error(function(data, status, headers, config) {
+//				console.log('Get ' + orgClassifyUrl + ' wrong...');
+//			})
 
 		entity.area = ['北京', '上海', '广州', '沈阳', '南京', '成都', '兰州', '武汉', '西安', '长春', '昆明', '新疆'];
 		entity.classify = ['大科学中心', '创新研究院', '卓越创新中心', '特色研究所', '其他'];
@@ -242,42 +271,38 @@ app.controller('OrgSearchCtrl', ['$scope', '$http', '$timeout', '$modal', 'OrgSe
 		// 搜索框 enter 触发搜索事件
 		$scope.enterPress = function(e) {
 			var params = {};
-			// if(e.keyCode === 13) {
+			if(e.keyCode === 13) {
 				options.search = true;
 				entity.searchResults = null;
 
 				params.searchArea = entity.areaSelected;
 				params.searchClassify = entity.classifySelected;
+				var params_search= {ORG_UNIT_NAME:entity.searchKey,page:1,pagesize:20};
+				
+				orgSearchUrl = '/service/orgUnit!queryListOrgByNameOrShortNameByPage';
 
-				$http.get(orgSearchUrl)
+				$http.post(orgSearchUrl, params_search)
 					.success(function(data, status, headers, config) {
-						if(params.searchArea == '北京' && params.searchClassify == '大科学中心') {
-							$timeout(function() {
-								entity.searchResults = data.obj;
-							}, 2000);
-						} else {
-							$timeout(function() {
-								entity.searchResults = [];
-							}, 2000);
-						}
+
+						entity.searchResults = data.obj;
+
 					})
 					.error(function(data, status, headers, config) {
 						console.log('Get ' + orgSearchUrl + ' wrong...');
 					})
-			// }
+			}
 
 			e.stopPropagation();
 		};
-		// 查看组织详细信息
+
 		$scope.showDetailInfo = function(org) {
+			// var modalInstance = $modal.open({
+			// 	templateUrl: 'views/business/hr/org/org-info.html'
+			// })
 			options.showDetail = true;
-			
-			$scope.selectedOrg = org;
-
-			OrgSearch.setOrg(org);
-
 			$http.get(orgDetailUrl)
 				.success(function(data, status, headers, config) {
+console.log(data);
 					$scope.orgInfo = data.obj;
 				})
 				.error(function(data, status, headers, config) {
@@ -288,7 +313,7 @@ app.controller('OrgSearchCtrl', ['$scope', '$http', '$timeout', '$modal', 'OrgSe
 		// 添加关注确认
 		$scope.collectionConfirm = function(org) {
 			var modalInstance = $modal.open({
-				templateUrl: 'views/business/home/contactlist/confirm.html',
+				templateUrl: 'app/business/home/contactlist/confirm.html',
 				controller: 'ConfirmCtrl',
 				resolve: {
 					modalParams: function() {
@@ -306,7 +331,7 @@ app.controller('OrgSearchCtrl', ['$scope', '$http', '$timeout', '$modal', 'OrgSe
 			modalInstance.result.then(function(rtnVal) {				
 				if(rtnVal == 'confirm') {
 					modalInstance2 = $modal.open({
-						templateUrl: 'views/business/home/contactlist/result.html',
+						templateUrl: 'app/business/home/contactlist/result.html',
 						controller: 'ConfirmResultCtrl'
 					})
 
@@ -318,27 +343,8 @@ app.controller('OrgSearchCtrl', ['$scope', '$http', '$timeout', '$modal', 'OrgSe
 				console.log(rtnVal)
 			})
 		};
-
-		// 返回通讯录列表
-		$scope.backContactlist = function() {
-			options.showDetail = false;
-		};
-
 	}
 ]);
-
-// OrgSearch service 用于保存点击的组织
-app.service('OrgSearch', function(){
-	var selectedOrg = '';
-
-	this.setOrg = function(org) {
-		selectedOrg = org;
-	};
-
-	this.getOrg = function() {
-		return selectedOrg;
-	}
-})
 
 app.controller('OrgTreeCtrl', ['$scope', 
 	function($scope) {
@@ -347,12 +353,11 @@ app.controller('OrgTreeCtrl', ['$scope',
 ]);
 
 // 下级组织页签
-app.controller('ChildOrgsCtrl', ['$scope', '$http', 'OrgSearch',
-	function($scope, $http, OrgSearch) {
-console.log(OrgSearch.getOrg())
+app.controller('ChildOrgsCtrl', ['$scope', '$http', 
+	function($scope, $http) {
 		$scope.orgs = [];
 
-		var childOrgsUrl = 'data/bz/home/contactlist2/orgUnit-queryNextContactTreeById.json';
+		var childOrgsUrl = 'app/business/home/contactlist/data/child-orgs.json';
 
 		$http.get(childOrgsUrl)
 			.success(function(data, status, headers, config) {
@@ -370,7 +375,7 @@ app.controller('OrgStaffsCtrl', ['$scope', '$http',
 	function($scope, $http) {
 		$scope.orgStaffs = [];
 
-		var orgStaffsUrl = 'data/bz/home/contactlist2/staffInfo-queryActStaffByOrgUnitId.json';
+		var orgStaffsUrl = 'app/business/home/contactlist/data/org-staffs.json';
 
 		$http.get(orgStaffsUrl)
 			.success(function(data, status, headers, config) {
@@ -388,7 +393,7 @@ app.controller('OrgInfoCtrl', ['$scope', '$http',
 	function($scope, $http) {
 		$scope.orgInfo = {};
 
-		var orgInfoUrl = 'data/bz/home/contactlist2/orgUnit-queryOrgUnitInfoInCam-id-1421924106089631410343354.json';
+		var orgInfoUrl = 'app/business/home/contactlist/data/org-info.json';
 
 		$http.get(orgInfoUrl)
 			.success(function(data, status, headers, config) {
@@ -401,28 +406,39 @@ console.log(data.obj);
 	}
 ]);
 
-// 获取用户信息
-app.controller('StaffInfoCtrl', ['$scope', '$stateParams', '$http', '$modalInstance', 
-	function($scope, $stateParams, $http, $modalInstance){
-		console.log($stateParams);
-		var entity = $scope.entity = {};
-		entity.color = 'blue';
-		var urlStaffInfo = 'data/bz/home/contactlist2/staffInfo-queryStaffInfoAndTotalnameAndJobs-ID-1422945768950299610293279.json';
-		$http.get(urlStaffInfo)
-			.success(function(data, status, headers, config) {
-				console.log(data);
-				$scope.entity = data.obj;
-			})
-			.error(function(data, status, headers, config) {
-				console.log('Get ' + urlStaffInfo + ' wrong...');
-			})
+app.controller('StaffInfoCtrl', ['$scope', '$stateParams', '$http', '$modalInstance',  'modalParams', 
+ 	function($scope, $stateParams, $http, $modalInstance, modalParams){
+ 		var staff = modalParams.user;
+ 		console.log(staff)
+ 		var entity = $scope.entity = {};
+ 		entity.color = 'blue';
+// 		var urlStaffInfo = 'app/business/home/contactlist/data/staff-info.json';
+ 		var urlStaffInfo = '/service/staffInfo!queryStaffInfoAndTotalnameAndJobs?ID=' + staff.ID
+ 		$http.get(urlStaffInfo)
+ 			.success(function(data, status, headers, config) {
+ 				console.log(data);
+ 				entity = data.obj;
+	    		var imgSrc = 'img/person';
+	    		if(entity.PHOTO == null) {
+		    		if(entity.GENDER == 'M') {
+		    			entity.PHOTO = imgSrc + '/person_photo_2.png';
+		    		} else {
+		    			entity.PHOTO = imgSrc + '/person_photo_4.png';
+		    		}	    			
+	    		}
+ 				$scope.staffId = $scope.entity.ID;
+ 				
+ 				$scope.entity = entity;
+ 			})
+ 			.error(function(data, status, headers, config) {
+ 				console.log('Get ' + urlStaffInfo + ' wrong...');
+ 			})
 
-		// 返回
-		$scope.goBack = function() {console.log('goBack')
+ 		// 返回
+ 		$scope.goBack = function() {
 			$modalInstance.close();
-			// history.back();
-			// $scope.$apply();
-		};
-	}
-]);
-
+// 			history.back();
+ 			// $scope.$apply();
+ 		};
+ 	}
+ ]);

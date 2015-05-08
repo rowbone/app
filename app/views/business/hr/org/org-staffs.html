@@ -3,6 +3,16 @@
 	.b-split {
 		border-color: #dcedf5;
 	}
+	.btn-danger-square {
+		background-color: #FFFFFF;
+		color: #F05050;
+		border: 1px solid #F05050;
+	}
+	.btn-danger-square:hover {
+		color: #F05050;
+		font-weight: bold;
+		border: 2px solid #F05050;
+	}
 	
 </style>
 
@@ -14,7 +24,7 @@
 					<span class="col-xs-3 text-base">{{ staff.NAME }}</span>
 					<small class="col-xs-3">{{ staff.JOBS_ID_HR_JOBS_INFO }}</small>
 				</a>
-				<a class="btn btn-default pull-right v-middle" ng-click="collectionConfirm(staff)">关注</a>
+				<a class="btn pull-right btn-danger-square" ng-click="collectionConfirm(staff)">关注</a>
 			</div>
 			<hr class="b-b b-split">
 		</div>
