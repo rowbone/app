@@ -20,11 +20,15 @@
 	<div class="m-t">
 		<div ng-repeat="staff in orgStaffs track by $index">
 			<div class="hbox">
-				<a ng-click="showDetailInfo(staff)">
-					<span class="col-xs-3 text-base">{{ staff.NAME }}</span>
-					<small class="col-xs-3">{{ staff.JOBS_ID_HR_JOBS_INFO }}</small>
-				</a>
-				<a class="btn pull-right btn-danger-square" ng-click="collectionConfirm(staff)">关注</a>
+				<div class="col v-middle">
+					<a ng-click="showDetailInfo(staff)">
+						<span class="text-base m">{{ staff.NAME }}</span>
+						<span class="text-xs">{{ staff.JOBS_ID_HR_JOBS_INFO }}</span>
+					</a>
+				</div>
+				<div class="col v-middle">
+					<a class="btn pull-right btn-danger-square" ng-click="collectionConfirm(staff)">关注</a>
+				</div>
 			</div>
 			<hr class="b-b b-split">
 		</div>

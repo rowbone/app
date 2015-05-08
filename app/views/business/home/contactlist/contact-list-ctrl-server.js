@@ -121,8 +121,8 @@ app.controller('PersonSearchCtrl', ['$scope', '$http', '$timeout', '$modal',
 		   $scope.staffMaxSize = 5;//显示的最大页码
 		   $scope.staffPageSize = 10;//每页显示记录条数
 		   
-			var params = {NAME:entity.searchKey,page:1,pagesize:10};
-			if(e.keyCode === 13) {
+			var params = {NAME:entity.searchKey,page:1,pagesize:50};
+//			if(e.keyCode === 13) {
 				options.search = true;
 				entity.searchResults = null;
 
@@ -144,7 +144,7 @@ app.controller('PersonSearchCtrl', ['$scope', '$http', '$timeout', '$modal',
 					.error(function(data, status, headers, config) {
 						console.log('Get ' + personSearchUrl + ' wrong...');
 					})
-			}
+//			}
 
 			e.stopPropagation();
 		};
@@ -227,8 +227,8 @@ app.controller('ConfirmResultCtrl', ['$scope', function($scope){
 	
 }])
 
-app.controller('OrgSearchCtrl', ['$scope', '$http', '$timeout', '$modal', 
-	function($scope, $http, $timeout, $modal) {
+app.controller('OrgSearchCtrl', ['$scope', '$http', '$timeout', '$modal', 'OrgSearch', 
+	function($scope, $http, $timeout, $modal, OrgSearch) {
 		var entity = $scope.entity = {};
 		var options = $scope.options = {
 			search: false,
@@ -271,13 +271,13 @@ app.controller('OrgSearchCtrl', ['$scope', '$http', '$timeout', '$modal',
 		// 搜索框 enter 触发搜索事件
 		$scope.enterPress = function(e) {
 			var params = {};
-			if(e.keyCode === 13) {
+//			if(e.keyCode === 13) {
 				options.search = true;
 				entity.searchResults = null;
 
 				params.searchArea = entity.areaSelected;
 				params.searchClassify = entity.classifySelected;
-				var params_search= {ORG_UNIT_NAME:entity.searchKey,page:1,pagesize:20};
+				var params_search= {ORG_UNIT_NAME:entity.searchKey,page:1,pagesize:50};
 				
 				orgSearchUrl = '/service/orgUnit!queryListOrgByNameOrShortNameByPage';
 
@@ -290,7 +290,7 @@ app.controller('OrgSearchCtrl', ['$scope', '$http', '$timeout', '$modal',
 					.error(function(data, status, headers, config) {
 						console.log('Get ' + orgSearchUrl + ' wrong...');
 					})
-			}
+//			}
 
 			e.stopPropagation();
 		};
@@ -300,14 +300,18 @@ app.controller('OrgSearchCtrl', ['$scope', '$http', '$timeout', '$modal',
 			// 	templateUrl: 'views/business/hr/org/org-info.html'
 			// })
 			options.showDetail = true;
-			$http.get(orgDetailUrl)
-				.success(function(data, status, headers, config) {
-console.log(data);
-					$scope.orgInfo = data.obj;
-				})
-				.error(function(data, status, headers, config) {
-					console.log('Get ' + orgDetailUrl + ' wrong...');
-				})
+			
+			$scope.selectedOrg = org;
+			
+			OrgSearch.setOrg(org);
+//			$http.get(orgDetailUrl)
+//				.success(function(data, status, headers, config) {
+//console.log(data);
+//					$scope.orgInfo = data.obj;
+//				})
+//				.error(function(data, status, headers, config) {
+//					console.log('Get ' + orgDetailUrl + ' wrong...');
+//				})
 		};
 
 		// 添加关注确认
@@ -343,6 +347,12 @@ console.log(data);
 				console.log(rtnVal)
 			})
 		};
+		
+		// 返回通讯录列表
+		$scope.backContactlist = function() {
+			options.showDetail = false;
+		};
+		
 	}
 ]);
 
@@ -352,16 +362,32 @@ app.controller('OrgTreeCtrl', ['$scope',
 	}
 ]);
 
+// OrgSearch service 用于保存点击的组织
+app.service('OrgSearch', function(){
+	var selectedOrg = '';
+
+	this.setOrg = function(org) {
+		selectedOrg = org;
+	};
+
+	this.getOrg = function() {
+		return selectedOrg;
+	};
+});
+
 // 下级组织页签
-app.controller('ChildOrgsCtrl', ['$scope', '$http', 
-	function($scope, $http) {
+app.controller('ChildOrgsCtrl', ['$scope', '$http', 'OrgSearch', 
+	function($scope, $http, OrgSearch) {
 		$scope.orgs = [];
+		
+		var selectedOrg = OrgSearch.getOrg();
+		$scope.selectedOrg = selectedOrg;
+		
+//		var childOrgsUrl = 'app/business/home/contactlist/data/child-orgs.json';
+		var childOrgsUrl = '/service/orgUnit!queryNextContactTreeById';
 
-		var childOrgsUrl = 'app/business/home/contactlist/data/child-orgs.json';
-
-		$http.get(childOrgsUrl)
+		$http.post(childOrgsUrl, {ORG_ID:selectedOrg.ID})
 			.success(function(data, status, headers, config) {
-console.log(data.obj);
 				$scope.orgs = data.obj;
 			})
 			.error(function(data, status, headers, config) {
@@ -371,15 +397,17 @@ console.log(data.obj);
 ]);
 
 // 人员信息页签
-app.controller('OrgStaffsCtrl', ['$scope', '$http', 
-	function($scope, $http) {
+app.controller('OrgStaffsCtrl', ['$scope', '$http', 'OrgSearch', 
+	function($scope, $http, OrgSearch) {
 		$scope.orgStaffs = [];
+		
+		var selectedOrg = OrgSearch.getOrg();
 
-		var orgStaffsUrl = 'app/business/home/contactlist/data/org-staffs.json';
+//		var orgStaffsUrl = 'app/business/home/contactlist/data/org-staffs.json';
+		var orgStaffsUrl = '/service/staffInfo!queryActStaffByOrgUnitId';
 
-		$http.get(orgStaffsUrl)
+		$http.post(orgStaffsUrl, {ORG_UNIT_ID:selectedOrg.ID})
 			.success(function(data, status, headers, config) {
-console.log(data.obj);
 				$scope.orgStaffs = data.obj;
 			})
 			.error(function(data, status, headers, config) {
@@ -389,13 +417,15 @@ console.log(data.obj);
 ]);
 
 // 组织信息页签
-app.controller('OrgInfoCtrl', ['$scope', '$http', 
-	function($scope, $http) {
+app.controller('OrgInfoCtrl', ['$scope', '$http', 'OrgSearch', 
+	function($scope, $http, OrgSearch) {
 		$scope.orgInfo = {};
+		var selectedOrg = OrgSearch.getOrg();
 
-		var orgInfoUrl = 'app/business/home/contactlist/data/org-info.json';
+//		var orgInfoUrl = 'app/business/home/contactlist/data/org-info.json';
+		var orgInfoUrl = '/service/orgUnit!queryOrgUnitInfoInCam?ID=' + selectedOrg.ID;
 
-		$http.get(orgInfoUrl)
+		$http.post(orgInfoUrl)
 			.success(function(data, status, headers, config) {
 console.log(data.obj);
 				$scope.orgInfo = data.obj.orgUnit;
@@ -409,14 +439,13 @@ console.log(data.obj);
 app.controller('StaffInfoCtrl', ['$scope', '$stateParams', '$http', '$modalInstance',  'modalParams', 
  	function($scope, $stateParams, $http, $modalInstance, modalParams){
  		var staff = modalParams.user;
- 		console.log(staff)
+ 		$scope.staffId = staff.ID;
  		var entity = $scope.entity = {};
  		entity.color = 'blue';
 // 		var urlStaffInfo = 'app/business/home/contactlist/data/staff-info.json';
  		var urlStaffInfo = '/service/staffInfo!queryStaffInfoAndTotalnameAndJobs?ID=' + staff.ID
  		$http.get(urlStaffInfo)
  			.success(function(data, status, headers, config) {
- 				console.log(data);
  				entity = data.obj;
 	    		var imgSrc = 'img/person';
 	    		if(entity.PHOTO == null) {
@@ -426,7 +455,6 @@ app.controller('StaffInfoCtrl', ['$scope', '$stateParams', '$http', '$modalInsta
 		    			entity.PHOTO = imgSrc + '/person_photo_4.png';
 		    		}	    			
 	    		}
- 				$scope.staffId = $scope.entity.ID;
  				
  				$scope.entity = entity;
  			})

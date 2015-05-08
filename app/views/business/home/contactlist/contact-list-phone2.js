@@ -20,6 +20,7 @@ app.controller('contactListCtrl2', ['$scope',
 	}
 ]);
 
+// 关注
 app.controller('CollectionCtrl', ['$scope', '$http', '$timeout', '$filter', '$state', 
 	function($scope, $http, $timeout, $filter, $state) {
 		var urlCollectionsOrgs = 'data/bz/home/contactlist2/collections-orgs.json';
@@ -85,6 +86,7 @@ app.controller('CollectionCtrl', ['$scope', '$http', '$timeout', '$filter', '$st
 	}
 ]);
 
+// 找人
 app.controller('PersonSearchCtrl', ['$scope', '$http', '$timeout', '$modal', 
 	function($scope, $http, $timeout, $modal) {
 		var entity = $scope.entity = {};
