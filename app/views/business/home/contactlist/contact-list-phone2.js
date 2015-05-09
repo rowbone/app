@@ -1,7 +1,7 @@
 'use strict';
 
-app.controller('contactListCtrl2', ['$scope', 
-	function($scope) {
+app.controller('contactListCtrl2', ['$scope', '$http', 'DataService', 
+	function($scope, $http, DataService) {
 		$scope.contactListTabs = [true, false, false, false];
 
 		$scope.tabsChange = function(tabIndex) {
@@ -17,6 +17,24 @@ app.controller('contactListCtrl2', ['$scope',
 
 			console.log($scope.contactListTabs)
 		};
+
+		$scope.test = function() {
+console.log('testing...');
+			var url = 'data/bz/area.json';
+			DataService.getData(url)
+			.then(function success(data) {
+				console.log(data);
+			}, function error(msg) {
+				console.log(msg);
+			}, function notification(notification) {
+				console.info(notification)
+			})
+			// 当调用了 reject 回调函数时，catch 会被自动忽略
+			.catch(function(msg) {
+				console.error(msg)
+			});
+		};
+
 	}
 ]);
 

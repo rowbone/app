@@ -1,0 +1,4 @@
+
+1、$q promise
+
+2、$resource
