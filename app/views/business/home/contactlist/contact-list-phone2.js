@@ -39,15 +39,16 @@ console.log('testing...');
 ]);
 
 // 关注
-app.controller('CollectionCtrl', ['$scope', '$http', '$timeout', '$filter', '$state', 
-	function($scope, $http, $timeout, $filter, $state) {
+app.controller('CollectionCtrl', ['$scope', '$http', '$timeout', '$filter', '$state', 'DataService', 
+	function($scope, $http, $timeout, $filter, $state, DataService) {
 		var urlCollectionsOrgs = 'data/bz/home/contactlist2/collections-orgs.json';
 		var urlCollectionsPersons = 'data/bz/home/contactlist2/collections-persons.json';
 
 		var options = $scope.options = {
 			collectionNone: false,
 			collectionOrgExpand: false,
-			collectionPersonExpand: true
+			collectionPersonExpand: true,
+			collectionPersonsGroupExpand: false
 		};
 
 		var collections = $scope.collections = {
@@ -64,14 +65,24 @@ app.controller('CollectionCtrl', ['$scope', '$http', '$timeout', '$filter', '$st
 				console.log('Get ' + urlCollectionsOrgs + ' wrong...');
 			});
 
-		$http.get(urlCollectionsPersons) 
-			.success(function(data, status, headers, config) {
+		DataService.getData(urlCollectionsPersons)
+			.then(function success(data) {
 				var persons = data.obj;
+				var personsGroup = $filter('userGroup')(persons, 'groupCode');
 				collections.persons = persons;
-			})
-			.error(function(data, status, headers, config) {
-				console.log('Get ' + urlCollectionsPersons + ' wrong...');
+				collections.personsGroup = personsGroup;
+			}, function error(msg) {
+				console.error(msg);
 			});
+
+		// $http.get(urlCollectionsPersons) 
+		// 	.success(function(data, status, headers, config) {
+		// 		var persons = data.obj;
+		// 		collections.persons = persons;
+		// 	})
+		// 	.error(function(data, status, headers, config) {
+		// 		console.log('Get ' + urlCollectionsPersons + ' wrong...');
+		// 	});
 
 		$timeout(function() {
 			if(collections.persons.length > 0 || collections.orgs.length > 0) {
@@ -101,6 +112,56 @@ app.controller('CollectionCtrl', ['$scope', '$http', '$timeout', '$filter', '$st
 			// 	// 
 			// }
 		};
+
+		$scope.collectionPersonFilter = function(group, subLabel) {
+			console.log(group)
+			console.log(subLabel)
+			group.selectedSub = subLabel.toLowerCase();
+		};
+
+	}
+]);
+
+app.filter('userGroup', ['$filter', 
+	function($filter) {
+		return function(input, groupCode) {
+			if(!angular.isArray(input)) {
+				console.error('Input must be an array.')
+				return;
+			}
+
+			var groupCode = groupCode;
+			var arrData = input;
+			var arrLabels = ['A-E', 'F-J', 'K-O', 'P-T', 'U-Z'];
+			var arrSplit = ['ABCDE', 'FGHIJ', 'KLMNO', 'PQRST', 'UVWXYZ'];
+			var arrSplitLower = ['abcde', 'fghij', 'klmno', 'pqrst', 'uvwxyz'];
+			var arr = [[], [], [], [], []];
+
+			var arrRtn = [];
+
+			if(angular.isUndefined(groupCode)) {
+				groupCode = 'name';
+			}
+			arrData = $filter('orderBy')(arrData, groupCode);
+			for(var i=0; i<arrSplitLower.length; i++) {
+				for(var j=0; j<arrData.length; j++) {
+					if(arrSplitLower[i].indexOf(arrData[j][groupCode]) > -1) {
+						arr[i].push(arrData[j]);
+					}
+				}
+				var arrSubLabels = arrSplit[i].split('');
+				arrRtn.push({
+					'label': arrLabels[i],
+					'subLabels': arrSubLabels,
+					'members': arr[i],
+					'expanded': false,
+					'selectedSub': arrSubLabels[0].toLowerCase()
+				})
+			}
+
+console.log(arrRtn);
+			return arrRtn;
+		}
 	}
 ]);
 
@@ -294,6 +355,13 @@ app.controller('OrgSearchCtrl', ['$scope', '$http', '$timeout', '$modal', 'OrgSe
 			
 			$scope.selectedOrg = org;
 
+			$scope.$watch(function() {
+				return OrgSearch.getOrg();
+			}, function() {
+				console.log(OrgSearch.getOrg());
+				$scope.selectedOrg = OrgSearch.getOrg();
+			}, true);
+
 			OrgSearch.setOrg(org);
 
 			$http.get(orgDetailUrl)
@@ -382,6 +450,11 @@ console.log(data.obj);
 			.error(function(data, status, headers, config) {
 				console.log('Get ' + childOrgsUrl + ' wrong...');
 			})
+
+		$scope.showDetailInfo = function(org) {
+			console.log(org);
+			OrgSearch.setOrg(org);
+		};
 	}
 ]);
 

@@ -2,3 +2,6 @@
 1、$q promise
 
 2、$resource
+
+3、$log 是否能够定义打印级别。比如debug模式打开打印，可以配置全局关闭打印
+

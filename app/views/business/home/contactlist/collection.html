@@ -87,7 +87,8 @@
 			</a>
 		</div>
 		<div class="collections" ng-show="options.collectionPersonExpand">
-			<div class="padder-sm" ng-repeat="person in collections.persons | filter:query | orderBy:'groupCode' track by $index">
+			<!-- <div class="padder-sm" ng-repeat="person in collections.persons | filter:query | orderBy:'groupCode' track by $index"> -->
+			<div class="padder-sm" ng-repeat="person in collections.persons | filter:query track by $index">
 				<div class="hbox">
 					<a class="col collections-items" ng-click="showDetailInfo(person, 'person')">
 						<div>
@@ -102,6 +103,51 @@
 					</div> -->
 				</div>
 				<hr class="b-b b-split">
+			</div>
+		</div>
+
+<!-- 		<div class="hbox m-t-sm m-b-md bg-primary lter text-md">
+			<a class="col bg-primary text-md font-bold padder-sm padder-v-sm" ng-click="options.collectionPersonsGroupExpand = !options.collectionPersonsGroupExpand">
+				<span>关注的人(分组)(</span>
+				<span class="text-danger font-bold"> {{ collections.personsGroup.length }}</span>
+				<span>)</span>
+				<i class="fa text-xlg p-r pull-right" ng-class="{true: 'fa-angle-down', false: 'fa-angle-right'}[options.collectionPersonExpand]"></i>
+			</a>
+		</div>
+		<div class="collections" ng-show="options.collectionPersonsGroupExpand">
+			<div cl ass="padder-sm" ng-repeat="group in collections.personsGroup track by $index">
+				<div class="hbox">
+					<a class="col collections-items" ng-click="showDetailInfo(person, 'person')">
+						<div>
+							<span ng-class="text-md">{{ group.label }}</span>
+						</div>
+						<div>
+							<span class="m-t-xs text-xs">{{ group.members | json }}</span>
+						</div>
+					</a>
+				</div>
+				<hr class="b-b b-split">
+			</div>
+		</div> -->
+
+		<div class="m-b" ng-repeat="group in collections.personsGroup track by $index">
+			<div class="hbox">
+				<a class="col bg-primary" ng-click="group.expanded = !group.expanded">
+					{{ group.label }}
+				</a>
+			</div>
+			<div ng-if="group.expanded">
+				<div class="hbox">
+					<div class="col no-padder" ng-repeat="subLabel in group.subLabels">
+						<a class="text-center" ng-click="collectionPersonFilter(group, subLabel)">
+							{{ subLabel }}
+						</a>
+						<span class="bg-primary" ng-if="!$last">&nbsp;</span>
+					</div>
+				</div>
+				<div class="hbox" ng-if="member.groupCode == group.selectedSub" ng-repeat="member in group.members track by $index">
+					<div class="col">{{ member.name }}</div>
+				</div>
 			</div>
 		</div>
 	</div>
