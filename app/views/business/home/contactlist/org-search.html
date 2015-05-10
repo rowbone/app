@@ -44,7 +44,7 @@
 			<label for="" class="control-label text-md">区域：</label>
 		</div>
 		<div class="col col-xs-10 col-md-11">
-			<a class="btn m-xxs r-3x btn-hover-red text-md" ng-class="{'btn-success': entity.areaSelected == area}" ng-repeat="area in entity.area track by $index" ng-click="areaSelect(area)">{{ area }}</a>
+			<a class="btn m-xxs r-3x btn-hover-red text-md" ng-class="{'btn-success': entity.areaSelected == area}" ng-repeat="area in entity.area track by $index" ng-click="areaSelect(area)">{{ area.ORG_UNIT_RGN }}</a>
 		</div>
 	</div>
 	<!-- <hr class="b-b b-split"> -->

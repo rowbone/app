@@ -116,7 +116,7 @@ app.controller('CollectionCtrl', ['$scope', '$http', '$timeout', '$filter', '$st
 		$scope.collectionPersonFilter = function(group, subLabel) {
 			console.log(group)
 			console.log(subLabel)
-			group.selectedSub = subLabel.toLowerCase();
+			group.selectedSub = subLabel;
 		};
 
 	}
@@ -132,7 +132,7 @@ app.filter('userGroup', ['$filter',
 
 			var groupCode = groupCode;
 			var arrData = input;
-			var arrLabels = ['A-E', 'F-J', 'K-O', 'P-T', 'U-Z'];
+			var arrLabels = ['A - E', 'F - J', 'K - O', 'P - T', 'U - Z'];
 			var arrSplit = ['ABCDE', 'FGHIJ', 'KLMNO', 'PQRST', 'UVWXYZ'];
 			var arrSplitLower = ['abcde', 'fghij', 'klmno', 'pqrst', 'uvwxyz'];
 			var arr = [[], [], [], [], []];
@@ -142,10 +142,15 @@ app.filter('userGroup', ['$filter',
 			if(angular.isUndefined(groupCode)) {
 				groupCode = 'name';
 			}
+			// 按照 groupCode 排序
 			arrData = $filter('orderBy')(arrData, groupCode);
-			for(var i=0; i<arrSplitLower.length; i++) {
+			// 转换 groupCode 为大写字符
+			angular.forEach(arrData, function(value, key) {
+				value.groupCode = value.groupCode.toUpperCase();
+			});
+			for(var i=0; i<arrSplit.length; i++) {
 				for(var j=0; j<arrData.length; j++) {
-					if(arrSplitLower[i].indexOf(arrData[j][groupCode]) > -1) {
+					if(arrSplit[i].indexOf(arrData[j][groupCode]) > -1) {
 						arr[i].push(arrData[j]);
 					}
 				}
@@ -155,11 +160,10 @@ app.filter('userGroup', ['$filter',
 					'subLabels': arrSubLabels,
 					'members': arr[i],
 					'expanded': false,
-					'selectedSub': arrSubLabels[0].toLowerCase()
+					'selectedSub': arrSubLabels[0]
 				})
 			}
 
-console.log(arrRtn);
 			return arrRtn;
 		}
 	}
@@ -279,8 +283,8 @@ app.controller('ConfirmResultCtrl', ['$scope', function($scope){
 	
 }])
 
-app.controller('OrgSearchCtrl', ['$scope', '$http', '$timeout', '$modal', 'OrgSearch', 
-	function($scope, $http, $timeout, $modal, OrgSearch) {
+app.controller('OrgSearchCtrl', ['$scope', '$http', '$timeout', '$modal', 'OrgSearch', 'DataService', 
+	function($scope, $http, $timeout, $modal, OrgSearch, DataService) {
 		var entity = $scope.entity = {};
 		var options = $scope.options = {
 			search: false,
@@ -291,28 +295,26 @@ app.controller('OrgSearchCtrl', ['$scope', '$http', '$timeout', '$modal', 'OrgSe
 		var orgSearchUrl = 'data/bz/home/contactlist2/orgUnit-queryListOrgByNameOrShortNameByPage.json';
 		var orgDetailUrl = 'data/bz/home/contactlist2/orgUnit-queryOrgUnitInfoInCam-id-1421924106089631410343354.json';
 
-		$http.get(orgAreaUrl)
-			.success(function(data, status, headers, config) {
-				console.log(data);
-				// entity.area = data.obj;
-			})
-			.error(function(data, status, headers, config) {
-				console.log('Get ' + orgAreaUrl + ' wrong...');
-			})
+		DataService.getData(orgAreaUrl)
+			.then(function(data) {
+				entity.area = data.obj;
+				console.log(entity.area);
+			}, function(msg) {
+				console.log(msg);
+			});
 
-		$http.get(orgClassifyUrl)
-			.success(function(data, status, headers, config) {
-				console.log(data);
-				// entity.classify = data.obj;
-			})
-			.error(function(data, status, headers, config) {
-				console.log('Get ' + orgClassifyUrl + ' wrong...');
-			})
+		// DataService.getData(orgClassifyUrl)
+		// 	.then(function(data) {
+		// 		entity.classify = data.obj.split(';');
+		// 		console.log(entity.classify)
+		// 	}, function(msg) {
+		// 		console.log(msg);
+		// 	});
 
-		entity.area = ['北京', '上海', '广州', '沈阳', '南京', '成都', '兰州', '武汉', '西安', '长春', '昆明', '新疆'];
 		entity.classify = ['大科学中心', '创新研究院', '卓越创新中心', '特色研究所', '其他'];
 
 		$scope.areaSelect = function(obj) {
+			console.log(entity.areaSelected)
 			entity.areaSelected = (entity.areaSelected == obj) ? null : obj;
 		};
 
@@ -327,7 +329,7 @@ app.controller('OrgSearchCtrl', ['$scope', '$http', '$timeout', '$modal', 'OrgSe
 				options.search = true;
 				entity.searchResults = null;
 
-				params.searchArea = entity.areaSelected;
+				params.searchArea = entity.areaSelected.ORG_UNIT_RGN;
 				params.searchClassify = entity.classifySelected;
 
 				$http.get(orgSearchUrl)
