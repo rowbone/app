@@ -19,9 +19,6 @@
 	.collections-items:hover {
 		background-color: #DCD2D2;
 	}
-	.b-split {
-		border-color: #dcedf5;
-	}
 </style>
 <div class="no-padder">
 	<div ng-if="options.collectionNone" class="hbox padder-md text-center v-middle">
@@ -41,27 +38,29 @@
 
 	<div ng-if="!options.collectionNone">
 		<div class="hbox padder-md">
-			<div class="input-group">
-				<input type="text" class="form-control input-lg r-3x" ng-model="query" ng-keyup="enterPress($event)" placeholder="搜索" autofocus>
-				<div class="input-group-btn">
+			<!-- <div class="input-group"> -->
+				<button type="button" class="form-control btn input-lg r-3x bg-white" ng-model="query" ng-keyup="enterPress($event)" ng-click="openSearchModal()">
+					<i class="fa fa-search m-r-xs"></i>搜索
+				</button>
+				<!-- <div class="input-group-btn">
 				  <button type="button" class="btn btn-primary input-lg r-3x" tabindex=-1>
 						<i class="fa fa-search"></i>
 				  </button>  	  	
-				</div>
-		  </div>
+				</div> -->
+		  <!-- </div> -->
 		</div>
 
-		<div class="hbox m-t-sm m-b-md bg-primary lter text-md">
+		<div class="hbox m-t-xs m-b-xs bg-primary lter text-md">
 			<a class="col bg-primary text-md font-bold padder-sm padder-v-sm" ng-click="options.collectionOrgExpand = !options.collectionOrgExpand">
 				<span>关注的组织(</span>
-				<span class="text-danger font-bold"> {{ collections.orgs.length }}</span>
+				<span class="text-danger"> {{ collections.orgs.length }}</span>
 				<span>)</span>
 				<i class="fa text-xlg p-r pull-right" ng-class="{true: 'fa-angle-down', false: 'fa-angle-right'}[options.collectionOrgExpand]"></i>
 			</a>
 		</div>
 		<div class="collections" ng-show="options.collectionOrgExpand">
-			<div class="padder-sm" ng-repeat="org in collections.orgs | filter:query | orderBy:'groupCode' track by $index">
-				<div class="hbox">
+			<div class="" ng-repeat="org in collections.orgs | filter:query | orderBy:'groupCode' track by $index">
+				<div class="hbox b-b padder-v-sm">
 					<a class="col collections-items" ng-click="showDetailInfo(org, 'org')">
 						<div>
 							<span class="text-md">{{ org.name }}</span>
@@ -74,7 +73,6 @@
 						<button type="button" class="btn btn-danger-square pull-right">取消关注</button>
 					</div> -->
 				</div>
-				<hr class="b-b b-split">
 			</div>
 		</div>
 
@@ -103,35 +101,39 @@
 		</div> -->
 
 		<div class="m-b" ng-repeat="group in collections.personsGroup track by $index">
-			<div class="hbox">
-				<a class="col bg-primary padder-sm padder-v-sm" ng-click="group.expanded = !group.expanded">
-					<span class="text-md font-bold">{{ group.label }}(</span>
-					<span class="text-danger font-bold"> {{ group.members.length }}</span>
+			<div class="hbox m-t-sm m-b-sm bg-primary lter text-md">
+				<a class="col bg-primary text-md font-bold padder-sm padder-v-sm" ng-click="group.expanded = !group.expanded">
+					<span class="text-md">{{ group.label }}(</span>
+					<span class="text-danger"> {{ group.persons.length }}</span>
 					<span>)</span>
 					<i class="fa text-xlg p-r pull-right" ng-class="{true: 'fa-angle-down', false: 'fa-angle-right'}[group.expanded]"></i>
 				</a>
 			</div>
 			<div ng-if="group.expanded">
-				<div class="hbox b-b">
-					<div class="col text-center font-bold" ng-repeat="subLabel in group.subLabels">
-						<a class="text-center text-base padder-sm padder-v-sm" ng-class="{'bg-primary': subLabel == group.selectedSub }" ng-click="collectionPersonFilter(group, subLabel)">
+				<div class="hbox b-b m-xs">
+					<a class="col text-center font-bold padder-sm padder-v-sm" ng-class="{'bg-primary': subLabel == group.selectedSub }" ng-repeat="subLabel in group.subLabels" ng-click="collectionPersonFilter(group, subLabel)">
+						<span class="text-center text-base">
 							{{ subLabel }}
-						</a>
-						<span class="bg-primary" ng-if="!$last">&nbsp;</span>
-					</div>
+						</span>
+						<!-- <span class="col bg-primary" ng-if="!$last">&nbsp;</span> -->
+					</a>
 				</div>
-				<div class="" ng-if="member.groupCode == group.selectedSub" ng-repeat="member in group.members | filter:query track by $index">
-					<div class="hbox m-t">
-						<a class="col collections-items" ng-click="showDetailInfo(person, 'person')">
-							<div>
-								<span ng-class="text-md">{{ member.name }}</span>
+				<div class="" ng-if="person.groupCode == group.selectedSub" ng-repeat="person in group.persons | filter:query track by $index">
+					<div class="hbox b-b padder-v-sm">
+						<a class="col collections-items" ui-sref="app.oa.chat({staffId:'{{person.id}}'})">
+							<div class="col pull-left">
+								<img ng-src="{{person.headImg}}" alt="">
 							</div>
-							<div>
-								<span class="m-t-xs text-xs">{{ member.fullName }}</span>
+							<div class="col padder padder-v m-l-xxl v-middle">
+								<div>
+									<span ng-class="text-md">{{ person.name }}</span>
+								</div>
+								<div>
+									<span class="m-t-xs text-xs">{{ person.fullName }}</span>
+								</div>
 							</div>
 						</a>
 					</div>
-					<hr class="b-b b-split">
 				</div>
 			</div>
 		</div>

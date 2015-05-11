@@ -1,5 +1,66 @@
 'use strict';
 
+// OrgSearch service 用于保存点击的组织
+app.service('OrgSearch', function(){
+	var selectedOrg = '';
+
+	this.setOrg = function(org) {
+		selectedOrg = org;
+	};
+
+	this.getOrg = function() {
+		return selectedOrg;
+	}
+});
+// 人员分组过滤器
+app.filter('userGroup', ['$filter', 
+	function($filter) {
+		return function(input, groupCode) {
+			if(!angular.isArray(input)) {
+				console.error('Input must be an array.')
+				return;
+			}
+
+			var groupCode = groupCode;
+			var arrData = input;
+			var arrLabels = ['A - E', 'F - J', 'K - O', 'P - T', 'U - Z'];
+			var arrSplit = ['ABCDE', 'FGHIJ', 'KLMNO', 'PQRST', 'UVWXYZ'];
+			var arrSplitLower = ['abcde', 'fghij', 'klmno', 'pqrst', 'uvwxyz'];
+			var arr = [[], [], [], [], []];
+
+			var arrRtn = [];
+
+			if(angular.isUndefined(groupCode)) {
+				groupCode = 'name';
+			}
+			// 按照 groupCode 排序
+			arrData = $filter('orderBy')(arrData, groupCode);
+			// 转换 groupCode 为大写字符
+			angular.forEach(arrData, function(value, key) {
+				value.groupCode = value.groupCode.toUpperCase();
+			});
+			for(var i=0; i<arrSplit.length; i++) {
+				for(var j=0; j<arrData.length; j++) {
+					if(arrSplit[i].indexOf(arrData[j][groupCode]) > -1) {
+						arr[i].push(arrData[j]);
+					}
+				}
+				var arrSubLabels = arrSplit[i].split('');
+				arrRtn.push({
+					'label': arrLabels[i],
+					'subLabels': arrSubLabels,
+					'persons': arr[i],
+					'expanded': false,
+					'selectedSub': arrSubLabels[0]
+				})
+			}
+
+			return arrRtn;
+		}
+	}
+]);
+
+// 通讯录 controller
 app.controller('contactListCtrl2', ['$scope', '$http', 'DataService', 
 	function($scope, $http, DataService) {
 		$scope.contactListTabs = [true, false, false, false];
@@ -19,51 +80,49 @@ app.controller('contactListCtrl2', ['$scope', '$http', 'DataService',
 		};
 
 		$scope.test = function() {
-console.log('testing...');
 			var url = 'data/bz/area.json';
 			DataService.getData(url)
-			.then(function success(data) {
-				console.log(data);
-			}, function error(msg) {
-				console.log(msg);
-			}, function notification(notification) {
-				console.info(notification)
-			})
-			// 当调用了 reject 回调函数时，catch 会被自动忽略
-			.catch(function(msg) {
-				console.error(msg)
-			});
+				.then(function success(data) {
+					console.log(data);
+				}, function error(msg) {
+					console.log(msg);
+				}, function notification(notification) {
+					console.info(notification)
+				})
+				// 当调用了 reject 回调函数时，catch 会被自动忽略
+				.catch(function(msg) {
+					console.error(msg)
+				});
 		};
 
 	}
 ]);
 
 // 关注
-app.controller('CollectionCtrl', ['$scope', '$http', '$timeout', '$filter', '$state', 'DataService', 
-	function($scope, $http, $timeout, $filter, $state, DataService) {
-		var urlCollectionsOrgs = 'data/bz/home/contactlist2/collections-orgs.json';
-		var urlCollectionsPersons = 'data/bz/home/contactlist2/collections-persons.json';
+app.controller('CollectionCtrl', ['$scope', '$http', '$timeout', '$filter', '$state', '$modal', 'DataService', 
+	function($scope, $http, $timeout, $filter, $state, $modal, DataService) {
+		var urlCollectionsOrgs = 'data/bz/home/contactlist2/collections-orgs.json',
+				urlCollectionsPersons = 'data/bz/home/contactlist2/collections-persons.json',
 
-		var options = $scope.options = {
-			collectionNone: false,
-			collectionOrgExpand: false,
-			collectionPersonExpand: true,
-			collectionPersonsGroupExpand: false
-		};
+				options = $scope.options = {
+					collectionNone: false,
+					collectionOrgExpand: false,
+					collectionPersonExpand: true,
+					collectionPersonsGroupExpand: false
+				},
 
-		var collections = $scope.collections = {
-			persons: [],
-			orgs: []
-		};
+				collections = $scope.collections = {
+					persons: [],
+					orgs: []
+				};
 
-		$http.get(urlCollectionsOrgs) 
-			.success(function(data, status, headers, config) {
+		DataService.getData(urlCollectionsOrgs)
+			.then(function success(data) {
 				var orgs = data.obj;
 				collections.orgs = orgs;
+			}, function error(msg) {
+				console.error(msg);
 			})
-			.error(function(data, status, headers, config) {
-				console.log('Get ' + urlCollectionsOrgs + ' wrong...');
-			});
 
 		DataService.getData(urlCollectionsPersons)
 			.then(function success(data) {
@@ -74,6 +133,15 @@ app.controller('CollectionCtrl', ['$scope', '$http', '$timeout', '$filter', '$st
 			}, function error(msg) {
 				console.error(msg);
 			});
+
+		// $http.get(urlCollectionsOrgs) 
+		// 	.success(function(data, status, headers, config) {
+		// 		var orgs = data.obj;
+		// 		collections.orgs = orgs;
+		// 	})
+		// 	.error(function(data, status, headers, config) {
+		// 		console.log('Get ' + urlCollectionsOrgs + ' wrong...');
+		// 	});
 
 		// $http.get(urlCollectionsPersons) 
 		// 	.success(function(data, status, headers, config) {
@@ -114,58 +182,76 @@ app.controller('CollectionCtrl', ['$scope', '$http', '$timeout', '$filter', '$st
 		};
 
 		$scope.collectionPersonFilter = function(group, subLabel) {
-			console.log(group)
-			console.log(subLabel)
 			group.selectedSub = subLabel;
+		};
+
+		$scope.openSearchModal = function() {
+			var modalInstance = $modal.open({
+				templateUrl: 'views/business/home/contactlist/collectionSearchModal.html',
+				controller: 'CollectionSearchModalCtrl',
+				resolve: {
+					modalParams: function() {
+						var objParams = {
+							collectionsPersons: collections.persons,
+							collectionsOrgs: collections.orgs
+						};
+
+						return objParams;
+					}
+				}
+			});
+
+			var modalInstance2 = null;
+			modalInstance.result.then(function(rtnVal) {
+				console.log(rtnVal);
+				if(rtnVal.objEntity && rtnVal.showType) {
+
+					if(rtnVal.showType == 'person') {
+						modalInstance2 = $modal.open({
+							templateUrl: 'views/business/hr/staff/staff-info.html',
+							controller: 'StaffInfoCtrl'
+						});
+					}
+				}
+			}, function(msg) {
+				console.log(msg);
+			});
 		};
 
 	}
 ]);
 
-app.filter('userGroup', ['$filter', 
-	function($filter) {
-		return function(input, groupCode) {
-			if(!angular.isArray(input)) {
-				console.error('Input must be an array.')
-				return;
+// 已关注搜索弹出层 controller
+app.controller('CollectionSearchModalCtrl', ['$scope', '$modalInstance', 'modalParams', '$filter', 
+	function($scope, $modalInstance, modalParams, $filter) {
+		console.log('CollectionSearchModalCtrl');
+		console.log(modalParams);
+
+		var entity = $scope.entity = {};
+		var options = $scope.options = {
+			search: false
+		};
+
+		entity.collectionsPersons = modalParams.collectionsPersons;
+		entity.collectionsOrgs = modalParams.collectionsOrgs;
+
+		$scope.$watch('entity.searchKey', function(newVal) {
+			if(newVal == ''){
+				options.search = false;
+			} else {
+				entity.filteredPersons = $filter('orderBy')($filter('filter')(entity.collectionsPersons, newVal), 'groupCode');
+				entity.filteredOrgs = $filter('orderBy')($filter('filter')(entity.collectionsOrgs, newVal), 'groupCode');
 			}
+		});
 
-			var groupCode = groupCode;
-			var arrData = input;
-			var arrLabels = ['A - E', 'F - J', 'K - O', 'P - T', 'U - Z'];
-			var arrSplit = ['ABCDE', 'FGHIJ', 'KLMNO', 'PQRST', 'UVWXYZ'];
-			var arrSplitLower = ['abcde', 'fghij', 'klmno', 'pqrst', 'uvwxyz'];
-			var arr = [[], [], [], [], []];
-
-			var arrRtn = [];
-
-			if(angular.isUndefined(groupCode)) {
-				groupCode = 'name';
-			}
-			// 按照 groupCode 排序
-			arrData = $filter('orderBy')(arrData, groupCode);
-			// 转换 groupCode 为大写字符
-			angular.forEach(arrData, function(value, key) {
-				value.groupCode = value.groupCode.toUpperCase();
+		$scope.showDetail = function(obj, showType) {
+			console.info(obj, showType);
+			$modalInstance.close({
+				objEntity: obj,
+				showType: showType
 			});
-			for(var i=0; i<arrSplit.length; i++) {
-				for(var j=0; j<arrData.length; j++) {
-					if(arrSplit[i].indexOf(arrData[j][groupCode]) > -1) {
-						arr[i].push(arrData[j]);
-					}
-				}
-				var arrSubLabels = arrSplit[i].split('');
-				arrRtn.push({
-					'label': arrLabels[i],
-					'subLabels': arrSubLabels,
-					'members': arr[i],
-					'expanded': false,
-					'selectedSub': arrSubLabels[0]
-				})
-			}
+		};
 
-			return arrRtn;
-		}
 	}
 ]);
 
@@ -416,19 +502,6 @@ app.controller('OrgSearchCtrl', ['$scope', '$http', '$timeout', '$modal', 'OrgSe
 
 	}
 ]);
-
-// OrgSearch service 用于保存点击的组织
-app.service('OrgSearch', function(){
-	var selectedOrg = '';
-
-	this.setOrg = function(org) {
-		selectedOrg = org;
-	};
-
-	this.getOrg = function() {
-		return selectedOrg;
-	}
-})
 
 app.controller('OrgTreeCtrl', ['$scope', 
 	function($scope) {
