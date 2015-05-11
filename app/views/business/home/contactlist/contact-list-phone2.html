@@ -1,22 +1,32 @@
 
 <style>
+.contact-list-title {
+	position: fixed;
+	top: 0;
+	width: 100%;
+	z-index: 1000;
+}
 </style>
 <div ng-controller="contactListCtrl2">
-	<div class="m-b-none">
-		<div class="bg-primary text-center text-2x">通讯录</div>
-	</div>
-	<div class="bg-white lter m-t-none p-xs m-b-sm">
-		<div class="text-center text-2x">
-			<div class="btn-group">
-				<a class="btn btn-lg b-primary text-primary r-3x" ng-class="{'btn-primary': contactListTabs[0]}" ng-click="tabsChange('0')" style="color: #23b7e5;">关&nbsp;&nbsp;注</a>
-				<a class="btn btn-lg b-primary text-primary r-3x" ng-class="{'btn-primary': contactListTabs[1]}" ng-click="tabsChange('1')" style="color: #23b7e5;">找&nbsp;&nbsp;人</a>
-				<a class="btn btn-lg b-primary text-primary r-3x" ng-class="{'btn-primary': contactListTabs[2]}" ng-click="tabsChange('2')" style="color: #23b7e5;">找组织</a>
-				<a class="btn btn-lg b-primary text-primary r-3x" ng-class="{'btn-primary': contactListTabs[3]}" ng ng-click="tabsChange('3')" style="color: #23b7e5;">组织树</a>
+	<div class="contact-list-title">
+		<div class="m-b-none">
+			<div class="bg-primary text-center text-2x">通讯录</div>
+		</div>
+		<div class="bg-white lter m-t-none p-xs m-b-sm">
+			<div class="text-center text-2x">
+				<div class="btn-group">
+					<a class="btn btn-lg b-primary text-primary text-small r-3x padder-v-sm" ng-class="{'btn-primary': contactListTabs[0]}" ng-click="tabsChange('0')" style="color: #23b7e5;">关&nbsp;&nbsp;注</a>
+					<a class="btn btn-lg b-primary text-primary text-small r-3x padder-v-sm" ng-class="{'btn-primary': contactListTabs[1]}" ng-click="tabsChange('1')" style="color: #23b7e5;">找&nbsp;&nbsp;人</a>
+					<a class="btn btn-lg b-primary text-primary text-small r-3x padder-v-sm" ng-class="{'btn-primary': contactListTabs[2]}" ng-click="tabsChange('2')" style="color: #23b7e5;">找组织</a>
+					<a class="btn btn-lg b-primary text-primary text-small r-3x padder-v-sm" ng-class="{'btn-primary': contactListTabs[3]}" ng ng-click="tabsChange('3')" style="color: #23b7e5;">组织树</a>
+				</div>
 			</div>
 		</div>
 	</div>
-	<div ng-include="'views/business/home/contactlist/collection.html'" ng-controller="CollectionCtrl" ng-show="contactListTabs[0]"></div>
-	<div ng-include="'views/business/home/contactlist/person-search.html'" ng-controller="PersonSearchCtrl" ng-show="contactListTabs[1]"></div>
-	<div ng-include="'views/business/home/contactlist/org-search.html'" ng-controller="OrgSearchCtrl" ng-show="contactListTabs[2]"></div>
-	<div ng-include="'views/business/home/contactlist/org-tree.html'" ng-controller="OrgTreeCtrl" ng-show="contactListTabs[3]"></div>
+	<div>
+		<div ng-include="'views/business/home/contactlist/collection.html'" ng-controller="CollectionCtrl" ng-show="contactListTabs[0]"></div>
+		<div ng-include="'views/business/home/contactlist/person-search.html'" ng-controller="PersonSearchCtrl" ng-show="contactListTabs[1]"></div>
+		<div ng-include="'views/business/home/contactlist/org-search.html'" ng-controller="OrgSearchCtrl" ng-show="contactListTabs[2]"></div>
+		<div ng-include="'views/business/home/contactlist/org-tree.html'" ng-controller="OrgTreeCtrl" ng-show="contactListTabs[3]"></div>
+	</div>
 </div>

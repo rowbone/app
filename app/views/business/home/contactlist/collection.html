@@ -19,6 +19,17 @@
 	.collections-items:hover {
 		background-color: #DCD2D2;
 	}
+	.contact-list-search {
+		position: fixed;
+		top: 100px;
+		height: 50px;
+		width: 100%;
+		z-index: 1000;
+	}
+	.contact-list-content {
+		position: relative;
+		top: 150px;
+	}
 </style>
 <div class="no-padder">
 	<div ng-if="options.collectionNone" class="hbox padder-md text-center v-middle">
@@ -37,19 +48,21 @@
 	</div>
 
 	<div ng-if="!options.collectionNone">
-		<div class="hbox padder-md">
-			<!-- <div class="input-group"> -->
-				<button type="button" class="form-control btn input-lg r-3x bg-white" ng-model="query" ng-keyup="enterPress($event)" ng-click="openSearchModal()">
-					<i class="fa fa-search m-r-xs"></i>搜索
-				</button>
-				<!-- <div class="input-group-btn">
-				  <button type="button" class="btn btn-primary input-lg r-3x" tabindex=-1>
-						<i class="fa fa-search"></i>
-				  </button>  	  	
-				</div> -->
-		  <!-- </div> -->
+		<div class="contact-list-search">
+			<div class="hbox padder-md">
+				<!-- <div class="input-group"> -->
+					<button type="button" class="form-control btn input-lg r-3x bg-white" ng-model="query" ng-keyup="enterPress($event)" ng-click="openSearchModal()">
+						<i class="fa fa-search m-r-xs"></i>搜索
+					</button>
+					<!-- <div class="input-group-btn">
+					  <button type="button" class="btn btn-primary input-lg r-3x" tabindex=-1>
+							<i class="fa fa-search"></i>
+					  </button>  	  	
+					</div> -->
+			  <!-- </div> -->
+			</div>
 		</div>
-
+<div class="contact-list-content">
 		<div class="hbox m-t-xs m-b-xs bg-primary lter text-md">
 			<a class="col bg-primary text-md font-bold padder-sm padder-v-sm" ng-click="options.collectionOrgExpand = !options.collectionOrgExpand">
 				<span>关注的组织(</span>
@@ -62,11 +75,13 @@
 			<div class="" ng-repeat="org in collections.orgs | filter:query | orderBy:'groupCode' track by $index">
 				<div class="hbox b-b padder-v-sm">
 					<a class="col collections-items" ng-click="showDetailInfo(org, 'org')">
-						<div>
-							<span class="text-md">{{ org.name }}</span>
-						</div>
-						<div>
-							<span class="m-t-xs text-xs">{{ org.fullName }}</span>	
+						<div class="padder-sm">
+							<div>
+								<span class="text-md">{{ org.name }}</span>
+							</div>
+							<div>
+								<span class="m-t-xs text-xs">{{ org.fullName }}</span>	
+							</div>
 						</div>
 					</a>
 					<!-- <div class="col v-middle">
@@ -121,10 +136,10 @@
 				<div class="" ng-if="person.groupCode == group.selectedSub" ng-repeat="person in group.persons | filter:query track by $index">
 					<div class="hbox b-b padder-v-sm">
 						<a class="col collections-items" ui-sref="app.oa.chat({staffId:'{{person.id}}'})">
-							<div class="col pull-left">
+							<div class="col pull-left padder-sm">
 								<img ng-src="{{person.headImg}}" alt="">
 							</div>
-							<div class="col padder padder-v m-l-xxl v-middle">
+							<div class="col padder padder-v v-middle">
 								<div>
 									<span ng-class="text-md">{{ person.name }}</span>
 								</div>
@@ -137,5 +152,6 @@
 				</div>
 			</div>
 		</div>
+</div>
 	</div>
 </div>

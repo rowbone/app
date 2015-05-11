@@ -1,9 +1,4 @@
 
-<style>
-	.b-split {
-		border-color: #dcedf5;
-	}
-</style>
 <div class="modal-header">已关注搜索</div>
 
 <div class="modal-body">
@@ -27,7 +22,7 @@
 				<div class="panel-body">
 					<div ng-if="entity.filteredOrgs.length > 0">
 						<div ng-repeat="org in entity.filteredOrgs track by $index">
-							<div class="hbox">
+							<div class="hbox padder-v-sm" ng-class="{ 'b-b': !$last }">
 								<a class="col" ng-click="">
 									<div>
 										<span class="text-md">{{ org.name }}</span>
@@ -37,7 +32,6 @@
 									</div>
 								</a>
 							</div>
-							<hr class="b-b b-split m-xs">
 						</div>
 					</div>
 					<div ng-if="entity.filteredOrgs.length == 0">
@@ -53,7 +47,7 @@
 				<div class="panel-body">
 					<div ng-if="entity.filteredPersons.length > 0">
 						<div ng-repeat="person in entity.filteredPersons track by $index">
-							<div class="hbox">
+							<div class="hbox padder-v-sm" ng-class="{'b-b': !$last}">
 								<a class="col" ui-sref="app.oa.chat({staffId:'{{person.id}}'})">
 								<!-- <a class="col" ng-click="showDetail(person, 'person')"> -->
 									<div>
@@ -64,7 +58,6 @@
 									</div>
 								</a>
 							</div>
-							<hr class="b-b b-split m-xs">
 						</div>
 					</div>
 					<div ng-if="entity.filteredPersons.length == 0">

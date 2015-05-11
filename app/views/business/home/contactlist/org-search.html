@@ -23,8 +23,8 @@
 		font-weight: bold;
 		border: 2px solid #23B7E5;
 	}
-	.b-split {
-		border-color: #dcedf5;
+	.result-item:hover {
+		background-color: #D9AEAE;
 	}
 </style>
 <div class="search" ng-if="!options.showDetail">
@@ -47,7 +47,6 @@
 			<a class="btn m-xxs r-3x btn-hover-red text-md" ng-class="{'btn-success': entity.areaSelected == area}" ng-repeat="area in entity.area track by $index" ng-click="areaSelect(area)">{{ area.ORG_UNIT_RGN }}</a>
 		</div>
 	</div>
-	<!-- <hr class="b-b b-split"> -->
 	<div class="hbox m-b">
 		<div class="col col-xs-2 col-md-1 p-t-sm p-l-md">
 			<label for="" class="control-label text-md">分类：</label>
@@ -73,7 +72,7 @@
 			</div>
 			<div class="m-t">
 				<div ng-repeat="result in entity.searchResults track by $index">
-					<div class="hbox padder">
+					<div class="hbox padder b-b padder-v-sm result-item">
 						<a class="col col-xs-8" ng-click="showDetailInfo(result)">
 							<div>
 								<span class="text-md">{{ result.ORG_UNIT_SHORT_NAME }}</span>
@@ -86,7 +85,6 @@
 							<a class="btn btn-danger-square pull-right v-middle" ng-click="collectionConfirm(result)">关注</a>
 						</div>
 					</div>
-					<hr class="b-b b-split">
 				</div>
 			</div>
 		</div>
@@ -96,6 +94,13 @@
 <div class="result-search" ng-if="options.showDetail">
 	<div class="hbox m-b bg-primary font-bold text-title padder-v-sm">
 		<span class="v-middle m-sm">{{ selectedOrg.totalName }}</span>
+	</div>
+	<div>
+		<ul class="breadcrumb bg-white b-a">
+			<li><a href="">111</a></li>
+			<li><a href="">222</a></li>
+			<li class="active"><a href="">333</a></li>
+		</ul>
 	</div>
 	<div class="hbox padder-md">
 		<div class="input-group">
