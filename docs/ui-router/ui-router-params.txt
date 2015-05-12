@@ -1,5 +1,13 @@
 
 ui-router 传参说明：
 
-ui-sref="app.hr.staffInfo({staffId:result.id})"
+	state 调用方法：
 
+	参数 staffId 类型为字符串，字符串是通过表达式计算出的结果
+	<a ui-sref="app.oa.chat({staffId:'{{staffId}}'})"></a>
+
+	router 配置：
+	
+	state('app.oa.chat', {
+		url: '/chat/:staffId/:content'
+	})

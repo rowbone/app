@@ -12,24 +12,58 @@
 $q 和 Promise
 Promise接口是AngularJS组织API的基础，从根本上讲，Promise接口从以下方面对异步请求做了规范：
 
-        a.异步请求返回一个promise，而不是返回具体值；
+  a.异步请求返回一个promise，而不是返回具体值；
 
-        b.Promise带有一个then函数，这个函数有两个参数：第一个参数是处理"resolved"和"sucess"事件的函数；第二个参数是处理"rejected"和"failure"事件的函数。调用这两个函数时将会把结果或者拒绝的原因作为参数传递进去；
+  b.Promise带有一个then函数，这个函数有两个参数：第一个参数是处理"resolved"和"sucess"事件的函数；第二个参数是处理"rejected"和"failure"事件的函数。调用这两个函数时将会把结果或者拒绝的原因作为参数传递进去；
 
-        c.只要返回结果是合法的，接口就可以保证这两个函数中的一个会被调用。
+  c.只要返回结果是合法的，接口就可以保证这两个函数中的一个会被调用。
 
-        大多数deferred/Q实现都会遵守以上方式，但是AngularJS的实现比较特殊，原因如下：
+  大多数deferred/Q实现都会遵守以上方式，但是AngularJS的实现比较特殊，原因如下：
 
-        a.AngularJS知道$q的存在，所以$q会被整合到作用域模型中去。这样可以使解析时的传递速度更快，并且可以减少UI的闪烁和刷新；
+  a.AngularJS知道$q的存在，所以$q会被整合到作用域模型中去。这样可以使解析时的传递速度更快，并且可以减少UI的闪烁和刷新；
 
-        b.AngularJS的模板也认识$q，这样一来，接口的内容就可以被当作最终结果值（而不是当作promise）来对待，然后等获取结果之后再通知promise；
+  b.AngularJS的模板也认识$q，这样一来，接口的内容就可以被当作最终结果值（而不是当作promise）来对待，然后等获取结果之后再通知promise；
 
-        c.体积更小，因为对于常用的异步任务来说，AngularJS只实现了它们所需要的最基本、最重要的功能。
+  c.体积更小，因为对于常用的异步任务来说，AngularJS只实现了它们所需要的最基本、最重要的功能。
 
+  定义 defer 以及 defer 的方法：
+		var defered = $q.defer();
 
-var defered = $q.defer();
+		defered.resolve(value);
+		defered.reject(reason)
+		defered.notify(value)
 
-defered.resolve(value);
-defered.reject(reason)
-defered.notify(value)
+// UserInfo Service
+ngApp.factory('UserInfo', ['$http', '$q', 
+	function($http, $q) {
+		return {
+			query: function() {
+				var defered = $q.defer(); 	// 声明延后执行，表示要去监控后面的执行
+				$http({method: 'GET', url: 'scripts/mine.json'})
+					.success(function(data, status, headers, config) {
+						defered.resolve(data);  // 声明执行成功，即http请求数据成功，可以返回数据了
+					})
+					.error(function(data, status, headers, config) {
+						defered.reject(data); 	// 声明执行失败，即服务器返回错误
+					});
+
+					return defered.promise;   // 返回承诺，这里并不是最终数据，而是访问最终数据的API 
+			}
+		}
+	}
+]);
+
+// controller
+angular.module('ngApp')
+	.controller('MainCtrl', ['$scope', 'UserInfo', 
+		function($scope, UserInfo) {
+			var promise = UserInfo.query();	// 同步调用，获得承诺接口  
+
+			promise.then(function(data) {		// 调用承诺API获取数据 .resolve  
+				$scope.user = data;
+			}, function(msg) {  						// 处理错误 .reject  
+				console.error(msg);
+			});
+		}
+	]);
 

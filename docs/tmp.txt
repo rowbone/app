@@ -3,3 +3,11 @@ http://web.jobbole.com/82317/
 http://jayli.github.io/whatisnode/index.html
 
 http://blogread.cn/it/article/4179?f=wb1
+
+http://fex.baidu.com/blog/2015/05/cross-mobile/
+
+http://wiki.commonjs.org/wiki/Promises
+
+http://stackoverflow.com/questions/17731942/how-to-load-data-synchronously-in-angularjs-application
+
+http://www.bennadel.com/blog/2492-what-a-select-watch-teaches-me-about-ngmodel-and-angularjs.htm

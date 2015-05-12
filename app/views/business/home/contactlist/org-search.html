@@ -92,14 +92,14 @@
 </div>
 
 <div class="result-search" ng-if="options.showDetail">
-	<div class="hbox m-b bg-primary font-bold text-title padder-v-sm">
+	<!-- <div class="hbox m-b bg-primary font-bold text-title padder-v-sm">
 		<span class="v-middle m-sm">{{ selectedOrg.totalName }}</span>
-	</div>
-	<div>
-		<ul class="breadcrumb bg-white b-a">
-			<li><a href="">111</a></li>
-			<li><a href="">222</a></li>
-			<li class="active"><a href="">333</a></li>
+	</div> -->
+	<div class="hbox m-b font-bold text-title padder-v-sm">
+		<ul class="breadcrumb bg-primary b-a">
+			<li ng-repeat="org in orgAndFatherOrgs track by $index" ng-class="{'active': $last}">
+				<a href="" ng-click="showDetailInfo(org)">{{ org.ORG_UNIT_SHORT_NAME }}</a>
+			</li>
 		</ul>
 	</div>
 	<div class="hbox padder-md">
