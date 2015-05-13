@@ -8,3 +8,7 @@
 4、标签页的功能和样式扩展
 
 5、组织树
+
+
+ORG_UNIT_RGN: "广州分院"		区域
+ORG_CLASS: null							分类

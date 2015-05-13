@@ -43,148 +43,160 @@ app.service('OrgSearch', function(){
 });
 // 已关注 service，保存已关注的人员和组织
 app.service('CollectionService', ['$http', 
-	function($http) {
-		var orgs = [],
-				persons = [],
-				params = {},
-				urlCollections = '/service/followItem!queryFollowItemByFollowType';
-		// 获取已关注的人员和组织，页面操作过程中维护获得的 orgs 和 persons
-		$http.post(urlCollections, params)
-			.success(function(data, status, headers, config) {
-				var collections = data.obj;
-				orgs = collections.orgFollowItem;
-				persons = collections.staffFollowItem;
-			})
-			.error(function(data, status, headers, config) {
-				console.error('Get "' + urlCollections + '" wrong...');
-			});
+  	function($http) {
+  		var orgs = [],
+			persons = [],
+			params = {},
+			urlCollections = '/service/followItem!queryFollowItemByFollowType',
+			isLoading = true;
+  		
+  		var getCollections = function(collectionType) {
+  			if(collectionType == 'STAFF') {
+  				params = {
+					'FOLLOW_TYPE': 'STAFF'
+  				};
+  			} else if(collectionType == 'ORG') {
+  				params = {
+					'FOLLOW_TYPE': 'ORG'
+  				};
+  			} else {
+  				params = {};
+  			}
+  	  		// 获取已关注的人员和组织，页面操作过程中维护获得的 orgs 和 persons
+  	  		$http.post(urlCollections, params)
+  	  			.success(function(data, status, headers, config) {
+  	  				isLoading = false;
+  	  				var collections = data.obj;
+  	  				orgs = collections.orgFollowItem;
+  	  				persons = collections.staffFollowItem;
+console.info('CollectionService --> ', orgs);
+console.info('CollectionService --> ', persons);
+  	  			})
+  	  			.error(function(data, status, headers, config) {
+  	  				console.error('Get "' + urlCollections + '" wrong...');
+  	  			});
+  			
+  		};
+  		
+  		getCollections();
 
-		this.setOrgs = function(orgs) {
-			orgs = orgs;
-		};
-		
-		this.setPersons = function(persons) {
-			persons = persons;
-		};
+  		this.setOrgs = function(orgs) {
+  			orgs = orgs;
+  		};
+  		
+  		this.setPersons = function(persons) {
+  			persons = persons;
+  		};
 
-		this.addOrg = function(org) {
-			orgs.push(org);
-		};
+  		this.addOrg = function(org) {
+  			orgs.push(org);
+  		};
 
-		this.removeOrg = function(org) {
-			// @todo
-		};
+  		this.removeOrg = function(org) {
+  			var index = -1;
+  			for(var i=0; i<orgs.length; i++) {
+  				if(orgs[i].ID == org.ID) {
+  					index = i;
+  					break;
+  				}
+  			}
+  			orgs.splice(i, 1);
+  		};
 
-		this.addPerson = function(person) {
-			persons.push(person);
-		};
+  		this.addPerson = function(person) {
+  			persons.push(person);
+  		};
 
-		this.removePerson = function(person) {
-			// @todo
-		};
+  		this.removePerson = function(person) {
+  			var index = -1;
+  			for(var i=0; i<persons.length; i++) {
+  				if(persons[i].ID == person.ID) {
+  					index = i;
+  					break;
+  				}
+  			}
+  			persons.splice(i, 1);
+  		};
 
-		this.getCollectionOrgItemById = function(orgId) {
-			// @todo
-		};
+  		this.getOrgById = function(orgId) {
+  			// @todo
+  		};
 
-		this.getOrgs = function() {
-			return orgs;
-		};
+  		this.getOrgs = function() {
+  			return orgs;
+  		};
 
-		this.getCollectionPersonItemById = function(personId) {
-			// @todo
-		};
+  		this.getPersonById = function(personId) {
+  			// @todo
+  		};
 
-		this.getPersons = function() {
-			return persons;
-		};
+  		this.getPersons = function() {
+  			if(isLoading) {
+  				
+  			}
+  			return persons;
+  		};
 
-		this.getAll = function() {
-			return {
-				orgs: orgs,
-				persons: persons
-			}
-		};
+  		this.getAll = function() {
+  			return {
+  				orgs: orgs,
+  				persons: persons
+  			};
+  		};
 
-	}
-]);
-
-// app.service('CollectionService', ['$http', 'DataService', 
-// 	function($http, DataService) {
-// 		var orgs = [],
-// 			persons = [],
-// 			personsFollowType = 'STAFF',
-// 			orgsFollowType = 'ORG',
-// 			params = {},
-// 			urlCollections = '/service/followItem!queryFollowItemByFollowType';
-		
-// 		this.setOrgs = function(orgs) {
-// 			orgs = orgs;
-// 		};
-		
-// 		this.setPersons = function(persons) {
-// 			persons = persons;
-// 		};
-
-// 		this.addOrg = function(org) {
-// 			orgs.push(org);
-// 		};
-
-// 		this.addPerson = function(person) {
-// 			persons.push(person);
-// 		};
-
-// 		this.getOrgs = function() {
-// 			params = {
-// 				'FOLLOW_TYPE': orgsFollowType
-// 			};
-// 			$http.post(urlCollections, params)
-// 				.success(function(data, status, headers, config) {
-// 					var orgs = data.obj.orgFollowItem;
-
-// 					return orgs;
-// 				})
-// 				.error(function(data, status, headers, config) {
-// 					console.error('Get "' + urlCollections + '" wrong...');
-// 				});
-// 		};
-
-// 		this.getPersons = function() {
-// 			params = {
-// 				'FOLLOW_TYPE': personsFollowType
-// 			};
-// 			$http.post(urlCollections, params)
-// 				.success(function(data, status, headers, config) {
-// 					var persons = data.obj.staffFollowItem;
-
-// 					return persons;
-// 				})
-// 				.error(function(data, status, headers, config) {
-// 					console.error('Get "' + urlCollections + '" wrong...');
-// 				});
-// 		};
-
-// 		this.getAll = function() {
-// 			params = {
-// 				// 
-// 			};
-// 			$http.post(urlCollections, params)
-// 				.success(function(data, status, headers, config) {
-// 					var orgs = data.obj.orgFollowItem;
-// 					var persons = data.obj.staffFollowItem;
-
-// 					return {
-// 						orgs: orgs,
-// 						persons: persons
-// 					};
-// 				})
-// 				.error(function(data, status, headers, config) {
-// 					console.error('Get "' + urlCollections + '" wrong...');
-// 				});
-			
-// 		};
-// 	}
-// ]);
+  	}
+  ]);
+//app.service('CollectionService', ['$http', 'DataService', 
+//	function($http, DataService) {
+//		var orgs = [],
+//			persons = [],
+//			personsFollowType = 'STAFF',
+//			orgsFollowType = 'ORG',
+//			params = {},
+//			urlCollections = '/service/followItem!queryFollowItemByFollowType';
+//
+//		$http.post(urlCollections, params)
+//			.success(function(data, status, headers, config) {
+//				orgs = data.obj.orgFollowItem;
+//				persons = data.obj.staffFollowItem;
+//			})
+//			.error(function(data, status, headers, config) {
+//				console.error('Get "' + urlCollections + '" wrong...');
+//			});
+//		
+//		this.setOrgs = function(orgs) {
+//			orgs = orgs;
+//		};
+//		
+//		this.setPersons = function(persons) {
+//			persons = persons;
+//		};
+//
+//		this.addOrg = function(org) {
+//			orgs.push(org);
+//		};
+//
+//		this.addPerson = function(person) {
+//			persons.push(person);
+//		};
+//
+//		this.getOrgs = function() {
+//			return orgs;
+//		};
+//
+//		this.getPersons = function() {
+//			return persons;
+//		};
+//
+//		this.getAll = function() {
+//			return {
+//				orgs: orgs,
+//				persons: persons
+//			};
+//			
+//		};
+//	}
+//]);
 
 // 人员分组过滤器
 app.filter('userGroup', ['$filter', 
@@ -249,8 +261,6 @@ app.controller('contactListCtrl', ['$scope',
 					$scope.contactListTabs[i] = false;
 				}
 			}
-
-			console.log($scope.contactListTabs);
 		};
 	}
 ]);
@@ -262,6 +272,7 @@ app.controller('CollectionCtrl', ['$scope', '$http', '$timeout', '$filter', '$st
 			urlCollectionsPersons = 'app/business/home/contactlist/data/collections-persons.json',
 			
 			options = $scope.options = {
+				isLoading: true,
 				collectionNone: false,
 				collectionOrgExpand: false,
 				collectionPersonExpand: true,
@@ -272,68 +283,57 @@ app.controller('CollectionCtrl', ['$scope', '$http', '$timeout', '$filter', '$st
 				persons: [],
 				orgs: []
 			};
-		
-//		DataService.getData(urlCollectionsOrgs)
-//			.then(function success(data) {
-//				var orgs = data.obj;
-//				collections.orgs = orgs;
-//				CollectionService.setOrgs(orgs);
-//			}, function error(msg) {
-//				console.error(msg);
-//			});
-//		
-//		DataService.getData(urlCollectionsPersons)
-//			.then(function success(data) {
-//				var persons = data.obj;
-//				CollectionService.setPersons(persons);
-//				var personsGroup = $filter('userGroup')(persons, 'groupCode');
-//				collections.persons = persons;
-//				collections.personsGroup = personsGroup;
-//			}, function error(msg) {
-//				console.error(msg);
-//			});
 
 		urlCollectionsOrgs = '/service/followItem!queryFollowItemByFollowType';
 		var params = {
-			
+			// 
 		};
-		$http.post(urlCollectionsOrgs, params) 
-			.success(function(data, status, headers, config) {
-				collections.orgs = data.obj.orgFollowItem;
-				
-				var persons = data.obj.staffFollowItem;
-				var personsGroup = $filter('userGroup')(persons, 'GROUPCODE');
-				collections.persons = persons;
-				collections.personsGroup = personsGroup;
-console.log(collections.persons);
-				$timeout(function() {
-					if(collections.persons.length > 0 || collections.orgs.length > 0) {
-						options.collectionNone = false;
-					} else {
-						options.collectionNone = true;
-					}
-				}, 3000);
-			})
-			.error(function(data, status, headers, config) {
-				console.log('Get ' + urlCollectionsOrgs + ' wrong...');
-			});
-
-//		$http.get(urlCollectionsPersons) 
+//		$http.post(urlCollectionsOrgs, params) 
+//			.success(function(data) {
+//				console.log(data);
+//			});
+//		$http.post(urlCollectionsOrgs, params) 
 //			.success(function(data, status, headers, config) {
-//				var persons = data.obj;
+//				collections.orgs = data.obj.orgFollowItem;		
+//				var persons = data.obj.staffFollowItem;
+//				var personsGroup = $filter('userGroup')(persons, 'GROUPCODE');
 //				collections.persons = persons;
+//				collections.personsGroup = personsGroup;
+//				
+////				$timeout(function() {
+//					options.isLoading = false;
+//					if(collections.persons.length > 0 || collections.orgs.length > 0) {
+//						options.collectionNone = false;
+//						options.isLoading = false;
+//					} else {
+//						options.collectionNone = true;
+//						options.isLoading = false;
+//					}
+////				}, 3000);
 //			})
 //			.error(function(data, status, headers, config) {
-//				console.log('Get ' + urlCollectionsPersons + ' wrong...');
+//				console.log('Get ' + urlCollectionsOrgs + ' wrong...');
 //			});
-//	
-//			$timeout(function() {
-//				if(collections.persons.length > 0 || collections.orgs.length > 0) {
-//					options.collectionNone = false;
-//				} else {
-//					options.collectionNone = true;
-//				}
-//			}, 3000);
+		
+		$scope.$watch(function() {
+			return CollectionService.getAll();
+		}, function(newVal, oldVal) {			
+			collections.orgs = CollectionService.getOrgs();
+			var persons = CollectionService.getPersons();
+			var personsGroup = $filter('userGroup')(persons, 'GROUPCODE');
+			collections.persons = persons;
+			collections.personsGroup = personsGroup;
+			
+			if(collections.persons.length > 0 || collections.orgs.length > 0) {
+				options.collectionNone = false;
+				options.isLoading = false;
+			} else {
+				options.collectionNone = true;
+				options.isLoading = false;
+			}
+			console.info(newVal);
+		}, true);
+		
 
 		// 添加收藏
 		$scope.addCollection = function() {
@@ -370,7 +370,6 @@ console.log(collections.persons);
 
 			var modalInstance2 = null;
 			modalInstance.result.then(function(rtnVal) {
-				console.log(rtnVal);
 				if(rtnVal.objEntity && rtnVal.showType) {
 
 					if(rtnVal.showType == 'person') {
@@ -391,8 +390,6 @@ console.log(collections.persons);
 //已关注搜索弹出层 controller
 app.controller('CollectionSearchModalCtrl', ['$scope', '$modalInstance', '$filter', 'modalParams', 
 	function($scope, $modalInstance, $filter, modalParams) {
-		console.log('CollectionSearchModalCtrl');
-		console.log(modalParams);
 
 		var entity = $scope.entity = {};
 		var options = $scope.options = {
@@ -408,8 +405,6 @@ app.controller('CollectionSearchModalCtrl', ['$scope', '$modalInstance', '$filte
 			} else {
 				entity.filteredPersons = $filter('orderBy')($filter('filter')(entity.collectionsPersons, newVal), 'GROUPCODE');
 				entity.filteredOrgs = $filter('orderBy')($filter('filter')(entity.collectionsOrgs, newVal), 'GROUPCODE');
-console.log(entity.filteredOrgs);
-console.log(entity.filteredPersons);
 			}
 		});
 
@@ -435,35 +430,34 @@ app.controller('PersonSearchCtrl', ['$scope', '$http', '$timeout', '$modal', 'Co
 
 		entity.searchType = 'name';
 		
-		$scope.$watch(function() {
-			return CollectionService.getPersons();
-		}, function(newVal) {
-			console.log(newVal);
-		}, true);
-		// 获取已关注人员
-//		var urlCollectionsPersons = 'app/business/home/contactlist/data/collections-persons.json';
-//		DataService.getData(urlCollectionsPersons)
-//			.then(function success(data) {
-//				var persons = data.obj;
+		// 获取已关注人员		
+//		var urlCollectionsOrgs = '/service/followItem!queryFollowItemByFollowType';
+//		var params = {
+////			'FOLLOW_TYPE': 'ORG'
+//			'FOLLOW_TYPE': 'STAFF'
+//		};
+//		$http.post(urlCollectionsOrgs, params) 
+//			.success(function(data, status, headers, config) {
+//				var persons = data.obj.staffFollowItem;
 //				entity.collectionsPersons = persons;
-//			}, function error(msg) {
-//				console.error(msg);
+//			})
+//			.error(function(data, status, headers, config) {
+//				console.log('Get ' + urlCollectionsOrgs + ' wrong...');
 //			});
 		
-		var urlCollectionsOrgs = '/service/followItem!queryFollowItemByFollowType';
-		var params = {
-//			'FOLLOW_TYPE': 'ORG'
-			'FOLLOW_TYPE': 'STAFF'
-		};
-		$http.post(urlCollectionsOrgs, params) 
-			.success(function(data, status, headers, config) {
-				var persons = data.obj.staffFollowItem;
-				entity.collectionsPersons = persons;
-			})
-			.error(function(data, status, headers, config) {
-				console.log('Get ' + urlCollectionsOrgs + ' wrong...');
-			});
 
+		
+		$scope.$watch(function() {
+			return CollectionService.getAll();
+		}, function(newVal, oldVal) {
+			var persons = CollectionService.getPersons();			
+			entity.collectionsPersons = persons;
+			$scope.enterPress(null, 'btn');
+console.info('after change:', persons);			
+			console.info('newVal==', newVal);
+		}, true);
+		
+console.info('entity.collectionsPersons==', entity.collectionsPersons);
 		// 搜索框 enter 触发搜索事件
 		$scope.enterPress = function(e, trigType) {
 			   
@@ -474,13 +468,25 @@ app.controller('PersonSearchCtrl', ['$scope', '$http', '$timeout', '$modal', 'Co
 		   $scope.staffMaxSize = 5;//显示的最大页码
 		   $scope.staffPageSize = 10;//每页显示记录条数
 		   
-			var params = {NAME:entity.searchKey,page:1,pagesize:50};
+			var params = {
+//				NAME:entity.searchKey,
+				page:1,
+				pagesize:50
+			};
 			if(trigType == 'btn' || e.keyCode === 13) {
 				options.search = true;
 				entity.searchResults = null;
 	
-				params.searchKey = entity.searchKey;
-				params.searchType = entity.searchType;
+//				params.searchKey = entity.searchKey;
+//				params.searchType = entity.searchType;
+				if(entity.searchType == 'name') {
+					personSearchUrl = '/service/staffInfo!queryStaffInfoByNameByPage';
+					params['NAME'] = entity.searchKey;								
+				}
+				if(entity.searchType == 'fullText') {
+					personSearchUrl = '/service/staffInfo!queryStaffListByResume';
+					params['RESUME'] = entity.searchKey;
+				}
 	
 				$http.post(personSearchUrl, params)
 					.success(function(data, status, headers, config) {
@@ -503,7 +509,9 @@ app.controller('PersonSearchCtrl', ['$scope', '$http', '$timeout', '$modal', 'Co
 					});
 
 			}
-			e.stopPropagation();
+			if(e != null) {
+				e.stopPropagation();
+			}			
 		};
 		// 人员详细信息
 		$scope.showDetailInfo = function(user) {
@@ -519,7 +527,6 @@ app.controller('PersonSearchCtrl', ['$scope', '$http', '$timeout', '$modal', 'Co
 					}
 				}
 			}
-console.info('PersonSearchCtrl --> ', collectionItem);
 			var modalInstance = $modal.open({
 				templateUrl: 'app/business/cam/staffdetail/staff-info.html',
 				controller: 'StaffInfoCtrl',
@@ -537,89 +544,51 @@ console.info('PersonSearchCtrl --> ', collectionItem);
 		};
 		// 添加关注确认
 		$scope.collectionConfirm = function(user, strType) {
-			var modalInstance = $modal.open({
-				templateUrl: 'app/business/home/contactlist/confirm.html',
-				controller: 'ConfirmCtrl',
-				resolve: {
-					modalParams: function() {
-						var objParams = {
-							user: user,
-							strType: strType
-						};
-
-						return objParams;		
+			var urlAddCollection = '/service/followItem!saveEntity',
+				staffId = $rootScope.userInfo.ID,
+				followType = 'STAFF',
+				followName = user.NAME,
+				followId = user.ID,
+				params = {
+					'STAFF_ID': staffId,
+					'FOLLOW_TYPE': followType,
+					'NAME': followName,
+					'FOLLOW_ITEM': followId
+				};
+				
+			$http.post(urlAddCollection, params)
+				.success(function(data, status, headers, config) {
+					CollectionService.addPerson(data.obj);
+					var searchResults = entity.searchResults;
+					var iLen = searchResults.length;
+					for(var i=0; i<iLen; i++) {
+						if(searchResults[i].ID == followId) {
+							searchResults[i].isInCollection = true;
+							break;
+						}
 					}
-				}
-			});
-
-			var modalInstance2 = null;
-			modalInstance.result.then(function(rtnVal) {				
-				if(rtnVal == 'confirm') {
-					var urlAddCollection = '/service/followItem!saveEntity',
-						staffId = $rootScope.userInfo.ID,
-						followType = 'STAFF',
-						followName = user.NAME,
-						followId = user.ID,
-						params = {
-						'STAFF_ID': staffId,
-						'FOLLOW_TYPE': followType,
-						'NAME': followName,
-						'FOLLOW_ITEM': followId
-					};
-					
-					$http.post(urlAddCollection, params)
-						.success(function(data, status, headers, config) {
-							
-							modalInstance2 = $modal.open({
-								templateUrl: 'app/business/home/contactlist/result.html',
-								controller: 'ConfirmResultCtrl',
-								resolve: {
-									modalParams: function() {
-										var objParams = {
-											user: user,
-											strType: strType
-										};
-										
-										return objParams;
-									}
-								}
-							});
-
-							$timeout(function() {
-								modalInstance2.close();
-								var searchResults = entity.searchResults;
-								var iLen = searchResults.length;
-								for(var i=0; i<iLen; i++) {
-									if(searchResults[i].ID == followId) {
-										searchResults[i].isInCollection = true;
-										break;
-									}
-								}
-							}, 1000);
-						})
-						.error(function(data, status, headers, config) {
-							console.error(data);
-						});
-				}
-			}, function(rtnVal) {
-				console.log(rtnVal);
-			});
+				})
+				.error(function(data, status, headers, config) {
+					console.error(data);
+				});
 		};
 
 		$scope.$watch('entity.searchKey', function(newVal) {
 			// console.log(newVal);
 		});
+		
+		$scope.trigSearch = function() {
+			$scope.enterPress(null, 'btn');
+		};
 	}
 ]);
 
 app.controller('ConfirmCtrl', ['$scope', '$modalInstance', 'modalParams', '$modal', '$timeout', 
 	function($scope, $modalInstance, modalParams, $modal, $timeout) {
 		$scope.entity = modalParams.user;
-console.info('ConfirmCtrl --> entity ', $scope.entity);
 		var options = $scope.options = {
 			strType: modalParams.strType
 		};
-console.info('ConfirmCtrl --> options ', options);
 		$scope.confirm = function() {
 			$modalInstance.close('confirm');
 		};
@@ -636,14 +605,13 @@ console.info('ConfirmCtrl --> options ', options);
 
 app.controller('ConfirmResultCtrl', ['$scope', '$modalInstance', 'modalParams',
 	function($scope, $modalInstance, modalParams){
-console.log(modalParams);
 		$scope.entity = modalParams.user;
 		$scope.strType = modalParams.strType;
 	}
 ]);
 
-app.controller('OrgSearchCtrl', ['$scope', '$http', '$timeout', '$modal', 'OrgSearch', 'DataService', '$rootScope', '$filter', 
-	function($scope, $http, $timeout, $modal, OrgSearch, DataService, $rootScope, $filter) {
+app.controller('OrgSearchCtrl', ['$scope', '$http', '$timeout', '$modal', 'OrgSearch', 'DataService', '$rootScope', '$filter', 'CollectionService', 
+	function($scope, $http, $timeout, $modal, OrgSearch, DataService, $rootScope, $filter, CollectionService) {
 		var entity = $scope.entity = {};
 		var options = $scope.options = {
 			search: false,
@@ -679,7 +647,6 @@ app.controller('OrgSearchCtrl', ['$scope', '$http', '$timeout', '$modal', 'OrgSe
 			.success(function(data, status, headers, config) {
 				if(data.obj){
 					entity.allOrgs = data.obj;
-					console.log(data);
 				}
 			})
 			.error(function(data, status, headers, config) {
@@ -705,36 +672,35 @@ app.controller('OrgSearchCtrl', ['$scope', '$http', '$timeout', '$modal', 'OrgSe
 				classifySelected: entity.classifySelected
 			};
 		}, function(newVal, oldVal) {
-			console.log(newVal);
-			console.log(oldVal);
 			$scope.enterPress(null, 'btn');
 		}, true);
 		
-		// 获取已关注组织
-//		var urlCollectionsOrgs = 'app/business/home/contactlist/data/collections-orgs.json';
-//		DataService.getData(urlCollectionsOrgs)
-//			.then(function success(data) {
-//				var orgs = data.obj;
+		// 获取已关注组织		
+//		var urlCollectionsOrgs = '/service/followItem!queryFollowItemByFollowType';
+//		var params = {
+//			'FOLLOW_TYPE': 'ORG'
+////			'FOLLOW_TYPE': 'STAFF'
+//		};
+//		$http.post(urlCollectionsOrgs, params) 
+//			.success(function(data, status, headers, config) {
+//				var orgs = data.obj.orgFollowItem;
 //				entity.collectionsOrgs = orgs;
-//			}, function error(msg) {
-//				console.error(msg);
+//				// 触发过滤操作
+//				$scope.enterPress(null, 'btn');
+//			})
+//			.error(function(data, status, headers, config) {
+//				console.log('Get ' + urlCollectionsOrgs + ' wrong...');
 //			});
-		
-		var urlCollectionsOrgs = '/service/followItem!queryFollowItemByFollowType';
-		var params = {
-			'FOLLOW_TYPE': 'ORG'
-//			'FOLLOW_TYPE': 'STAFF'
-		};
-		$http.post(urlCollectionsOrgs, params) 
-			.success(function(data, status, headers, config) {
-				var orgs = data.obj.orgFollowItem;
-				entity.collectionsOrgs = orgs;
-				// 触发过滤操作
-				$scope.enterPress(null, 'btn');
-			})
-			.error(function(data, status, headers, config) {
-				console.log('Get ' + urlCollectionsOrgs + ' wrong...');
-			});
+		$scope.$watch(function() {
+			return CollectionService.getAll();
+		}, function(newVal, oldVal) {
+			var orgs = CollectionService.getOrgs();
+			entity.collectionsOrgs = orgs;
+			// 触发过滤操作
+			$scope.enterPress(null, 'btn');
+			
+			console.info(newVal);
+		}, true);
 
 		// 搜索框 enter 触发搜索事件
 		$scope.enterPress = function(e, trigType) {
@@ -779,7 +745,7 @@ app.controller('OrgSearchCtrl', ['$scope', '$http', '$timeout', '$modal', 'OrgSe
 					if(entity.areaSelected != undefined) {
 						data = $filter('filter')(data, {'ORG_UNIT_RGN': entity.areaSelected.ORG_UNIT_RGN});
 					}
-					if(entity.classifySelected != undefined) {console.info(entity.classifySelected);
+					if(entity.classifySelected != undefined) {
 						data = $filter('filter')(data, {'ORG_CLASS': entity.classifySelected.key});
 					}				
 			
@@ -829,73 +795,35 @@ app.controller('OrgSearchCtrl', ['$scope', '$http', '$timeout', '$modal', 'OrgSe
 
 		// 添加关注确认
 		$scope.collectionConfirm = function(org, strType) {
-			var modalInstance = $modal.open({
-				templateUrl: 'app/business/home/contactlist/confirm.html',
-				controller: 'ConfirmCtrl',
-				resolve: {
-					modalParams: function() {
-						var objParams = {
-							user: org,
-							strType: strType
-						};
 
-						return objParams;		
+			var urlAddCollection = '/service/followItem!saveEntity',
+				staffId = $rootScope.userInfo.ID,
+				followType = 'ORG',
+				followName = org.ORG_UNIT_SHORT_NAME,
+				followId = org.ID,
+				params = {
+					'STAFF_ID': staffId,
+					'FOLLOW_TYPE': followType,
+					'NAME': followName,
+					'FOLLOW_ITEM': followId
+				};
+			
+			$http.post(urlAddCollection, params)
+				.success(function(data, status, headers, config) {
+					CollectionService.addOrg(data.obj);
+					var searchResults = entity.searchResults;
+					var iLen = searchResults.length;
+					for(var i=0; i<iLen; i++) {
+						if(searchResults[i].ID == followId) {
+							searchResults[i].isInCollection = true;
+							break;
+						}
 					}
-				}
-			});
+				})
+				.error(function(data, status, headers, config) {
+					console.error(data);
+				});
 
-			var modalInstance2 = null;
-
-			modalInstance.result.then(function(rtnVal) {				
-				if(rtnVal == 'confirm') {
-					var urlAddCollection = '/service/followItem!saveEntity',
-						staffId = $rootScope.userInfo.ID,
-						followType = 'ORG',
-						followName = org.ORG_UNIT_SHORT_NAME,
-						followId = org.ID,
-						params = {
-							'STAFF_ID': staffId,
-							'FOLLOW_TYPE': followType,
-							'NAME': followName,
-							'FOLLOW_ITEM': followId
-						};
-					
-					$http.post(urlAddCollection, params)
-						.success(function(data, status, headers, config) {						
-							modalInstance2 = $modal.open({
-								templateUrl: 'app/business/home/contactlist/result.html',
-								controller: 'ConfirmResultCtrl',
-								resolve: {
-									modalParams: function() {
-										var objParams = {
-											user: org,
-											strType: strType
-										};
-										
-										return objParams;
-									}
-								}
-							});
-
-							$timeout(function() {
-								modalInstance2.close();
-								var searchResults = entity.searchResults;
-								var iLen = searchResults.length;
-								for(var i=0; i<iLen; i++) {
-									if(searchResults[i].ID == followId) {
-										searchResults[i].isInCollection = true;
-										break;
-									}
-								}
-							}, 1000);
-						})
-						.error(function(data, status, headers, config) {
-							console.error(data);
-						});
-				}
-			}, function(rtnVal) {
-				console.log(rtnVal);
-			});
 		};
 		
 		// 返回通讯录列表
@@ -923,7 +851,7 @@ app.controller('ChildOrgsCtrl', ['$scope', '$http', 'OrgSearch',
 		$scope.$watch(function() {
 			return OrgSearch.getOrg();
 		}, function(newVal) {
-			console.log(newVal);
+//			console.log(newVal);
 		});
 		
 		var childOrgsUrl = '/service/orgUnit!queryNextContactTreeById';
@@ -969,29 +897,110 @@ app.controller('OrgStaffsCtrl', ['$scope', '$http', 'OrgSearch',
 ]);
 
 // 组织信息页签
-app.controller('OrgInfoCtrl', ['$scope', '$http', 'OrgSearch', 
-	function($scope, $http, OrgSearch) {
+app.controller('OrgInfoCtrl', ['$scope', '$http', 'OrgSearch', 'CollectionService', '$rootScope', 
+	function($scope, $http, OrgSearch, CollectionService, $rootScope) {
 		$scope.orgInfo = {};
 		var selectedOrg = OrgSearch.getOrg();
-		
 		var orgInfoUrl = '/service/orgUnit!queryOrgUnitInfoInCam?ID=' + selectedOrg.ID;
+		
+		$scope.$watch(function() {
+			return CollectionService.getAll();
+		}, function(newVal, oldVal) {
+			var orgs = CollectionService.getOrgs();
+			for(var i=0; i<orgs.length; i++) {
+				if(orgs[i].FOLLOW_ITEM == selectedOrg.ID) {
+					$scope.collectionItem = orgs[i];
+					$scope.orgInfo.isInCollection = true;
+					break;
+				}
+			}
+		}, true);
 
 		$http.post(orgInfoUrl)
 			.success(function(data, status, headers, config) {
 				$scope.orgInfo = data.obj.orgUnit;
+				
+//				var collectionOrgs = CollectionService.getOrgs();
+//				for(var i=0; i<collectionOrgs.length; i++) {
+//					if(selectedOrg.ID == collectionOrgs[i].FOLLOW_ITEM) {
+//						$scope.orgInfo.isInCollection = true;
+//						$scope.collectionItem = collectionOrgs[i];
+//						break;
+//					}
+//				}
 			})
 			.error(function(data, status, headers, config) {
 				console.log('Get ' + orgInfoUrl + ' wrong...');
-			});
+			});	
+		// 关注/取消关注
+		$scope.collectionConfirm = function(org, strType) {
+			var urlAddCollection = '',
+				staffId = '',
+				followType = '',
+				followName = '',
+				followId = '',
+				params = {};
+			if(strType == 'add') {
+				urlAddCollection = '/service/followItem!saveEntity';
+				staffId = $rootScope.userInfo.ID,
+				followType = 'ORG',
+				followName = org.ORG_UNIT_SHORT_NAME,
+				followId = org.ID,
+				params = {
+					'STAFF_ID': staffId,
+					'FOLLOW_TYPE': followType,
+					'NAME': followName,
+					'FOLLOW_ITEM': followId
+				};
+			}
+				
+			if(strType == 'remove') {
+				urlAddCollection = '/service/followItem!deleteEntity';
+				var collectionItemId = $scope.collectionItem.ID;
+				params = {
+					'ID': collectionItemId
+				};
+			}
+					
+			$http.post(urlAddCollection, params)
+				.success(function(data, status, headers, config) {
+					if(strType == 'remove') {
+						CollectionService.removeOrg($scope.collectionItem);
+						org.isInCollection = false;
+					} else {
+						ColletionService.addOrg(data.obj);
+						$scope.collectionItem = data.obj;
+						org.isInCollection = true;
+						$scope.collectionItem = data.obj;
+					}
+				})
+				.error(function(data, status, headers, config) {
+					console.error(data);
+				});
+ 	 	};
 	}
 ]);
 
-app.controller('StaffInfoCtrl', ['$scope', '$http', '$modalInstance', 'modalParams', '$modal', '$timeout', '$rootScope', 
- 	function($scope, $http, $modalInstance, modalParams, $modal, $timeout, $rootScope) {
+app.controller('StaffInfoCtrl', ['$scope', '$http', '$modalInstance', 'modalParams', '$modal', '$timeout', '$rootScope', 'CollectionService', 
+ 	function($scope, $http, $modalInstance, modalParams, $modal, $timeout, $rootScope, CollectionService) {
  		var staff = modalParams.user;
- 		var collectionItem = modalParams.collectionItem;
-console.info('StaffInfoCtrl --> ', collectionItem);
+// 		$scope.collectionItem = modalParams.collectionItem;
+ 		$scope.collectionItem = null;
+ 		
  		$scope.staffId = staff.ID;
+ 		
+ 		$scope.$watch(function() {
+			return CollectionService.getAll();
+		}, function(newVal, oldVal) {
+			var persons = CollectionService.getPersons();
+			for(var i=0; i<persons.length; i++) {
+				if(persons[i].FOLLOW_ITEM == $scope.staffId) {
+					$scope.collectionItem = persons[i];
+					break;
+				}
+			}
+		}, true);
+ 		
  		var entity = $scope.entity = {};
  		var urlStaffInfo = '/service/staffInfo!queryStaffInfoAndTotalnameAndJobs?ID=' + staff.ID;
  		$http.get(urlStaffInfo)
@@ -1015,87 +1024,50 @@ console.info('StaffInfoCtrl --> ', collectionItem);
  			});
  		
  		$scope.collectionConfirm = function(staff, strType) {
- 			var modalInstance = $modal.open({
-				templateUrl: 'app/business/home/contactlist/confirm.html',
-				controller: 'ConfirmCtrl',
-				resolve: {
-					modalParams: function() {
-						var objParams = {
-							user: staff,
-							strType: strType
-						};
-
-						return objParams;		
-					}
-				}
-			});
-
-			var modalInstance2 = null;
-			modalInstance.result.then(function(rtnVal) {				
-				if(rtnVal == 'confirm') {
-					var urlAddCollection = '',
-						staffId = '',
-						followType = '',
-						followName = '',
-						followId = '',
-						params = {};
-					if(strType == 'add') {
-						urlAddCollection = '/service/followItem!saveEntity';
-						staffId = $rootScope.userInfo.ID,
-						followType = 'STAFF',
-						followName = staff.NAME,
-						followId = staff.ID,
-						params = {
-							'STAFF_ID': staffId,
-							'FOLLOW_TYPE': followType,
-							'NAME': followName,
-							'FOLLOW_ITEM': followId
-						};
-					}
+			var urlAddCollection = '',
+				staffId = '',
+				followType = '',
+				followName = '',
+				followId = '',
+				params = {};
+			if(strType == 'add') {
+				urlAddCollection = '/service/followItem!saveEntity';
+				staffId = $rootScope.userInfo.ID,
+				followType = 'STAFF',
+				followName = staff.NAME,
+				followId = staff.ID,
+				params = {
+					'STAFF_ID': staffId,
+					'FOLLOW_TYPE': followType,
+					'NAME': followName,
+					'FOLLOW_ITEM': followId
+				};
+			}
+				
+			if(strType == 'remove') {
+				urlAddCollection = '/service/followItem!deleteEntity';
+console.info($scope.collectionItem);
+				var collectionItemId = $scope.collectionItem.ID;
+				params = {
+					'ID': collectionItemId
+				};
+			}
 					
+			$http.post(urlAddCollection, params)
+				.success(function(data, status, headers, config) {
 					if(strType == 'remove') {
-						urlAddCollection = '/service/followItem!deleteEntity';
-						var collectionItemId = collectionItem.ID;
-						params = {
-							'ID': collectionItemId
-						};
+						staff.isInCollection = false;
+						CollectionService.removePerson($scope.collectionItem);
+					} else {
+						$scope.collectionItem = data.obj;
+						staff.isInCollection = true;
+						CollectionService.addPerson($scope.collectionItem);
 					}
-					
-					$http.post(urlAddCollection, params)
-						.success(function(data, status, headers, config) {
-console.log('StaffInfo --> strType ', strType);					
-							modalInstance2 = $modal.open({
-								templateUrl: 'app/business/home/contactlist/result.html',
-								controller: 'ConfirmResultCtrl',
-								resolve: {
-									modalParams: function() {
-										var objParams = {
-											user: staff,
-											strType: strType
-										};
-										
-										return objParams;
-									}
-								}
-							});
-
-							$timeout(function() {
-								modalInstance2.close();
-								if(strType == 'remove') {
-									staff.isInCollection = false;
-								} else {
-									staff.isInCollection = true;
-								}
-							}, 1000);
-						})
-						.error(function(data, status, headers, config) {
-							console.error(data);
-						});
-				}
-			}, function(rtnVal) {
-				console.log(rtnVal);
-			});
- 		};
+				})
+				.error(function(data, status, headers, config) {
+					console.error(data);
+				});
+ 	 	};
 
  		// 返回
  		$scope.goBack = function() {
@@ -1103,5 +1075,6 @@ console.log('StaffInfo --> strType ', strType);
 // 			history.back();
  			// $scope.$apply();
  		};
- 	}
+ 		
+	}
  ]);

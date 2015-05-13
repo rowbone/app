@@ -60,7 +60,7 @@ app.service('AreaService', ['$http', '$filter', '$rootScope',
         // 过滤获取市一级地区：areaFilter，并按拼音排序：orderBy
         arrCityGroup = $filter('areaFilter')(arr, 'city');
         // 增加直辖市
-        arrCityGroup = arrCityGroup.concat(arrMunipalities);
+        // arrCityGroup = arrCityGroup.concat(arrMunipalities);
         arrCityGroup = $filter('orderBy')(arrCityGroup, 'spell');
         // 市一级名称过滤：areaNameFilter
         arrCityGroup = $filter('areaNameFilter')(arrCityGroup, 'city');
@@ -80,7 +80,7 @@ app.service('AreaService', ['$http', '$filter', '$rootScope',
         cityGroup = arrCities;
 
         arrRegion = arr;
-        arrRegion = arr.concat(arrMunipalities);
+        // arrRegion = arr.concat(arrMunipalities);
         // arrRegion = $filter('areaNameFilter')(arr, 'province');
         // arrRegion = $filter('areaNameFilter')(arrRegion, 'county');
 
