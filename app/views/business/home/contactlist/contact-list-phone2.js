@@ -109,19 +109,35 @@ app.controller('contactListCtrl2', ['$scope', '$http', 'DataService',
 		};
 
 		$scope.test = function() {
-			var url = 'data/bz/area.json';
-			DataService.getData(url)
-				.then(function success(data) {
-					console.log(data);
-				}, function error(msg) {
-					console.log(msg);
-				}, function notification(notification) {
-					console.info(notification)
+			// var url = 'data/bz/area.json';
+			// DataService.getData(url)
+			// 	.then(function success(data) {
+			// 		console.log(data);
+			// 	}, function error(msg) {
+			// 		console.log(msg);
+			// 	}, function notification(notification) {
+			// 		console.info(notification)
+			// 	})
+			// 	// 当调用了 reject 回调函数时，catch 会被自动忽略
+			// 	.catch(function(msg) {
+			// 		console.error(msg)
+			// 	});
+
+			var url = '/home/?email=abc';
+			var params = {
+				'name': 'abc',
+				'age': 12
+			};
+			$http.post(url, params)
+				.success(function(data) {
+					console.log(data)
 				})
-				// 当调用了 reject 回调函数时，catch 会被自动忽略
-				.catch(function(msg) {
-					console.error(msg)
-				});
+			// DataService.postData(url, params)
+			// 	.then(function(data) {
+			// 		console.info(data);
+			// 	}, function(msg) {
+			// 		console.error(msg);
+			// 	})
 		};
 
 	}

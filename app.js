@@ -7,7 +7,8 @@ var bodyParser = require('body-parser');
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
-var components = require('./routes/components')
+var components = require('./routes/components');
+var home = require('./routes/home');
 
 var ejs = require('ejs');
 
@@ -36,6 +37,7 @@ app.use('/', routes);
 */
 app.use('/users', users);
 app.use('/components', components);
+app.use('/home', home);
 
 // app.get('/userlist', users.userlist(db));
 

@@ -21,6 +21,19 @@ app.service('DataService', ['$http', '$q', '$interval',
 			return dataGetUrl;
 		};
 
+		this.postData = function(url, params) {
+			var deferred = $q.defer();
+			$http.post(url, params)
+				.success(function(data, status, headers, config) {
+					deferred.resolve(data);
+				})
+				.error(function(data, status, headers, config) {
+					deferred.reject('Post "' + url + '" wrong...');
+				})
+
+			return deferred.promise;
+		};
+
 		this.getData = function(url) {
 			var deferred = $q.defer();
 
