@@ -13,34 +13,108 @@ app.service('OrgSearch', function(){
 	}
 });
 // 已关注 service，保存已关注的人员和组织
-app.service('CollectionService', function() {
-	var orgs = [],
-		persons = [];
-	
-	this.setOrgs = function(orgs) {
-		orgs = orgs;
-	};
-	
-	this.setPersons = function(persons) {
-		persons = persons;
-	};
+app.service('CollectionService', ['$http', 
+	function($http) {
+		var orgs = [],
+		persons = [],
+		params = {},
+		urlCollections = '/service/followItem!queryFollowItemByFollowType',
+		isLoading = true;
+		
+		var getCollections = function(collectionType) {
+			if(collectionType == 'STAFF') {
+				params = {
+				'FOLLOW_TYPE': 'STAFF'
+				};
+			} else if(collectionType == 'ORG') {
+				params = {
+				'FOLLOW_TYPE': 'ORG'
+				};
+			} else {
+				params = {};
+			}
+  		// 获取已关注的人员和组织，页面操作过程中维护获得的 orgs 和 persons
+  		$http.post(urlCollections, params)
+  			.success(function(data, status, headers, config) {
+  				// isLoading = false;
+  				var collections = data.obj;
+  				orgs = collections.orgFollowItem;
+  				persons = collections.staffFollowItem;
+  			})
+  			.error(function(data, status, headers, config) {
+  				console.error('Get "' + urlCollections + '" wrong...');
+  			});
+			
+		};
+		
+		getCollections();
 
-	this.addOrg = function(org) {
-		orgs.push(org);
-	};
+		this.setOrgs = function(orgs) {
+			orgs = orgs;
+		};
+		
+		this.setPersons = function(persons) {
+			persons = persons;
+		};
 
-	this.addPerson = function(person) {
-		persons.push(person);
-	};
+		this.addOrg = function(org) {
+			orgs.push(org);
+		};
 
-	this.getOrgs = function() {
-		return orgs;
-	};
+		this.removeOrg = function(org) {
+			var index = -1;
+			for(var i=0; i<orgs.length; i++) {
+				if(orgs[i].ID == org.ID) {
+					index = i;
+					break;
+				}
+			}
+			orgs.splice(i, 1);
+		};
 
-	this.getPersons = function() {
-		return persons;
-	};
-});
+		this.addPerson = function(person) {
+			persons.push(person);
+		};
+
+		this.removePerson = function(person) {
+			var index = -1;
+			for(var i=0; i<persons.length; i++) {
+				if(persons[i].ID == person.ID) {
+					index = i;
+					break;
+				}
+			}
+			persons.splice(i, 1);
+		};
+
+		this.getOrgById = function(orgId) {
+			// @todo
+		};
+
+		this.getOrgs = function() {
+			return orgs;
+		};
+
+		this.getPersonById = function(personId) {
+			// @todo
+		};
+
+		this.getPersons = function() {
+			// if(isLoading) {
+				
+			// }
+			return persons;
+		};
+
+		this.getAll = function() {
+			return {
+				orgs: orgs,
+				persons: persons
+			};
+		};
+
+	}
+]);
 // 人员分组过滤器
 app.filter('userGroup', ['$filter', 
 	function($filter) {

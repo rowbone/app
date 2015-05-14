@@ -31,10 +31,17 @@
 	.contact-list-search {
 		
 	}
+	/*.person-search {
+		 position:fixed; 
+		 height:100px; top:100px; 
+		 left:0; 
+		 width:100%; 
+		 z-index:1000;
+	}*/
 </style>
 <div class="">
-	<div class="bg-white" style="position:fixed; height:100px; top:100px; left:0; width:100%; z-index:1000;">
-		<div class="hbox padder-md m-n" style="position:fixed; height:50px; top:100px; left:0; width:100%;">
+	<div class="bg-white person-search">
+		<div class="hbox padder-md m-n">
 			<div class="input-group">
 				<input type="text" class="form-control input-lg r-3x" ng-model="entity.searchKey" placeholder="搜索" autofocus>
 				<div class="input-group-btn">
@@ -45,7 +52,7 @@
 		  </div>
 		</div>
 
-		<div class="hbox m-n padder-md" style="position:fixed; height:auto; top:150px; left:0; width:100%;">
+		<div class="hbox m-n padder-md">
 		  <div class="col radio">
 		    <label class="i-checks text-md">
 		      <input type="radio" name="personSearchType" ng-model="entity.searchType" value="name"><i></i>姓名快速搜索
