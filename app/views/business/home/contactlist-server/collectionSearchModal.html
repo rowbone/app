@@ -1,0 +1,70 @@
+
+<div class="modal-header">已关注搜索</div>
+
+<div class="modal-body">
+	<div class="hbox padder-md m-t-md m-b-md">
+		<div class="input-group">
+			<input type="text" class="form-control input-lg r-3x" ng-model="entity.searchKey" ng-change="options.search = true;" placeholder="搜索" autofocus>
+			<!-- <i class="glyphicon glyphicon-remove pull-right"></i> -->
+			<div class="input-group-btn">
+			  <button type="button" class="btn btn-primary input-lg r-3x" tabindex="-1">
+					<i class="fa fa-search"></i>
+			  </button>  	  	
+			</div>
+	  </div>
+	</div>
+	<div class="hbox padder">
+		<div class="search-body" ng-if="options.search">
+			<div class="panel panel-info">
+				<div class="panel-heading">
+					<div class="panel-title">已关注的组织</div>
+				</div>
+				<div class="panel-body">
+					<div ng-if="entity.filteredOrgs.length > 0">
+						<div ng-repeat="org in entity.filteredOrgs track by $index">
+							<div class="hbox padder-v-sm" ng-class="{ 'b-b': !$last }">
+								<a class="col" ng-click="">
+									<div>
+										<span class="text-md">{{ org.ORG_UNIT_NAME }}</span>
+									</div>
+									<div>
+										<span class="m-t-xs text-xs">{{ org.ORG_TOTAL_NAME }}</span>	
+									</div>
+								</a>
+							</div>
+						</div>
+					</div>
+					<div ng-if="entity.filteredOrgs.length == 0">
+						<div>找组织：{{ entity.searchKey }}</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="panel panel-info">
+				<div class="panel-heading">
+					<div class="panel-title">已关注的人员</div>
+				</div>
+				<div class="panel-body">
+					<div ng-if="entity.filteredPersons.length > 0">
+						<div ng-repeat="person in entity.filteredPersons track by $index">
+							<div class="hbox padder-v-sm" ng-class="{'b-b': !$last}">
+								<a class="col" ui-sref="app.oa.chat({staffId:'{{person.FOLLOW_ITEM}}'})">
+								<!-- <a class="col" ng-click="showDetail(person, 'person')"> -->
+									<div>
+										<span class="text-md">{{ person.NAME }}</span>
+									</div>
+									<div>
+										<span class="m-t-xs text-xs">{{ person.ORG_TOTAL_NAME }}</span>	
+									</div>
+								</a>
+							</div>
+						</div>
+					</div>
+					<div ng-if="entity.filteredPersons.length == 0">
+						<div>找人：{{ entity.searchKey }}</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

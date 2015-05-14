@@ -1,0 +1,28 @@
+
+<div class="modal-header">
+	<div class="header-md h w-full b-b bg-light dk text-center text-md">
+		<a class="fa fa-angle-left pull-left text-2x" ng-click="cancel()"></a>组织信息
+	</div>
+</div>
+<div class="modal-body">
+	<div class="hbox m">
+		<conow-tabs>
+			<conow-tabs-titles>
+				<conow-tabs-titles-text title="下级组织" show="true"></conow-tabs-titles-text>
+				<conow-tabs-titles-text title="人员信息"></conow-tabs-titles-text>
+				<conow-tabs-titles-text title="组织信息"></conow-tabs-titles-text>
+			</conow-tabs-titles>
+			<conow-tabs-content>
+				<conow-tabs-content-url url="app/business/cam/organdstaff/child-orgs.html"></conow-tabs-content-url>
+				<conow-tabs-content-url url="app/business/cam/organdstaff/org-staffs.html"></conow-tabs-content-url>
+				<conow-tabs-content-url url="app/business/cam/organdstaff/org-info.html"></conow-tabs-content-url>
+			</conow-tabs-content>
+		</conow-tabs>
+	
+		<div class="m-t-sm text-center">
+			<button class="btn btn-primary-square r-3x text-base" ng-click="backContactlist()">返回通讯录列表</button>
+		</div>
+	</div>
+</div>
+
+<div class="modal-footer"></div>
