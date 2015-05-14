@@ -69,8 +69,6 @@ app.service('CollectionService', ['$http',
   	  				var collections = data.obj;
   	  				orgs = collections.orgFollowItem;
   	  				persons = collections.staffFollowItem;
-console.info('CollectionService --> ', orgs);
-console.info('CollectionService --> ', persons);
   	  			})
   	  			.error(function(data, status, headers, config) {
   	  				console.error('Get "' + urlCollections + '" wrong...');
@@ -528,7 +526,6 @@ app.controller('CollectionSearchModalCtrl', ['$scope', '$modalInstance', '$filte
 		});
 
 		$scope.showDetail = function(obj, showType) {
-			console.info(obj, showType);
 			$modalInstance.close({
 				objEntity: obj,
 				showType: showType
@@ -647,7 +644,6 @@ app.controller('PersonSearchCtrl', ['$scope', '$http', '$timeout', '$modal', 'Co
 			});
 		};
 		// 添加关注确认
-		// @todo:添加的后台接口需要返回关注实体，才能在已关注中显示对应的关注数据
 		$scope.collectionConfirm = function(user, strType) {
 			var urlAddCollection = '/service/followItem!saveEntity',
 				staffId = $rootScope.userInfo.ID,
@@ -785,8 +781,6 @@ app.controller('OrgSearchCtrl', ['$scope', '$http', '$timeout', '$modal', 'OrgSe
 			entity.collectionsOrgs = orgs;
 			// 触发过滤操作
 			$scope.enterPress(null, 'btn');
-			
-			console.info(newVal);
 		}, true);
 
 		// 搜索框 enter 触发搜索事件
@@ -841,7 +835,6 @@ app.controller('OrgSearchCtrl', ['$scope', '$http', '$timeout', '$modal', 'OrgSe
 		});
 		// 组织信息弹出层
 		$scope.showOrgInfo = function(org) {
-console.info('showOrgInfo=====================');
 			OrgSearch.setOrg(org);
 			// 获取当前人在关注列表中的对象
 			var orgFollowItem = null;
@@ -872,8 +865,7 @@ console.info('showOrgInfo=====================');
 		
 		// 显示对应的组织信息
 		$scope.showDetailInfo = function(org) {
-			options.showDetail = true;
-console.info('OrgSearchCtrl --> showDetailInfo:', org);			
+			options.showDetail = true;			
 			$scope.selectedOrg = org;
 			
 			OrgSearch.setOrg(org);
@@ -1030,8 +1022,8 @@ app.controller('ChildOrgsCtrl', ['$scope', '$http', 'OrgSearch', 'CollectionServ
 ]);
 
 // 人员信息页签
-app.controller('OrgStaffsCtrl', ['$scope', '$http', 'OrgSearch', 
-	function($scope, $http, OrgSearch) {
+app.controller('OrgStaffsCtrl', ['$scope', '$http', 'OrgSearch', 'CollectionService', '$rootScope', '$modal', 
+	function($scope, $http, OrgSearch, CollectionService, $rootScope, $modal) {
 		$scope.orgStaffs = [];
 		
 		$scope.$watch(function() {
@@ -1066,6 +1058,65 @@ app.controller('OrgStaffsCtrl', ['$scope', '$http', 'OrgSearch',
 				.error(function(data, status, headers, config) {
 					console.log('Get ' + orgStaffsUrl + ' wrong...');
 				});
+		};
+		// 添加关注确认
+		$scope.collectionConfirm = function(user, strType) {
+			var urlAddCollection = '/service/followItem!saveEntity',
+				staffId = $rootScope.userInfo.ID,
+				followType = 'STAFF',
+				followName = user.NAME,
+				followId = user.ID,
+				params = {
+					'STAFF_ID': staffId,
+					'FOLLOW_TYPE': followType,
+					'NAME': followName,
+					'FOLLOW_ITEM': followId
+				};
+				
+			$http.post(urlAddCollection, params)
+				.success(function(data, status, headers, config) {
+					var searchResults = $scope.orgStaffs;
+					var iLen = searchResults.length;
+					for(var i=0; i<iLen; i++) {
+						if(searchResults[i].ID == followId) {
+							searchResults[i].isInCollection = true;
+							break;
+						}
+					}
+					CollectionService.addPerson(data.obj);
+				})
+				.error(function(data, status, headers, config) {
+					console.error(data);
+				});
+		};
+		// 人员详细信息
+		$scope.showStaffInfo = function(staff) {
+			// 获取当前人在关注列表中的对象
+			var staffFollowItem = null;
+			if(staff.isInCollection) {
+				var collectionsPersons = $scope.collectionPersons;
+				var iLen = collectionsPersons.length;
+				for(var i=0; i<iLen; i++) {
+					if(staff.ID == collectionsPersons[i].FOLLOW_ITEM) {
+						staffFollowItem = collectionsPersons[i];
+						break;
+					}
+				}
+			}
+			var modalInstance = $modal.open({
+				templateUrl: 'app/business/cam/staffdetail/staff-info.html',
+				controller: 'StaffInfoCtrl',
+				resolve: {
+					modalParams: function() {
+						var objParams = {
+							staff: staff,
+							staffFollowItem: staffFollowItem
+						};
+
+						return objParams;		
+					}
+				}
+			});
 		};
 		
 		

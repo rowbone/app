@@ -8,7 +8,8 @@ var app = angular.module('demoApp', [
 	// 'ui.jq',
 	// 'ui.validate',
 	'oc.lazyLoad',
-	
+	'ngDialog',
+	'oitozero.ngSweetAlert',
 	'app.demo',
 	'app.form',
 	'app.directives',
