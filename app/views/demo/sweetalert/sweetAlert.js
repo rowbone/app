@@ -87,6 +87,8 @@ app.service('OperationService', ['$http', '$state', '$timeout', 'SweetAlert', 'D
                 // title: '操作提示',
                 text: '',
                 confirmButtonText: '确认',
+                confirmButtonColor: '#19A9D5',
+                cancelButtonColor: '',
                 cancelButtonText: '取消'
             },
             swalUserParams = {};
@@ -94,17 +96,16 @@ app.service('OperationService', ['$http', '$state', '$timeout', 'SweetAlert', 'D
 
         // 调用后台的接口
         var interFunc = function(params) {
-            DataService.postData(params.actionUrl, {'name': 'abc'})
+            DataService.getData(params.actionUrl, {'name': 'abc'})
                 .then(function(data) {
-console.info('interFunc-->', data)
+console.info('interFunc-->', data);
                     swalUserParams = {
                         title: params.successMsg,
                         type: 'success',
                         timer: userTimer
                     };
-                    angular.extend(swalParams, swalUserParams);
                     if (angular.isDefined(params.successMsg)) {
-                        SweetAlert.swal(swalParams);
+                        SweetAlert.swal(angular.extend({}, swalParams, swalUserParams));
                     }
                     if (angular.isUndefined(params.isSuccessBack) || params.isSuccessBack) {
                         history.back();
@@ -124,8 +125,7 @@ console.info('interFunc-->', data)
                         type: 'error',
                         timer: userTimer
                     }
-                    angular.extend(swalParams, swalUserParams);
-                    SweetAlert.swal(swalParams);
+                    SweetAlert.swal(angular.extend({}, swalParams, swalUserParams));
                 });
         };
         // 与后台接口的操作方法
@@ -147,8 +147,7 @@ console.info('interFunc-->', data)
                     'closeOnConfirm': false,
                     'closeOnCancel': false
                 };
-                angular.extend(swalParams, swalUserParams);
-                SweetAlert.swal(swalParams,
+                SweetAlert.swal(angular.extend({}, swalParams, swalUserParams), 
                     function(isConfirm) {
                         if (isConfirm) {
                             return interFunc(params);
@@ -158,8 +157,7 @@ console.info('interFunc-->', data)
                                 type: 'info',
                                 timer: userTimer
                             };
-                            angular.extend(swalParams, swalUserParams);
-                            SweetAlert.swal(swalParams);
+		                        SweetAlert.swal(angular.extend({}, swalParams, swalUserParams));
                         }
                     }
                 );
@@ -173,20 +171,19 @@ console.info('interFunc-->', data)
         this.alertAction = function(params) {
             if (angular.isObject(params)) {
                 swalUserParams = {
-                    title: params.alertMsg,
-                    timer: userTimer
+                    title: params.alertMsg
                 }
-                angular.extend(swalParams, swalUserParams);
             } else if (angular.isString(params)) {
                 swalUserParams = {
-                    title: params,
-                    timer: userTimer
+                    title: params
                 };
             } else {
                 // 
             }
-            angular.extend(swalParams, swalUserParams);
-            SweetAlert.swal(swalParams);
+console.info(swalParams);
+console.info(swalUserParams);
+console.info(angular.extend({}, swalParams, swalUserParams));
+            SweetAlert.swal(angular.extend({}, swalParams, swalUserParams));
         };
 
         // Prompt
@@ -196,12 +193,11 @@ console.info('interFunc-->', data)
                 type: "input",
                 showCancelButton: true,
                 closeOnConfirm: false,
-                animation: "slide-from-top",
+                // animation: "slide-from-top",
+                animation: "pop",
                 inputPlaceholder: "请输入金额"
             };
-            angular.extend(swalParams, swalUserParams);
-
-            SweetAlert.swal(swalParams, function(inputValue) {
+            SweetAlert.swal(angular.extend({}, swalParams, swalUserParams), function(inputValue) {
                 console.info('inputValue-->', inputValue)
             });
         };
