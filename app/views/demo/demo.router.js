@@ -23,7 +23,7 @@ angular.module('app.demo', ['ui.router'])
 				})
 				.state('app.demo.sweetAlert', {
 					url: '/sweetAlert',
-					templateUrl: 'views/demo/sweetAlert.html'
+					templateUrl: 'views/demo/sweetalert/sweetAlert.html'
 				})
 				.state('app.demo.toaster', {
 					url: '/toaster',

@@ -1,0 +1,45 @@
+<div class="bg-light dk b-b header-md h">
+  <h1 class="m-n text-center font-thin h3">Sweet Alert</h1>
+</div>
+<div class="wrapper-md" ng-controller="SweetAlertCtrl">
+	<div class="row">
+		<div class="form" name="sweetalertform">
+			<div class="form-group">
+				<label for="" class="control-label">调用之前有提示信息</label>
+				<button class="btn btn-info" ng-click="interAction()">调用后台数据</button>
+			</div>
+			<div class="form-group">
+				<label for="" class="control-label">直接调用后台接口</label>
+				<button class="btn btn-info" ng-click="interAction2()">调用后台出错数据</button>
+			</div>
+			<div class="form-group">
+				<label for="" class="control-label">调用后台接口之后返回</label>
+				<button class="btn btn-info" ng-click="interAction3()">back</button>
+			</div>
+			<div class="form-group">
+				<label for="" class="control-label">调用后台接口之后重定向</label>
+				<button class="btn btn-info" ng-click="interAction4()">redirect</button>
+			</div>
+			<div class="form-group">
+				<label for="" class="control-label">调用后台接口之后停在当前页面</label>
+				<button class="btn btn-info" ng-click="interAction5()">stay</button>
+			</div>
+			<div class="form-group">
+				<label for="" class="control-label">提示信息</label>
+				<button type="button" class="btn btn-primary" ng-click="alertAction()">页面提示</button>
+			</div>
+			<div class="form-group">
+				<label for="" class="control-label">提示操作</label>
+				<button type="button" class="btn btn-primary" ng-click="promptAction()">prompt</button>
+			</div>
+			<div class="form-group">
+				<a href="tel:{{phone}}">打电话</a>
+				<a href="sms:{{phone}}">发短信</a>
+			</div>
+		</div>
+	</div>
+
+	<div class="row">
+		{{ data | json }}
+	</div>
+</div>
