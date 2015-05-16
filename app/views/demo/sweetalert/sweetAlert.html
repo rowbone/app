@@ -14,12 +14,13 @@
 	<div class="row">
 		<div class="form" name="sweetalertform">
 			<div class="form-group">
-				<label for="" class="control-label">调用之前有提示信息</label>
+				<label for="" class="control-label">调用之前有提示信息，成功不返回</label>
 				<button class="btn btn-info" ng-click="interAction()">调用后台数据</button>
 			</div>
 			<div class="form-group">
-				<label for="" class="control-label">直接调用后台接口</label>
-				<button class="btn btn-info" ng-click="interAction2()">调用后台出错数据</button>
+				<label for="" class="control-label">直接调用后台接口，成功不返回</label>
+				<button class="btn btn-info" ng-click="interAction2()">直接调用后台接口</button>
+				<button class="btn btn-info" ng-click="interAction22()">直接调用后台接口，接口随机</button>
 			</div>
 			<div class="form-group">
 				<label for="" class="control-label">调用后台接口之后返回</label>
