@@ -1,16 +1,16 @@
 'use strict';
 
-app.controller('SweetAlertCtrl', ['$scope', 'SweetAlert', 'OperationService', 'foo', '$log', 
-  function($scope, SweetAlert, OperationService, foo, $log) {
+app.controller('SweetAlertCtrl', ['$scope', 'SweetAlert', 'OperationService', '$log', 
+  function($scope, SweetAlert, OperationService, $log) {
 
     $scope.interAction = function() {
-      var varPrivate = foo.getPrivate();
-      console.log(varPrivate);
+      // var varPrivate = foo.getPrivate();
+      // console.log(varPrivate);
 
-      console.log('foo', foo);
+      // console.log('foo', foo);
 
-      var greet = foo.greet();
-      console.log(greet);
+      // var greet = foo.greet();
+      // console.log(greet);
 
       $scope.data = OperationService.interAction({
         'confirmMsg': '是否确认?',
@@ -107,48 +107,48 @@ app.controller('SweetAlertCtrl', ['$scope', 'SweetAlert', 'OperationService', 'f
  }:
 */
 
-app.factory('foo', function(){
-  var thisIsPrivate = 'private';
+// app.factory('foo', function(){
+//   var thisIsPrivate = 'private';
 
-  function getPrivate() {
-    return thisIsPrivate;
-  }
+//   function getPrivate() {
+//     return thisIsPrivate;
+//   }
 
-  return {
-    variable: 'ThisIsPublice',
-    getPrivate: getPrivate
-  }
-});
+//   return {
+//     variable: 'ThisIsPublice',
+//     getPrivate: getPrivate
+//   }
+// });
 
-app
-.config(['$provide', 
-  function($provide) {
-    $provide.decorator('$log', function($delegate) {
-      angular.forEach(['log', 'debug', 'info', 'warn', 'error'], 
-        function(o) {
-          $delegate[o] = decoratorLogger($delegate[o]);
-        });
+// app
+// .config(['$provide', 
+//   function($provide) {
+//     $provide.decorator('$log', function($delegate) {
+//       angular.forEach(['log', 'debug', 'info', 'warn', 'error'], 
+//         function(o) {
+//           $delegate[o] = decoratorLogger($delegate[o]);
+//         });
 
-      function decoratorLogger(originalFn) {
-        return function() {
-          var args = Array.prototype.slice(arguments);
-          args.unshift(new Data().toISPString());
-          orgiginalFn.apply(null, args);
-        }
-      };
-    })
-  }
-])
-.config(function($provide) {
-  $provide.decorator('foo', function($delegate) {
-console.log('in decorator');
-    $delegate.greet = function() {
-      return 'Hello, I am a new function of "foo"';
-    };
+//       function decoratorLogger(originalFn) {
+//         return function() {
+//           var args = Array.prototype.slice(arguments);
+//           args.unshift(new Data().toISPString());
+//           orgiginalFn.apply(null, args);
+//         }
+//       };
+//     })
+//   }
+// ])
+// .config(function($provide) {
+//   $provide.decorator('foo', function($delegate) {
+// console.log('in decorator');
+//     $delegate.greet = function() {
+//       return 'Hello, I am a new function of "foo"';
+//     };
 
-    return $delegate;
-  });
-});
+//     return $delegate;
+//   });
+// });
 
 app.service('OperationService', ['$http', '$state', '$timeout', 'SweetAlert', 'DataService',
   function($http, $state, $timeout, SweetAlert, DataService) {

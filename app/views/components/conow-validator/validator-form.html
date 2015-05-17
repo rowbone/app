@@ -2,14 +2,6 @@
   <h3 class="m-n font-thin h3">validator demo</h3>
 </div>
 
-<!-- <title-bar name="validator demo">
-  <div class="pull-right .m-r-md">
-    <button type="submit" class="btn m-r-sm w-xs btn-primary">提交</button>
-    <input type="button" value="暂存" class="btn m-r-sm w-xs btn-dark" ng-click="saveTrip()" /> 
-    <input type="button" value="删除" class="btn m-r-sm w-xs btn-danger" ng-click="deleteTripReq()"/>
-    <input type="button" value="放弃" class="btn w-xs btn-danger" ng-click="back()" />
-  </div>
-</title-bar> -->
 <div class="wrapper-md pos-rlt">
   <div class="row">
     <div class="col-sm-6">
@@ -38,16 +30,11 @@
           </div>
           <div class="form-group">
             <label for="number">数字</label>
-              <input type="number" class="form-control" name="number" id="number" required="" ng-model="entity.number" placeholder="输入数字10-15" max="15" min="10">
+            <input type="number" class="form-control" name="number" id="number" required="" ng-model="entity.number" placeholder="输入数字10-15" max="15" min="10">
           </div>
           <div class="form-group">
             <label for="url">URL</label>
             <input type="url" class="form-control" name="url" id="url" required="" ng-model="entity.url" placeholder="请输入URL">
-          </div>
-          <div class="form-group">
-            <label for="datetime">date</label>
-            <input type="text" class="form-control" name="datetime" id="datetime" required="" ng-model="entity.datetime" placeholder="请输入date">
-            <span>{{ entity.datetime | strDate:'yyyy-MM-dd HH:mm' }}</span>
           </div>
           <div class="form-group">
             <label for="memo">备注</label>
@@ -73,12 +60,11 @@
             </div>
           </div>
           <div class="form-group">
-            <div ng-include="views/components/conow-validator/"></div>
+            <div ng-include="views/components/conow-validator/include-file.html"></div>
           </div>
           <div class="form-group">
             <button type="button" ng-click="test()">ClickService Click</button>
             <button type="button" ng-click="go()">Click to Go</button>
-            <span>{{ entity.ClickServiceProperty }}</span>
           </div>
 
           <!-- <div class="form-group">
@@ -155,13 +141,6 @@
             </div>
           </div>
           <div class="form-group">
-            <label class="control-label col-md-2" for="datetime">date</label>
-            <div class="col-md-10">
-              <input type="text" class="form-control" name="datetime" id="datetime" required="" ng-model="entity.datetime" placeholder="请输入date">
-              <span>{{ entity.datetime | strDate:'yyyy-MM-dd HH:mm' }}</span>
-            </div>
-          </div>
-          <div class="form-group">
             <label class="control-label col-md-2" for="memo">备注</label>
             <div class="col-md-10">
               <textarea class="form-control" name="memo" ng-model="entity.memo" id="memo" rows="3" required placeholder="请输入备注"></textarea>
@@ -192,12 +171,6 @@
             <label for="reason" class="control-label col-md-2">原因</label>
             <div class="col-md-10">
               <textarea class="form-control" ng-model="entity.reason" ng-class="{ 'hidden': entity.isAgree !== 'yes' }" name="reason" id="reason" rows="3" placeholder="请填写理由！" required></textarea>
-            </div>
-          </div>
-          <div class="form-group">
-            <label for="directValidate" class="control-label col-md-2">生成元素验证</label>
-            <div class="col-md-10">
-              <direct-validate name="directValidate" ng-model="entity.directValidate" required></direct-validate>
             </div>
           </div>
     

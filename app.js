@@ -42,7 +42,7 @@ app.use('/home', home);
 // app.get('/userlist', users.userlist(db));
 
 app.get('/', function(req, res) {
-    res.sendfile('app/index-demo.html');
+    res.sendfile('app/index.html');
 });
 
 // catch 404 and forward to error handler

@@ -1,0 +1,28 @@
+<div class="header-md h pos-fix w-full b-b bg-light dk">
+  <h3 class="m-n font-thin h3">validator demo</h3>
+</div>
+
+<div class="wrapper-md pos-rlt">
+  <div class="row">
+    <div class="col-sm-6">
+      <div class="panel panel-info">
+        <div class="panel-heading">
+          <div class="panel-title">测试中的校验属性</div>
+        </div>
+        <div class="panel-body" ng-controller="ValidateBetaCtrl">
+          <form class="conow-form demo-form" role="form" conow-form-validate novalidate name="validateForm">
+	          <div class="form-group">
+	            <label for="directValidate" class="control-label col-md-2">生成元素验证</label>
+	            <div class="col-md-10">
+	              <direct-validate name="directValidate" ng-model="entity.directValidate"></direct-validate>
+	            </div>
+	          </div>
+	          
+            <div ng-include="views/components/conow-validator/include-file.html"></div>
+
+          </form>
+       	</div>
+      </div>
+    </div>
+  </div>
+</div>

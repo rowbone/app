@@ -19,6 +19,10 @@ angular.module('app.components', ['ui.router'])
 					url: '/validator',
 					templateUrl: 'views/components/conow-validator/validator-form.html'
 				})
+				.state('app.components.validateBeta', {
+					url: '/validateBeta',
+					templateUrl: 'views/components/conow-validator/validate-beta.html'
+				})
 				.state('app.components.dialog', {
 					url: '/dialog',
 					views: {
