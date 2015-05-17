@@ -1,9 +1,17 @@
 'use strict';
 
-app.controller('SweetAlertCtrl', ['$scope', 'SweetAlert', 'OperationService',
-  function($scope, SweetAlert, OperationService) {
+app.controller('SweetAlertCtrl', ['$scope', 'SweetAlert', 'OperationService', 'foo', '$log', 
+  function($scope, SweetAlert, OperationService, foo, $log) {
 
     $scope.interAction = function() {
+      var varPrivate = foo.getPrivate();
+      console.log(varPrivate);
+
+      console.log('foo', foo);
+
+      var greet = foo.greet();
+      console.log(greet);
+
       $scope.data = OperationService.interAction({
         'confirmMsg': '是否确认?',
         'successMsg': '读取数据成功',
@@ -13,8 +21,6 @@ app.controller('SweetAlertCtrl', ['$scope', 'SweetAlert', 'OperationService',
         'isSuccessBack': false,
         // 'redirectState': 'app.home.contactlist2'
       });
-
-      console.log($scope.data);
     };
 
     $scope.interAction2 = function() {
@@ -100,6 +106,50 @@ app.controller('SweetAlertCtrl', ['$scope', 'SweetAlert', 'OperationService',
   redirectState: 'app.home'   // 操作成功的重定向地址(state跳转，isSuccessBack为false或者不提供时)
  }:
 */
+
+app.factory('foo', function(){
+  var thisIsPrivate = 'private';
+
+  function getPrivate() {
+    return thisIsPrivate;
+  }
+
+  return {
+    variable: 'ThisIsPublice',
+    getPrivate: getPrivate
+  }
+});
+
+app
+.config(['$provide', 
+  function($provide) {
+    $provide.decorator('$log', function($delegate) {
+      angular.forEach(['log', 'debug', 'info', 'warn', 'error'], 
+        function(o) {
+          $delegate[o] = decoratorLogger($delegate[o]);
+        });
+
+      function decoratorLogger(originalFn) {
+        return function() {
+          var args = Array.prototype.slice(arguments);
+          args.unshift(new Data().toISPString());
+          orgiginalFn.apply(null, args);
+        }
+      };
+    })
+  }
+])
+.config(function($provide) {
+  $provide.decorator('foo', function($delegate) {
+console.log('in decorator');
+    $delegate.greet = function() {
+      return 'Hello, I am a new function of "foo"';
+    };
+
+    return $delegate;
+  });
+});
+
 app.service('OperationService', ['$http', '$state', '$timeout', 'SweetAlert', 'DataService',
   function($http, $state, $timeout, SweetAlert, DataService) {
     var userTimer = 2000,
@@ -218,7 +268,7 @@ app.service('OperationService', ['$http', '$state', '$timeout', 'SweetAlert', 'D
       };
       var abc = SweetAlert.swal(angular.extend({}, swalParams, swalUserParams), 
         function(inputVal) {
-          console.info('inputVal-->', inputVal);
+console.info('inputVal-->', inputVal);
           if(inputVal === false) {
             return false;
           }
@@ -226,6 +276,7 @@ app.service('OperationService', ['$http', '$state', '$timeout', 'SweetAlert', 'D
             swal.showInputError('请输入金额');
             return false;
           }
+          swal.close();
 
           return inputVal;
         }
