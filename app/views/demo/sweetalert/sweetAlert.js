@@ -3,12 +3,14 @@
 app.controller('SweetAlertCtrl', ['$scope', 'SweetAlert', 'OperationService', 
   function($scope, SweetAlert, OperationService) {
 
+    $scope.goBack = function() {
+      OperationService.goBack();
+    };
+
     $scope.interAction = function() {
 
       $scope.data = OperationService.interAction({
-        'confirmMsg': '是否确认?',
-        'successMsg': '读取数据成功',
-        'errorMsg': '读取数据出错!',
+        'showConfirm': true,
         // 'actionUrl': 'views/demo/sweetalert/data/get-data.json',
         'actionUrl': '/home',
         'data': { 'name': 'abc', 'age': 8 },
@@ -19,8 +21,7 @@ app.controller('SweetAlertCtrl', ['$scope', 'SweetAlert', 'OperationService',
 
     $scope.interAction2 = function() {
       OperationService.interAction({
-        // 'successMsg': '读取数据成功',
-        'errorMsg': '读取数据出错!',
+        'showConfirm': false,
         'actionUrl': '/home',
         'isSuccessBack': false
           // ,
@@ -37,8 +38,7 @@ app.controller('SweetAlertCtrl', ['$scope', 'SweetAlert', 'OperationService',
       }
 
       OperationService.interAction({
-        // 'successMsg': '读取数据成功',
-        'errorMsg': '读取数据出错!',
+        'showConfirm': true,
         'actionUrl': actionUrl,
         'isSuccessBack': false
           // ,
@@ -48,9 +48,6 @@ app.controller('SweetAlertCtrl', ['$scope', 'SweetAlert', 'OperationService',
 
     $scope.interAction3 = function() {
       OperationService.interAction({
-        'confirmMsg': '是否确认?',
-        'successMsg': '读取数据成功',
-        'errorMsg': '读取数据出错!',
         'actionUrl': '/home',
         'isSuccessBack': true,
         'redirectState': 'app.home.contactlist2'
@@ -59,9 +56,6 @@ app.controller('SweetAlertCtrl', ['$scope', 'SweetAlert', 'OperationService',
 
     $scope.interAction4 = function() {
       OperationService.interAction({
-        'confirmMsg': '是否确认?',
-        'successMsg': '读取数据成功',
-        'errorMsg': '读取数据出错!',
         'actionUrl': '/home',
         'isSuccessBack': false,
         'redirectState': 'app.home.contactlist2'
@@ -70,9 +64,6 @@ app.controller('SweetAlertCtrl', ['$scope', 'SweetAlert', 'OperationService',
 
     $scope.interAction5 = function() {
       OperationService.interAction({
-        'confirmMsg': '是否确认?',
-        'successMsg': '读取数据成功',
-        'errorMsg': '读取数据出错!',
         'actionUrl': '/home',
         'isSuccessBack': false
       });
@@ -147,32 +138,38 @@ app.controller('SweetAlertCtrl', ['$scope', 'SweetAlert', 'OperationService',
 app.service('OperationService', ['$http', '$state', '$timeout', 'SweetAlert', 'DataService',
   function($http, $state, $timeout, SweetAlert, DataService) {
     var userTimer = 2000,
+      options = {
+        confirmMsg: '是否确认操作？',
+        successMsg: '操作成功！',
+        errorMsg: '操作失败！'
+      },
       swalParams = {
-        // title: '操作提示',
         text: '',
         confirmButtonText: '确认',
         confirmButtonColor: '#19A9D5',
-        cancelButtonColor: '',
-        cancelButtonText: '取消'
+        cancelButtonColor: '#19A9D5',
+        cancelButtonText: '取消',
+        closeOnConfirm: true,
+        closeOnCancel: true
       },
       swalUserParams = {};
 
 
     // 调用后台的接口
     var interFunc = function(params) {
-console.log('params', params);
       DataService.postData(params.actionUrl, params.data)
         .then(function(data) {
-          console.info('interFunc-->', data);
           swalUserParams = {
-            title: params.successMsg,
+            title: options.successMsg,
             type: 'success',
             timer: userTimer
           };
-          if (angular.isDefined(params.successMsg)) {
+          // 不提供 showConfirm 参数，或者 showConfirm 不为 false 时，提示
+          if(angular.isUndefined(params.showConfirm) || params.showConfirm != false) {
             SweetAlert.swal(angular.extend({}, swalParams, swalUserParams));
           }
-          if (angular.isUndefined(params.isSuccessBack) || params.isSuccessBack) {
+          // 不提供 isSuccessBack 参数或者 isSuccessBack 不为 false时，操作成功返回
+          if (angular.isUndefined(params.isSuccessBack) || params.isSuccessBack != false) {
             history.back();
           } else {
             if (angular.isDefined(params.redirectState)) {
@@ -186,7 +183,7 @@ console.log('params', params);
           }
         }, function(msg) {
           swalUserParams = {
-            title: params.errorMsg || '操作失败！',
+            title: options.errorMsg,
             type: 'error',
             timer: userTimer
           }
@@ -203,14 +200,14 @@ console.log('params', params);
         console.error('请提供操作对应的后台接口');
         return false;
       }
-      if (angular.isDefined(params.confirmMsg)) {
+      // 不提供 showConfirm 参数，或者 showConfirm 不为 false 时，提示
+      if(angular.isUndefined(params.showConfirm) || params.showConfirm != false) {
         swalUserParams = {
-          'title': params.confirmMsg,
+          'title': options.confirmMsg,
           'type': 'warning',
           'showConfirmButton': true,
           'showCancelButton': true,
-          'closeOnConfirm': false,
-          'closeOnCancel': false
+          'closeOnConfirm': false
         };
         SweetAlert.swal(angular.extend({}, swalParams, swalUserParams),
           function(isConfirm) {
@@ -265,7 +262,6 @@ console.log('params', params);
       };
       var abc = SweetAlert.swal(angular.extend({}, swalParams, swalUserParams), 
         function(inputVal) {
-console.info('inputVal-->', inputVal);
           if(inputVal === false) {
             return false;
           }
@@ -280,6 +276,18 @@ console.info('inputVal-->', inputVal);
       );
 
       return abc;
+    };
+
+    // 返回
+    this.goBack = function() {
+      swalUserParams = {
+          title: "确定放弃？",
+          text: "放弃后将回退到上一个页面！",
+          type: "warning"
+      };
+      SweetAlert.swal(angular.extend({}, swalParams, swalUserParams), function() {
+        history.back();
+      });
     };
 
   }

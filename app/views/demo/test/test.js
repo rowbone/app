@@ -1,7 +1,7 @@
 'use strict';
 
-app.controller('ExecFuncInServiceCtrl', ['$scope', 'ExecFuncService', 
-	function($scope, ExecFuncService) {
+app.controller('ExecFuncInServiceCtrl', ['$scope', 'ExecFuncService', 'foo', 
+	function($scope, ExecFuncService, foo) {
 		$scope.entity = {
 			'email': 'abc111@email.com',
 			'sex': 'female'
@@ -15,6 +15,14 @@ app.controller('ExecFuncInServiceCtrl', ['$scope', 'ExecFuncService',
 				};
 			});
 		};
+
+		$scope.execDecorator = function() {
+			// 
+			console.log('foo.variable-->', foo.variable);
+			console.log('foo.getPrivate-->', foo.getPrivate());
+			console.log('foo.greet-->', foo.greet());
+		};
+
 	}
 ]);
 
@@ -34,3 +42,26 @@ app.service('ExecFuncService', ['$timeout',
 		return ExecFuncService;
 	}
 ]);
+
+app.factory('foo', ['$timeout', function($timeout) {
+	var thisIsPrivate = 'Private';
+
+	function getPrivate() {
+		return thisIsPrivate;
+	}
+
+	return {
+		variable: 'This is public',
+		getPrivate: getPrivate
+	};
+}]);
+
+app.config(function($provide) {
+	$provide.decorator('foo', function($delegate) {
+		$delegate.greet = function() {
+			return 'Hello, I am a new function of "foo"';
+		};
+
+		return $delegate;
+	})
+})

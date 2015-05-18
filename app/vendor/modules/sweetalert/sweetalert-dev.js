@@ -1070,6 +1070,7 @@ var setParameters = function setParameters(params) {
   modal.setAttribute('data-has-cancel-button', params.showCancelButton);
   if (params.showCancelButton) {
     $cancelBtn.style.display = 'inline-block';
+    $cancelBtn.style.backgroundColor = '#EC1F1F';
   } else {
     _hasClass$addClass$removeClass$escapeHtml$_show$show$_hide$hide.hide($cancelBtn);
   }
@@ -1103,6 +1104,18 @@ var setParameters = function setParameters(params) {
 
     // Set box-shadow to default focused button
     _getModal$getInput$setFocusStyle.setFocusStyle($confirmBtn, params.confirmButtonColor);
+  }
+
+  /*
+   * Custom color on cancel button
+   */
+  if (params.cancelButtonColor) {
+    // Set cancel button to selected background color
+    $cancelBtn.style.backgroundColor = params.cancelButtonColor;
+console.log('============================')
+console.log('cancelButtonColor-->', params.cancelButtonColor);
+    // Set box-shadow to default focused button
+    _getModal$getInput$setFocusStyle.setFocusStyle($cancelBtn, params.cancelButtonColor);
   }
 
   /*

@@ -1,6 +1,6 @@
 <style>
 	.sa-button-container .cancel {
-		background-color: #E52F2F;
+		background-color: #EC1F1F;
 	}
 	.sa-button-container .confirm {
 		background-color: #26B912;
@@ -49,6 +49,10 @@
 							<label for="" class="control-label">提示操作</label>
 							<button type="button" class="btn btn-primary" ng-click="promptAction()">prompt</button>
 						</div>
+						<div class="form-group">
+							<label for="" class="control-label">返回操作</label>
+							<button type="button" class="btn btn-primary" ng-click="goBack()">goBack</button>
+						</div>
 
 					</form>
 				</div>
@@ -65,9 +69,7 @@
 						<li><code>controller</code> 注入服务 <code>OperationService</code></li>
 						<li>参数说明
 							<ul class="list-unstyled">
-								<li>confirmMsg: '', // 调用后台接口前的提示信息</li>
-								<li>successMsg: '', // 操作成功时的提示信息</li>
-								<li>errorMsg: '',   // 操作失败时的提示信息</li>
+								<li>showConfirm: boolean, // 是否提示[调用后台接口前，以及操作成功的提示]，默认为 true</li>
 								<li>actionUrl: '',  // 操作对应的后台接口[必填]</li>
 								<li>data: '',  			// 需要提交到后台的参数数据</li>
 								<li>isSuccessBack: true, // 操作成功是否返回</li>
@@ -79,9 +81,6 @@
 								<li>调用接口前有提示，调用之后有提示，操作成功后停在当前页面
 <pre>
 OperationService.interAction({
-  'confirmMsg': '是否确认?',
-  'successMsg': '读取数据成功',
-  'errorMsg': '读取数据出错!',
   'actionUrl': '/home',
   'data': { 'name': 'abc', 'age': 8 },
   'isSuccessBack': false
@@ -91,7 +90,7 @@ OperationService.interAction({
         				<li>直接调用后台接口，成功不返回
 <pre>
 OperationService.interAction({
-  'errorMsg': '读取数据出错!',
+	'showConfirm': false,
   'actionUrl': '/home',
   'isSuccessBack': false
 });
@@ -100,9 +99,6 @@ OperationService.interAction({
         				<li>操作成功返回[isSuccessBack 为 true时，redirectState 参数不起作用]
 <pre>
 OperationService.interAction({
-  'confirmMsg': '是否确认?',
-  'successMsg': '读取数据成功',
-  'errorMsg': '读取数据出错!',
   'actionUrl': '/home',
   'isSuccessBack': true,
   'redirectState': 'app.home.contactlist2'
@@ -112,9 +108,6 @@ OperationService.interAction({
         				<li>操作成功后重定向
 <pre>
 OperationService.interAction({
-  'confirmMsg': '是否确认?',
-  'successMsg': '读取数据成功',
-  'errorMsg': '读取数据出错!',
   'actionUrl': '/home',
   'isSuccessBack': false,
   'redirectState': 'app.home.contactlist2'
