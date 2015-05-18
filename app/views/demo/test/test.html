@@ -1,0 +1,29 @@
+
+<div class="bg-light dk b-b header-md h">
+  <h1 class="m-n text-center font-thin h3">Sweet Alert</h1>
+</div>
+<div class="wrapper-md">
+	<div class="row">
+		<div class="col-sm-12 col-md-6">
+			<div class="panel panel-info">
+				<div class="panel-heading">
+					<div class="panel-title">服务中调用controller的方法，是否会有上下文的问题</div>
+				</div>
+				<div class="panel-body">
+					<form class="form" name="form" ng-controller="ExecFuncInServiceCtrl">
+						<div class="form-group">
+							<label for="">调用方法</label>
+							<button type="button" class="btn btn-primary" ng-click="execFuncInService()">调用方法</button>
+						</div>
+						<div class="form-group">
+							<pre>{{ entity | json }}</pre>
+						</div>
+					</form>
+				</div>
+				<div class="panel-footer">
+					<small class="text-info">点击调用方法，改变 entity 的值</small>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

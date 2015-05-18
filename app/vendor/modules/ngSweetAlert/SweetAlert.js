@@ -47,6 +47,11 @@ angular.module('oitozero.ngSweetAlert', [])
 			$rootScope.$evalAsync(function(){
 				swal( title, message, 'info' );
 			});
+		},
+		close: function() {
+			$rootScope.$evalAsync(function(){
+				swal.close();
+			});
 		}
 	};
 	

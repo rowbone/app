@@ -1,16 +1,9 @@
 'use strict';
 
-app.controller('SweetAlertCtrl', ['$scope', 'SweetAlert', 'OperationService', '$log', 
-  function($scope, SweetAlert, OperationService, $log) {
+app.controller('SweetAlertCtrl', ['$scope', 'SweetAlert', 'OperationService', 
+  function($scope, SweetAlert, OperationService) {
 
     $scope.interAction = function() {
-      // var varPrivate = foo.getPrivate();
-      // console.log(varPrivate);
-
-      // console.log('foo', foo);
-
-      // var greet = foo.greet();
-      // console.log(greet);
 
       $scope.data = OperationService.interAction({
         'confirmMsg': '是否确认?',
@@ -18,6 +11,7 @@ app.controller('SweetAlertCtrl', ['$scope', 'SweetAlert', 'OperationService', '$
         'errorMsg': '读取数据出错!',
         // 'actionUrl': 'views/demo/sweetalert/data/get-data.json',
         'actionUrl': '/home',
+        'data': { 'name': 'abc', 'age': 8 },
         'isSuccessBack': false,
         // 'redirectState': 'app.home.contactlist2'
       });
@@ -103,7 +97,7 @@ app.controller('SweetAlertCtrl', ['$scope', 'SweetAlert', 'OperationService', '$
   errorMsg: '',               // 操作失败时的提示信息
   actionUrl: '',              // 操作对应的后台接口
   isSuccessBack: true,        // 操作成功是否返回
-  redirectState: 'app.home'   // 操作成功的重定向地址(state跳转，isSuccessBack为false或者不提供时)
+  redirectState: 'app.home'   // 操作成功的重定向地址(state跳转，isSuccessBack为false时起作用)
  }:
 */
 
@@ -166,9 +160,8 @@ app.service('OperationService', ['$http', '$state', '$timeout', 'SweetAlert', 'D
 
     // 调用后台的接口
     var interFunc = function(params) {
-      DataService.postData(params.actionUrl, {
-          'name': 'abc'
-        })
+console.log('params', params);
+      DataService.postData(params.actionUrl, params.data)
         .then(function(data) {
           console.info('interFunc-->', data);
           swalUserParams = {
@@ -222,20 +215,22 @@ app.service('OperationService', ['$http', '$state', '$timeout', 'SweetAlert', 'D
         SweetAlert.swal(angular.extend({}, swalParams, swalUserParams),
           function(isConfirm) {
             if (isConfirm) {
-              return interFunc(params);
+              interFunc(params);
             } else {
-              swalUserParams = {
-                title: '取消操作',
-                type: 'info',
-                timer: userTimer
-              };
-              SweetAlert.swal(angular.extend({}, swalParams, swalUserParams));
+              // swal.close();
+              SweetAlert.close();
+              // swalUserParams = {
+              //   title: '取消操作',
+              //   type: 'info',
+              //   timer: userTimer
+              // };
+              // SweetAlert.swal(angular.extend({}, swalParams, swalUserParams));
             }
           }
         );
       } else {
         // 直接调用后台接口
-        return interFunc(params);
+        interFunc(params);
       }
     };
 
@@ -243,11 +238,13 @@ app.service('OperationService', ['$http', '$state', '$timeout', 'SweetAlert', 'D
     this.alertAction = function(params) {
       if (angular.isObject(params)) {
         swalUserParams = {
-          title: params.alertMsg
-        }
+          title: params.alertMsg,
+          type: params.type
+        };
       } else if (angular.isString(params)) {
         swalUserParams = {
-          title: params
+          title: params,
+          type: 'info'
         };
       } else {
         // 

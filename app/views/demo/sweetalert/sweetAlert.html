@@ -12,41 +12,124 @@
 </div>
 <div class="wrapper-md" ng-controller="SweetAlertCtrl">
 	<div class="row">
-		<div class="form" name="sweetalertform">
-			<div class="form-group">
-				<label for="" class="control-label">调用之前有提示信息，成功不返回</label>
-				<button class="btn btn-info" ng-click="interAction()">调用后台数据</button>
-			</div>
-			<div class="form-group">
-				<label for="" class="control-label">直接调用后台接口，成功不返回</label>
-				<button class="btn btn-info" ng-click="interAction2()">直接调用后台接口</button>
-				<button class="btn btn-info" ng-click="interAction22()">直接调用后台接口，接口随机</button>
-			</div>
-			<div class="form-group">
-				<label for="" class="control-label">调用后台接口之后返回</label>
-				<button class="btn btn-info" ng-click="interAction3()">back</button>
-			</div>
-			<div class="form-group">
-				<label for="" class="control-label">调用后台接口之后重定向</label>
-				<button class="btn btn-info" ng-click="interAction4()">redirect</button>
-			</div>
-			<div class="form-group">
-				<label for="" class="control-label">调用后台接口之后停在当前页面</label>
-				<button class="btn btn-info" ng-click="interAction5()">stay</button>
-			</div>
-			<div class="form-group">
-				<label for="" class="control-label">提示信息</label>
-				<button type="button" class="btn btn-warning" ng-click="alertAction()">页面提示</button>
-			</div>
-			<div class="form-group">
-				<label for="" class="control-label">提示操作</label>
-				<button type="button" class="btn btn-primary" ng-click="promptAction()">prompt</button>
-			</div>
+		<div class="col-sm-12 col-md-6">
+			<div class="panel panel-info">
+				<div class="panel-heading">
+					<div class="panel-title">操作提示框</div>
+				</div>
+				<div class="panel-body">
+					
+					<form class="form" name="sweetalertform">
+						<div class="form-group">
+							<label for="" class="control-label">调用之前有提示信息，成功不返回</label>
+							<button class="btn btn-info" ng-click="interAction()">调用后台数据</button>
+						</div>
+						<div class="form-group">
+							<label for="" class="control-label">直接调用后台接口，成功不返回</label>
+							<button class="btn btn-info" ng-click="interAction2()">直接调用后台接口</button>
+							<button class="btn btn-info" ng-click="interAction22()">直接调用后台接口，接口随机</button>
+						</div>
+						<div class="form-group">
+							<label for="" class="control-label">调用后台接口之后返回</label>
+							<button class="btn btn-info" ng-click="interAction3()">back</button>
+						</div>
+						<div class="form-group">
+							<label for="" class="control-label">调用后台接口之后重定向</label>
+							<button class="btn btn-info" ng-click="interAction4()">redirect</button>
+						</div>
+						<div class="form-group">
+							<label for="" class="control-label">调用后台接口之后停在当前页面</label>
+							<button class="btn btn-info" ng-click="interAction5()">stay</button>
+						</div>
+						<div class="form-group">
+							<label for="" class="control-label">提示信息</label>
+							<button type="button" class="btn btn-warning" ng-click="alertAction()">页面提示</button>
+						</div>
+						<div class="form-group">
+							<label for="" class="control-label">提示操作</label>
+							<button type="button" class="btn btn-primary" ng-click="promptAction()">prompt</button>
+						</div>
 
+					</form>
+				</div>
+			</div>
 		</div>
-	</div>
 
-	<div class="row">
-		{{ data | json }}
+		<div class="col-sm-12 col-md-6">
+			<div class="panel panel-info">
+				<div class="panel-heading">
+					<div class="panel-title">使用说明</div>
+				</div>
+				<div class="panel-body">
+					<ol>
+						<li><code>controller</code> 注入服务 <code>OperationService</code></li>
+						<li>参数说明
+							<ul class="list-unstyled">
+								<li>confirmMsg: '', // 调用后台接口前的提示信息</li>
+								<li>successMsg: '', // 操作成功时的提示信息</li>
+								<li>errorMsg: '',   // 操作失败时的提示信息</li>
+								<li>actionUrl: '',  // 操作对应的后台接口[必填]</li>
+								<li>data: '',  			// 需要提交到后台的参数数据</li>
+								<li>isSuccessBack: true, // 操作成功是否返回</li>
+								<li>redirectState: 'app.home'   // 操作成功的重定向地址(state跳转，isSuccessBack为false时起作用)</li>
+							</ul>
+						</li>
+						<li>示例
+							<ol>
+								<li>调用接口前有提示，调用之后有提示，操作成功后停在当前页面
+<pre>
+OperationService.interAction({
+  'confirmMsg': '是否确认?',
+  'successMsg': '读取数据成功',
+  'errorMsg': '读取数据出错!',
+  'actionUrl': '/home',
+  'data': { 'name': 'abc', 'age': 8 },
+  'isSuccessBack': false
+});
+</pre>
+        				</li>
+        				<li>直接调用后台接口，成功不返回
+<pre>
+OperationService.interAction({
+  'errorMsg': '读取数据出错!',
+  'actionUrl': '/home',
+  'isSuccessBack': false
+});
+</pre>
+        				</li>
+        				<li>操作成功返回[isSuccessBack 为 true时，redirectState 参数不起作用]
+<pre>
+OperationService.interAction({
+  'confirmMsg': '是否确认?',
+  'successMsg': '读取数据成功',
+  'errorMsg': '读取数据出错!',
+  'actionUrl': '/home',
+  'isSuccessBack': true,
+  'redirectState': 'app.home.contactlist2'
+});
+</pre>
+        				</li>
+        				<li>操作成功后重定向
+<pre>
+OperationService.interAction({
+  'confirmMsg': '是否确认?',
+  'successMsg': '读取数据成功',
+  'errorMsg': '读取数据出错!',
+  'actionUrl': '/home',
+  'isSuccessBack': false,
+  'redirectState': 'app.home.contactlist2'
+});
+</pre>
+        				</li>
+        				<li>提示框
+<p>OperationService.alertAction('这里是提示信息');</p>
+<p>或者 OperationService.alertAction({alertMsg: '这里是提示信息'});</p>
+        				</li>
+							</ol>
+						</li>
+					</ol>
+				</div>
+			</div>
+		</div>
 	</div>
 </div>

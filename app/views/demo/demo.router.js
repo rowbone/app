@@ -49,5 +49,9 @@ angular.module('app.demo', ['ui.router'])
 					url: '/area',
 					templateUrl: 'views/demo/conow-area/area.html'
 				})
+				.state('app.demo.test', {
+					url: '/test',
+					templateUrl: 'views/demo/test/test.html'
+				})
 		}
 	])
