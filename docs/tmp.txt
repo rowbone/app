@@ -11,3 +11,9 @@ http://wiki.commonjs.org/wiki/Promises
 http://stackoverflow.com/questions/17731942/how-to-load-data-synchronously-in-angularjs-application
 
 http://www.bennadel.com/blog/2492-what-a-select-watch-teaches-me-about-ngmodel-and-angularjs.htm
+
+1、项目中 lazyload 按需加载；
+
+2、ui-router 页面中多个 ui-view 的问题
+
+3、

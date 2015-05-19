@@ -1,12 +1,12 @@
 'use strict';
 
-app.controller('ExecFuncInServiceCtrl', ['$scope', 'ExecFuncService', 'foo', 
-	function($scope, ExecFuncService, foo) {
+app.controller('ExecFuncInServiceCtrl', ['$scope', 'ExecFuncService', 'foo', '$log', 
+	function($scope, ExecFuncService, foo, $log) {
 		$scope.entity = {
 			'email': 'abc111@email.com',
 			'sex': 'female'
 		};
-
+		// service 调用 controller 提供的参数方法
 		$scope.execFuncInService = function() {
 			ExecFuncService.submit({'name': 'abc', 'age': 12}, function() {
 				$scope.entity = {
@@ -15,12 +15,14 @@ app.controller('ExecFuncInServiceCtrl', ['$scope', 'ExecFuncService', 'foo',
 				};
 			});
 		};
-
+		// service decorator
 		$scope.execDecorator = function() {
 			// 
 			console.log('foo.variable-->', foo.variable);
-			console.log('foo.getPrivate-->', foo.getPrivate());
-			console.log('foo.greet-->', foo.greet());
+			console.log('foo.getPrivate()-->', foo.getPrivate());
+			console.log('foo.greet()-->', foo.greet());
+
+			$log.log('This is from Angular $log...');
 		};
 
 	}
@@ -63,5 +65,20 @@ app.config(function($provide) {
 		};
 
 		return $delegate;
-	})
-})
+	});
+
+	$provide.decorator('$log', function($delegate) {
+		angular.forEach(['log', 'debug', 'info', 'warn', 'error'], function(o) {
+			$delegate[o] = decoratorLogger($delegate[o]);
+		});
+
+		function decoratorLogger(originalFn) {
+			return function() {
+				var args = Array.prototype.slice(arguments);
+				args.unshift(new Date().toISPString());
+				originalFn.apply(null, args);
+			}
+		}
+	});
+	
+});
