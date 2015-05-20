@@ -28,70 +28,70 @@ angular.module("conow.validator", ["ng"])
             }
             return false;
         };
-        this.getShowObj = function(elem) {
-          var $elem = angular.element(elem),
-              $formGroup = $elem,
-              isHasInputGroup = false;
+       // this.getShowObj = function(elem) {
+       //   var $elem = angular.element(elem),
+       //       $formGroup = $elem,
+       //       isHasInputGroup = false;
 
-          while(!($formGroup.hasClass('form-group'))) {
-            $formGroup = $formGroup.parent();
-            if($formGroup.hasClass('input-group')) {
-              isHasInputGroup = true;
-              break;
-            }
-          }
-          if(isHasInputGroup) {
-            return $elem.parent();
-          } else {
-            return $elem;
-          }
-        };
+       //   while(!($formGroup.hasClass('form-group'))) {
+       //     $formGroup = $formGroup.parent();
+       //     if($formGroup.hasClass('input-group')) {
+       //       isHasInputGroup = true;
+       //       break;
+       //     }
+       //   }
+       //   if(isHasInputGroup) {
+       //     return $elem.parent();
+       //   } else {
+       //     return $elem;
+       //   }
+       // };
         this.defaultShowError = function (elem, errorMessages) {
-            // var $elem = angular.element(elem),
-                // $parent = $elem.parent(),
-                // $group = $parent.parent();
+             var $elem = angular.element(elem),
+                 $parent = $elem.parent(),
+                 $group = $parent.parent();
+          
+           // $group = this.getShowObj(elem);
 
-            $group = this.getShowObj(elem);
-
-            // if(!this.isEmpty($group) && $group[0].tagName === "FORM"){
-            //     $group = $parent;
-            // }
-            // if(!this.isEmpty($parent) && $parent.hasClass('input-group')) {
-            //     $group = $parent;
-            // }
-            // if (!this.isEmpty($group) && !$group.hasClass("has-error")) {
-            //     $group.addClass("has-error");
-            //     // 修改 input-group 的提示问题 2015-4-3
-            //     // $elem.addClass("has-error");
-            //     $group.after('<span class="conow-error">' + ((errorMessages[0] == undefined) ? '' : errorMessages[0]) + '</span>');
-            // }
-            if(!$group.hasClass('has-error')) {
-              $group.addClass('has-error');
-              $group.after('<span class="conow-error">' + ((errorMessages[0] == undefined) ? '' : errorMessages[0]) + '</span>');
-            }
+             if(!this.isEmpty($group) && $group[0].tagName === "FORM"){
+                 $group = $parent;
+             }
+             if(!this.isEmpty($parent) && $parent.hasClass('input-group')) {
+                 $group = $parent;
+             }
+             if (!this.isEmpty($group) && !$group.hasClass("has-error")) {
+                 $group.addClass("has-error");
+                 // 修改 input-group 的提示问题 2015-4-3
+                 // $elem.addClass("has-error");
+                 $group.after('<span class="conow-error">' + ((errorMessages[0] == undefined) ? '' : errorMessages[0]) + '</span>');
+             }
+             
+           // if(!$group.hasClass('has-error')) {
+           //   $group.addClass('has-error');
+           //   $group.after('<span class="conow-error">' + ((errorMessages[0] == undefined) ? '' : errorMessages[0]) + '</span>');
+           // }
         };
         this.defaultRemoveError = function (elem) {
-            // var $elem = angular.element(elem),
-                // $parent = $elem.parent(),
-                // $group = $parent.parent();
+             var $elem = angular.element(elem),
+                 $parent = $elem.parent(),
+                 $group = $parent.parent();
 
-            var $group = this.getShowObj(elem);
-
-            // if(!this.isEmpty($group) && $group[0].tagName === "FORM"){
-            //     $group = $parent;
-            // }
-            // if(!this.isEmpty($parent) && $parent.hasClass('input-group')) {
-            //     $group = $parent;
-            // }
-            // if (!this.isEmpty($group) && $group.hasClass("has-error")) {
-            //     $group.removeClass("has-error");
-            //     // $elem.next(".conow-error").remove();
-            //     $group.next(".conow-error").remove();
-            // }
-            if($group.hasClass('has-error')) {
-              $group.removeClass('has-error');
-              $group.next('.conow-error').remove();
-            }
+             if(!this.isEmpty($group) && $group[0].tagName === "FORM"){
+                 $group = $parent;
+             }
+             if(!this.isEmpty($parent) && $parent.hasClass('input-group')) {
+                 $group = $parent;
+             }
+             if (!this.isEmpty($group) && $group.hasClass("has-error")) {
+                 $group.removeClass("has-error");
+                 // $elem.next(".conow-error").remove();
+                 $group.next(".conow-error").remove();
+             }
+             
+           // if($group.hasClass('has-error')) {
+           //   $group.removeClass('has-error');
+           //   $group.next('.conow-error').remove();
+           // }
         };
         this.options = {
             blurTrig   : true,
@@ -223,13 +223,14 @@ angular.module("conow.validator", ["ng"])
   }]);
 
 angular.module("conow.validator")
-  .directive("conowFormValidate", ['$parse', '$timeout', 'conowValidator', function ($parse, $timeout, conowValidator) {
+  .directive("conowFormValidate", ['$parse', '$compile', '$timeout', 'conowValidator', function ($parse, $compile, $timeout, conowValidator) {
       return {
           controller: ['$scope', function ($scope) {
               this.needBindKeydown = false;
               this.form = null;
               this.formElement = null;
               this.submitSuccessFn = null;
+              this.fields = [];
               this.doValidate = function(success){
                   if (angular.isFunction(this.form.doValidate)) {
                       this.form.doValidate();
@@ -239,9 +240,72 @@ angular.module("conow.validator")
                           success($scope);
                       });
                   }
+              },
+
+              // this method will be exposed to directives that require conowFormValidate
+              this.addField = function(field, fieldName) {
+                  // this.fields.push(field);
+                  // bind events for this single field
+                  this.bindEventForSingleField(field, fieldName);
+              };
+
+              // 为单个输入控件绑定校验事件
+              this.bindEventForSingleField = function(elem, asyncFieldName){
+                var $elem = angular.element(elem),
+                  formName = this.formElement.attr('name'),
+                  formElem = this.formElement[0],
+                  elemName = asyncFieldName || elem.name;
+                  self = this;
+
+                // 只验证输入类表单控件
+                if(conowValidator.elemTypes.toString().indexOf(elem.type) == -1) return;
+
+                // 处理异常参数
+                if(conowValidator.isEmpty(elemName)) return;
+                
+                // $viewValue属性保存着更新视图所需的实际字符串。
+                var $viewValueName = formName + "." + elemName + ".$viewValue";
+
+                this.fields.push(elem);
+
+                // 监控输入框的value值当有变化时移除错误信息
+                // 可以修改成当输入框验证通过时才移除错误信息，只要监控$valid属性即可
+                $scope.$watch("[" + $viewValueName + "," + (this.fields.length - 1) + "]", function (newValue) {
+                    var $elem = self.fields[newValue[1]];
+                    $scope[formName].$errors = [];
+                    conowValidator.removeError($elem, self.options);
+                }, true);
+
+                // 光标移走的时候触发验证信息
+                if (this.options.blurTrig) {
+                    $elem.bind("blur", function (e) {
+                      self.blurHandler(e);
+                    });
+                }
+                
+              },
+
+              // 光标离开事件处理函数
+              this.blurHandler = function(e){
+                if (!this.options.blurTrig) {
+                    return;
+                }
+                var targetInput = e.target;
+                var self = this,
+                  $elem = angular.element(targetInput),
+                  formName = this.formElement.attr('name');
+                $timeout(function () {
+                    if (!$scope[formName][targetInput.name].$valid) {
+                        var errorMessages = conowValidator.getErrorMessages(targetInput, $scope[formName][targetInput.name].$error);
+                        conowValidator.showError($elem, errorMessages, self.options);
+                    } else {
+                        conowValidator.removeError($elem, self.options);
+                    }
+                }, 50);
               }
           }],
           link      : function (scope, form, attr, ctrl) {
+            // $timeout(function(){
               var formElem = form[0],
                   formName = form.attr("name"),
                   formSubmitFn = $parse(attr.conowSubmit),
@@ -249,6 +313,7 @@ angular.module("conow.validator")
 
               ctrl.form = scope[formName];
               ctrl.formElement = form;
+
               // conowFormValidate has value,watch it
               if (attr.conowFormValidate) {
                   scope.$watch(attr.conowFormValidate, function (newValue) {
@@ -259,43 +324,15 @@ angular.module("conow.validator")
               }
               
               options = angular.extend({}, conowValidator.options, options);
+              ctrl.options = options;
 
               // 初始化验证规则，并实时监控输入值的变化
               // form.length 获取 form 中的元素个数；form[i]/form.elements[i] 获取页面的单个元素；
               for (var i = 0; i < formElem.length; i++) {
                   var elem = formElem[i];
-                  var $elem = angular.element(elem);
-                  if (conowValidator.elemTypes.toString().indexOf(elem.type) > -1 && !conowValidator.isEmpty(elem.name)) {
-                      // $viewValue属性保存着更新视图所需的实际字符串。
-                      var $viewValueName = formName + "." + elem.name + ".$viewValue";
-                      // 监控输入框的value值当有变化时移除错误信息
-                      // 可以修改成当输入框验证通过时才移除错误信息，只要监控$valid属性即可
-                      scope.$watch("[" + $viewValueName + "," + i + "]", function (newValue) {
-                          var $elem = formElem[newValue[1]];
-                          scope[formName].$errors = [];
-                          conowValidator.removeError($elem, options);
-                      }, true);
-
-                      // 光标移走的时候触发验证信息
-                      if (options.blurTrig) {
-                          $elem.bind("blur", function () {
-                              if (!options.blurTrig) {
-                                  return;
-                              }
-                              var self = this;
-                              var $elem = angular.element(this);
-                              $timeout(function () {
-                                  if (!scope[formName][self.name].$valid) {
-                                      var errorMessages = conowValidator.getErrorMessages(self, scope[formName][self.name].$error);
-                                      conowValidator.showError($elem, errorMessages, options);
-                                  } else {
-                                      conowValidator.removeError($elem, options);
-                                  }
-                              }, 50);
-                          });
-                      }
-                  }
+                  ctrl.bindEventForSingleField(elem);
               }
+            // }, 0);
 
               //触发验证事件
               var doValidate = function () {
@@ -399,41 +436,33 @@ angular.module("conow.validator")
           }
       };
   }])
-  .directive('conowIdCheck', ['$timeout', 
-    function($timeout) {
-      var regExp = /^\d{2,5}$/;
-      return {
-        require: 'ngModel',
-        link: function(scope, elem, attr, ctrl) {
-          ctrl.$parsers.push(function(val) {
-            if(regExp.test(val)) {
-              console.log('true');
-              ctrl.$setValidity('idCheck', true);
-              return val;
-            }
-            ctrl.$setValidity('idCheck', false);
-          })
-        }
-      }
-    }
-  ])
-  .directive("conowUniqueCheck", ['$timeout', '$http', function ($timeout, $http) {
+  .directive("conowUniqueCheck", [ '$timeout', '$http', 'conowValidator', function ($timeout, $http, conowValidator) {
       return{
           require: "ngModel",
           link   : function (scope, elem, attrs, ctrl) {
               var doValidate = function () {
                   // 属性为对象时获取其值的方法（scope.$eval）
                   var attValues = scope.$eval(attrs.conowUniqueCheck),
-                      url = attValues.url,
-                      isExists = attValues.isExists;  // isExists 参数是 conow-unique-check 属性对象的一个属性。default is true
+                      url = attValues.url;
+                     // isExists = attValues.isExists;  // isExists 参数是 conow-unique-check 属性对象的一个属性。default is true
 
-                  var isExistsAttr = attrs.isExists;  // 增加 isExists 的属性调用方式
+                 // var isExistsAttr = attrs.isExists;  // 增加 isExists 的属性调用方式
                   $http.get(url).success(function (data) {
-                      if (isExists === false || isExistsAttr === 'false') {
-                          ctrl.$setValidity('conowuniquecheck', !(data.obj == null));
-                      } else {
-                          ctrl.$setValidity('conowuniquecheck', (data.obj == null));
-                      }
+                         
+                         var $elem = angular.element(elem),
+                          formElem = $elem.closest('form'),
+                          formName = formElem.attr("name"),
+                          valid = (data.obj == null);
+                         
+                         ctrl.$setValidity('conowuniquecheck', valid);
+                         if (valid) {
+                           // 有效
+                           conowValidator.removeError($elem, conowValidator.options);
+                         } else {
+                           // 无效，输入数据与已存在数据重复
+                           var errorMessages = conowValidator.getErrorMessages($elem, scope[formName][$elem.attr('name')].$error);
+                             conowValidator.showError($elem, errorMessages, conowValidator.options);
+                         }
                   });
               };
 
@@ -463,4 +492,13 @@ angular.module("conow.validator")
               });
           }
       };
-  }]);
+  }])
+  // 为ng-repeat等动态生成的输入控件添加校验事件
+  .directive('asyncField', [function() {
+    return {
+        require: "^conowFormValidate",
+        link: function($scope, elem, attribs, ctrls ) {
+            ctrls.addField(elem[0], attribs.name);
+        }
+    };
+} ] );

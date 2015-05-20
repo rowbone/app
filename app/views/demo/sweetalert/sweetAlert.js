@@ -2,28 +2,42 @@
 
 app.controller('SweetAlertCtrl', ['$scope', 'SweetAlert', 'OperationService', 
   function($scope, SweetAlert, OperationService) {
-
+    // 返回
     $scope.goBack = function() {
       OperationService.goBack();
     };
 
+    var successFunc = function() {
+      console.log('success....');
+    };
+
+    var failFunc = function() {
+      console.log('fail....');
+    };
+
     $scope.interAction = function() {
 
-      $scope.data = OperationService.interAction({
-        'showConfirm': true,
-        // 'actionUrl': 'views/demo/sweetalert/data/get-data.json',
+      OperationService.interAction({
+        'confirmTitle': '是否确认',
+        'confirmText': 'abc',
+        'successTitle': '',
         'actionUrl': '/home',
         'data': { 'name': 'abc', 'age': 8 },
         'isSuccessBack': false,
-        // 'redirectState': 'app.home.contactlist2'
+        'redirectState': 'app.home.contactlist2',
+        successFunc: successFunc,
+        failFunc: failFunc
       });
     };
 
     $scope.interAction2 = function() {
       OperationService.interAction({
-        'showConfirm': false,
+        'confirmTitle': '',
+        'successTitle': '',
         'actionUrl': '/home',
-        'isSuccessBack': false
+        'isSuccessBack': false,
+        successFunc: successFunc,
+        failFunc: failFunc
           // ,
           // 'redirectState': 'app.home.contactlist2'
       });
@@ -35,12 +49,15 @@ app.controller('SweetAlertCtrl', ['$scope', 'SweetAlert', 'OperationService',
 
       if (random % 2) {
         actionUrl = '/home';
+      } else {
+        actionUrl = '/home/error';
       }
 
       OperationService.interAction({
-        'showConfirm': true,
         'actionUrl': actionUrl,
-        'isSuccessBack': false
+        'isSuccessBack': false,
+        successFunc: successFunc,
+        failFunc: failFunc
           // ,
           // 'redirectState': 'app.home.contactlist2'
       });
@@ -50,7 +67,9 @@ app.controller('SweetAlertCtrl', ['$scope', 'SweetAlert', 'OperationService',
       OperationService.interAction({
         'actionUrl': '/home',
         'isSuccessBack': true,
-        'redirectState': 'app.home.contactlist2'
+        'redirectState': 'app.home.contactlist2',
+        successFunc: successFunc,
+        failFunc: failFunc
       });
     };
 
@@ -58,14 +77,18 @@ app.controller('SweetAlertCtrl', ['$scope', 'SweetAlert', 'OperationService',
       OperationService.interAction({
         'actionUrl': '/home',
         'isSuccessBack': false,
-        'redirectState': 'app.home.contactlist2'
+        'redirectState': 'app.home.contactlist2',
+        successFunc: successFunc,
+        failFunc: failFunc
       });
     };
 
     $scope.interAction5 = function() {
       OperationService.interAction({
         'actionUrl': '/home',
-        'isSuccessBack': false
+        'isSuccessBack': false,
+        successFunc: successFunc,
+        failFunc: failFunc
       });
     };
 
@@ -84,67 +107,38 @@ app.controller('SweetAlertCtrl', ['$scope', 'SweetAlert', 'OperationService',
  页面操作服务
  params: {
   confirmMsg: '',             // 调用后台接口前的提示信息
+  confirmTitle: '',
   successMsg: '',             // 操作成功时的提示信息
+  successTitle: '',
   errorMsg: '',               // 操作失败时的提示信息
+  errorTitle: '', 
   actionUrl: '',              // 操作对应的后台接口
   isSuccessBack: true,        // 操作成功是否返回
   redirectState: 'app.home'   // 操作成功的重定向地址(state跳转，isSuccessBack为false时起作用)
  }:
 */
 
-// app.factory('foo', function(){
-//   var thisIsPrivate = 'private';
-
-//   function getPrivate() {
-//     return thisIsPrivate;
-//   }
-
-//   return {
-//     variable: 'ThisIsPublice',
-//     getPrivate: getPrivate
-//   }
-// });
-
-// app
-// .config(['$provide', 
-//   function($provide) {
-//     $provide.decorator('$log', function($delegate) {
-//       angular.forEach(['log', 'debug', 'info', 'warn', 'error'], 
-//         function(o) {
-//           $delegate[o] = decoratorLogger($delegate[o]);
-//         });
-
-//       function decoratorLogger(originalFn) {
-//         return function() {
-//           var args = Array.prototype.slice(arguments);
-//           args.unshift(new Data().toISPString());
-//           orgiginalFn.apply(null, args);
-//         }
-//       };
-//     })
-//   }
-// ])
-// .config(function($provide) {
-//   $provide.decorator('foo', function($delegate) {
-// console.log('in decorator');
-//     $delegate.greet = function() {
-//       return 'Hello, I am a new function of "foo"';
-//     };
-
-//     return $delegate;
-//   });
-// });
-
 app.service('OperationService', ['$http', '$state', '$timeout', 'SweetAlert', 'DataService',
   function($http, $state, $timeout, SweetAlert, DataService) {
     var userTimer = 2000,
       options = {
-        confirmMsg: '是否确认操作？',
-        successMsg: '操作成功！',
-        errorMsg: '操作失败！'
+        isShowConfirm: false,
+        confirmTitle: '是否确认操作？',
+        confirmText: '',
+        isShowSuccess: false,
+        successTitle: '操作成功！',
+        successText: '',
+        isShowError: true,
+        errorTitle: '操作失败！',
+        errorText: '',
+        actionUrl: '',
+        paramsData: {},
+        isSuccessBack: true,
+        redirectState: '',
+        successFunc: null,
+        failFunc: null
       },
       swalParams = {
-        text: '',
         confirmButtonText: '确认',
         confirmButtonColor: '#19A9D5',
         cancelButtonColor: '#19A9D5',
@@ -152,46 +146,13 @@ app.service('OperationService', ['$http', '$state', '$timeout', 'SweetAlert', 'D
         closeOnConfirm: true,
         closeOnCancel: true
       },
-      swalUserParams = {};
+      swalUserParams = {},
+      optionsDefault = angular.copy(options);
 
+    // 初始化方法
+    var init = function(params) {
+      options = angular.copy(optionsDefault);
 
-    // 调用后台的接口
-    var interFunc = function(params) {
-      DataService.postData(params.actionUrl, params.data)
-        .then(function(data) {
-          swalUserParams = {
-            title: options.successMsg,
-            type: 'success',
-            timer: userTimer
-          };
-          // 不提供 showConfirm 参数，或者 showConfirm 不为 false 时，提示
-          if(angular.isUndefined(params.showConfirm) || params.showConfirm != false) {
-            SweetAlert.swal(angular.extend({}, swalParams, swalUserParams));
-          }
-          // 不提供 isSuccessBack 参数或者 isSuccessBack 不为 false时，操作成功返回
-          if (angular.isUndefined(params.isSuccessBack) || params.isSuccessBack != false) {
-            history.back();
-          } else {
-            if (angular.isDefined(params.redirectState)) {
-              $timeout(function() {
-                $state.go(params.redirectState);
-              }, userTimer);
-            } else {
-              // stay
-              return data;
-            }
-          }
-        }, function(msg) {
-          swalUserParams = {
-            title: options.errorMsg,
-            type: 'error',
-            timer: userTimer
-          }
-          SweetAlert.swal(angular.extend({}, swalParams, swalUserParams));
-        });
-    };
-    // 与后台接口的操作方法
-    this.interAction = function(params) {
       if (angular.isUndefined(params)) {
         console.error('请提供操作对应的参数');
         return false;
@@ -200,34 +161,136 @@ app.service('OperationService', ['$http', '$state', '$timeout', 'SweetAlert', 'D
         console.error('请提供操作对应的后台接口');
         return false;
       }
-      // 不提供 showConfirm 参数，或者 showConfirm 不为 false 时，提示
-      if(angular.isUndefined(params.showConfirm) || params.showConfirm != false) {
+      if(angular.isUndefined(params.confirmTitle)) {
+        options.isShowConfirm = true;
+      } else if(params.confirmTitle == '') {
+        options.isShowConfirm = false;
+      } else {
+        options.isShowConfirm = true;
+        options.confirmTitle = params.confirmTitle;
+      }
+      if(angular.isUndefined(params.successTitle)) {
+        options.isShowSuccess = true;
+      } else if(params.successTitle == '') {
+        options.isShowSuccess = false;
+      } else {
+        options.isShowSuccess = true;
+        options.successTitle = params.successTitle;
+      }
+      if(angular.isDefined(params.errorTitle)) {
+        options.errorTitle = params.errorTitle;
+      }
+      options.confirmText = params.confirmText || '';
+      options.successText = params.successText || '',
+      options.errorText = params.errorText || '';
+
+      options.actionUrl = params.actionUrl || options.actionUrl;
+      options.paramsData = params.data || options.paramsData;
+
+      if(angular.isDefined(params.isSuccessBack) && params.isSuccessBack == false) {
+        options.isSuccessBack = false;
+        options.redirectState = params.redirectState || options.redirectState;
+      } else {
+        options.isSuccessBack = true;
+      }
+
+      if(angular.isDefined(params.successFunc) && angular.isFunction(params.successFunc)) {
+        options.successFunc = params.successFunc;
+      }
+      if(angular.isDefined(params.failFunc) && angular.isFunction(params.failFunc)) {
+        options.failFunc = params.failFunc;
+      }
+
+      return true;
+    };
+    // 调用后台的接口
+    var interFunc = function() {
+      DataService.postData(options.actionUrl, options.paramsData)
+        .then(function(data) {
+console.log('data-->', data);
+          if(data.success) {
+            if(options.isShowSuccess) {
+              swalUserParams = {
+                title: options.successTitle,
+                text: options.successText,
+                timer: userTimer
+              };
+              SweetAlert.swal(angular.extend({}, swalParams, swalUserParams));
+            } else {
+              // 
+            }
+            if(angular.isFunction(options.successFunc)) {
+              (options.successFunc)();
+            }
+            if(options.isSuccessBack) {
+              $timeout(function() {
+                history.back();
+              }, userTimer);
+            } else {
+              if(options.redirectState != '') {
+                $timeout(function() {
+                  $state.go(options.redirectState);
+                }, userTimer);
+              }
+            }
+          } else {            
+            swalUserParams = {
+              title: options.errorTitle,
+              text: options.errorText,
+              type: 'error',
+              timer: userTimer
+            }
+            SweetAlert.swal(angular.extend({}, swalParams, swalUserParams));
+
+            if(angular.isFunction(options.failFunc)) {
+              (options.failFunc)();
+            }
+          }
+        }, function(msg) {
+          swalUserParams = {
+            title: options.errorTitle,
+            text: options.errorText,
+            type: 'error',
+            timer: userTimer
+          }
+          SweetAlert.swal(angular.extend({}, swalParams, swalUserParams));
+
+          if(angular.isFunction(options.failFunc)) {
+            (options.failFunc)();
+          }
+        });
+    };
+
+    // 与后台接口的操作方法
+    this.interAction = function(params) {
+      // 
+      if(!init(params)) {
+        return false;
+      }
+
+      if(options.isShowConfirm) {
         swalUserParams = {
-          'title': options.confirmMsg,
+          'title': options.confirmTitle,
+          'text': options.confirmText,
           'type': 'warning',
           'showConfirmButton': true,
           'showCancelButton': true,
-          'closeOnConfirm': false
+          // 'closeOnConfirm': false
+          'closeOnConfirm': options.isShowSuccess ? false : true
         };
         SweetAlert.swal(angular.extend({}, swalParams, swalUserParams),
           function(isConfirm) {
+console.info('isConfirm-->', isConfirm)
             if (isConfirm) {
-              interFunc(params);
+              interFunc();
             } else {
-              // swal.close();
-              SweetAlert.close();
-              // swalUserParams = {
-              //   title: '取消操作',
-              //   type: 'info',
-              //   timer: userTimer
-              // };
-              // SweetAlert.swal(angular.extend({}, swalParams, swalUserParams));
+              // 
             }
           }
         );
       } else {
         // 直接调用后台接口
-        interFunc(params);
+        interFunc();
       }
     };
 
