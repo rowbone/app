@@ -7,12 +7,14 @@ app.controller('SweetAlertCtrl', ['$scope', 'SweetAlert', 'OperationService',
       OperationService.goBack();
     };
 
-    var successFunc = function() {
+    var successFunc = function(data) {
       console.log('success....');
+      console.log(data);
     };
 
-    var failFunc = function() {
-      console.log('fail....');
+    var errorFunc = function(data) {
+      console.log('error....');
+      console.log(data);
     };
 
     $scope.interAction = function() {
@@ -26,7 +28,7 @@ app.controller('SweetAlertCtrl', ['$scope', 'SweetAlert', 'OperationService',
         'isSuccessBack': false,
         'redirectState': 'app.home.contactlist2',
         successFunc: successFunc,
-        failFunc: failFunc
+        errorFunc: errorFunc
       });
     };
 
@@ -37,7 +39,7 @@ app.controller('SweetAlertCtrl', ['$scope', 'SweetAlert', 'OperationService',
         'actionUrl': '/home',
         'isSuccessBack': false,
         successFunc: successFunc,
-        failFunc: failFunc
+        errorFunc: errorFunc
           // ,
           // 'redirectState': 'app.home.contactlist2'
       });
@@ -57,7 +59,7 @@ app.controller('SweetAlertCtrl', ['$scope', 'SweetAlert', 'OperationService',
         'actionUrl': actionUrl,
         'isSuccessBack': false,
         successFunc: successFunc,
-        failFunc: failFunc
+        errorFunc: errorFunc
           // ,
           // 'redirectState': 'app.home.contactlist2'
       });
@@ -69,7 +71,9 @@ app.controller('SweetAlertCtrl', ['$scope', 'SweetAlert', 'OperationService',
         'isSuccessBack': true,
         'redirectState': 'app.home.contactlist2',
         successFunc: successFunc,
-        failFunc: failFunc
+        errorFunc: errorFunc,
+        confirmBtnText: '是',
+        cancelBtnText: '否'
       });
     };
 
@@ -79,7 +83,7 @@ app.controller('SweetAlertCtrl', ['$scope', 'SweetAlert', 'OperationService',
         'isSuccessBack': false,
         'redirectState': 'app.home.contactlist2',
         successFunc: successFunc,
-        failFunc: failFunc
+        errorFunc: errorFunc
       });
     };
 
@@ -88,12 +92,17 @@ app.controller('SweetAlertCtrl', ['$scope', 'SweetAlert', 'OperationService',
         'actionUrl': '/home',
         'isSuccessBack': false,
         successFunc: successFunc,
-        failFunc: failFunc
+        errorFunc: errorFunc
       });
     };
 
     $scope.alertAction = function() {
-      OperationService.alertAction('这里是提示信息');
+      // OperationService.alertAction('这里是提示信息');
+      OperationService.alertAction({
+        alertMsg: '这里是提示信息',
+        type: 'info',
+        successFunc: successFunc
+      });
     };
 
     $scope.promptAction = function() {
@@ -106,15 +115,18 @@ app.controller('SweetAlertCtrl', ['$scope', 'SweetAlert', 'OperationService',
 /*
  页面操作服务
  params: {
-  confirmMsg: '',             // 调用后台接口前的提示信息
-  confirmTitle: '',
-  successMsg: '',             // 操作成功时的提示信息
-  successTitle: '',
-  errorMsg: '',               // 操作失败时的提示信息
-  errorTitle: '', 
+  confirmTitle: '',             // 调用后台接口前的提示信息
+  confirmText: '',
+  successTitle: '',             // 操作成功时的提示信息
+  successText: '',
+  errorTitle: '',               // 操作失败时的提示信息
+  errorText: '', 
   actionUrl: '',              // 操作对应的后台接口
+  data: {},                   // 提交到后台的数据
   isSuccessBack: true,        // 操作成功是否返回
   redirectState: 'app.home'   // 操作成功的重定向地址(state跳转，isSuccessBack为false时起作用)
+  successFunc: func,          // 操作成功的回调方法
+  errorFunc: func              // 操作失败的回调方法
  }:
 */
 
@@ -136,7 +148,9 @@ app.service('OperationService', ['$http', '$state', '$timeout', 'SweetAlert', 'D
         isSuccessBack: true,
         redirectState: '',
         successFunc: null,
-        failFunc: null
+        errorFunc: null,
+        confirmBtnText: '确认',
+        cancelBtnText: '取消'
       },
       swalParams = {
         confirmButtonText: '确认',
@@ -161,6 +175,7 @@ app.service('OperationService', ['$http', '$state', '$timeout', 'SweetAlert', 'D
         console.error('请提供操作对应的后台接口');
         return false;
       }
+      // 再次确认提示
       if(angular.isUndefined(params.confirmTitle)) {
         options.isShowConfirm = true;
       } else if(params.confirmTitle == '') {
@@ -169,6 +184,7 @@ app.service('OperationService', ['$http', '$state', '$timeout', 'SweetAlert', 'D
         options.isShowConfirm = true;
         options.confirmTitle = params.confirmTitle;
       }
+      // 操作成功提示
       if(angular.isUndefined(params.successTitle)) {
         options.isShowSuccess = true;
       } else if(params.successTitle == '') {
@@ -183,22 +199,29 @@ app.service('OperationService', ['$http', '$state', '$timeout', 'SweetAlert', 'D
       options.confirmText = params.confirmText || '';
       options.successText = params.successText || '',
       options.errorText = params.errorText || '';
-
+      // 后台接口以及数据
       options.actionUrl = params.actionUrl || options.actionUrl;
       options.paramsData = params.data || options.paramsData;
-
+      // 操作成功返回/重定向
       if(angular.isDefined(params.isSuccessBack) && params.isSuccessBack == false) {
         options.isSuccessBack = false;
         options.redirectState = params.redirectState || options.redirectState;
       } else {
         options.isSuccessBack = true;
       }
-
+      // 操作成功/失败回调方法
       if(angular.isDefined(params.successFunc) && angular.isFunction(params.successFunc)) {
         options.successFunc = params.successFunc;
       }
-      if(angular.isDefined(params.failFunc) && angular.isFunction(params.failFunc)) {
-        options.failFunc = params.failFunc;
+      if(angular.isDefined(params.errorFunc) && angular.isFunction(params.errorFunc)) {
+        options.errorFunc = params.errorFunc;
+      }
+      // 提示按钮文字
+      if(angular.isDefined(params.confirmBtnText) && params.confirmBtnText != '') {
+        options.confirmBtnText = params.confirmBtnText;
+      }
+      if(angular.isDefined(params.cancelBtnText) && params.cancelBtnText != '') {
+        options.cancelBtnText = params.cancelBtnText;
       }
 
       return true;
@@ -207,12 +230,12 @@ app.service('OperationService', ['$http', '$state', '$timeout', 'SweetAlert', 'D
     var interFunc = function() {
       DataService.postData(options.actionUrl, options.paramsData)
         .then(function(data) {
-console.log('data-->', data);
           if(data.success) {
             if(options.isShowSuccess) {
               swalUserParams = {
                 title: options.successTitle,
                 text: options.successText,
+                type: 'success',
                 timer: userTimer
               };
               SweetAlert.swal(angular.extend({}, swalParams, swalUserParams));
@@ -220,7 +243,7 @@ console.log('data-->', data);
               // 
             }
             if(angular.isFunction(options.successFunc)) {
-              (options.successFunc)();
+              (options.successFunc)(data);
             }
             if(options.isSuccessBack) {
               $timeout(function() {
@@ -242,8 +265,8 @@ console.log('data-->', data);
             }
             SweetAlert.swal(angular.extend({}, swalParams, swalUserParams));
 
-            if(angular.isFunction(options.failFunc)) {
-              (options.failFunc)();
+            if(angular.isFunction(options.errorFunc)) {
+              (options.errorFunc)(data);
             }
           }
         }, function(msg) {
@@ -255,14 +278,15 @@ console.log('data-->', data);
           }
           SweetAlert.swal(angular.extend({}, swalParams, swalUserParams));
 
-          if(angular.isFunction(options.failFunc)) {
-            (options.failFunc)();
+          if(angular.isFunction(options.errorFunc)) {
+            (options.errorFunc)(msg);
           }
         });
     };
 
     // 与后台接口的操作方法
     this.interAction = function(params) {
+      var rtnVal = null;
       // 
       if(!init(params)) {
         return false;
@@ -276,11 +300,12 @@ console.log('data-->', data);
           'showConfirmButton': true,
           'showCancelButton': true,
           // 'closeOnConfirm': false
-          'closeOnConfirm': options.isShowSuccess ? false : true
+          'closeOnConfirm': options.isShowSuccess ? false : true,
+          'confirmButtonText': options.confirmBtnText,
+          'cancelButtonText': options.cancelBtnText
         };
         SweetAlert.swal(angular.extend({}, swalParams, swalUserParams),
           function(isConfirm) {
-console.info('isConfirm-->', isConfirm)
             if (isConfirm) {
               interFunc();
             } else {
@@ -309,7 +334,12 @@ console.info('isConfirm-->', isConfirm)
       } else {
         // 
       }
-      SweetAlert.swal(angular.extend({}, swalParams, swalUserParams));
+      SweetAlert.swal(angular.extend({}, swalParams, swalUserParams), 
+        function(isConfirm) {
+          console.log('abc-->', isConfirm);
+          (params.successFunc)();
+        }
+      );
     };
 
     // Prompt
