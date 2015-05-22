@@ -3,9 +3,6 @@
 	.text-4x {
 		font-size: 8em;
 	}
-	.h-full {
-		height: 100px;
-	}
 	.btn-danger-square {
 		background-color: #FFFFFF;
 		color: #F05050;
@@ -26,7 +23,7 @@
 		<span>加载中</span>
 	</div>
 	<div ng-if="!options.isLoading && options.collectionNone" class="hbox padder-md text-center v-middle">
-		<div class="h-full"></div>
+		<div class="p-xl"></div>
 		<div class="">您目前还没有任何关注的人或组织</div>
 		<div class="m-t-sm">
 			<a class="text-success" ng-click="addCollection()">
@@ -62,10 +59,27 @@
 				<i class="fa text-xlg p-r pull-right" ng-class="{true: 'fa-angle-down', false: 'fa-angle-right'}[options.collectionOrgExpand]"></i>
 			</a>
 		</div>
+        
 		<div class="collections" ng-show="options.collectionOrgExpand">
 			<div class="" ng-repeat="org in collections.orgs | orderBy:'groupCode' track by $index">
 				<div class="hbox b-b padder-v-sm">
-					<a class="col collections-items" ng-click="showOrgInfo(org, 'org')">
+					<!-- <a class="col collections-items" ng-click="showOrgInfo(org, 'org')">
+						<div class="padder-sm">
+							<div>
+								<span class="text-base">{{ org.ORG_UNIT_NAME }}</span>
+							</div>
+							<div>
+								<span class="m-t-xs text-xs">{{ org.ORG_TOTAL_NAME }}</span>	
+							</div>
+						</div>
+					</a> -->
+					<a conow-modal 
+		               full="true"
+		               size="lg"
+					   url="app/business/cam/organdstaff/org-info-all.html" 
+					   controls="OrgInfoAllCtrl" 
+					   ng-click="showOrgInfo(org, 'org')"
+					>
 						<div class="padder-sm">
 							<div>
 								<span class="text-base">{{ org.ORG_UNIT_NAME }}</span>
@@ -125,17 +139,33 @@
 					</a>
 				</div>
 				<div class="" ng-if="person.GROUPCODE == group.selectedSub" ng-repeat="person in group.persons | filter:query track by $index">
-					<div class="hbox b-b padder-v-sm">
-						<!-- <a class="col collections-items" ui-sref="app.oa.chat({staffId:'{{person.FOLLOW_ITEM}}'})"> -->
-						<a class="col collections-items" ng-click="showStaffInfo(person)">
+					<div class="b-b padder-v-xs">
+						
+						<!-- <a class="col collections-items" ng-click="showStaffInfo(person)">
 							<div class="col pull-left padder-sm">
-								<img ng-src="{{person.PHOTO}}" alt="">
-								
-								<!-- <span class="thumb-header avatar">
-									<img ng-src="{{ person.PHOTO }}" alt="..." class="thumb-xxs b-2x b-primary header-img" style="width: 40px;height: 40px;border:2px solid #F00B0B;">
-								</span> -->
+								<img ng-src="{{person.PHOTO}}" alt="" class="thumb-xxs b-2x b-primary">
 							</div>
 							<div class="col padder padder-v m-l-xxl v-middle">
+								<div>
+									<span ng-class="text-base">{{ person.NAME }}</span>
+								</div>
+								<div>
+									<span class="m-t-xs text-xs">{{ person.ORG_TOTAL_NAME }}</span>
+								</div>
+							</div>
+						</a> -->
+						<a conow-modal 
+			               full="true"
+			               size="lg"
+						   url="app/business/cam/staffdetail/staff-info.html" 
+						   controls="StaffInfoCtrl" 
+						   ng-click="showStaffInfo(person, 'staff')" 
+						   class="v-middle padder-v-xs"
+						>							
+							<div class="col pull-left padder-xs v-middle">
+								<img ng-src="{{person.PHOTO}}" alt="" class="thumb-xxs b-2x b-primary" style="width:50px;height:50px;">
+							</div>
+							<div class="col padder padder-v-xs m-l-xxl v-middle">
 								<div>
 									<span ng-class="text-base">{{ person.NAME }}</span>
 								</div>

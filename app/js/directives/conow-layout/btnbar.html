@@ -1,0 +1,21 @@
+<div class="col title-btn v-middle ">
+    <div class="hbox">
+        <div class="col v-middle" ng-if="iclass != null">
+            <a class="{{iclass}}" ui-sref="{{url}}"></a>
+        </div>
+        <div class="col v-middle" ng-class="{'col-click':iclass != null}">
+            <ul class="more no-margin no-padder" ng-class="{'hidden-md hidden-lg':!isBigMore && iclass == null,'hidden':!isMore && iclass == null}">
+                <li class="dropdown" dropdown>
+                    <div class="icon-btn">
+                        <a class="icon ion-more btn-bar-icon" dropdown-toggle></a>
+                    </div>
+                    <ul class="dropdown-menu more-menu no-border no-shadow bg-dark animated fadeInDown">
+                        <span class="arrow top arrow-dark pull-right-xs"></span>
+                        <li class="more-menu-btn" ng-transclude></li>
+                    </ul>
+                </li>
+            </ul>
+            <div ng-class="{'hidden-xs hidden-sm':isMore,'hidden':isBigMore || iclass != null}" id="nav-btns" ng-transclude></div>
+        </div>
+    </div>
+</div>

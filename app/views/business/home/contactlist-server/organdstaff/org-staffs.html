@@ -20,9 +20,20 @@
 	<div class="m-t">
 		<div ng-repeat="staff in orgStaffs track by $index">
 			<div class="hbox padder">
-				<a class="col col-xs-8" ng-click="showStaffInfo(staff)">
-					<span class="col-xs-4 text-base">{{ staff.NAME }}</span>
-					<small class="col-xs-4">{{ staff.JOBS_ID_HR_JOBS_INFO }}</small>
+				<!-- <a class="col col-xs-8 padder-sm v-middle" ng-click="showStaffInfo(staff)">
+					<span class="col inline text-base">{{ staff.NAME }}</span>
+					<small class="col inline m-l">{{ staff.JOBS_ID_HR_JOBS_INFO }}</small>
+				</a> -->
+				<a conow-modal 
+	               full="true"
+	               size="lg"
+				   url="app/business/cam/staffdetail/staff-info.html" 
+				   controls="StaffInfoCtrl" 
+				   ng-click="showStaffInfo(staff, 'staff')" 
+				   class="v-middle padder-v-xs"
+				>
+					<span class="col inline text-base">{{ staff.NAME }}</span>
+					<small class="col inline m-l">{{ staff.JOBS_ID_HR_JOBS_INFO }}</small>
 				</a>
 				<!-- <a class="btn pull-right btn-danger-square" ng-click="collectionConfirm(staff)">关注</a> -->
 				<div class="col v-middle m-r-md">

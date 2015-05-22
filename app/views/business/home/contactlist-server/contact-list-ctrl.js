@@ -1,34 +1,5 @@
 'use strict';
 
-app.service('DataService', ['$http', '$q', '$interval', 
-	function($http, $q, $interval) {
-
-		var dataGetUrl = '';
-
-		this.setUrl = function(url) {
-			dataGetUrl = url;
-		};
-
-		this.getUrl = function() {
-			return dataGetUrl;
-		};
-
-		this.getData = function(url) {
-			var deferred = $q.defer();
-
-			$http.get(url)
-				.success(function(data, status, headers, config) {
-					deferred.resolve(data);
-				})
-				.error(function(data, status, headers, config) {
-					deferred.reject('Get data from "' + url + '" wrong...');
-				});
-
-			return deferred.promise;
-		};
-	}
-]);
-
 //OrgSearch service 用于保存点击的组织
 app.service('OrgSearch', function(){
 	var selectedOrg = '';
@@ -367,55 +338,81 @@ app.controller('CollectionCtrl', ['$scope', '$http', '$timeout', '$filter', '$st
 		// 查看组织信息
 		$scope.showOrgInfo = function(orgFollowItem) {
 			OrgSearch.setOrg({'ID': orgFollowItem.FOLLOW_ITEM});
-			var modalInstance = $modal.open({
-				templateUrl: 'app/business/cam/organdstaff/org-info-all.html',
-				controller: 'OrgInfoAllCtrl',
-				resolve: {
-					modalParams: function() {
-						var objParams = {
-							orgFollowItem: orgFollowItem
-						};
-
-						return objParams;		
-					}
-				}
-			});
+//			var modalInstance = $modal.open({
+//				templateUrl: 'app/business/cam/organdstaff/org-info-all.html',
+//				controller: 'OrgInfoAllCtrl',
+//				resolve: {
+//					modalParams: function() {
+//						var objParams = {
+//							orgFollowItem: orgFollowItem
+//						};
+//
+//						return objParams;		
+//					}
+//				}
+//			});
 		};
 		
 	}
 ]);
 
 // 组织的所有信息弹出层 controller
-app.controller('OrgInfoAllCtrl',  ['$scope', '$http', '$modalInstance', 'modalParams', '$modal', '$timeout', '$rootScope', 'CollectionService', 'OrgSearch', 
-    function($scope, $http, $modalInstance, modalParams, $modal, $timeout, $rootScope, CollectionService, OrgSearch) {
+app.controller('OrgInfoAllCtrl',  ['$scope', '$http', '$modalInstance', '$modal', '$timeout', '$rootScope', 'CollectionService', 'OrgSearch', '$modalStack', 
+    function($scope, $http, $modalInstance, $modal, $timeout, $rootScope, CollectionService, OrgSearch, $modalStack) {
 		var org = OrgSearch.getOrg();
+		
+		var func = function(org) {
+		    var orgDetailUrl = '/service/orgUnit!queryOrgUnitInfoInCam?ID=';
+			
+			// 组织面包屑
+			$http.post(orgDetailUrl + org.ID)
+				.success(function(data, status, headers, config) {
+					$scope.orgAndFatherOrgs = data.obj.orgUnit.orgAndFatherOrgs;
+				})
+				.error(function(data, status, headers, config) {
+					console.log(data);
+				});
+		};
+		
+		$scope.showOrgInfo = function(org) {			
+			OrgSearch.setOrg(org);
+		};
 
+		$scope.$watch(function() {
+			return OrgSearch.getOrg();
+		}, function(newVal) {
+			console.log(newVal);
+			func(newVal);
+		});
+		
 		// 返回通讯录
 		$scope.backContactlist = function() {
-			$modalInstance.close();
+//			$modalInstance.close();
+			$modalStack.dismissAll();
 		};
 		
 		$scope.cancel = function() {
-			$modalInstance.close();
-//			$modalInstance.dismissAll();
+//			$modalInstance.close();
+			$modalStack.dismissAll();
 		};
 		
 	}
 ]);
 
 //个人信息
-app.controller('StaffInfoCtrl', ['$scope', '$http', '$modalInstance', 'modalParams', '$modal', '$timeout', '$rootScope', 'CollectionService', 
-	function($scope, $http, $modalInstance, modalParams, $modal, $timeout, $rootScope, CollectionService) {
-		if(modalParams.staffFollowItem) {
-			$scope.staffFollowItem = modalParams.staffFollowItem;
-			$scope.staff = {
-				"ID": $scope.staffFollowItem.FOLLOW_ITEM,
-				"isInCollection": true
-			};
-		}
-		if(modalParams.staff) {
-			$scope.staff = modalParams.staff;
-		}	
+app.controller('StaffInfoCtrl', ['$scope', '$http', '$timeout', '$rootScope', 'CollectionService', '$modalStack', 
+	function($scope, $http, $timeout, $rootScope, CollectionService, $modalStack) {
+//		if(modalParams.staffFollowItem) {
+//			$scope.staffFollowItem = modalParams.staffFollowItem;
+//			$scope.staff = {
+//				"ID": $scope.staffFollowItem.FOLLOW_ITEM,
+//				"isInCollection": true
+//			};
+//		}
+//		if(modalParams.staff) {
+//			$scope.staff = modalParams.staff;
+//		}	
+	
 //		$scope.$watch(function() {
 //			return CollectionService.getPersons();
 //		}, function(newVal, oldVal) {
@@ -496,9 +493,14 @@ app.controller('StaffInfoCtrl', ['$scope', '$http', '$modalInstance', 'modalPara
 
 		// 返回
 		$scope.goBack = function() {
-			$modalInstance.close();
-//			history.back();
-			// $scope.$apply();
+//			$modalInstance.close();
+			$modalStack.dismissAll('close');
+		};
+
+		// 返回通讯录
+		$scope.backContactlist = function() {
+//			$modalInstance.close();
+			$modalStack.dismissAll('close');
 		};
 		
 	}
@@ -708,6 +710,7 @@ app.controller('ConfirmResultCtrl', ['$scope', '$modalInstance', 'modalParams',
 	}
 ]);
 
+// 找组织
 app.controller('OrgSearchCtrl', ['$scope', '$http', '$timeout', '$modal', 'OrgSearch', 'DataService', '$rootScope', '$filter', 'CollectionService', 
 	function($scope, $http, $timeout, $modal, OrgSearch, DataService, $rootScope, $filter, CollectionService) {
 		var entity = $scope.entity = {};
@@ -1091,6 +1094,7 @@ app.controller('OrgStaffsCtrl', ['$scope', '$http', 'OrgSearch', 'CollectionServ
 		};
 		// 人员详细信息
 		$scope.showStaffInfo = function(staff) {
+			
 			// 获取当前人在关注列表中的对象
 			var staffFollowItem = null;
 			if(staff.isInCollection) {
@@ -1103,20 +1107,20 @@ app.controller('OrgStaffsCtrl', ['$scope', '$http', 'OrgSearch', 'CollectionServ
 					}
 				}
 			}
-			var modalInstance = $modal.open({
-				templateUrl: 'app/business/cam/staffdetail/staff-info.html',
-				controller: 'StaffInfoCtrl',
-				resolve: {
-					modalParams: function() {
-						var objParams = {
-							staff: staff,
-							staffFollowItem: staffFollowItem
-						};
-
-						return objParams;		
-					}
-				}
-			});
+//			var modalInstance = $modal.open({
+//				templateUrl: 'app/business/cam/staffdetail/staff-info.html',
+//				controller: 'StaffInfoCtrl',
+//				resolve: {
+//					modalParams: function() {
+//						var objParams = {
+//							staff: staff,
+//							staffFollowItem: staffFollowItem
+//						};
+//
+//						return objParams;		
+//					}
+//				}
+//			});
 		};
 		
 		

@@ -1,4 +1,4 @@
-
+<modal-box>
 <style>
 	.header-img {
 		width: 110px;
@@ -23,35 +23,45 @@
 	.h-30 {
 		height: 30px;
 	}
+	.btn-primary-square {		
+		background-color: #FFFFFF;
+		color: #23B7E5;
+		border: 1px solid #23B7E5;
+	}
+	.btn-primary-square:hover {
+		color: #23B7E5;
+		font-weight: bold;
+		border: 2px solid #23B7E5;
+	}
 </style>
 
-<div>
-	<div class="header-md h pos-fix w-full b-b bg-light dk text-center text-2x">
+
+	<!-- <div class="modal-header header-md h pos-fix w-full b-b bg-light dk text-center text-2x">
 		<a class="fa fa-angle-left pull-left" ng-click="goBack()"></a>个人信息
-	</div>
-	<div class="wrapper-md pos-rlt">
-		<div class="panel-body m-t-xs">
+	</div> -->
+	<!-- <div class="wrapper-md pos-rlt modal-body"> -->
+		<div class="panel-body m-t-xs padder-md">
 			<form class="form-horizontal">
 				<div class="hbox m-b">
-					<div class="col col-xs-3 col-sm-2">
+					<div class="col col-xs-3 col-sm-2 padder-xs">
 						<span class="thumb-header avatar">
-							<img ng-src="{{ entity.PHOTO }}" alt="..." class="thumb-xxs b-2x b-primary header-img" style="width: 80px;height: 80px;border:2px solid #F00B0B;">
+							<img ng-src="{{ entity.PHOTO }}" alt="" class="thumb-xxs b-2x b-primary header-img" style="width: 60px;height: 60px;">
 						</span>
 					</div>
 
-					<div class="col col-xs-4 col-sm-3 v-middle">
+					<div class="col col-xs-3 col-sm-3 v-middle padder-xs">
 						<div class="m-b-xxs text-xlg font-bold">{{ entity.NAME }}</div>
 						<!-- <div>{{ entity.GENDER_HR_STAFF_GENDER }}</div> -->
 					</div>
 
-					<div class="col col-xs-3 col-sm-2 v-middle">
+					<div class="col col-xs-3 col-sm-2 v-middle padder-xs">
 						<div class="m-b-xxs">
 							<a ui-sref="app.cam.sweepHead({staffId:'{{entity.ID}}'})">
 								<img ng-src="{{ entity.QR_CODE }}" alt="">
 							</a>
 						</div>
 					</div>
-					<div class="col col-xs-2 col-sm-2 v-middle">
+					<div class="col col-xs-3 col-sm-2 v-middle padder-xs">
 						<a class="btn btn-danger-square" ng-if="!entity.isInCollection" ng-click="collectionConfirm(entity, 'add')">关注</a>
 						<a class="btn btn-danger-square" ng-if="entity.isInCollection" ng-click="collectionConfirm(entity, 'remove')">取消关注</a>
 					</div>
@@ -63,24 +73,26 @@
 
 				<div class="hbox h-30">
 					<div class="col padder-sm v-middle">
-						<a href="tel:18825159879" class="">
+						<a href="tel:{{entity.MOBILE}}" class="">
 							<i class="fa fa-phone text-success"></i>
 							<span class="m-l-xs">{{ entity.MOBILE }}</span>
 						</a>
 					</div>
 					<div class="col padder-sm v-middle">
-						<a>
+						 <a href="sms:{{ entity.MOBILE }}" class="">
 							<i class="glyphicon glyphicon-envelope text-success"></i>
 							<span class="m-l-xs">发短信</span>
 						</a>
 					</div>
+					
+						
 				</div>
 
 				<div class="line b-b b-primary"></div>
 
 				<div class="hbox h-30">
 					<div class="col padder-sm v-middle">
-						<a>
+						<a href="tel:{{ entity.OFFICE_TEL }}">
 							<i class="glyphicon glyphicon-phone-alt text-success"></i>
 							<span class="m-l-xs">{{ entity.OFFICE_TEL }}</span>
 						</a>
@@ -91,7 +103,7 @@
 
 				<div class="hbox h-30">
 					<div class="col padder-sm v-middle">
-						<a>
+						<a href="mailto:{{entity.MAIL}}">
 							<i class="glyphicon glyphicon-share-alt text-success"></i>
 							<span class="m-l-xs">{{ entity.MAIL }}</span>
 						</a>
@@ -143,5 +155,11 @@
 
 			</form>
 		</div>
-	</div>
-</div>
+<!-- 	</div>
+	
+	<div class="modal-footer">
+		<div class="m-t-sm text-center bg-white">
+			<button class="btn btn-primary-square r-3x text-base" ng-click="backContactlist()">返回通讯录列表</button>
+		</div>
+	</div> -->
+</modal-box>

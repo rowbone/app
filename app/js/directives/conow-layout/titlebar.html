@@ -1,0 +1,11 @@
+<div class="header-md padder-v-n padder-sm pos-fix" ng-init="$parent.app.settings.equSwitch = true;$parent.app.settings.headerFixed=true">
+    <div class="hbox">
+        <div class="col title-btn v-middle icon-btn">
+            <a class="ion-chevron-left btn-bar-icon pull-left no-margin" ng-click="goBack()"></a>
+        </div>
+        <div class="col v-middle m-n font-thin text-xlg text-center text-ellipsis" ng-bind="title" ng-if="!isDiy"></div>
+        <div class="col v-middle text-right" ng-class="{'title-btn':!isDiy}">
+            <div class="hbox" ng-transclude></div>
+        </div>
+    </div>
+</div>
