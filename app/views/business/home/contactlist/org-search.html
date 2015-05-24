@@ -27,7 +27,7 @@
 		background-color: #D9AEAE;
 	}
 </style>
-<div class="search" ng-if="!options.showDetail">
+<div class="search">
 	<div class="hbox padder-md">
 		<div class="input-group">
 			<input type="text" class="form-control input-lg r-3x" ng-model="entity.searchKey" placeholder="搜索" autofocus>
@@ -52,7 +52,7 @@
 			<label for="" class="control-label text-md">分类：</label>
 		</div>
 		<div class="col col-xs-10 col-md-11">
-			<a class="btn m-xxs r-3x btn-hover-red text-md" ng-class="{'btn-success': entity.classifySelected == classify}" ng-repeat="classify in entity.classify track by $index" ng-click="classifySelect(classify)">{{ classify }}</a>
+			<a class="btn m-xxs r-3x btn-hover-red text-md" ng-class="{'btn-success': entity.classifySelected == classify}" ng-repeat="classify in entity.classify track by $index" ng-click="classifySelect(classify)">{{ classify.value }}</a>
 		</div>
 	</div>
 
@@ -73,7 +73,13 @@
 			<div class="m-t">
 				<div ng-repeat="result in entity.searchResults track by $index">
 					<div class="hbox padder b-b padder-v-sm result-item">
-						<a class="col col-xs-8" ng-click="showDetailInfo(result)">
+						<a conow-modal 
+	             full="true"
+	             size="lg"
+						   url="app/business/cam/organdstaff/org-info-all.html" 
+						   controls="OrgInfoAllCtrl" 
+						   ng-click="showOrgInfo(result, 'org')"
+						>
 							<div>
 								<span class="text-md">{{ result.ORG_UNIT_SHORT_NAME }}</span>
 							</div>
@@ -89,46 +95,4 @@
 			</div>
 		</div>
 	</div>
-</div>
-
-<div class="result-search" ng-if="options.showDetail">
-	<!-- <div class="hbox m-b bg-primary font-bold text-title padder-v-sm">
-		<span class="v-middle m-sm">{{ selectedOrg.totalName }}</span>
-	</div> -->
-	<div class="hbox m-b font-bold text-title padder-v-sm">
-		<ul class="breadcrumb bg-primary b-a">
-			<li ng-repeat="org in orgAndFatherOrgs track by $index" ng-class="{'active': $last}">
-				<a href="" ng-click="showDetailInfo(org)">{{ org.ORG_UNIT_SHORT_NAME }}</a>
-			</li>
-		</ul>
-	</div>
-	<div class="hbox padder-md">
-		<div class="input-group">
-			<input type="text" class="form-control input-lg r-3x" ng-model="entity.searchKey" placeholder="搜索" autofocus>
-			<div class="input-group-btn">
-			  <button type="button" class="btn btn-primary input-lg r-3x" tabindex=-1 ng-click="enterPress($event)">
-					<i class="fa fa-search"></i>
-			  </button>  	  	
-			</div>
-	  </div>
-	</div>
-	<div class="hbox m-b">
-		<conow-tabs>
-			<conow-tabs-titles>
-				<conow-tabs-titles-text title="下级组织" show="true"></conow-tabs-titles-text>
-				<conow-tabs-titles-text title="人员信息"></conow-tabs-titles-text>
-				<conow-tabs-titles-text title="组织信息"></conow-tabs-titles-text>
-			</conow-tabs-titles>
-			<conow-tabs-content>
-				<conow-tabs-content-url url="views/business/hr/org/child-orgs.html"></conow-tabs-content-url>
-				<conow-tabs-content-url url="views/business/hr/org/org-staffs.html"></conow-tabs-content-url>
-				<conow-tabs-content-url url="views/business/hr/org/org-info.html"></conow-tabs-content-url>
-			</conow-tabs-content>
-		</conow-tabs>
-
-		<div class="m-t-sm text-center">
-			<button class="btn btn-primary-square r-3x text-md" ng-click="backContactlist()">返回通讯录列表</button>
-		</div>
-	</div>
-	
 </div>

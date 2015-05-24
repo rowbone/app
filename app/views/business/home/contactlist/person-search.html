@@ -71,7 +71,14 @@
 			<div class="search-result m-t">
 				<div ng-repeat="result in entity.searchResults track by $index">
 					<div class="hbox padder">
-						<a class="col" ng-click="showStaffInfo(result)">
+						<a conow-modal 
+              full="true" 
+              size="lg" 
+						  url="app/business/cam/staffdetail/staff-info.html" 
+						  controls="StaffInfoCtrl" 
+						  class="col v-middle padder-v-xs"
+						  ng-click="showStaffInfo(result, 'staff')"
+						>	
 							<div>
 								<span class="text-base">{{ result.NAME }}</span>
 							</div>
@@ -80,8 +87,8 @@
 							</div>
 						</a>
 						<div class="col v-middle">
-							<a class="btn pull-right btn-danger-square" ng-show="!result.isInCollection" ng-click="collectionConfirm(result, 'add')">关注</a>
-							<a class="btn pull-right btn-danger-square2" ng-show="result.isInCollection" ng-click="">已关注</a>
+							<a class="btn pull-right btn-danger-square" ng-show="!result.isInCollection" ng-click="follow(result, 'staff')">关注</a>
+							<a class="btn pull-right btn-danger-square2" ng-show="result.isInCollection" ng-click="unfollow(result, 'staff')">取消关注</a>
 						</div>
 					</div>
 					<hr class="b-b b-split">

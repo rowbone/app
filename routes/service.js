@@ -3,13 +3,6 @@ var express = require('express');
 var router = express.Router();
 var fs = require('fs');
 
-// router.post('/followItem!queryFollowItemByFollowType', 
-// 	function(req, res) {
-// 		console.log(req.pram(''));
-
-// 		var strFile = '';
-// 	});
-
 router.post('/orgUnit!queryOrgUnitInfoInCam?', 
 	function(req, res) {
 console.log(req.param('ID'));
@@ -72,5 +65,94 @@ router.post('/staffInfo!queryStaffInfoAndTotalnameAndJobs',
 			res.send(data);
 		})
 	})
+
+// 关注
+router.post('/followItem!saveEntity', 
+	function(req, res) {
+		var followType = req.param('FOLLOW_TYPE');
+console.log('followType-->', followType);
+		var strFile = 'app/data/bz/home/contactlist2/collections-org-staff.json';
+
+		fs.readFile(strFile, 'utf8', function(err, data) {
+			if(err) throw err;
+
+			res.send(data);
+		})
+	});
+
+// 取消关注
+router.post('/followItem!deleteEntity', 
+	function(req, res) {
+		var staffId = req.param('ID');
+console.log('unFollowId-->', staffId);
+		var strFile = 'app/data/bz/home/contactlist2/collections-org-staff.json';
+
+		fs.readFile(strFile, 'utf8', function(err, data) {
+			if(err) throw err;
+
+			data = JSON.parse(data);
+			var followedOrgs = data.obj.orgFollowItem;
+			var followedStaffs = data.obj.staffFollowItem;
+
+			res.send(data);
+		})
+	});
+
+router.post('/staffInfo!queryStaffInfoByNameByPage', 
+	function(req, res) {
+		console.log('NAME-->', req.param('NAME'));
+		var strFile = 'app/data/bz/home/contactlist2/staffInfo-queryStaffInfoByNameByPage.json';
+
+		fs.readFile(strFile, 'utf8', function(err, data) {
+			if(err)	throw err;
+
+			res.send(data);
+		});
+	})
+
+router.post('/staffInfo!queryStaffListByResume', 
+	function(req, res) {
+		console.log('RESUME-->', req.param('RESUME'));
+		var strFile = 'app/data/bz/home/contactlist2/staffInfo-queryStaffInfoByNameByPage.json';
+
+		fs.readFile(strFile, 'utf8', function(err, data) {
+			if(err)	throw err;
+
+			res.send(data);
+		});
+	})
+
+// 区域
+router.post('/orgUnit!query12BranchCourts', function(req, res) {
+	var strFile = 'app/data/bz/home/contactlist2/orgUnit-query12BranchCourts.json';
+
+	fs.readFile(strFile, 'utf8', function(err, data) {
+		if(err)	throw err;
+
+		res.send(data);
+	});
+});
+
+// 分类
+router.post('/common!queryOptions', function(req, res) {
+	var strFile = 'app/data/bz/home/contactlist2/common-queryOptions-type-DICT_OPTION-DICT_CODE-HR_ORG_CLASS.json';
+
+	fs.readFile(strFile, 'utf8', function(err, data) {
+		if(err)	throw err;
+
+		res.send(data);
+	});
+});
+
+// 获取所有组织
+router.post('/orgUnit!queryAcademicAllOrg', function(req, res) {
+	var strFile = 'app/data/bz/home/contactlist2/orgUnit-queryListOrgByNameOrShortNameByPage.json';
+
+	fs.readFile(strFile, 'utf8', function(err, data) {
+		if(err)	throw err;
+
+		res.send(data);
+	});
+});
 
 module.exports = router;

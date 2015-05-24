@@ -79,8 +79,8 @@
 							</div>
 						</div>
 					</a>
-					<div class="col v-middle">
-						<button type="button" class="btn btn-danger-square pull-right" ng-click="removeFollow(org)">取消关注</button>
+					<div class="col v-middle padder">
+						<button type="button" class="btn btn-danger-square pull-right" ng-click="unFollow(org, 'org')">取消关注</button>
 					</div>
 				</div>
 			</div>
@@ -128,7 +128,7 @@
 							</div>
 						</a>
 						<div class="col v-middle padder">
-							<button type="button" class="btn btn-danger-square pull-right">取消关注</button>
+							<button type="button" class="btn btn-danger-square pull-right" ng-click="unFollow(person, 'staff')">取消关注</button>
 						</div>
 					</div>
 				</div>

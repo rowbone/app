@@ -1,8 +1,8 @@
 'use strict';
 
 // 找人 controller
-app.controller('PersonSearchCtrl', ['$scope', '$http', '$timeout', '$modal', 'CollectionService', 'DataService', '$rootScope', 
-	function($scope, $http, $timeout, $modal, CollectionService, DataService, $rootScope) {
+app.controller('PersonSearchCtrl', ['$scope', '$http', '$timeout', '$modal', 'followService', 'DataService', '$rootScope', 'DataSelected', 
+	function($scope, $http, $timeout, $modal, followService, DataService, $rootScope, DataSelected) {
 		var entity = $scope.entity = {};
 		var options = $scope.options = {
 			search: false
@@ -13,26 +13,13 @@ app.controller('PersonSearchCtrl', ['$scope', '$http', '$timeout', '$modal', 'Co
 		
 		// 获取已关注人员		
 		$scope.$watch(function() {
-			return CollectionService.getPersons();
+			return followService.getStaffs();
 		}, function(newVal, oldVal) {
-			var persons = CollectionService.getPersons();			
-			entity.collectionsPersons = persons;
-			$scope.enterPress(null, 'btn');
-//			if(persons && entity.searchResults) {
-//				var iPersonsLen = persons.length;
-//				var searchResults = entity.searchResults;
-//				var iResultsLen = searchResults.length;
-//				for(var i=0; i<iResultsLen; i++) {
-//					searchResults.isInCollection = false;
-//					for(var j=0; j<iPersonsLen; j++) {
-//						if(persons[j].FOLLOW_ITEM == searchResults[i].ID) {
-//							searchResults.isInCollection = true;
-//							break;
-//						}
-//					}
-//				}
-//				entity.searchResults = searchResults;
-//			}
+console.log('in watch....');
+			var staffs = newVal;			
+			entity.followedStaffs = staffs;
+console.log(entity.followedStaffs)
+			// $scope.enterPress(null, 'btn');
 		}, true);
 		
 		// 搜索框 enter 触发搜索事件
@@ -53,25 +40,24 @@ app.controller('PersonSearchCtrl', ['$scope', '$http', '$timeout', '$modal', 'Co
 					personSearchUrl = '/service/staffInfo!queryStaffListByResume';
 					params['RESUME'] = entity.searchKey;
 				}
-	
-				$http.post(personSearchUrl, params)
-					.success(function(data, status, headers, config) {
+
+				DataService.postData(personSearchUrl, params)
+					.then(function(data) {
 						data = data.obj;
 						var iDataLen = data.length;
-						var collectionPersons = entity.collectionsPersons;
-						var iLen = collectionPersons.length;
+						var followedStaffs = entity.followedStaffs;
+						var iLen = followedStaffs.length;
 						for(var i=0; i<iDataLen; i++) {
 							for(var j=0; j<iLen; j++) {
-								if(data[i].ID == collectionPersons[j].FOLLOW_ITEM) {
+								if(data[i].ID == followedStaffs[j].FOLLOW_ITEM) {
 									data[i].isInCollection = true;
 									break;
 								}
 							}
 						}
 						entity.searchResults = data;
-					})
-					.error(function(data, status, headers, config) {
-						console.log('Get ' + personSearchUrl + ' wrong...');
+					}, function(msg) {
+						console.log(msg);
 					});
 
 			}
@@ -79,34 +65,35 @@ app.controller('PersonSearchCtrl', ['$scope', '$http', '$timeout', '$modal', 'Co
 				e.stopPropagation();
 			}			
 		};
+
 		// 人员详细信息
 		$scope.showStaffInfo = function(staff) {
-			// 获取当前人在关注列表中的对象
-			var staffFollowItem = null;
-			if(staff.isInCollection) {
-				var collectionsPersons = entity.collectionsPersons;
-				var iLen = collectionsPersons.length;
-				for(var i=0; i<iLen; i++) {
-					if(staff.ID == collectionsPersons[i].FOLLOW_ITEM) {
-						staffFollowItem = collectionsPersons[i];
-						break;
-					}
-				}
-			}
-			var modalInstance = $modal.open({
-				templateUrl: 'app/business/cam/staffdetail/staff-info.html',
-				controller: 'StaffInfoCtrl',
-				resolve: {
-					modalParams: function() {
-						var objParams = {
-							staff: staff,
-							staffFollowItem: staffFollowItem
-						};
+console.log(staff);
+			DataSelected.setStaff(staff);
+		};
 
-						return objParams;		
-					}
-				}
-			});
+		// 添加关注
+		$scope.follow = function(staff) {
+			console.log(staff)
+			// var staffId = $rootScope.userInfo.ID,
+			var staffId = '1234567890',
+					followType = 'STAFF',
+					followName = staff.NAME,
+					followId = staff.ID,
+					params = {
+						'STAFF_ID': staffId,
+						'FOLLOW_TYPE': followType,
+						'NAME': followName,
+						'FOLLOW_ITEM': followId
+					};
+
+			followService.follow(params);
+		};
+
+		// 取消关注
+		$scope.unFollow = function(followItem, strType) {
+			//
+			followService.unFollow(followItem, strType);
 		};
 		// 添加关注确认
 		$scope.collectionConfirm = function(user, strType) {
@@ -133,7 +120,7 @@ app.controller('PersonSearchCtrl', ['$scope', '$http', '$timeout', '$modal', 'Co
 						}
 					}
 					data.obj.NAME = followName;
-					CollectionService.addPerson(data.obj);
+					followService.addPerson(data.obj);
 				})
 				.error(function(data, status, headers, config) {
 					console.error(data);

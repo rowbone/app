@@ -1,11 +1,12 @@
 'use strict';
 
 //个人信息
-app.controller('StaffInfoCtrl', ['$scope', '$http', '$timeout', '$rootScope', 'CollectionService', '$modalStack', 'DataSelected', 'DataService',
-	function($scope, $http, $timeout, $rootScope, CollectionService, $modalStack, DataSelected, DataService) {
+app.controller('StaffInfoCtrl', ['$scope', '$http', '$timeout', '$rootScope', 'followService', '$modalStack', 'DataSelected', 'DataService',
+	function($scope, $http, $timeout, $rootScope, followService, $modalStack, DataSelected, DataService) {
 		
 		var entity = $scope.entity = {};
 		var staff = DataSelected.getStaff();
+console.log('staff-->', staff);
 		var urlStaffInfo = '/service/staffInfo!queryStaffInfoAndTotalnameAndJobs?ID=' + staff.ID;
 
 		DataService.postData(urlStaffInfo)
@@ -59,11 +60,11 @@ app.controller('StaffInfoCtrl', ['$scope', '$http', '$timeout', '$rootScope', 'C
 				.success(function(data, status, headers, config) {
 					if(strType == 'remove') {
 						entity.isInCollection = false;
-						CollectionService.removePerson($scope.staffFollowItem);
+						followService.removePerson($scope.staffFollowItem);
 					} else {
 						$scope.staffFollowItem = data.obj;
 						entity.isInCollection = true;
-						CollectionService.addPerson($scope.staffFollowItem);
+						followService.addPerson($scope.staffFollowItem);
 					}
 				})
 				.error(function(data, status, headers, config) {

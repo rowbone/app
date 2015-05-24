@@ -1,8 +1,8 @@
 'use strict';
 
 // 下级组织页签
-app.controller('ChildOrgsCtrl', ['$scope', '$http', 'OrgSearch', 'CollectionService', '$rootScope', 
-	function($scope, $http, OrgSearch, CollectionService, $rootScope) {
+app.controller('ChildOrgsCtrl', ['$scope', '$http', 'OrgSearch', 'followService', '$rootScope', 
+	function($scope, $http, OrgSearch, followService, $rootScope) {
 		
 		$scope.$watch(function() {
 			return OrgSearch.getOrg();
@@ -11,7 +11,7 @@ app.controller('ChildOrgsCtrl', ['$scope', '$http', 'OrgSearch', 'CollectionServ
 		}, true);
 		
 		$scope.$watch(function() {
-			return CollectionService.getOrgs();
+			return followService.getOrgs();
 		}, function(newVal, oldVal) {
 			$scope.collectionOrgs = newVal;
 		}, true);
@@ -78,10 +78,10 @@ app.controller('ChildOrgsCtrl', ['$scope', '$http', 'OrgSearch', 'CollectionServ
 			$http.post(urlAddCollection, params)
 				.success(function(data, status, headers, config) {
 					if(strType == 'remove') {
-						CollectionService.removeOrg($scope.collectionItem);
+						followService.removeOrg($scope.collectionItem);
 						org.isInCollection = false;
 					} else {
-						CollectionService.addOrg(data.obj);
+						followService.addOrg(data.obj);
 						$scope.collectionItem = data.obj;
 						org.isInCollection = true;
 					}

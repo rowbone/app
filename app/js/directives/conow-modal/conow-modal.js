@@ -7,14 +7,14 @@ app
                 if (attrs.full == "true") {
                     winClass = "modal-full";
                 }
-                el.bind('click', function () {console.log('conow-modal click');
+                el.bind('click', function () {
                     var modalInstance = $modal.open({
                         templateUrl: attrs.url,
                         controller: attrs.controls,
                         size: attrs.size,
                         windowClass: winClass
                     });
-                    console.log(modalInstance)
+                    
                     modalInstance.result.then(function (selectedItem) {
                         scope.selected = selectedItem;
                     }, function () {

@@ -1,8 +1,8 @@
 'use strict';
 
 // 人员信息页签
-app.controller('OrgStaffsCtrl', ['$scope', '$http', 'OrgSearch', 'CollectionService', '$rootScope', '$modal', 
-	function($scope, $http, OrgSearch, CollectionService, $rootScope, $modal) {
+app.controller('OrgStaffsCtrl', ['$scope', '$http', 'OrgSearch', 'followService', '$rootScope', '$modal', 
+	function($scope, $http, OrgSearch, followService, $rootScope, $modal) {
 		$scope.orgStaffs = [];
 		
 		$scope.$watch(function() {
@@ -12,7 +12,7 @@ app.controller('OrgStaffsCtrl', ['$scope', '$http', 'OrgSearch', 'CollectionServ
 		}, true);
 		
 		$scope.$watch(function() {
-			return CollectionService.getPersons();
+			return followService.getPersons();
 		}, function(newVal, oldVal) {
 			$scope.collectionPersons = newVal;
 		}, true);
@@ -62,7 +62,7 @@ app.controller('OrgStaffsCtrl', ['$scope', '$http', 'OrgSearch', 'CollectionServ
 							break;
 						}
 					}
-					CollectionService.addPerson(data.obj);
+					followService.addPerson(data.obj);
 				})
 				.error(function(data, status, headers, config) {
 					console.error(data);

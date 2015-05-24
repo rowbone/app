@@ -25,7 +25,16 @@ app.service('OrgSearch', function(){
 
 // 已选择的数据
 app.service('DataSelected', function(){
-  var selectedStaff = '';
+  var selectedOrg = null;
+  var selectedStaff = null;
+
+  this.setOrg = function(org) {
+    selectedOrg = org;
+  };
+
+  this.getOrg = function() {
+    return selectedOrg;
+  };
 
   this.setStaff = function(staff) {
     selectedStaff = staff;
@@ -38,20 +47,22 @@ app.service('DataSelected', function(){
 });
 
 // 已关注 service，保存已关注的人员和组织
-app.service('CollectionService', ['$http', 
-    function($http) {
-      var orgs = [],
-      persons = [],
-      params = {},
-      urlCollections = '/service/followItem!queryFollowItemByFollowType';
+app.service('followService', ['$http', 'DataService', 
+    function($http, DataService) {
+      var self = this,
+          orgs = [],
+          persons = [],
+          staffs = [], 
+          params = {},
+          urlFollows = '/service/followItem!queryFollowItemByFollowType';
 //      isLoading = true;
       
-      var getCollections = function(collectionType) {
-        if(collectionType == 'STAFF') {
+      var getFollows = function(followType) {
+        if(followType == 'STAFF') {
           params = {
           'FOLLOW_TYPE': 'STAFF'
           };
-        } else if(collectionType == 'ORG') {
+        } else if(followType == 'ORG') {
           params = {
           'FOLLOW_TYPE': 'ORG'
           };
@@ -59,12 +70,13 @@ app.service('CollectionService', ['$http',
           params = {};
         }
           // 获取已关注的人员和组织，页面操作过程中维护获得的 orgs 和 persons
-          $http.post(urlCollections, params)
+          $http.post(urlFollows, params)
             .success(function(data, status, headers, config) {
 //              isLoading = false;
               var collections = data.obj;
               orgs = collections.orgFollowItem;
               persons = collections.staffFollowItem;
+              staffs = collections.staffFollowItem;
             })
             .error(function(data, status, headers, config) {
               console.error('Get "' + urlCollections + '" wrong...');
@@ -72,7 +84,51 @@ app.service('CollectionService', ['$http',
         
       };
       
-      getCollections();
+      getFollows();
+
+      this.follow = function(params) {
+        var urlFollow = '/service/followItem!saveEntity';
+
+        DataService.postData(urlFollow, params)
+          .then(function(data) {
+            if(data.success) {
+              var followType = params['FOLLOW_TYPE'].toLowerCase();
+console.log(staffs);
+              if(followType === 'staff') {
+                self.addStaff(data.obj);
+              } else if(followType === 'org') {
+                self.addOrg(data.obj);
+              } else {
+                console.log('Get wrong followType...');
+              }
+            }
+console.log(staffs)
+          }, function(msg) {
+            console.log(msg);
+          })
+      };
+
+      this.unFollow = function(followItem, strType) {
+        var urlUnFollow = '/service/followItem!deleteEntity';
+        var params = { 'ID': followItem.ID };
+
+        DataService.postData(urlUnFollow, params)
+          .then(function(data) {
+            if(data.success) {
+              if(strType == 'org') {
+                self.removeOrg(followItem);
+                console.log('unfollow success...');
+              } else if(strType == 'staff') {
+                self.removeStaff(followItem);
+                console.log('unfollow success...');
+              } else {
+                console.log('unfollow wrong...');
+              }
+            }
+          }, function(msg) {
+            console.log(msg);
+          });
+      };
 
       this.setOrgs = function(orgs) {
         orgs = orgs;
@@ -81,6 +137,10 @@ app.service('CollectionService', ['$http',
       this.setPersons = function(persons) {
         persons = persons;
       };
+
+      this.setStaffs = function(staffs) {
+        staffs = staffs;
+      }
 
       this.addOrg = function(org) {
         orgs.push(org);
@@ -112,6 +172,21 @@ app.service('CollectionService', ['$http',
         persons.splice(i, 1);
       };
 
+      this.addStaff = function(staff) {
+        staffs.push(staff);
+      };
+
+      this.removeStaff = function(staff) {
+        var index = -1;
+        for(var i=0; i<staffs.length; i++) {
+          if(staffs[i].ID == staff.ID) {
+            index = i;
+            break;
+          }
+        }
+        staffs.splice(i, 1);
+      };
+
       this.getOrgById = function(orgId) {
         // @todo
       };
@@ -131,10 +206,15 @@ app.service('CollectionService', ['$http',
         return persons;
       };
 
+      this.getStaffs = function() {
+        return staffs;
+      }
+
       this.getAll = function() {
         return {
           orgs: orgs,
-          persons: persons
+          persons: persons,
+          staffs: staffs
         };
       };
 

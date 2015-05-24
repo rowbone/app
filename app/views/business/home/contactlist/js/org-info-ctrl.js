@@ -1,8 +1,8 @@
 'use strict';
 
 // 组织信息页签
-app.controller('OrgInfoCtrl', ['$scope', '$http', 'OrgSearch', 'CollectionService', '$rootScope', 
-	function($scope, $http, OrgSearch, CollectionService, $rootScope) {
+app.controller('OrgInfoCtrl', ['$scope', '$http', 'OrgSearch', 'followService', '$rootScope', 
+	function($scope, $http, OrgSearch, followService, $rootScope) {
 		$scope.orgInfo = {};
 		var selectedOrg = OrgSearch.getOrg();
 
@@ -13,9 +13,9 @@ app.controller('OrgInfoCtrl', ['$scope', '$http', 'OrgSearch', 'CollectionServic
 				$scope.orgInfo = data.obj.orgUnit;
 				
 //				$scope.$watch(function() {
-//					return CollectionService.getAll();
+//					return followService.getAll();
 //				}, function(newVal, oldVal) {
-//					var orgs = CollectionService.getOrgs();
+//					var orgs = followService.getOrgs();
 //					for(var i=0; i<orgs.length; i++) {
 //						if(orgs[i].FOLLOW_ITEM == selectedOrg.ID) {
 //							$scope.collectionItem = orgs[i];
@@ -25,7 +25,7 @@ app.controller('OrgInfoCtrl', ['$scope', '$http', 'OrgSearch', 'CollectionServic
 //					}
 //				}, true);
 				
-				var collectionOrgs = CollectionService.getOrgs();
+				var collectionOrgs = followService.getOrgs();
 				for(var i=0; i<collectionOrgs.length; i++) {
 					if(selectedOrg.ID == collectionOrgs[i].FOLLOW_ITEM) {
 						$scope.orgInfo.isInCollection = true;
@@ -70,10 +70,10 @@ app.controller('OrgInfoCtrl', ['$scope', '$http', 'OrgSearch', 'CollectionServic
 			$http.post(urlAddCollection, params)
 				.success(function(data, status, headers, config) {
 					if(strType == 'remove') {
-						CollectionService.removeOrg($scope.collectionItem);
+						followService.removeOrg($scope.collectionItem);
 						org.isInCollection = false;
 					} else {
-						CollectionService.addOrg(data.obj);
+						followService.addOrg(data.obj);
 						$scope.collectionItem = data.obj;
 						org.isInCollection = true;
 					}

@@ -1,8 +1,8 @@
 'use strict';
 
 // 已关注 controller
-app.controller('CollectionCtrl', ['$scope', '$http', '$timeout', '$filter', '$state', '$modal', 'DataService', 'CollectionService', 'OrgSearch', 'DataSelected', 
-	function($scope, $http, $timeout, $filter, $state, $modal, DataService, CollectionService, OrgSearch, DataSelected) {
+app.controller('CollectionCtrl', ['$scope', '$http', '$timeout', '$filter', '$state', '$modal', 'DataService', 'followService', 'OrgSearch', 'DataSelected', 
+	function($scope, $http, $timeout, $filter, $state, $modal, DataService, followService, OrgSearch, DataSelected) {
 		var urlCollectionsOrgs = 'app/business/home/contactlist/data/collections-orgs.json',
 			urlCollectionsPersons = 'app/business/home/contactlist/data/collections-persons.json',
 			
@@ -20,10 +20,10 @@ app.controller('CollectionCtrl', ['$scope', '$http', '$timeout', '$filter', '$st
 			};
 		
 		$scope.$watch(function() {
-			return CollectionService.getAll();
+			return followService.getAll();
 		}, function(newVal, oldVal) {			
-			$scope.collections.orgs = CollectionService.getOrgs();
-			var persons = CollectionService.getPersons();
+			$scope.collections.orgs = followService.getOrgs();
+			var persons = followService.getPersons();
 			for(var i=0; i<persons.length; i++) {
 				if(persons[i].PHOTO == null) {
 					persons[i].PHOTO = 'img/person/person_photo_2.png';
@@ -96,10 +96,16 @@ app.controller('CollectionCtrl', ['$scope', '$http', '$timeout', '$filter', '$st
 				console.log(msg);
 			});
 		};
+		
 		// 查看组织信息
 		$scope.showOrgInfo = function(orgFollowItem) {
-console.log(orgFollowItem)
 			OrgSearch.setOrg({'ID': orgFollowItem.FOLLOW_ITEM});
+		};
+
+		// 取消关注
+		$scope.unFollow = function(followItem, strType) {
+			//
+			followService.unFollow(followItem, strType);
 		};
 		
 	}

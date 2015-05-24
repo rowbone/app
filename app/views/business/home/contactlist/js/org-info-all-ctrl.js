@@ -1,11 +1,11 @@
 'use strict';
 
 // 组织的所有信息弹出层 controller
-app.controller('OrgInfoAllCtrl',  ['$scope', '$http', '$modalInstance', '$modal', '$timeout', '$rootScope', 'CollectionService', 'OrgSearch', '$modalStack', 
-    function($scope, $http, $modalInstance, $modal, $timeout, $rootScope, CollectionService, OrgSearch, $modalStack) {
+app.controller('OrgInfoAllCtrl',  ['$scope', '$http', '$modalInstance', '$modal', '$timeout', '$rootScope', 'followService', 'OrgSearch', '$modalStack', 
+    function($scope, $http, $modalInstance, $modal, $timeout, $rootScope, followService, OrgSearch, $modalStack) {
 		var org = OrgSearch.getOrg();
 		
-		var func = function(org) {
+		var func = function(org) {console.log('in func-->', org);
 		    var orgDetailUrl = '/service/orgUnit!queryOrgUnitInfoInCam?ID=';
 			
 			// 组织面包屑
