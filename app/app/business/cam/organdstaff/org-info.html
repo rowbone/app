@@ -1,0 +1,80 @@
+<style>
+	.btn-danger-square {
+		background-color: #FFFFFF;
+		color: #F05050;
+		border: 1px solid #F05050;
+	}
+	.btn-danger-square:hover {
+		color: #F05050;
+		font-weight: bold;
+		border: 2px solid #F05050;
+	}
+	.b-split {
+		border-color: #dcedf5;
+	}
+</style>
+<div ng-controller="OrgInfoCtrl">
+	<!-- <pre>{{ orgInfo | json }}</pre> -->
+	<div class="hbox m-t-sm">
+		<div class="col col-xs-8 v-middle">
+			<span>组织名称：{{ orgInfo.ORG_UNIT_NAME }}</span>
+		</div>
+		<div class="col v-middle">
+			<button type="button" class="btn btn-danger-square" ng-if="!orgInfo.isInCollection" ng-click="collectionConfirm(orgInfo, 'add')">关注</button>
+			<button type="button" class="btn btn-danger-square" ng-if="orgInfo.isInCollection" ng-click="collectionConfirm(orgInfo, 'remove')">取消关注</button>
+		</div>
+	</div>
+
+	<div class="hbox m-t-sm">
+		<div class="col col-xs-12 v-middle">
+			<span>组织简称：{{ orgInfo.ORG_UNIT_SHORT_NAME }}</span>
+		</div>
+	</div>
+	
+	<div class="hbox m-t-sm">
+		<div class="col padder v-middle">
+			<span>英文名称：{{ orgInfo.ORG_UNIT_ENG_NAME }}</span>
+		</div>
+	</div>	
+	<div class="hbox m-t-sm">
+		<div class="col padder v-middle">
+			<span>部门职责类型：{{ orgInfo.ORG_UNIT_TYPE_HR_ORG_UNIT_TYPE }}</span>
+		</div>
+	</div>
+	<div class="hbox m-t-sm">
+		<div class="col padder v-middle">
+			<span>部门负责人：</span>
+			<span class="thumb-header avatar m-r-md">
+				<img ng-src="{{ orgInfo.CHARGE_MAN_STAFF_PHOTO }}" alt="" class="thumb-xxs b-primary header-img">
+			</span>
+			<span>{{ orgInfo.CHARGE_MAN_HR_STAFF_INFO }}</span>
+		</div>
+	</div>
+	<div class="hbox m-t-sm">
+		<div class="col padder v-middle">
+			<span>联系地址：{{ orgInfo.ADDR_EXT }}</span>
+		</div>
+	</div>
+	<div class="hbox m-t-sm">
+		<div class="col padder v-middle">
+			<span>邮政编码：{{ orgInfo.ZIP }}</span>
+		</div>
+	</div>
+	<div class="hbox m-t-sm">
+		<div class="col padder v-middle">
+			<span>电话号码：{{ orgInfo.TEL }}</span>
+		</div>
+	</div>
+	<div class="hbox m-t-sm">
+		<div class="col padder v-middle">
+			<span>传真：{{ orgInfo.FAX }}</span>
+		</div>
+	</div>
+	<div class="hbox m-t-sm">
+		<div class="col padder v-middle">
+			<span>网址：{{ orgInfo.WEB }}</span>
+		</div>
+	</div>
+	
+	<hr class="b-b b-split">
+</div>

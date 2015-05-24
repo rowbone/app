@@ -2,7 +2,7 @@
 
 // OrgSearch service 用于保存点击的组织
 app.service('OrgSearch', function(){
-	var selectedOrg = '';
+	var selectedOrg = null;
 
 	this.setOrg = function(org) {
 		selectedOrg = org;
@@ -24,11 +24,11 @@ app.service('CollectionService', ['$http',
 		var getCollections = function(collectionType) {
 			if(collectionType == 'STAFF') {
 				params = {
-				'FOLLOW_TYPE': 'STAFF'
+					'FOLLOW_TYPE': 'STAFF'
 				};
 			} else if(collectionType == 'ORG') {
 				params = {
-				'FOLLOW_TYPE': 'ORG'
+					'FOLLOW_TYPE': 'ORG'
 				};
 			} else {
 				params = {};
@@ -140,7 +140,7 @@ app.filter('userGroup', ['$filter',
 			arrData = $filter('orderBy')(arrData, groupCode);
 			// 转换 groupCode 为大写字符
 			angular.forEach(arrData, function(value, key) {
-				value.groupCode = value.groupCode.toUpperCase();
+				value[groupCode] = value[groupCode].toUpperCase();
 			});
 			for(var i=0; i<arrSplit.length; i++) {
 				for(var j=0; j<arrData.length; j++) {
@@ -208,7 +208,7 @@ app.controller('contactListCtrl2', ['$scope', '$http', 'DataService',
 				})
 			// DataService.postData(url, params)
 			// 	.then(function(data) {
-			// 		console.info(data);
+			// 		console.info(data); 
 			// 	}, function(msg) {
 			// 		console.error(msg);
 			// 	})
@@ -218,8 +218,8 @@ app.controller('contactListCtrl2', ['$scope', '$http', 'DataService',
 ]);
 
 // 关注
-app.controller('CollectionCtrl', ['$scope', '$http', '$timeout', '$filter', '$state', '$modal', 'DataService', 
-	function($scope, $http, $timeout, $filter, $state, $modal, DataService) {
+app.controller('CollectionCtrl', ['$scope', '$http', '$timeout', '$filter', '$state', '$modal', 'DataService', 'OrgSearch', 
+	function($scope, $http, $timeout, $filter, $state, $modal, DataService, OrgSearch) {
 		var urlCollectionsOrgs = 'data/bz/home/contactlist2/collections-orgs.json',
 				urlCollectionsPersons = 'data/bz/home/contactlist2/collections-persons.json',
 
@@ -246,30 +246,12 @@ app.controller('CollectionCtrl', ['$scope', '$http', '$timeout', '$filter', '$st
 		DataService.getData(urlCollectionsPersons)
 			.then(function success(data) {
 				var persons = data.obj;
-				var personsGroup = $filter('userGroup')(persons, 'groupCode');
+				var personsGroup = $filter('userGroup')(persons, 'GROUPCODE');
 				collections.persons = persons;
 				collections.personsGroup = personsGroup;
 			}, function error(msg) {
 				console.error(msg);
 			});
-
-		// $http.get(urlCollectionsOrgs) 
-		// 	.success(function(data, status, headers, config) {
-		// 		var orgs = data.obj;
-		// 		collections.orgs = orgs;
-		// 	})
-		// 	.error(function(data, status, headers, config) {
-		// 		console.log('Get ' + urlCollectionsOrgs + ' wrong...');
-		// 	});
-
-		// $http.get(urlCollectionsPersons) 
-		// 	.success(function(data, status, headers, config) {
-		// 		var persons = data.obj;
-		// 		collections.persons = persons;
-		// 	})
-		// 	.error(function(data, status, headers, config) {
-		// 		console.log('Get ' + urlCollectionsPersons + ' wrong...');
-		// 	});
 
 		$timeout(function() {
 			if(collections.persons.length > 0 || collections.orgs.length > 0) {
@@ -291,14 +273,6 @@ app.controller('CollectionCtrl', ['$scope', '$http', '$timeout', '$filter', '$st
 		// 组织/人员详细信息
 		$scope.showDetailInfo = function(obj, showType) {
 			var state = '';
-
-			// if(showType == 'org') {
-			// 	$state.go('app.hr.orgInfo', { orgId: obj.id });
-			// } else if(showType == 'person') {
-			// 	$state.go('app.hr.staffInfo', { staffId: obj.id });
-			// } else {
-			// 	// 
-			// }
 		};
 		// 点击 subLabel 过滤 person
 		$scope.collectionPersonFilter = function(group, subLabel) {
@@ -336,6 +310,10 @@ app.controller('CollectionCtrl', ['$scope', '$http', '$timeout', '$filter', '$st
 			}, function(msg) {
 				console.log(msg);
 			});
+		};
+		// 查看组织信息
+		$scope.showOrgInfo = function(orgFollowItem) {
+			OrgSearch.setOrg({ "ID": orgFollowItem.FOLLOW_ITEM });
 		};
 
 	}
@@ -501,7 +479,6 @@ app.controller('OrgSearchCtrl', ['$scope', '$http', '$timeout', '$modal', 'OrgSe
 		DataService.getData(orgAreaUrl)
 			.then(function(data) {
 				entity.area = data.obj;
-				console.log(entity.area);
 			}, function(msg) {
 				console.log(msg);
 			});
@@ -644,7 +621,6 @@ console.log(OrgSearch.getOrg())
 
 		DataService.getData(childOrgsUrl)
 			.then(function(data) {
-				console.log(data);
 				$scope.orgs = data.obj;
 			}, function(msg) {
 				console.error(msg);
@@ -697,6 +673,49 @@ console.log(data.obj);
 			.error(function(data, status, headers, config) {
 				console.log('Get ' + orgInfoUrl + ' wrong...');
 			})
+	}
+]);
+
+// 组织的所有信息弹出层 controller
+app.controller('OrgInfoAllCtrl',  ['$scope', '$http', '$modalInstance', '$modal', '$timeout', '$rootScope', 'CollectionService', 'OrgSearch', '$modalStack', 
+    function($scope, $http, $modalInstance, $modal, $timeout, $rootScope, CollectionService, OrgSearch, $modalStack) {
+		var org = OrgSearch.getOrg();
+		
+		var func = function(org) {
+		    var orgDetailUrl = '/service/orgUnit!queryOrgUnitInfoInCam?ID=';
+			
+			// 组织面包屑
+			$http.post(orgDetailUrl + org.ID)
+				.success(function(data, status, headers, config) {
+					$scope.orgAndFatherOrgs = data.obj.orgUnit.orgAndFatherOrgs;
+				})
+				.error(function(data, status, headers, config) {
+					console.log(data);
+				});
+		};
+		
+		$scope.showOrgInfo = function(org) {			
+			OrgSearch.setOrg(org);
+		};
+
+		$scope.$watch(function() {
+			return OrgSearch.getOrg();
+		}, function(newVal) {
+			console.log(newVal);
+			func(newVal);
+		});
+		
+		// 返回通讯录
+		$scope.backContactlist = function() {
+//			$modalInstance.close();
+			$modalStack.dismissAll();
+		};
+		
+		$scope.cancel = function() {
+//			$modalInstance.close();
+			$modalStack.dismissAll();
+		};
+		
 	}
 ]);
 

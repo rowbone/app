@@ -3,39 +3,39 @@
     "obj": [
     	{
     		"id": "1422945768950299610293279",
-    		"name": "陈盛波",
-    		"fullName": "中科院/广州分院/科南软件/二组",
+    		"NAME": "陈盛波",
+    		"ORG_TOTAL_NAME": "中科院/广州分院/科南软件/二组",
     		"sex": "male",
     		"headImg": "img/person/person_photo_1.png",
-    		"groupCode": "c"
+    		"GROUPCODE": "c"
 	  	}, {
     		"id": "1422522862104695210284750",
-    		"name": "陈玄强",
-    		"fullName": "中科院/武汉分院",
+    		"NAME": "陈玄强",
+    		"ORG_TOTAL_NAME": "中科院/武汉分院",
     		"sex": "male",
     		"headImg": "img/person/person_photo_1.png",
-    		"groupCode": "c"
+    		"GROUPCODE": "c"
 	  	}, {
     		"id": "1427770676670104566906204",
-    		"name": "张薇",
-    		"fullName": "中科院/网络信息中心",
+    		"NAME": "张薇",
+    		"ORG_TOTAL_NAME": "中科院/网络信息中心",
     		"sex": "none",
     		"headImg": "img/person/person_photo_1.png",
-    		"groupCode": "z"
+    		"GROUPCODE": "z"
 	  	}, {
     		"id": "1429515472808104405716634",
-    		"name": "张奕敏",
-    		"fullName": "中科院/广州分院/科南软件/三组",
+    		"NAME": "张奕敏",
+    		"ORG_TOTAL_NAME": "中科院/广州分院/科南软件/三组",
     		"sex": "female",
     		"headImg": "img/person/person_photo_1.png",
-    		"groupCode": "z"
+    		"GROUPCODE": "z"
 	  	}, {
     		"id": "1422945818796386910293279",
-    		"name": "李观松",
-    		"fullName": "中科院/广州分院/科南软件/二组",
+    		"NAME": "李观松",
+    		"ORG_TOTAL_NAME": "中科院/广州分院/科南软件/二组",
     		"sex": "male",
     		"headImg": "img/person/person_photo_1.png",
-    		"groupCode": "l"
+    		"GROUPCODE": "l"
 	  	}
   	],
     "pageInfo": null,

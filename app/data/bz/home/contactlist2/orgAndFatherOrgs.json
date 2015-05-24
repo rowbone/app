@@ -1,0 +1,17 @@
+{
+    "message": null,
+    "obj": {
+    	"orgUnit": {
+    		"orgAndFatherOrgs": [
+    			{
+					  "ORG_UNIT_SHORT_NAME": "中科院"
+					}, {
+						"ORG_UNIT_SHORT_NAME": "广州分院"
+					}
+
+    		]
+    	}
+  	},
+    "pageInfo": null,
+    "success": true
+}

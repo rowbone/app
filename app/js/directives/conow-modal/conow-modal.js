@@ -1,4 +1,4 @@
-angular.module('app')
+app
     .directive('conowModal', ['$modal', function ($modal) {
         return {
             restrict: 'A',
@@ -7,13 +7,14 @@ angular.module('app')
                 if (attrs.full == "true") {
                     winClass = "modal-full";
                 }
-                el.bind('click', function () {
+                el.bind('click', function () {console.log('conow-modal click');
                     var modalInstance = $modal.open({
                         templateUrl: attrs.url,
                         controller: attrs.controls,
                         size: attrs.size,
                         windowClass: winClass
                     });
+                    console.log(modalInstance)
                     modalInstance.result.then(function (selectedItem) {
                         scope.selected = selectedItem;
                     }, function () {

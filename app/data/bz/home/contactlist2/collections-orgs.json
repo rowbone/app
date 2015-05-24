@@ -3,30 +3,35 @@
     "obj": [
     	{
     		"id": "1421924106089631410343354",
-    		"name": "科南软件",
-    		"fullName": "中科院/广州分院",
+    		"ORG_UNIT_NAME": "科南软件",
+    		"ORG_TOTAL_NAME": "中科院/广州分院",
     		"groupCode": "k",
-            "inCollection": true
+            "inCollection": true,
+            "FOLLOW_ITEM": "1421924106089631410343354"
 	  	}, {
     		"id": "8752141681484801813751026",
-    		"name": "广州生物医药与健康研究院",
-    		"fullName": "中科院",
-    		"groupCode": "g"
+    		"ORG_UNIT_NAME": "广州生物医药与健康研究院",
+    		"ORG_TOTAL_NAME": "中科院",
+    		"groupCode": "g",
+            "FOLLOW_ITEM": "1421924106089631410343354"
 	  	}, {
     		"id": "4321141716983011049671023",
-    		"name": "物理研究所",
-    		"fullName": "中科院",
-    		"groupCode": "w"
+    		"ORG_UNIT_NAME": "物理研究所",
+    		"ORG_TOTAL_NAME": "中科院",
+    		"groupCode": "w",
+            "FOLLOW_ITEM": "1421924106089631410343354"
 	  	}, {
     		"id": "4321133316914437935071114",
-    		"name": "武汉分院",
-    		"fullName": "中科院",
-    		"groupCode": "w"
+    		"ORG_UNIT_NAME": "武汉分院",
+    		"ORG_TOTAL_NAME": "中科院",
+    		"groupCode": "w",
+            "FOLLOW_ITEM": "1421924106089631410343354"
 	  	}, {
     		"id": "8752141748893526958921026",
-    		"name": "技术信息办公室",
-    		"fullName": "中科院/学部工作局/技术信息办公室",
-    		"groupCode": "j"
+    		"ORG_UNIT_NAME": "技术信息办公室",
+    		"ORG_TOTAL_NAME": "中科院/学部工作局/技术信息办公室",
+    		"groupCode": "j",
+            "FOLLOW_ITEM": "1421924106089631410343354"
 	  	}
   	],
     "pageInfo": null,
