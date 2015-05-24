@@ -53,5 +53,9 @@ angular.module('app.demo', ['ui.router'])
 					url: '/test',
 					templateUrl: 'views/demo/test/test.html'
 				})
+				.state('app.demo.directive', {
+					url: '/directive',
+					templateUrl: 'views/demo/test/directives.html'
+				})
 		}
 	])
