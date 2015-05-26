@@ -22,6 +22,12 @@
 							<label for="">decorator</label>
 							<button type="button" class="btn btn-primary" ng-click="execDecorator()">decorator 方法</button>
 						</div>
+						<div class="form-group">
+							<div ng-repeat="chkbox in chkboxes">
+								<input type="checkbox" name="chkbox" ng-model="entity.abc[$index]" ng-true-value="{{chkbox.age}}">{{ chkbox.name }}
+							</div>
+						</div>
+						<pre>{{ entity.abc }}</pre>
 					</form>
 				</div>
 				<div class="panel-footer">

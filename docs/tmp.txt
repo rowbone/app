@@ -32,3 +32,15 @@ https://github.com/aui/blog/issues/1
 http://www.toptal.com/angular-js/top-18-most-common-angularjs-developer-mistakes
 http://www.codeceo.com/article/simple-javascript-function.html
 
+
+1、git常用命令
+	http://liujin.me/blog/
+
+2、重新介绍 JavaScript（JS 教程）
+	https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/A_re-introduction_to_JavaScript
+
+3、angularjs & worktile
+	http://segmentfault.com/u/worktile
+
+
+

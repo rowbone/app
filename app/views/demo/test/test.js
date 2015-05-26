@@ -25,6 +25,18 @@ app.controller('ExecFuncInServiceCtrl', ['$scope', 'ExecFuncService', 'foo', '$l
 			$log.log('This is from Angular $log...');
 		};
 
+		$scope.chkboxes = [
+			{
+				'name': 'name1',
+				'age': 3
+			}, {
+				'name': 'name2',
+				'age': 8
+			}
+		];
+
+		$scope.abc = [];
+
 	}
 ]);
 
