@@ -37,18 +37,6 @@ app.service('DataService', ['$http', '$q', '$interval',
 		this.getData = function(url) {
 			var deferred = $q.defer();
 
-			// deferred.notify('This is the getData func in DataService.');
-
-			// var progress = 0;
-			// var interval = $interval(function() {
-			// 	if(progress >= 100) {
-			// 		$interval.cancel(interval);
-			// 		deferred.resolve('All done!');
-			// 	}
-			// 	progress += 10;
-			// 	deferred.notify(progress + '% ...');
-			// }, 100);
-
 			$http.get(url)
 				.success(function(data, status, headers, config) {
 					deferred.resolve(data);

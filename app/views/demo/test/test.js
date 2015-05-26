@@ -94,3 +94,31 @@ app.config(function($provide) {
 	});
 	
 });
+
+app.service('PromiseDataService', ['DataService', 
+	function(DataService) {
+		var self = this,
+				data = [];
+
+		var data = DataService.getData('');
+
+		this.setData = function(data) {
+			self.data = data;
+		}
+
+		this.getData = function() {
+			return self.data;
+		};
+	}
+]);
+
+// $q defer promise 
+app.controller('DeferAndPromiseCtrl', ['$scope', 'DataService', 
+	function($scope, DataService) {
+		// 
+
+		$scope.$watch(function() {
+			return DateService.getData('')
+		});
+	}
+]);
