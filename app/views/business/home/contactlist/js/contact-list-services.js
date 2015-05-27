@@ -93,7 +93,6 @@ app.service('followService', ['$http', 'DataService',
           .then(function(data) {
             if(data.success) {
               var followType = params['FOLLOW_TYPE'].toLowerCase();
-console.log(staffs);
               if(followType === 'staff') {
                 self.addStaff(data.obj);
               } else if(followType === 'org') {
@@ -102,7 +101,6 @@ console.log(staffs);
                 console.log('Get wrong followType...');
               }
             }
-console.log(staffs)
           }, function(msg) {
             console.log(msg);
           })
@@ -221,6 +219,61 @@ console.log(staffs)
     }
   ]);
 
+app.filter('letterFilter', ['$filter', 
+  function($filter) {
+    return function(input, letter) {
+      var arrRtn = [];
+      angular.forEach(input, function(value, key) {
+        if(value['GROUPCODE'] === letter) {
+          arrRtn.push(value);
+        }
+      });
+
+      return arrRtn;
+    }
+  }
+]);
+
+app.filter('userGroupByLetter', ['$filter', 
+  function($filter) {
+    return function(input, groupCode) {
+      if(!angular.isArray(input)) {
+        console.error('Input must be an array...');
+        return;
+      }
+
+      var groupCode = groupCode,
+          arrData = input,
+          arrLabels = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split(''),
+          label = '',
+          iLabelLen = arrLabels.length,
+          arrPersons = [];
+
+      for(var i=0; i<iLabelLen; i++) {
+        // arrPersons.push([]);
+      }
+
+      if(angular.isUndefined(groupCode)) {
+        groupCode = 'name';
+      }
+
+      angular.forEach(arrData, function(value, key) {
+        value[groupCode] = value[groupCode].toUpperCase();
+      });
+
+      for(var i=0; i<iLabelLen; i++) {
+        label = arrLabels[i];
+        arrPersons.push({
+          'label': label,
+          'persons': $filter('letterFilter')(arrData, label)
+        });
+      }
+
+      return arrPersons;
+    }
+  }
+]);
+
 // 人员分组过滤器
 app.filter('userGroup', ['$filter', 
   function($filter) {
@@ -229,7 +282,6 @@ app.filter('userGroup', ['$filter',
         console.error('Input must be an array.');
         return;
       }
-
       var groupCode = groupCode;
       var arrData = input;
       var arrLabels = ['A - E', 'F - J', 'K - O', 'P - T', 'U - Z'];

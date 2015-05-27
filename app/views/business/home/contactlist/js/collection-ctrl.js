@@ -29,7 +29,8 @@ app.controller('CollectionCtrl', ['$scope', '$http', '$timeout', '$filter', '$st
 					persons[i].PHOTO = 'img/person/person_photo_2.png';
 				}
 			}
-			var personsGroup = $filter('userGroup')(persons, 'GROUPCODE');
+			// var personsGroup = $filter('userGroup')(persons, 'GROUPCODE');
+			var personsGroup = $filter('userGroupByLetter')(persons, 'GROUPCODE');
 			collections.persons = persons;
 			collections.personsGroup = personsGroup;
 			

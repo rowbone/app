@@ -1,48 +1,10 @@
 
-<style>
-	.btn-hover-red:hover {
-		color: #EB6565;
-	}
-	.btn-danger-square {
-		background-color: #FFFFFF;
-		color: #F05050;
-		border: 1px solid #F05050;
-	}
-	.btn-danger-square:hover {
-		color: #F05050;
-		font-weight: bold;
-		border: 2px solid #F05050;
-	}
-	.btn-primary-square {		
-		background-color: #FFFFFF;
-		color: #23B7E5;
-		border: 1px solid #23B7E5;
-	}
-	.btn-primary-square:hover {
-		color: #23B7E5;
-		font-weight: bold;
-		border: 2px solid #23B7E5;
-	}
-	.b-split {
-		border-color: #dcedf5;
-	}
-	.btn-danger-square2 {
-		color: #e5cfd6;
-		border: 1px solid #e5cfd6;
-	}
-	.btn-danger-square2:hover {
-		color: #e5cfd6;
-		font-weight: bold;
-		border: 2px solid #e5cfd6;
-		cursor: not-allowed;
-	}
-</style>
-<div class="search" ng-if="!options.showDetail">
+<div class="search">
 	<div class="hbox padder-md">
 		<div class="input-group">
-			<input type="text" class="form-control input-lg r-3x" ng-model="entity.searchKey" ng-keyup="enterPress($event)" placeholder="搜索">
+			<input type="text" class="form-control r-3x" ng-model="entity.searchKey" ng-keyup="enterPress($event)" placeholder="搜索">
 			<div class="input-group-btn">
-			  <button type="button" class="btn btn-primary input-lg r-3x" tabindex=-1 ng-click="enterPress($event, 'btn')">
+			  <button type="button" class="btn btn-primary r-3x" tabindex=-1 ng-click="enterPress($event, 'btn')">
 					<i class="fa fa-search"></i>
 			  </button>  	  	
 			</div>
@@ -50,20 +12,20 @@
 	</div>
 
 	<div class="hbox m-t-sm">
-		<div class="col col-xs-2 col-md-1 p-t-sm p-l-md">
+		<div class="col w-80 p-l-md m-t-sm p-t-sm">
 			<label for="" class="control-label text-base">区域：</label>
 		</div>
-		<div class="col col-xs-10 col-md-11">
+		<div class="col">
 			<a class="btn m-xxs r-3x btn-hover-red text-base" ng-class="{'btn-success': entity.areaSelected == area}" ng-repeat="area in entity.area track by $index" ng-click="areaSelect(area)">{{ area.ORG_UNIT_RGN }}</a>
 		</div>
 	</div>
-	<!-- <hr class="b-b b-split"> -->
+	
 	<div class="hbox m-b">
-		<div class="col col-xs-2 col-md-1 p-t-sm p-l-md">
+		<div class="col w-80 p-l-md m-t-sm p-t-sm">
 			<label for="" class="control-label text-base">分类：</label>
 		</div>
-		<div>{{ classify | json }}</div>
-		<div class="col col-xs-10 col-md-11">
+		
+		<div class="col">
 			<a class="btn m-xxs r-3x btn-hover-red text-base" ng-class="{'btn-success': entity.classifySelected == classify}" ng-repeat="classify in entity.classify track by $index" ng-click="classifySelect(classify)">{{ classify.value }}</a>
 		</div>
 	</div>
@@ -71,75 +33,42 @@
 	<div class="m-b" ng-if="options.search">
 		<div class="padder-md" ng-if="!entity.searchResults">
 			<i class="fa fa-spin fa-spinner"></i>
-			<span>加载中</span>
+			<span class="text-md">加载中</span>
 		</div>
 		<div ng-if="entity.searchResults">
-			<div class="hbox v-middle bg-primary font-bold text-base padder-v-xxs p-l-sm">
+			<div class="hbox bg-primary text-base font-bold padder-sm padder-v-sm">
 				<div class="col">
-					<span>搜索结果</span>
+					<span class="text-md">搜索结果</span>
 				</div>
 			</div>
-			<div class="padder-sm padder-v-sm font-bold" ng-if="entity.searchResults && entity.searchResults.length == 0">
+			<div class="padder-sm padder-v-sm font-bold text-md" ng-if="entity.searchResults && entity.searchResults.length == 0">
 				没有符合条件的组织信息
 			</div>
-			<div class="m-t">
+			<div>
 				<div ng-repeat="result in entity.searchResults track by $index">
-					<div class="hbox padder">
-						<a class="col col-xs-8" ng-click="showOrgInfo(result)">
+					<div class="hbox p b-b">
+						<!-- <a class="col col-xs-8" ng-click="showOrgInfo(result)"> -->
+						<a conow-modal 
+			               full="true"
+			               size="lg"
+						   url="app/business/cam/organdstaff/org-info-all.html" 
+						   controls="OrgInfoAllCtrl" 
+						   ng-click="showOrgInfo(result, 'org')" 
+						>
 							<div>
-								<span class="text-base">{{ result.ORG_UNIT_SHORT_NAME }}</span>
+								<span class="text-md">{{ result.ORG_UNIT_SHORT_NAME }}</span>
 							</div>
 							<div>
-								<span class="text-xs m-t-sm">{{ result.totalName }}</span>
+								<span class="text-sm m-t-sm">{{ result.totalName }}</span>
 							</div>
 						</a>
-						<div class="col v-middle m-r">
-							<a class="btn btn-danger-square pull-right v-middle" ng-show="!result.isInCollection" ng-click="collectionConfirm(result, 'add')">关注</a>
-							<a class="btn pull-right btn-danger-square2" ng-show="result.isInCollection" ng-click="">已关注</a>
+						<div class="col col-p-sm v-middle m-r">
+							<a class="btn btn-danger-square pull-right v-middle" ng-show="!result.isInCollection" ng-click="follow(result, 'org')">关注</a>
+							<a class="btn pull-right btn-danger-square" ng-show="result.isInCollection" ng-click="unFollow(result, 'org')">取消关注</a>
 						</div>
 					</div>
-					<hr class="b-b b-split">
 				</div>
 			</div>
 		</div>
 	</div>
 </div>
-
-<!-- <div class="result-search" ng-if="options.showDetail">
-	<div class="hbox m-b font-bold text-title padder-v-sm">
-		<ul class="breadcrumb bg-primary b-a">
-			<li ng-repeat="org in orgAndFatherOrgs track by $index" ng-class="{'active': $last}">
-				<a href="" ng-click="showDetailInfo(org)">{{ org.ORG_UNIT_SHORT_NAME }}</a>
-			</li>
-		</ul>
-	</div>
-	<div class="hbox padder-md">
-		<div class="input-group">
-			<input type="text" class="form-control input-lg r-3x" placeholder="搜索" autofocus>
-			<div class="input-group-btn">
-			  <button type="button" class="btn btn-primary input-lg r-3x" tabindex=-1 ng-click="enterPress($event)">
-					<i class="fa fa-search"></i>
-			  </button>  	  	
-			</div>
-	  </div>
-	</div>
-	<div class="hbox m">
-		<conow-tabs>
-			<conow-tabs-titles>
-				<conow-tabs-titles-text title="下级组织" show="true"></conow-tabs-titles-text>
-				<conow-tabs-titles-text title="人员信息"></conow-tabs-titles-text>
-				<conow-tabs-titles-text title="组织信息"></conow-tabs-titles-text>
-			</conow-tabs-titles>
-			<conow-tabs-content>
-				<conow-tabs-content-url url="app/business/cam/organdstaff/child-orgs.html"></conow-tabs-content-url>
-				<conow-tabs-content-url url="app/business/cam/organdstaff/org-staffs.html"></conow-tabs-content-url>
-				<conow-tabs-content-url url="app/business/cam/organdstaff/org-info.html"></conow-tabs-content-url>
-			</conow-tabs-content>
-		</conow-tabs>
-
-		<div class="m-t-sm text-center">
-			<button class="btn btn-primary-square r-3x text-base" ng-click="backContactlist()">返回通讯录列表</button>
-		</div>
-	</div>
-	
-</div> -->

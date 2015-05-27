@@ -2,7 +2,8 @@
 
 //OrgSearch service 用于保存点击的组织
 app.service('OrgSearch', function(){
-	var selectedOrg = '';
+	var selectedOrg = null;
+	var selectedStaff = null;
 
 	this.setOrg = function(org) {
 		selectedOrg = org;
@@ -11,15 +12,28 @@ app.service('OrgSearch', function(){
 	this.getOrg = function() {
 		return selectedOrg;
 	};
+	
+	this.setStaff = function(staff) {
+		selectedStaff = staff;
+	};
+
+	this.getStaff = function() {
+		return selectedStaff;
+	};
 });
 // 已关注 service，保存已关注的人员和组织
-app.service('CollectionService', ['$http', 
-  	function($http) {
-  		var orgs = [],
+app.service('CollectionService', ['$http', 'DataService', '$q', 
+  	function($http, DataService, $q) {
+  		var self = this,
+  			orgs = [],
 			persons = [],
+			staffs = [],
 			params = {},
-			urlCollections = '/service/followItem!queryFollowItemByFollowType';
-//			isLoading = true;
+			urlCollections = '/service/followItem!queryFollowItemByFollowType',
+			isLoading = true;
+  		
+  		var deferred = $q.defer();
+  		this.promiseFollowed = deferred.promise;
   		
   		var getCollections = function(collectionType) {
   			if(collectionType == 'STAFF') {
@@ -36,10 +50,14 @@ app.service('CollectionService', ['$http',
   	  		// 获取已关注的人员和组织，页面操作过程中维护获得的 orgs 和 persons
   	  		$http.post(urlCollections, params)
   	  			.success(function(data, status, headers, config) {
-//  	  				isLoading = false;
+  	  				isLoading = false;
   	  				var collections = data.obj;
   	  				orgs = collections.orgFollowItem;
   	  				persons = collections.staffFollowItem;
+  	  				staffs = persons;
+//  	  				staffs = collections.staffFollowItem;
+  	  				
+  	  				deferred.resolve({'msg': 'Get followed data success'});
   	  			})
   	  			.error(function(data, status, headers, config) {
   	  				console.error('Get "' + urlCollections + '" wrong...');
@@ -48,6 +66,54 @@ app.service('CollectionService', ['$http',
   		};
   		
   		getCollections();
+  		
+  		this.isLoading = function() {
+  			return isLoading;
+  		};
+
+        this.follow = function(params) {
+          var urlFollow = '/service/followItem!saveEntity';
+
+          DataService.postData(urlFollow, params)
+            .then(function(data) {
+              if(data.success) {
+                var followType = params['FOLLOW_TYPE'].toLowerCase();
+                if(followType === 'staff') {
+//                  self.addStaff(data.obj);
+                	self.addPerson(data.obj);
+                } else if(followType === 'org') {
+                  self.addOrg(data.obj);
+                } else {
+                  console.log('Get wrong followType...');
+                }
+              }
+            }, function(msg) {
+              console.log(msg);
+            });
+        };
+
+        this.unFollow = function(followItem, strType) {
+          var urlUnFollow = '/service/followItem!deleteEntity';
+          var params = { 'ID': followItem.ID };
+
+          DataService.postData(urlUnFollow, params)
+            .then(function(data) {
+//              if(data.success) {
+                if(strType == 'org') {
+                  self.removeOrg(followItem);
+                  console.log('unfollow success...');
+                } else if(strType == 'staff') {
+//                  self.removeStaff(followItem);
+                	self.removePerson(followItem);
+                  console.log('unfollow success...');
+                } else {
+                  console.log('unfollow wrong...');
+                }
+//              }
+            }, function(msg) {
+              console.log(msg);
+            });
+        };
 
   		this.setOrgs = function(orgs) {
   			orgs = orgs;
@@ -87,6 +153,21 @@ app.service('CollectionService', ['$http',
   			persons.splice(i, 1);
   		};
 
+        this.addStaff = function(staff) {
+          staffs.push(staff);
+        };
+
+        this.removeStaff = function(staff) {
+          var index = -1;
+          for(var i=0; i<staffs.length; i++) {
+            if(staffs[i].ID == staff.ID) {
+              index = i;
+              break;
+            }
+          }
+          staffs.splice(i, 1);
+        };
+
   		this.getOrgById = function(orgId) {
   			// @todo
   		};
@@ -115,57 +196,6 @@ app.service('CollectionService', ['$http',
 
   	}
   ]);
-//app.service('CollectionService', ['$http', 'DataService', 
-//	function($http, DataService) {
-//		var orgs = [],
-//			persons = [],
-//			personsFollowType = 'STAFF',
-//			orgsFollowType = 'ORG',
-//			params = {},
-//			urlCollections = '/service/followItem!queryFollowItemByFollowType';
-//
-//		$http.post(urlCollections, params)
-//			.success(function(data, status, headers, config) {
-//				orgs = data.obj.orgFollowItem;
-//				persons = data.obj.staffFollowItem;
-//			})
-//			.error(function(data, status, headers, config) {
-//				console.error('Get "' + urlCollections + '" wrong...');
-//			});
-//		
-//		this.setOrgs = function(orgs) {
-//			orgs = orgs;
-//		};
-//		
-//		this.setPersons = function(persons) {
-//			persons = persons;
-//		};
-//
-//		this.addOrg = function(org) {
-//			orgs.push(org);
-//		};
-//
-//		this.addPerson = function(person) {
-//			persons.push(person);
-//		};
-//
-//		this.getOrgs = function() {
-//			return orgs;
-//		};
-//
-//		this.getPersons = function() {
-//			return persons;
-//		};
-//
-//		this.getAll = function() {
-//			return {
-//				orgs: orgs,
-//				persons: persons
-//			};
-//			
-//		};
-//	}
-//]);
 
 // 人员分组过滤器
 app.filter('userGroup', ['$filter', 
@@ -237,10 +267,7 @@ app.controller('contactListCtrl', ['$scope',
 // 已关注 controller
 app.controller('CollectionCtrl', ['$scope', '$http', '$timeout', '$filter', '$state', '$modal', 'DataService', 'CollectionService', 'OrgSearch', 
 	function($scope, $http, $timeout, $filter, $state, $modal, DataService, CollectionService, OrgSearch) {
-		var urlCollectionsOrgs = 'app/business/home/contactlist/data/collections-orgs.json',
-			urlCollectionsPersons = 'app/business/home/contactlist/data/collections-persons.json',
-			
-			options = $scope.options = {
+		var options = $scope.options = {
 				isLoading: true,
 				collectionNone: false,
 				collectionOrgExpand: false,
@@ -255,24 +282,26 @@ app.controller('CollectionCtrl', ['$scope', '$http', '$timeout', '$filter', '$st
 		
 		$scope.$watch(function() {
 			return CollectionService.getAll();
-		}, function(newVal, oldVal) {			
-			$scope.collections.orgs = CollectionService.getOrgs();
-			var persons = CollectionService.getPersons();
-			for(var i=0; i<persons.length; i++) {
-				if(persons[i].PHOTO == null) {
-					persons[i].PHOTO = 'img/person/person_photo_2.png';
+		}, function(newVal, oldVal) {
+			CollectionService.promiseFollowed.then(function(data) {
+				$scope.collections.orgs = CollectionService.getOrgs();
+				var persons = CollectionService.getPersons();
+				for(var i=0; i<persons.length; i++) {
+					if(persons[i].PHOTO == null) {
+						persons[i].PHOTO = 'img/person/person_photo_2.png';
+					}
 				}
-			}
-			var personsGroup = $filter('userGroup')(persons, 'GROUPCODE');
-			collections.persons = persons;
-			collections.personsGroup = personsGroup;
-			
-			if(collections.persons.length > 0 || collections.orgs.length > 0) {
-				options.collectionNone = false;
-			} else {
-				options.collectionNone = true;
-			}
-			options.isLoading = false;
+				var personsGroup = $filter('userGroup')(persons, 'GROUPCODE');
+				collections.persons = persons;
+				collections.personsGroup = personsGroup;
+				
+				if(collections.persons.length > 0 || collections.orgs.length > 0) {
+					options.collectionNone = false;
+				} else {
+					options.collectionNone = true;
+				}
+				options.isLoading = false;
+			});
 		}, true);		
 
 		// 没有关注时，点击切换到“找人”，添加人员关注
@@ -283,25 +312,15 @@ app.controller('CollectionCtrl', ['$scope', '$http', '$timeout', '$filter', '$st
 			}
 			$scope.contactListTabs[1] = true;
 		};
+		
 		// 关注人员过滤，点击人员分组字母时触发
 		$scope.collectionPersonFilter = function(group, subLabel) {
 			group.selectedSub = subLabel;
 		};
+		
 		// 人员详细信息
-		$scope.showStaffInfo = function(staffFollowItem) {			
-			var modalInstance = $modal.open({
-				templateUrl: 'app/business/cam/staffdetail/staff-info.html',
-				controller: 'StaffInfoCtrl',
-				resolve: {
-					modalParams: function() {
-						var objParams = {
-							staffFollowItem: staffFollowItem
-						};
-
-						return objParams;		
-					}
-				}
-			});
+		$scope.showStaffInfo = function(staffFollowItem) {
+			OrgSearch.setStaff({ 'ID': staffFollowItem.FOLLOW_ITEM, 'isInCollection': true, 'followItem': staffFollowItem });			
 		};
 		// 过滤弹出框
 		$scope.openSearchModal = function() {
@@ -337,20 +356,12 @@ app.controller('CollectionCtrl', ['$scope', '$http', '$timeout', '$filter', '$st
 		};
 		// 查看组织信息
 		$scope.showOrgInfo = function(orgFollowItem) {
-			OrgSearch.setOrg({'ID': orgFollowItem.FOLLOW_ITEM});
-//			var modalInstance = $modal.open({
-//				templateUrl: 'app/business/cam/organdstaff/org-info-all.html',
-//				controller: 'OrgInfoAllCtrl',
-//				resolve: {
-//					modalParams: function() {
-//						var objParams = {
-//							orgFollowItem: orgFollowItem
-//						};
-//
-//						return objParams;		
-//					}
-//				}
-//			});
+			OrgSearch.setOrg({ 'ID': orgFollowItem.FOLLOW_ITEM, 'isInCollection': true, 'followItem': orgFollowItem });
+		};
+
+		// 取消关注
+		$scope.unFollow = function(followItem, strType) {
+			CollectionService.unFollow(followItem, strType);
 		};
 		
 	}
@@ -359,8 +370,7 @@ app.controller('CollectionCtrl', ['$scope', '$http', '$timeout', '$filter', '$st
 // 组织的所有信息弹出层 controller
 app.controller('OrgInfoAllCtrl',  ['$scope', '$http', '$modalInstance', '$modal', '$timeout', '$rootScope', 'CollectionService', 'OrgSearch', '$modalStack', 
     function($scope, $http, $modalInstance, $modal, $timeout, $rootScope, CollectionService, OrgSearch, $modalStack) {
-		var org = OrgSearch.getOrg();
-		
+		var org = OrgSearch.getOrg();	
 		var func = function(org) {
 		    var orgDetailUrl = '/service/orgUnit!queryOrgUnitInfoInCam?ID=';
 			
@@ -374,6 +384,7 @@ app.controller('OrgInfoAllCtrl',  ['$scope', '$http', '$modalInstance', '$modal'
 				});
 		};
 		
+		// 显示组织信息
 		$scope.showOrgInfo = function(org) {			
 			OrgSearch.setOrg(org);
 		};
@@ -381,7 +392,6 @@ app.controller('OrgInfoAllCtrl',  ['$scope', '$http', '$modalInstance', '$modal'
 		$scope.$watch(function() {
 			return OrgSearch.getOrg();
 		}, function(newVal) {
-			console.log(newVal);
 			func(newVal);
 		});
 		
@@ -400,52 +410,40 @@ app.controller('OrgInfoAllCtrl',  ['$scope', '$http', '$modalInstance', '$modal'
 ]);
 
 //个人信息
-app.controller('StaffInfoCtrl', ['$scope', '$http', '$timeout', '$rootScope', 'CollectionService', '$modalStack', 
-	function($scope, $http, $timeout, $rootScope, CollectionService, $modalStack) {
-//		if(modalParams.staffFollowItem) {
-//			$scope.staffFollowItem = modalParams.staffFollowItem;
-//			$scope.staff = {
-//				"ID": $scope.staffFollowItem.FOLLOW_ITEM,
-//				"isInCollection": true
-//			};
-//		}
-//		if(modalParams.staff) {
-//			$scope.staff = modalParams.staff;
-//		}	
-	
-//		$scope.$watch(function() {
-//			return CollectionService.getPersons();
-//		}, function(newVal, oldVal) {
-//			var persons = CollectionService.getPersons();
-//			for(var i=0; i<persons.length; i++) {
-//				if(persons[i].FOLLOW_ITEM == $scope.staffId) {
-//					$scope.staffFollowItem = persons[i];
-//					break;
-//				}
-//			}
-//		}, true);
+app.controller('StaffInfoCtrl', ['$scope', '$http', '$timeout', '$rootScope', 'CollectionService', '$modalStack', 'OrgSearch', 
+	function($scope, $http, $timeout, $rootScope, CollectionService, $modalStack, OrgSearch) {
 		
 		var entity = $scope.entity = {};
 		
-		var urlStaffInfo = '/service/staffInfo!queryStaffInfoAndTotalnameAndJobs?ID=' + $scope.staff.ID;
-		$http.get(urlStaffInfo)
-			.success(function(data, status, headers, config) {
-				entity = data.obj;
-	    		var imgSrc = 'img/person';
-	    		if(entity.PHOTO == null) {
-		    		if(entity.GENDER == 'M') {
-		    			entity.PHOTO = imgSrc + '/person_photo_2.png';
-		    		} else {
-		    			entity.PHOTO = imgSrc + '/person_photo_4.png';
-		    		}	    			
-	    		}
-	     		// 是否已经关注
-	     		entity.isInCollection = $scope.staff.isInCollection;			
-				$scope.entity = entity;
-			})
-			.error(function(data, status, headers, config) {
-				console.log('Get ' + urlStaffInfo + ' wrong...');
-			});
+		var init = function() {
+			
+			$scope.staff = OrgSearch.getStaff();
+			$scope.staffFollowItem = $scope.staff.followItem;
+			
+			var urlStaffInfo = '/service/staffInfo!queryStaffInfoAndTotalnameAndJobs?ID=' + $scope.staff.ID;
+			$http.get(urlStaffInfo)
+				.success(function(data, status, headers, config) {
+					entity = data.obj;
+		    		var imgSrc = 'img/person';
+		    		if(entity.PHOTO == null) {
+			    		if(entity.GENDER == 'M') {
+			    			entity.PHOTO = imgSrc + '/person_photo_2.png';
+			    		} else {
+			    			entity.PHOTO = imgSrc + '/person_photo_4.png';
+			    		}	    			
+		    		}
+		     		// 是否已经关注
+		     		entity.isInCollection = $scope.staff.isInCollection;			
+					$scope.entity = entity;
+				})
+				.error(function(data, status, headers, config) {
+					console.log('Get ' + urlStaffInfo + ' wrong...');
+				});
+			
+		};
+		
+		init();
+		
 		// 增加/取消关注
 		$scope.collectionConfirm = function(staff, strType) {
 			var urlAddCollection = '',
@@ -538,8 +536,8 @@ app.controller('CollectionSearchModalCtrl', ['$scope', '$modalInstance', '$filte
 ]);
 
 // 找人 controller
-app.controller('PersonSearchCtrl', ['$scope', '$http', '$timeout', '$modal', 'CollectionService', 'DataService', '$rootScope', 
-	function($scope, $http, $timeout, $modal, CollectionService, DataService, $rootScope) {
+app.controller('PersonSearchCtrl', ['$scope', '$http', '$timeout', '$modal', 'CollectionService', 'DataService', '$rootScope', 'OrgSearch',  
+	function($scope, $http, $timeout, $modal, CollectionService, DataService, $rootScope, OrgSearch) {
 		var entity = $scope.entity = {};
 		var options = $scope.options = {
 			search: false
@@ -554,22 +552,23 @@ app.controller('PersonSearchCtrl', ['$scope', '$http', '$timeout', '$modal', 'Co
 		}, function(newVal, oldVal) {
 			var persons = CollectionService.getPersons();			
 			entity.collectionsPersons = persons;
-			$scope.enterPress(null, 'btn');
-//			if(persons && entity.searchResults) {
-//				var iPersonsLen = persons.length;
-//				var searchResults = entity.searchResults;
-//				var iResultsLen = searchResults.length;
-//				for(var i=0; i<iResultsLen; i++) {
-//					searchResults.isInCollection = false;
-//					for(var j=0; j<iPersonsLen; j++) {
-//						if(persons[j].FOLLOW_ITEM == searchResults[i].ID) {
-//							searchResults.isInCollection = true;
-//							break;
-//						}
-//					}
-//				}
-//				entity.searchResults = searchResults;
-//			}
+			var pLens = persons.length;
+//			$scope.enterPress(null, 'btn');
+			var results = entity.searchResults;
+			if(results && results.length > 0) {
+				var rLen = results.length;
+				for(var i=0; i<rLen; i++) {
+					results[i].isInCollection = false;
+					for(var j=0; j<pLens; j++) {
+						if(results[i].ID == persons[j].FOLLOW_ITEM) {
+							results[i].isInCollection = true;
+							break;
+						}
+					}
+				}
+				
+				entity.searchResults = results;
+			}
 		}, true);
 		
 		// 搜索框 enter 触发搜索事件
@@ -578,7 +577,8 @@ app.controller('PersonSearchCtrl', ['$scope', '$http', '$timeout', '$modal', 'Co
 				page:1,
 				pagesize:50
 			};
-			if(trigType == 'btn' || e.keyCode === 13) {
+//			if(trigType == 'btn' || e.keyCode === 13) {
+			if(trigType == 'btn') {
 				options.search = true;
 				entity.searchResults = null;
 				
@@ -618,64 +618,61 @@ app.controller('PersonSearchCtrl', ['$scope', '$http', '$timeout', '$modal', 'Co
 		};
 		// 人员详细信息
 		$scope.showStaffInfo = function(staff) {
-			// 获取当前人在关注列表中的对象
-			var staffFollowItem = null;
+			var followedItem = null;
 			if(staff.isInCollection) {
-				var collectionsPersons = entity.collectionsPersons;
-				var iLen = collectionsPersons.length;
-				for(var i=0; i<iLen; i++) {
-					if(staff.ID == collectionsPersons[i].FOLLOW_ITEM) {
-						staffFollowItem = collectionsPersons[i];
+				var persons = entity.collectionsPersons;
+				for(var i=0; i<persons.length; i++) {
+					if(persons[i].FOLLOW_ITEM == staff.ID) {
+						followedItem = persons[i];
 						break;
 					}
 				}
 			}
-			var modalInstance = $modal.open({
-				templateUrl: 'app/business/cam/staffdetail/staff-info.html',
-				controller: 'StaffInfoCtrl',
-				resolve: {
-					modalParams: function() {
-						var objParams = {
-							staff: staff,
-							staffFollowItem: staffFollowItem
-						};
-
-						return objParams;		
-					}
-				}
-			});
+			staff.followItem = followedItem;
+			
+			OrgSearch.setStaff(staff);
 		};
 		// 添加关注确认
-		$scope.collectionConfirm = function(user, strType) {
-			var urlAddCollection = '/service/followItem!saveEntity',
-				staffId = $rootScope.userInfo.ID,
+		$scope.follow = function(staff, strType) {
+			if(staff.isInCollection) {
+				console.error('逻辑错误，只有未关注的人员才能添加关注!');
+				return;
+			}
+			var staffId = $rootScope.userInfo.ID,
 				followType = 'STAFF',
-				followName = user.NAME,
-				followId = user.ID,
+				followName = staff.NAME,
+				followId = staff.ID,
 				params = {
 					'STAFF_ID': staffId,
 					'FOLLOW_TYPE': followType,
 					'NAME': followName,
 					'FOLLOW_ITEM': followId
 				};
-				
-			$http.post(urlAddCollection, params)
-				.success(function(data, status, headers, config) {
-					var searchResults = entity.searchResults;
-					var iLen = searchResults.length;
-					for(var i=0; i<iLen; i++) {
-						if(searchResults[i].ID == followId) {
-							searchResults[i].isInCollection = true;
-							break;
-						}
-					}
-					data.obj.NAME = followName;
-					CollectionService.addPerson(data.obj);
-				})
-				.error(function(data, status, headers, config) {
-					console.error(data);
-				});
+			
+			CollectionService.follow(params);
 		};
+		
+		// 取消关注
+		$scope.unFollow = function(staff, strType) {
+			var followedItem = null;
+			
+			if(!staff.isInCollection) {
+				console.error('逻辑错误，只有已关注的人员才能取消关注!');
+				return;
+			}
+			
+			var persons = entity.collectionsPersons;
+			for(var i=0; i<persons.length; i++) {
+				if(persons[i].FOLLOW_ITEM == staff.ID) {
+					followedItem = persons[i];
+					break;
+				}
+			}
+			
+			CollectionService.unFollow(followedItem, strType);
+			
+		};
+		
 		// 代码直接触发搜索操作
 		$scope.trigSearch = function() {
 			$scope.enterPress(null, 'btn');
@@ -715,8 +712,7 @@ app.controller('OrgSearchCtrl', ['$scope', '$http', '$timeout', '$modal', 'OrgSe
 	function($scope, $http, $timeout, $modal, OrgSearch, DataService, $rootScope, $filter, CollectionService) {
 		var entity = $scope.entity = {};
 		var options = $scope.options = {
-			search: false,
-			showDetail: false
+			search: false
 		};
 		var orgAreaUrl = 'data/bz/home/contactlist2/orgUnit-query12BranchCourts.json';
 		var orgClassifyUrl = 'data/bz/home/contactlist2/common-queryOptions-type-DICT_OPTION-DICT_CODE-HR_ORG_CLASS.json';
@@ -743,20 +739,20 @@ app.controller('OrgSearchCtrl', ['$scope', '$http', '$timeout', '$modal', 'OrgSe
 				}
 				entity.classify = arrClassify;
 			 });
+		
 		// 获取所有的组织信息
 		$http.post('/service/orgUnit!queryAcademicAllOrg')
 			.success(function(data, status, headers, config) {
 				if(data.obj){
 					entity.allOrgs = data.obj;
+
+					options.search = true;
+					entity.searchResults = entity.allOrgs;
 				}
 			})
 			.error(function(data, status, headers, config) {
 				console.error(data);
 			});
-
-
-//		entity.area = ['北京', '上海', '广州', '沈阳', '南京', '成都', '兰州', '武汉', '西安', '长春', '昆明', '新疆'];
-//		entity.classify = ['大科学中心', '创新研究院', '卓越创新中心', '特色研究所', '其他'];
 
 		$scope.areaSelect = function(obj) {
 			entity.areaSelected = (entity.areaSelected == obj) ? null : obj;
@@ -789,8 +785,9 @@ app.controller('OrgSearchCtrl', ['$scope', '$http', '$timeout', '$modal', 'OrgSe
 		// 搜索框 enter 触发搜索事件
 		$scope.enterPress = function(e, trigType) {
 			var params = {};
-
-			if(trigType == 'btn' || e.keyCode === 13) {
+			// 去掉回车键触发搜索
+//			if(trigType == 'btn' || e.keyCode === 13) {
+			if(trigType == 'btn') {
 				options.search = true;
 				entity.searchResults = null;
 
@@ -839,36 +836,10 @@ app.controller('OrgSearchCtrl', ['$scope', '$http', '$timeout', '$modal', 'OrgSe
 		// 组织信息弹出层
 		$scope.showOrgInfo = function(org) {
 			OrgSearch.setOrg(org);
-			// 获取当前人在关注列表中的对象
-			var orgFollowItem = null;
-			if(org.isInCollection) {
-				var collectionsOrgs = entity.collectionsOrgs;
-				var iLen = collectionsOrgs.length;
-				for(var i=0; i<iLen; i++) {
-					if(org.ID == collectionsOrgs[i].FOLLOW_ITEM) {
-						orgFollowItem = collectionsOrgs[i];
-						break;
-					}
-				}
-			}
-			var modalInstance = $modal.open({
-				templateUrl: 'app/business/cam/organdstaff/org-info-all.html',
-				controller: 'OrgInfoAllCtrl',
-				resolve: {
-					modalParams: function() {
-						var objParams = {
-							orgFollowItem: orgFollowItem
-						};
-
-						return objParams;		
-					}
-				}
-			});
 		};
 		
 		// 显示对应的组织信息
-		$scope.showDetailInfo = function(org) {
-			options.showDetail = true;			
+		$scope.showDetailInfo = function(org) {		
 			$scope.selectedOrg = org;
 			
 			OrgSearch.setOrg(org);
@@ -884,10 +855,13 @@ app.controller('OrgSearchCtrl', ['$scope', '$http', '$timeout', '$modal', 'OrgSe
 		};
 
 		// 添加关注确认
-		$scope.collectionConfirm = function(org, strType) {
-
-			var urlAddCollection = '/service/followItem!saveEntity',
-				staffId = $rootScope.userInfo.ID,
+		$scope.follow = function(org, strType) {
+			if(org.isInCollection) {
+				console.error('逻辑错误，只有未关注的组织才能添加关注!');
+				return;
+			}
+			
+			var staffId = $rootScope.userInfo.ID,
 				followType = 'ORG',
 				followName = org.ORG_UNIT_SHORT_NAME,
 				followId = org.ID,
@@ -898,22 +872,28 @@ app.controller('OrgSearchCtrl', ['$scope', '$http', '$timeout', '$modal', 'OrgSe
 					'FOLLOW_ITEM': followId
 				};
 			
-			$http.post(urlAddCollection, params)
-				.success(function(data, status, headers, config) {
-					CollectionService.addOrg(data.obj);
-					var searchResults = entity.searchResults;
-					var iLen = searchResults.length;
-					for(var i=0; i<iLen; i++) {
-						if(searchResults[i].ID == followId) {
-							searchResults[i].isInCollection = true;
-							break;
-						}
-					}
-				})
-				.error(function(data, status, headers, config) {
-					console.error(data);
-				});
-
+			CollectionService.follow(params);
+		};
+		
+		// 取消关注
+		$scope.unFollow = function(org, strType) {
+			var followedItem = null;
+			
+			if(!org.isInCollection) {
+				console.error('逻辑错误，只有已关注的组织才能取消关注!');
+				return;
+			}
+			
+			var orgs = entity.collectionsOrgs;
+			for(var i=0; i<orgs.length; i++) {
+				if(orgs[i].FOLLOW_ITEM == org.ID) {
+					followedItem = orgs[i];
+					break;
+				}
+			}
+			
+			CollectionService.unFollow(followedItem, strType);
+			
 		};
 		
 		// 返回通讯录列表
@@ -972,6 +952,72 @@ app.controller('ChildOrgsCtrl', ['$scope', '$http', 'OrgSearch', 'CollectionServ
 		// 查看组织详细信息
 		$scope.showOrgInfo = function(org) {
 			OrgSearch.setOrg(org);
+		};
+		
+		$scope.$watch(function() {
+			return CollectionService.getOrgs();
+		}, function(newVal) {
+			$scope.collectionOrgs = newVal;
+			
+			if($scope.orgs) {
+				var orgs = $scope.orgs;
+				var collectionOrgs = newVal;
+				var oLens = orgs.length;
+				var cLens = collectionOrgs.length;
+				for(var i=0; i<oLens; i++) {
+					orgs[i].isInCollection = false;
+					for(var j=0; j<cLens; j++) {
+						if(orgs[i].ID === collectionOrgs[j].FOLLOW_ITEM) {
+							orgs[i].isInCollection = true;
+							break;
+						}
+					}
+				}
+				
+				$scope.orgs = orgs;
+			}
+		}, true);
+
+		// 添加关注确认
+		$scope.follow = function(org, strType) {
+			if(org.isInCollection) {
+				console.error('逻辑错误，只有未关注的组织才能添加关注!');
+				return;
+			}
+			
+			var staffId = $rootScope.userInfo.ID,
+				followType = 'ORG',
+				followName = org.ORG_UNIT_SHORT_NAME,
+				followId = org.ID,
+				params = {
+					'STAFF_ID': staffId,
+					'FOLLOW_TYPE': followType,
+					'NAME': followName,
+					'FOLLOW_ITEM': followId
+				};
+			
+			CollectionService.follow(params);
+		};
+		
+		// 取消关注
+		$scope.unFollow = function(org, strType) {
+			var followedItem = null;
+			
+			if(!org.isInCollection) {
+				console.error('逻辑错误，只有已关注的组织才能取消关注!');
+				return;
+			}
+			
+			var orgs = $scope.collectionOrgs;
+			for(var i=0; i<orgs.length; i++) {
+				if(orgs[i].FOLLOW_ITEM == org.ID) {
+					followedItem = orgs[i];
+					break;
+				}
+			}
+			
+			CollectionService.unFollow(followedItem, strType);
+			
 		};
 		
 
@@ -1035,10 +1081,29 @@ app.controller('OrgStaffsCtrl', ['$scope', '$http', 'OrgSearch', 'CollectionServ
 			getOrgStaffs(newVal.ID);
 		}, true);
 		
+		// 获取已关注人员		
 		$scope.$watch(function() {
 			return CollectionService.getPersons();
 		}, function(newVal, oldVal) {
-			$scope.collectionPersons = newVal;
+			var persons = CollectionService.getPersons();			
+			$scope.collectionPersons = persons;
+			var pLens = persons.length;
+//			$scope.enterPress(null, 'btn');
+			var results = $scope.orgStaffs;
+			if(results && results.length > 0) {
+				var rLen = results.length;
+				for(var i=0; i<rLen; i++) {
+					results[i].isInCollection = false;
+					for(var j=0; j<pLens; j++) {
+						if(results[i].ID == persons[j].FOLLOW_ITEM) {
+							results[i].isInCollection = true;
+							break;
+						}
+					}
+				}
+				
+				$scope.orgStaffs = results;
+			}
 		}, true);
 		
 		var getOrgStaffs = function(selectedOrgId) {
@@ -1062,65 +1127,65 @@ app.controller('OrgStaffsCtrl', ['$scope', '$http', 'OrgSearch', 'CollectionServ
 					console.log('Get ' + orgStaffsUrl + ' wrong...');
 				});
 		};
+		
 		// 添加关注确认
-		$scope.collectionConfirm = function(user, strType) {
-			var urlAddCollection = '/service/followItem!saveEntity',
-				staffId = $rootScope.userInfo.ID,
+		$scope.follow = function(staff, strType) {
+			if(staff.isInCollection) {
+				console.error('逻辑错误，只有未关注的人员才能添加关注!');
+				return;
+			}
+			var staffId = $rootScope.userInfo.ID,
 				followType = 'STAFF',
-				followName = user.NAME,
-				followId = user.ID,
+				followName = staff.NAME,
+				followId = staff.ID,
 				params = {
 					'STAFF_ID': staffId,
 					'FOLLOW_TYPE': followType,
 					'NAME': followName,
 					'FOLLOW_ITEM': followId
 				};
-				
-			$http.post(urlAddCollection, params)
-				.success(function(data, status, headers, config) {
-					var searchResults = $scope.orgStaffs;
-					var iLen = searchResults.length;
-					for(var i=0; i<iLen; i++) {
-						if(searchResults[i].ID == followId) {
-							searchResults[i].isInCollection = true;
-							break;
-						}
-					}
-					CollectionService.addPerson(data.obj);
-				})
-				.error(function(data, status, headers, config) {
-					console.error(data);
-				});
-		};
-		// 人员详细信息
-		$scope.showStaffInfo = function(staff) {
 			
+			CollectionService.follow(params);
+		};
+		
+		// 取消关注
+		$scope.unFollow = function(staff, strType) {
+			var followedItem = null;
+			
+			if(!staff.isInCollection) {
+				console.error('逻辑错误，只有已关注的人员才能取消关注!');
+				return;
+			}
+			
+			var persons = $scope.collectionsPersons;
+			for(var i=0; i<persons.length; i++) {
+				if(persons[i].FOLLOW_ITEM == staff.ID) {
+					followedItem = persons[i];
+					break;
+				}
+			}
+			
+			CollectionService.unFollow(followedItem, strType);
+			
+		};
+		
+		// 人员详细信息
+		$scope.showStaffInfo = function(staff) {			
 			// 获取当前人在关注列表中的对象
-			var staffFollowItem = null;
+			var followedItem = null;
 			if(staff.isInCollection) {
 				var collectionsPersons = $scope.collectionPersons;
 				var iLen = collectionsPersons.length;
 				for(var i=0; i<iLen; i++) {
 					if(staff.ID == collectionsPersons[i].FOLLOW_ITEM) {
-						staffFollowItem = collectionsPersons[i];
+						followedItem = collectionsPersons[i];
 						break;
 					}
 				}
 			}
-//			var modalInstance = $modal.open({
-//				templateUrl: 'app/business/cam/staffdetail/staff-info.html',
-//				controller: 'StaffInfoCtrl',
-//				resolve: {
-//					modalParams: function() {
-//						var objParams = {
-//							staff: staff,
-//							staffFollowItem: staffFollowItem
-//						};
-//
-//						return objParams;		
-//					}
-//				}
-//			});
+			staff.followItem = followedItem;	
+			
+			OrgSearch.setStaff(staff);
 		};
 		
 		
@@ -1128,33 +1193,44 @@ app.controller('OrgStaffsCtrl', ['$scope', '$http', 'OrgSearch', 'CollectionServ
 ]);
 
 // 组织信息页签
-app.controller('OrgInfoCtrl', ['$scope', '$http', 'OrgSearch', 'CollectionService', '$rootScope', 
-	function($scope, $http, OrgSearch, CollectionService, $rootScope) {
+app.controller('OrgInfoCtrl', ['$scope', '$http', 'OrgSearch', 'CollectionService', '$rootScope', 'DataService', 
+	function($scope, $http, OrgSearch, CollectionService, $rootScope, DataService) {
 		$scope.orgInfo = {};
-		var selectedOrg = OrgSearch.getOrg();
+		$scope.selectedOrg = OrgSearch.getOrg();
 
-		var orgInfoUrl = '/service/orgUnit!queryOrgUnitInfoInCam?ID=' + selectedOrg.ID;
+		var orgInfoUrl = '/service/orgUnit!queryOrgUnitInfoInCam?ID=';
+		
+		$scope.$watch(function() {
+			return OrgSearch.getOrg();
+		}, function(newVal) {
+			$scope.selectedOrg = newVal;		
+			DataService.postData(orgInfoUrl + $scope.selectedOrg.ID)
+				.then(function(data) {
+					var orgUnit = data.obj.orgUnit;
+					// 判断组织是否已关注
+					var collectionOrgs = CollectionService.getOrgs();
+					for(var i=0; i<collectionOrgs.length; i++) {
+						if($scope.selectedOrg.ID == collectionOrgs[i].FOLLOW_ITEM) {
+							newVal.isInCollection = true;
+							newVal.collectionItem = collectionOrgs[i];
+							break;
+						}
+					}
+					
+					angular.extend(orgUnit, newVal);
+					$scope.orgInfo = orgUnit;
+				}, function(msg) {
+					console.log(msg);
+				});
+		}, true);
 
-		$http.post(orgInfoUrl)
+		$http.post(orgInfoUrl + $scope.selectedOrg.ID)
 			.success(function(data, status, headers, config) {
 				$scope.orgInfo = data.obj.orgUnit;
 				
-//				$scope.$watch(function() {
-//					return CollectionService.getAll();
-//				}, function(newVal, oldVal) {
-//					var orgs = CollectionService.getOrgs();
-//					for(var i=0; i<orgs.length; i++) {
-//						if(orgs[i].FOLLOW_ITEM == selectedOrg.ID) {
-//							$scope.collectionItem = orgs[i];
-//							$scope.orgInfo.isInCollection = true;
-//							break;
-//						}
-//					}
-//				}, true);
-				
 				var collectionOrgs = CollectionService.getOrgs();
 				for(var i=0; i<collectionOrgs.length; i++) {
-					if(selectedOrg.ID == collectionOrgs[i].FOLLOW_ITEM) {
+					if($scope.selectedOrg.ID == collectionOrgs[i].FOLLOW_ITEM) {
 						$scope.orgInfo.isInCollection = true;
 						$scope.collectionItem = collectionOrgs[i];
 						break;

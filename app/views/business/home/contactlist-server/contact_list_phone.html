@@ -1,16 +1,72 @@
 
 <style>
+	.text-8x {
+		font-size: 8em;
+	}
+	.contact-list-tab { 
+		font-size: 16px; 
+		padding-left: 30px; 
+		padding-right: 30px;
+		padding-top: 8px;
+		padding-bottom: 8px; 
+	}
+	.btn-danger-square {
+		background-color: #FFFFFF;
+		color: #F05050;
+		border: 1px solid #F05050;
+		border-radius: 4px;
+		min-width: 84px;
+	}
+	.btn-danger-square:hover {
+		color: #F05050;
+		border: 2px solid #F05050;
+	}
+	.btn-danger-square:active {
+		color: #F05050;
+	}
+	.btn-danger-square:visited {
+		color: #F05050;
+	}
+	.btn-primary-square {
+		color: #23B7E5;
+		background-color: #FFFFFF;
+		border: 1px solid #23B7E5;
+		min-width: 100px;
+	}
+	.btn-primary-square:hover {
+		color: #23B7E5;
+		border: 2px solid #23B7E5;
+	}
+	.w-80 {
+		width: 80px;
+	}
+	.bg-collection {
+		background-color: #DFEAEB;
+	}
+	.bg-sub-label {
+		height: 30px !important;
+		width: 30px;
+		padding: 5px;
+		display: inline-block !important;
+		margin: 5px 12px;
+	}
+	.color-white:hover {
+		color: #FFF;
+	}
+	.w-p-3 {
+		width: 33.3%;
+	}
 </style>
 <div ng-controller="contactListCtrl">
 	<!-- <div class="m-b-none">
 		<div class="bg-primary text-center text-2x">通讯录</div>
 	</div> -->
-	<div class="bg-white text-primary dker m-t-none p-xs m-b-sm">
+	<div class="bg-white dker m-t-none p-xs m-b-sm">
 		<div class="text-center">
 			<div class="btn-group">
-				<a class="btn b-primary text-primary r-3x" ng-class="{'btn-primary': contactListTabs[0]}" ng-click="tabsChange('0')" style="color: #23b7e5;">关&nbsp;&nbsp;注</a>
-				<a class="btn b-primary text-primary r-3x" ng-class="{'btn-primary': contactListTabs[1]}" ng-click="tabsChange('1')" style="color: #23b7e5;">找&nbsp;&nbsp;人</a>
-				<a class="btn b-primary text-primary r-3x" ng-class="{'btn-primary': contactListTabs[2]}" ng-click="tabsChange('2')" style="color: #23b7e5;">找组织</a>
+				<a class="btn b-primary text-primary text-md r-3x contact-list-tab" ng-class="{'btn-primary': contactListTabs[0]}" ng-click="tabsChange('0')" style="color: #23b7e5;">关&nbsp;&nbsp;注</a>
+				<a class="btn b-primary text-primary text-md r-3x contact-list-tab" ng-class="{'btn-primary': contactListTabs[1]}" ng-click="tabsChange('1')" style="color: #23b7e5;">找&nbsp;&nbsp;人</a>
+				<a class="btn b-primary text-primary text-md r-3x contact-list-tab" ng-class="{'btn-primary': contactListTabs[2]}" ng-click="tabsChange('2')" style="color: #23b7e5;">找组织</a>
 				<!-- <a class="btn btn-lg b-primary text-primary r-3x" ng-class="{'btn-primary': contactListTabs[3]}" ng ng-click="tabsChange('3')">组织树</a> -->
 			</div>
 		</div>

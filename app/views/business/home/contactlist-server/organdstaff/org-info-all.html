@@ -1,30 +1,40 @@
 
 <modal-box is-btn-cancel="false">
-	<div class="font-bold text-title p-t-sm">
-		<ul class="breadcrumb bg-primary m-b-xs">
+	<div class="text-title p-t-sm padder-xs">
+		<ul class="breadcrumb text-primary m-b-xs">
 			<li ng-repeat="org in orgAndFatherOrgs track by $index" ng-class="{'active': $last}">
-				<a href="" ng-click="showOrgInfo(org)">{{ org.ORG_UNIT_SHORT_NAME }}</a>
+				<a href="" class="text-md text-primary" ng-click="showOrgInfo(org)">{{ org.ORG_UNIT_SHORT_NAME }}</a>
 			</li>
 		</ul>
 	</div>
-	<div class="p-xs">
+	<div class="padder-xs">
 		<conow-tabs>
-			<conow-tabs-titles>
+	<conow-tabs-titles theme="3" class="">
+		<conow-tabs-titles-diy show="true" class="w-p-3 m-n" class-a="bg-white">
+			<span class="text-base font-bold">下级组织</span>
+		</conow-tabs-titles-diy>
+		<conow-tabs-titles-diy class="w-p-3 m-n" class-a="bg-white">
+			<span class="text-base font-bold">人员信息</span>
+		</conow-tabs-titles-diy>
+		<conow-tabs-titles-diy class="w-p-3 m-n" class-a="bg-white">
+			<span class="text-base font-bold">组织信息</span>
+		</conow-tabs-titles-diy>
+	</conow-tabs-titles>
+			<!-- <conow-tabs-titles>
 				<conow-tabs-titles-text title="下级组织" show="true"></conow-tabs-titles-text>
 				<conow-tabs-titles-text title="人员信息"></conow-tabs-titles-text>
 				<conow-tabs-titles-text title="组织信息"></conow-tabs-titles-text>
-			</conow-tabs-titles>
-			<!-- app/business/cam/organdstaff -->
+			</conow-tabs-titles> -->
 			<conow-tabs-content>
-				<conow-tabs-content-url url="views/business/home/contactlist-server/organdstaff/child-orgs.html"></conow-tabs-content-url>
-				<conow-tabs-content-url url="views/business/home/contactlist-server/organdstaff/org-staffs.html"></conow-tabs-content-url>
-				<conow-tabs-content-url url="views/business/home/contactlist-server/organdstaff/org-info.html"></conow-tabs-content-url>
+				<conow-tabs-content-url url="app/business/cam/organdstaff/child-orgs.html"></conow-tabs-content-url>
+				<conow-tabs-content-url url="app/business/cam/organdstaff/org-staffs.html"></conow-tabs-content-url>
+				<conow-tabs-content-url url="app/business/cam/organdstaff/org-info.html"></conow-tabs-content-url>
 			</conow-tabs-content>
 		</conow-tabs>
 	
-		<div class="m-t-sm text-center">
+		<!-- <div class="m-t-sm text-center">
 			<button class="btn btn-primary-square r-3x text-base" ng-click="backContactlist()">返回通讯录列表</button>
-		</div>
+		</div> -->
 	</div>
 
 </modal-box>

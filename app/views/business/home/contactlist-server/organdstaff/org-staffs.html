@@ -1,47 +1,29 @@
 
-<style>
-	.b-split {
-		border-color: #dcedf5;
-	}
-	.btn-danger-square {
-		background-color: #FFFFFF;
-		color: #F05050;
-		border: 1px solid #F05050;
-	}
-	.btn-danger-square:hover {
-		color: #F05050;
-		font-weight: bold;
-		border: 2px solid #F05050;
-	}
-	
-</style>
-
 <div ng-controller="OrgStaffsCtrl">
 	<div class="m-t">
-		<div ng-repeat="staff in orgStaffs track by $index">
-			<div class="hbox padder">
-				<!-- <a class="col col-xs-8 padder-sm v-middle" ng-click="showStaffInfo(staff)">
-					<span class="col inline text-base">{{ staff.NAME }}</span>
-					<small class="col inline m-l">{{ staff.JOBS_ID_HR_JOBS_INFO }}</small>
-				</a> -->
-				<a conow-modal 
-	               full="true"
-	               size="lg"
-				   url="app/business/cam/staffdetail/staff-info.html" 
-				   controls="StaffInfoCtrl" 
-				   ng-click="showStaffInfo(staff, 'staff')" 
-				   class="v-middle padder-v-xs"
-				>
-					<span class="col inline text-base">{{ staff.NAME }}</span>
-					<small class="col inline m-l">{{ staff.JOBS_ID_HR_JOBS_INFO }}</small>
-				</a>
-				<!-- <a class="btn pull-right btn-danger-square" ng-click="collectionConfirm(staff)">关注</a> -->
-				<div class="col v-middle m-r-md">
-					<a class="btn btn-danger-square pull-right v-middle" ng-show="!staff.isInCollection" ng-click="collectionConfirm(staff, 'add')">关注</a>
-					<a class="btn pull-right btn-danger-square2" ng-show="staff.isInCollection" ng-click="">已关注</a>
+		<div ng-if="orgStaffs.length == 0">
+			<span class="text-md font-bold p-sm">没有对应的人员信息</span>
+		</div>
+		<div ng-if="orgStaffs.length > 0">
+			<div ng-repeat="staff in orgStaffs track by $index">
+				<div class="hbox p-sm b-b">
+					<a conow-modal 
+		               full="true"
+		               size="lg"
+					   url="app/business/cam/staffdetail/staff-info.html" 
+					   controls="StaffInfoCtrl" 
+					   ng-click="showStaffInfo(staff, 'staff')" 
+					   class="p-l-sm"
+					>
+						<span class="text-md">{{ staff.NAME }}</span>
+						<span class="m-l text-base">{{ staff.JOBS_ID_HR_JOBS_INFO }}</span>
+					</a>
+					<div class="col col-p-sm v-middle m-r-md">
+						<a class="btn btn-danger-square pull-right v-middle" ng-show="!staff.isInCollection" ng-click="follow(staff, 'staff')">关注</a>
+						<a class="btn pull-right btn-danger-square" ng-show="staff.isInCollection" ng-click="unFollow(staff, 'staff')">取消关注</a>
+					</div>
 				</div>
 			</div>
-			<hr class="b-b b-split">
 		</div>
 	</div>
 </div>

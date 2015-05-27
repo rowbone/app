@@ -1,36 +1,22 @@
 
-<style>
-	.b-split {
-		border-color: #dcedf5;
-	}
-	.btn-danger-square {
-		background-color: #FFFFFF;
-		color: #F05050;
-		border: 1px solid #F05050;
-	}
-	.btn-danger-square:hover {
-		color: #F05050;
-		font-weight: bold;
-		border: 2px solid #F05050;
-	}
-	
-</style>
-
 <div ng-controller="ChildOrgsCtrl">
 	<div class="m-t">
-		<div ng-repeat="org in orgs track by $index">
-			<div class="hbox padder">
-				<a ng-click="showOrgInfo(org)">
-					<span class="col-xs-8 text-base">{{ org.ORG_UNIT_NAME }}</span>
-				</a>
-				<!-- <a class="btn pull-right btn-danger-square padder-md" ng-click="collectionConfirm(org, 'add')">关注</a> -->
-				
-				<div class="col v-middle m-r-md">
-					<a class="btn btn-danger-square pull-right v-middle" ng-show="!org.isInCollection" ng-click="collectionConfirm(org, 'add')">关注</a>
-					<a class="btn pull-right btn-danger-square2" ng-show="org.isInCollection" ng-click="">已关注</a>
+		<div ng-if="orgs.length == 0">
+			<span class="text-md font-bold p-sm">没有对应的下级组织信息</span>
+		</div>
+		<div ng-if="orgs.length > 0">		
+			<div ng-repeat="org in orgs track by $index">
+				<div class="hbox p-sm b-b">					
+					<a ng-click="showOrgInfo(org)" class="p-l-sm">
+						<span class="text-md">{{ org.ORG_UNIT_NAME }}</span>
+					</a>
+					
+					<div class="col col-p-sm v-middle m-r-md">
+						<a class="btn btn-danger-square pull-right v-middle" ng-show="!org.isInCollection" ng-click="follow(org, 'org')">关注</a>
+						<a class="btn pull-right btn-danger-square" ng-show="org.isInCollection" ng-click="unFollow(org, 'org')">取消关注</a>
+					</div>
 				</div>
 			</div>
-			<hr class="b-b b-split">
 		</div>
 	</div>
 </div>
