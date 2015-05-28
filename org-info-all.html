@@ -1,0 +1,46 @@
+<style>
+		.breadcrumb > li + li:before {
+		  padding: 0 5px;
+		  color: #ccc;
+		  content: " ";
+		}		
+		.bg-breadcrumb {
+			background-color: #54586a;
+		}	
+		.breadcrumb-divider {
+		  position: relative;
+		  background-color: #54586a;
+		  width: 10px;
+		  height: 45px;
+		  display: inline-block;
+		  vertical-align: middle;
+		}
+		.arrow-right {
+			width: 0; 
+			height: 0; 
+			border-top: 23px solid transparent;
+			border-bottom: 23px solid transparent;	
+			border-left: 10px solid white;
+		  	position: absolute;
+		  	display: inline-block;
+		}		
+		.arrow-right2 {
+			border-top: 22px solid transparent;
+			border-bottom: 22px solid transparent;			
+			border-left: 9px solid #54586a;
+		  	z-index: 2;
+		  	top: 1px;
+		  	display: inline-block;
+		}
+	</style>
+	<div class="text-title p-t-sm padder-xs">
+		<ul class="breadcrumb bg-primary bg-breadcrumb mo-b-xs no-padder">
+			<li ng-repeat="org in orgAndFatherOrgs track by $index" ng-class="{'active': $last, 'p-l-sm': $first}">
+				<a href="" class="text-base v-middle inline a-breadcrumb padder-v" ng-click="showOrgInfo(org)">{{ org.ORG_UNIT_SHORT_NAME }}</a>
+				<span class="breadcrumb-divider" ng-class="{'hidden': $last}">
+					<span class="arrow-right arrow-right2"></span>
+					<span class="arrow-right"></span>
+				</span>
+			</li>
+		</ul>
+	</div>
