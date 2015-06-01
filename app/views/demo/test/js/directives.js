@@ -1,10 +1,15 @@
 'use strict';
 
-app.directive('MyDirect', ['$filter', function($filter) {
-	return {
-		templateUrl: 'my-direct.html'
+app.directive('myDirect', ['$filter', 
+	function($filter) {
+		return {
+			templateUrl: 'views/demo/test/tpls/my-direct.html',
+			link: function(scope, elem, attrs) {
+				console.log('in my-direct linking...');
+			}
+		}
 	}
-}]);
+]);
 
 // app.directive('MyDirect', ['$filter', 
 // 	function($filter) {
