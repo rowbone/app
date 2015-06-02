@@ -17,6 +17,14 @@ app.controller('SweetAlertCtrl', ['$scope', 'SweetAlert', 'OperationService',
       console.log(data);
     };
 
+    var cancelFunc = function() {
+      console.log('This is the cancel callback function...');
+    };
+
+    $scope.alertHtml = function() {
+      OperationService.alertHtml();
+    };
+
     $scope.interAction = function() {
 
       OperationService.interAction({
@@ -28,7 +36,8 @@ app.controller('SweetAlertCtrl', ['$scope', 'SweetAlert', 'OperationService',
         'isSuccessBack': false,
         'redirectState': 'app.home.contactlist2',
         successFunc: successFunc,
-        errorFunc: errorFunc
+        errorFunc: errorFunc,
+        cancelFunc: cancelFunc
       });
     };
 
@@ -209,12 +218,15 @@ app.service('OperationService', ['$http', '$state', '$timeout', 'SweetAlert', 'D
       } else {
         options.isSuccessBack = true;
       }
-      // 操作成功/失败回调方法
+      // 操作成功/失败/取消回调方法
       if(angular.isDefined(params.successFunc) && angular.isFunction(params.successFunc)) {
         options.successFunc = params.successFunc;
       }
       if(angular.isDefined(params.errorFunc) && angular.isFunction(params.errorFunc)) {
         options.errorFunc = params.errorFunc;
+      }
+      if(angular.isDefined(params.cancelFunc) && angular.isFunction(params.cancelFunc)) {
+        options.cancelFunc = params.cancelFunc;
       }
       // 提示按钮文字
       if(angular.isDefined(params.confirmBtnText) && params.confirmBtnText != '') {
@@ -310,6 +322,9 @@ app.service('OperationService', ['$http', '$state', '$timeout', 'SweetAlert', 'D
               interFunc();
             } else {
               // 
+              if(angular.isFunction(options.cancelFunc)) {
+                (options.cancelFunc)();
+              }
             }
           }
         );
@@ -317,6 +332,29 @@ app.service('OperationService', ['$http', '$state', '$timeout', 'SweetAlert', 'D
         // 直接调用后台接口
         interFunc();
       }
+    };
+
+    var func = function() {
+      console.log('This is hasDoneFunction test');
+    };
+
+    // 弹框中有 html 代码
+    this.alertHtml = function(params) {
+      swalUserParams = {
+        title: 'swal <small>html</small>',
+        // text: '<span class="text-danger">11111111</span>',
+        html: true,
+        showCancelButton: true,
+        type: 'prompt',
+        inputType: 'radio',
+        inputPlaceholder: "请输入金额",
+        allowOutsideClick: true,
+        hasDoneFunction: func
+      };
+      SweetAlert.swal(angular.extend({}, swalParams, swalUserParams),
+        function(isConfirm) {
+          console.log(isConfirm);
+        });
     };
 
     // Alert
