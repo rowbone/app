@@ -21,9 +21,6 @@
 					
 					<form class="form" name="sweetalertform">
 						<div class="form-group">
-							<label for="" ng-class="{'text-danger': entity.color}">{{ entity.name }}</label>
-						</div>
-						<div class="form-group">
 							<label for="" class="control-label">调用之前有提示信息，成功不返回</label>
 							<button class="btn btn-info" ng-click="interAction()">调用后台数据</button>
 						</div>
@@ -60,25 +57,10 @@
 							<label for="" class="control-label">弹出框包含 html</label>
 							<button type="button" class="btn btn-primary" ng-click="alertHtml()">alert html</button>
 						</div>
-						<div class="form-group">
-							更新所有日志？
-							<!-- <label for="">
-								<input type="checkbox" name="isConfirm" value="yes">
-							</label> -->
-
-							<div>
-								<label class="checkbox i-checks i-checks">
-							    <input type="radio" name="DATA_ENABLE" value="NA"><i></i>是
-								</label>
-								<label class="i-checks i-checks">
-							    <input type="radio" name="DATA_ENABLE" value="NA"><i></i>否
-								</label>
-							</div>
-								
-						</div>
 
 					</form>
 				</div>
+				<div class="panel-footer">Based by sweet-alert and ngSweetAlert</div>
 			</div>
 		</div>
 
@@ -92,11 +74,18 @@
 						<li><code>controller</code> 注入服务 <code>OperationService</code></li>
 						<li>参数说明
 							<ul class="list-unstyled">
-								<li>showConfirm: boolean, // 是否提示[调用后台接口前，以及操作成功的提示]，默认为 true</li>
-								<li>actionUrl: '',  // 操作对应的后台接口[必填]</li>
-								<li>data: '',  			// 需要提交到后台的参数数据</li>
-								<li>isSuccessBack: true, // 操作成功是否返回</li>
-								<li>redirectState: 'app.home'   // 操作成功的重定向地址(state跳转，isSuccessBack为false时起作用)</li>
+	  							<li>confirmTitle: '',            // 调用后台接口前的提示信息</li>
+	  							<li>confirmText: '',</li>
+	  							<li>successTitle: '',            // 操作成功时的提示信息</li>
+	  							<li>successText: '',</li>
+							  	<li>errorTitle: '',           // 操作失败时的提示信息</li> 
+	  							<li>errorText: '',</li>
+							  	<li>actionUrl: '',              // 操作对应的后台接口</li>
+							  	<li>data: {},                   // 提交到后台的数据</li>
+							  	<li>isSuccessBack: true,        // 操作成功是否返回</li>
+							  	<li>redirectState: 'app.home'   // 操作成功的重定向地址(state跳转，isSuccessBack为false时起作用)</li>
+							  	<li>successFunc: func,          // 操作成功的回调方法</li>
+							  	<li>errorFunc: func              // 操作失败的回调方法</li>								
 							</ul>
 						</li>
 						<li>示例
@@ -141,10 +130,58 @@ OperationService.interAction({
 <p>OperationService.alertAction('这里是提示信息');</p>
 <p>或者 OperationService.alertAction({alertMsg: '这里是提示信息'});</p>
         				</li>
+        				<li>日程：[是否更新所有相同日程]
+<pre>
+OperationService.alertHtml({
+  callback: callbackFunc,
+  yesUrl: '/home',
+  noUrl: '/home',
+  confirmTitle: '这里是操作提示！'
+});
+</pre>
+        				</li>
 							</ol>
 						</li>
 					</ol>
 				</div>
+			</div>
+		</div>
+
+		<div class="col-sm-12 col-md-6">
+			<div class="panel panel-info">
+				<div class="panel-heading">
+					<div class="panel-title">适用场景</div>
+				</div>
+				<div class="panel-body">
+					<ol>
+						<li>页面的保存、删除操作</li>
+						<li>涉及工作流的提交操作的调用方法：
+						<code>workflowService.submitWorkflow("expenseLabor",$scope.paramWorkflow,"")</code>，中的第三个参数为空，则操作成功会直接返回（一般是返回列表），如果给定重定向地址state，则会重定向</li>
+					</ol>
+
+				</div>
+			</div>
+		</div>
+		
+		<div class="col-sm-12 col-md-6">
+			<div class="panel panel-danger">
+				<div class="panel-heading">
+					<div class="panel-title">待解决问题</div>
+				</div>
+				<div class="panel-body">
+					<ol>
+						<li>更新日程需要增加“是否更新所有相同日程”的选项</li>
+					</ol>
+				</div>
+			</div>
+		</div>
+
+		<div class="col-sm-12 col-md-6">
+			<div class="panel panel-info">
+				<div class="panel-heading">
+					<div class="panel-title">维护日志</div>
+				</div>
+				<div class="panel-body"></div>
 			</div>
 		</div>
 	</div>

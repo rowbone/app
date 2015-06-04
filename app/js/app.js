@@ -1,6 +1,7 @@
 'use strict';
 
 var app = angular.module('demoApp', [
+	'ngAnimate',
 	'ngStorage',
 	'ui.router',
 	'ui.bootstrap',
@@ -14,6 +15,7 @@ var app = angular.module('demoApp', [
 	'app.form',
 	'app.directives',
 	'conow.validator',
+	'toaster',
 	'app.angular',
 	'app.components',
 	'conow.datepicker',

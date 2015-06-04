@@ -3,11 +3,6 @@
 app.controller('SweetAlertCtrl', ['$scope', 'SweetAlert', 'OperationService', 
   function($scope, SweetAlert, OperationService) {
 
-    var entity = $scope.entity = {
-      'name': 'abc',
-      'color': '12'
-    };
-
     // 返回
     $scope.goBack = function() {
       OperationService.goBack();
@@ -28,24 +23,17 @@ app.controller('SweetAlertCtrl', ['$scope', 'SweetAlert', 'OperationService',
     };
 
     $scope.alertHtml = function() {
-      var callbackFunc = function(msg) {
+      var callbackFunc = function(data) {
         // console.log('This is the alertHtml callback function... -->', msg);
 
-        if(msg === false) {
-          console.log('boolean false');
-        } else if(msg === 'yes') {
-          console.log('msg yes');
-
-          $scope.interAction2();
-        } else if(msg === 'no') {
-          console.log('msg no');
-        }
+        console.log('alertHtml callbackFunc-->', data);
       };
 
       var params = {
         callback: callbackFunc,
         yesUrl: '/home',
-        noUrl: '/home'
+        noUrl: '/home',
+        confirmTitle: '这里是操作提示！'
       };
       OperationService.alertHtml(params);
     };
@@ -363,9 +351,9 @@ app.service('OperationService', ['$http', '$state', '$timeout', 'SweetAlert', 'D
       console.log('This is hasDoneFunction test');
     };
 
-
     // 弹框中有 html 代码
     this.alertHtml = function(params) {
+console.log('in alertHtml-->', params);
       // var alertText = '<span class="text-md font-bold">更新所有重复日志?</span><label class="i-checks m-l-sm"><input type="radio" tabIndex="3" name="isConfirm" value="yes" checked="false" /><i></i>是</label><label class="i-checks m-l-sm"><input type="radio" tabIndex="3" name="isConfirm" value="no" checked="false" /><i></i>否</label>';
       var alertTextPrefix = '<span class="text-md font-bold">';
       var alertTextAfter = '</span><label class="i-checks m-l-sm"><input type="radio" tabIndex="3" name="isConfirm" value="yes" checked="false" /><i></i>是</label><label class="i-checks m-l-sm"><input type="radio" tabIndex="3" name="isConfirm" value="no" checked="false" /><i></i>否</label>';
@@ -376,8 +364,9 @@ app.service('OperationService', ['$http', '$state', '$timeout', 'SweetAlert', 'D
         title: params.confirmTitle || '操作确认',
         text: alertText,
         html: true,
-        showCancelButton: true,
-        allowOutsideClick: true,
+        showCancelButton: true
+        // ,
+        // allowOutsideClick: true,
         // hasDoneFunction: func,
       };
 
@@ -387,15 +376,53 @@ app.service('OperationService', ['$http', '$state', '$timeout', 'SweetAlert', 'D
             if(params.yesUrl) {
               DataService.postData(params.yesUrl)
                 .then(function(data) {
+                  console.log('yes...');
                   console.log(data);
+          
+                  if(params.callback && angular.isFunction(params.callback)) {
+                    (params.callback)(data);
+                  }
                 }, function(msg) {
                   console.log(msg);
                 });
             }
-          }
-          
-          if(params.callback && angular.isFunction(params.callback)) {
-            (params.callback)(isConfirm);
+          } else if(isConfirm === 'no') {
+            if(params.noUrl) {
+              DataService.postData(params.noUrl)
+                .then(function(data) {
+                  console.log('no')
+                  console.log(data);
+
+                  if(angular.isDefined(params.successTitle) && params.successTitle === '') {
+                    // 
+                  } else {
+                    swalUserParams = {
+                      type: 'success',
+                      title: params.successTitle || '操作成功',
+                      text: params.successText || '',
+                      timer: timer
+                    }
+
+                    SweetAlert.swal(angular.extend({}, swalParams, swalUserParams));
+                  }
+        
+                  // if(params.callback && angular.isFunction(params.callback)) {
+                  //   (params.callback)(data);
+                  // }
+                }, function(msg) {
+                  console.log(msg);
+                    swalUserParams = {
+                      type: 'error',
+                      title: params.errorTitle || '操作失败',
+                      text: params.errorTitle || '',
+                      timer: timer
+                    }
+
+                    SweetAlert.swal(angular.extend({}, swalParams, swalUserParams));
+                });
+            }
+          } else if(isConfirm === false) {
+            console.log('cancel...');
           }
         });
     };
