@@ -2,6 +2,12 @@
 
 app.controller('SweetAlertCtrl', ['$scope', 'SweetAlert', 'OperationService', 
   function($scope, SweetAlert, OperationService) {
+
+    var entity = $scope.entity = {
+      'name': 'abc',
+      'color': '12'
+    };
+
     // 返回
     $scope.goBack = function() {
       OperationService.goBack();
@@ -22,7 +28,26 @@ app.controller('SweetAlertCtrl', ['$scope', 'SweetAlert', 'OperationService',
     };
 
     $scope.alertHtml = function() {
-      OperationService.alertHtml();
+      var callbackFunc = function(msg) {
+        // console.log('This is the alertHtml callback function... -->', msg);
+
+        if(msg === false) {
+          console.log('boolean false');
+        } else if(msg === 'yes') {
+          console.log('msg yes');
+
+          $scope.interAction2();
+        } else if(msg === 'no') {
+          console.log('msg no');
+        }
+      };
+
+      var params = {
+        callback: callbackFunc,
+        yesUrl: '/home',
+        noUrl: '/home'
+      };
+      OperationService.alertHtml(params);
     };
 
     $scope.interAction = function() {
@@ -338,22 +363,40 @@ app.service('OperationService', ['$http', '$state', '$timeout', 'SweetAlert', 'D
       console.log('This is hasDoneFunction test');
     };
 
+
     // 弹框中有 html 代码
     this.alertHtml = function(params) {
+      // var alertText = '<span class="text-md font-bold">更新所有重复日志?</span><label class="i-checks m-l-sm"><input type="radio" tabIndex="3" name="isConfirm" value="yes" checked="false" /><i></i>是</label><label class="i-checks m-l-sm"><input type="radio" tabIndex="3" name="isConfirm" value="no" checked="false" /><i></i>否</label>';
+      var alertTextPrefix = '<span class="text-md font-bold">';
+      var alertTextAfter = '</span><label class="i-checks m-l-sm"><input type="radio" tabIndex="3" name="isConfirm" value="yes" checked="false" /><i></i>是</label><label class="i-checks m-l-sm"><input type="radio" tabIndex="3" name="isConfirm" value="no" checked="false" /><i></i>否</label>';
+      var alertText = params.confirmText || '更新所有重复日志?';
+      alertText = alertTextPrefix + alertText + alertTextAfter;
+
       swalUserParams = {
-        title: 'swal <small>html</small>',
-        // text: '<span class="text-danger">11111111</span>',
+        title: params.confirmTitle || '操作确认',
+        text: alertText,
         html: true,
         showCancelButton: true,
-        type: 'prompt',
-        inputType: 'radio',
-        inputPlaceholder: "请输入金额",
         allowOutsideClick: true,
-        hasDoneFunction: func
+        // hasDoneFunction: func,
       };
+
       SweetAlert.swal(angular.extend({}, swalParams, swalUserParams),
         function(isConfirm) {
-          console.log(isConfirm);
+          if(isConfirm === 'yes') {
+            if(params.yesUrl) {
+              DataService.postData(params.yesUrl)
+                .then(function(data) {
+                  console.log(data);
+                }, function(msg) {
+                  console.log(msg);
+                });
+            }
+          }
+          
+          if(params.callback && angular.isFunction(params.callback)) {
+            (params.callback)(isConfirm);
+          }
         });
     };
 

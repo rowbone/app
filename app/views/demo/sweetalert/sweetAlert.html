@@ -21,6 +21,9 @@
 					
 					<form class="form" name="sweetalertform">
 						<div class="form-group">
+							<label for="" ng-class="{'text-danger': entity.color}">{{ entity.name }}</label>
+						</div>
+						<div class="form-group">
 							<label for="" class="control-label">调用之前有提示信息，成功不返回</label>
 							<button class="btn btn-info" ng-click="interAction()">调用后台数据</button>
 						</div>

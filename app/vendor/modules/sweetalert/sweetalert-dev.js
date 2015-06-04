@@ -397,9 +397,21 @@ var handleButton = function handleButton(event, params, modal) {
 var handleConfirm = function handleConfirm(modal, params) {
   var callbackValue = true;
 
-  if (_hasClass$isDescendant.hasClass(modal, 'show-input')) {
-    callbackValue = modal.querySelector('input').value;
+  if(params.html) {
+    var $inputs = modal.querySelectorAll('[name="isConfirm"]');
+    if($inputs.length === 2) {
+      if($inputs[0].checked) {
+        callbackValue = 'yes';
+      } else if($inputs[1].checked) {
+        callbackValue = 'no';
+      }
+    }
+  }
 
+  if (_hasClass$isDescendant.hasClass(modal, 'show-input')) {
+  
+    callbackValue = modal.querySelector('input').value;
+      
     if (!callbackValue) {
       callbackValue = '';
     }
@@ -900,8 +912,8 @@ var injectedHTML =
 "<div class=\"sa-icon sa-success\">\n      <span class=\"sa-line sa-tip\"></span>\n      <span class=\"sa-line sa-long\"></span>\n\n      <div class=\"sa-placeholder\"></div>\n      <div class=\"sa-fix\"></div>\n    </div>" + "<div class=\"sa-icon sa-custom\"></div>" +
 
 // Title, text and input
-// "<h2>Title</h2>\n    <p>Text</p>\n    <fieldset>\n      <input type=\"text\" tabIndex=\"3\" />\n      <div class=\"sa-input-error\"></div>\n    </fieldset>" +
-"<h2>Title</h2>\n    <p>Text</p>\n    <fieldset>\n      更新所有重复日志?<label class='i-checks'><input type=\"radio\" tabIndex=\"3\" name='isConfirm' value='yes' /><i></i>是</label><label class='i-checks'><input type=\"radio\" tabIndex=\"3\" name='isConfirm' value='no' /><i></i>否</label>\n      <div class=\"sa-input-error\"></div>\n    </fieldset>" +
+"<h2>Title</h2>\n    <p>Text</p>\n    <fieldset>\n      <input type=\"text\" tabIndex=\"3\" />\n      <div class=\"sa-input-error\"></div>\n    </fieldset>" +
+// "<h2>Title</h2>\n    <p>Text</p>\n    <fieldset>\n      <span class='text-md font-bold'>更新所有重复日志?</span><label class='i-checks m-l-sm'><input type=\"radio\" tabIndex=\"3\" name='isConfirm' value='yes' checked='false' /><i></i>是</label><label class='i-checks m-l-sm'><input type=\"radio\" tabIndex=\"3\" name='isConfirm' value='no' checked='false' /><i></i>否</label>\n      <div class=\"sa-input-error\"></div>\n    </fieldset>" +
 
 // Input errors
 "<div class=\"sa-error-container\">\n      <div class=\"icon\">!</div>\n      <p>Not valid!</p>\n    </div>" +
@@ -998,7 +1010,6 @@ var setParameters = function setParameters(params) {
       }
 
       var $input = _getModal$getInput$setFocusStyle.getInput();
-console.log('$input1111111111111-->', $input);
       // Animate icon
       switch (params.type) {
 
@@ -1143,6 +1154,11 @@ console.log('$input1111111111111-->', $input);
    * Timer
    */
   modal.setAttribute('data-timer', params.timer);
+
+  /*
+   * checkbox
+   */
+
 };
 
 exports['default'] = setParameters;
