@@ -11,3 +11,5 @@ ui-router 传参说明：
 	state('app.oa.chat', {
 		url: '/chat/:staffId/:content'
 	})
+
+	$state.go('app.oa.chat', {'staffId': $scope.staff.ID})
