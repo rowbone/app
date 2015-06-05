@@ -1,7 +1,7 @@
 'use strict';
 
-app.controller('ExecFuncInServiceCtrl', ['$scope', 'ExecFuncService', 'foo', '$log', 
-	function($scope, ExecFuncService, foo, $log) {
+app.controller('ExecFuncInServiceCtrl', ['$scope', 'ExecFuncService', 'foo', '$log', 'DataService', 
+	function($scope, ExecFuncService, foo, $log, DataService) {
 		$scope.entity = {
 			'email': 'abc111@email.com',
 			'sex': 'female'
@@ -117,8 +117,27 @@ app.controller('DeferAndPromiseCtrl', ['$scope', 'DataService',
 	function($scope, DataService) {
 		// 
 
-		$scope.$watch(function() {
-			return DateService.getData('')
-		});
+		// $scope.$watch(function() {
+		// 	return DateService.getData('')
+		// });
+	}
+]);
+
+app.controller('DataGenerateCtrl', ['$scope', 'DataService', 
+	function($scope, DataService) {
+		//
+		$scope.entity = {
+			// 'sex': 'male'
+		};
+
+		$scope.generateData = function() {console.log(DataService);
+			DataService.getData('/dataGenerate/scroll?name=123')
+				.then(function(data) {
+					console.log(data);
+				}, function(msg) {
+					console.log('msg-->', msg);
+				});
+		};
+
 	}
 ]);

@@ -263,10 +263,16 @@ app.service('OperationService', ['$http', '$state', '$timeout', 'SweetAlert', 'D
                 type: 'success',
                 timer: userTimer
               };
-              SweetAlert.swal(angular.extend({}, swalParams, swalUserParams));
+              SweetAlert.swal(angular.extend({}, swalParams, swalUserParams), 
+                function(isConfirm) {console.log('isConfirm--->', isConfirm)
+                  if(isConfirm) {
+                    userTimer = 0;
+                  }
+                });
             } else {
               // 
             }
+console.log('userTimer-->', userTimer);
             if(angular.isFunction(options.successFunc)) {
               (options.successFunc)(data);
             }
