@@ -1,2 +1,97 @@
+<style>
+	/*.avatar { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; word-wrap: normal; display: inline-block; box-sizing: border-box;}
+	.avatar>div { width: 100%; height: 100%; }
+	.avatar .avatar-text { width: 38px; height: 38px; display: table-cell; vertical-align: middle; text-align: center; color: #fff; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; font-size: 13px; }*/
+	.thumb-contact-list { width: 50px; height: 50px; }
+</style>
+<div ng-controller="contactlistCtrlNew">
+	<div class="bg-white padder-sm contact-list">
+		<div class="hbox padder-v-sm">
+			<div class="col">
+				<div class="text-base text-primary font-bold">组织架构</div>
+			</div>
+		</div>
+		<div class="hbox b-b padder-v-xs">
+			<div class="col col-xxs v-middle">
+				<i class="fa fa-sitemap"></i>
+			</div>
+			<div class="col">
+				<div class="text-md font-bold">{{ orgUnitInfo.orgUnitName }}</div>
+				<div class="text-base">法人组织</div>
+			</div>
+			<div class="col v-middle pull-right text-2x">
+				<i class="fa fa-angle-right"></i>
+			</div>
+		</div>
+		<div class="hbox b-b padder-v-xs">
+			<div class="col col-xxs v-middle p-l-sm">
+				<i class="fa fa-minus"></i>
+			</div>
+			<div class="col">
+				<div class="text-md font-bold">{{ orgUnitInfo.orgUnitName }}</div>
+				<div class="text-base">我的部门</div>			
+			</div>
+			<div class="col v-middle pull-right text-2x">
+				<i class="fa fa-angle-right"></i>
+			</div>
+		</div>
+		<div class="hbox b-b padder-v-xs">
+			<div class="col col-xxs v-middle p-l-sm">
+				<i class="fa fa-minus"></i>
+			</div>
+			<div class="col">
+				<div class="text-md font-bold">开发</div>
+				<div class="text-base">兼任的部门</div>			
+			</div>
+			<div class="col v-middle pull-right text-2x">
+				<i class="fa fa-angle-right"></i>
+			</div>
+		</div>
+		<div class="hbox b-b padder-v-xs">
+			<div class="col col-xxs v-middle p-l-sm">
+				<i class="fa fa-minus"></i>
+			</div>
+			<div class="col">
+				<div class="text-md font-bold">中国科学院</div>
+				<div class="text-base">全院机构</div>			
+			</div>
+			<div class="col v-middle pull-right text-2x">
+				<i class="fa fa-angle-right"></i>
+			</div>
+		</div>
+	</div>
 
-<div class="hbox padder-md">org-tree</div>
+	<div class="bg-white padder-sm recent-contacts m-t-sm">
+		<div class="hbox padder-v-sm">
+			<div class="col">
+				<div class="text-base text-primary font-bold">常用联系人</div>
+			</div>
+		</div>
+		<!-- <ul>
+			<li class="list-group-item" ng-repeat="staff in recentContacts track by $index">
+				<div class="hbox">
+					<div class="col avatar thumb-contact-list m-r bg-primary">
+						<div class="v-middle text-center">
+							<div class="text-ellipsis padder-v">{{ staff.nick }}</div>
+						</div>
+					</div>
+					<div class="col v-middle padder-sm text-sm text-muted">
+						<div>
+							<a href="" class="text-md">{{ staff.name }}</a>
+						</div>
+						<div class="text-ellipsis m-t-xs">{{ staff.org }}</div>
+					</div>
+				</div>
+			</li>
+		</ul> -->
+		<div class="hbox b-b padder-v-xs" ng-repeat="staff in recentContacts track by $index">
+			<div class="col avatar thumb-contact-list m-r bg-primary">
+				<div class="text-ellipsis padder-v text-center">{{ staff.nick }}</div>
+			</div>
+			<div class="col p-l-sm">
+				<div class="text-md font-bold">{{ staff.name }}</div>
+				<div class="text-base">{{ staff.org }}</div>
+			</div>
+		</div>
+	</div>
+</div>

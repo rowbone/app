@@ -10,7 +10,8 @@ var users = require('./routes/users');
 var components = require('./routes/components');
 var home = require('./routes/home');
 var service = require('./routes/service');
-var dataGenerate = require('./routes/dataGenerate.js')
+var dataGenerate = require('./routes/dataGenerate.js');
+var contactlist = require('./routes/contactlist');
 
 var ejs = require('ejs');
 
@@ -42,6 +43,7 @@ app.use('/components', components);
 app.use('/home', home);
 app.use('/service', service);
 app.use('/dataGenerate', dataGenerate);
+app.use('/contactlist', contactlist);
 
 // app.get('/userlist', users.userlist(db));
 

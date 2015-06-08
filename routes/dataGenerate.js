@@ -3,11 +3,6 @@ var router = express.Router();
 
 var fs = require('fs');
 
-var fileData = fs.readFile('../app/data/test/iscroll/all-date.json', function(err, data) {
-	if(err) console.error(err);
-	else console.log('data-->>', data);
-});
-
 
 router.get('/', function(req, res) {
 	console.log(req.param('name'));
@@ -29,7 +24,7 @@ router.get('/scroll', function(req, res) {
 		data.push(user);
 	}
 
-	fs.writeFile('app/data/test/iscroll/all-date.json', JSON.stringify(data), function(err, data) {
+	fs.writeFile('./app/data/test/iscroll/all-data.json', JSON.stringify(data), function(err, data) {
 		if(err) {
 			console.error(err);
 		}
