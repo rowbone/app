@@ -1,0 +1,27 @@
+<div tabindex="-1" role="dialog" class="modal fade" ng-class="{'in': animate}" ng-style="{'z-index': 1050 + index*10, display: 'block'}" ng-click="close($event)">
+    <div class="modal-dialog" ng-class="{'modal-sm': size == 'sm', 'modal-lg': size == 'lg' || size == 'full'}">
+        <div class="modal-content">
+            <div class="h-full">
+                <!-- 标题栏 -->
+                <div class="modal-header bg-primary-xs lter" ng-class="{'hidden-sm hidden-md hidden-lg':title==null}">
+                    <div class="hbox text-md">
+                        <div class="col col-xs v-middle text-left hidden-sm hidden-md hidden-lg"><a class="btn btn-bar-primary" ng-click="cancel()">取消</a></div>
+                        <div class="col v-middle font-bold text-center-xs text-ellipsis" ng-bind="title"></div>
+                        <div class="col col-xs v-middle text-right">
+                            <a class="close hidden-xs" ng-click="cancel()"><i class="ion-android-close"></i></a>
+                            <!--<a class="modal-ok text-primary hidden-sm hidden-md hidden-lg" ng-click="cancel()" ng-show="isOk">确定</a>-->
+                        </div>
+                    </div>
+                </div>
+                <!-- 内容 -->
+                <!--<div class="modal-body" conow-modal-transclude></div>-->
+                <div class="h-full" conow-modal-transclude></div>
+                <!-- 底部按钮 -->
+                <!--<div class="modal-footer hidden-xs" ng-show="toolbars">-->
+                    <!--<a class="modal-cancel btn btn-default" ng-click="cancel()">取消</a>-->
+                    <!--<a class="modal-ok btn btn-success" ng-click="cancel()" ng-show="isOk">确定</a>-->
+                <!--</div>-->
+            </div>
+        </div>
+    </div>
+</div>

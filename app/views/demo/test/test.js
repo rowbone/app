@@ -4,7 +4,9 @@ app.controller('ExecFuncInServiceCtrl', ['$scope', 'ExecFuncService', 'foo', '$l
 	function($scope, ExecFuncService, foo, $log, DataService) {
 		$scope.entity = {
 			'email': 'abc111@email.com',
-			'sex': 'female'
+			'sex': 'female',
+			'isMulti': false,
+			'results': [{}, {}, {}]
 		};
 		// service 调用 controller 提供的参数方法
 		$scope.execFuncInService = function() {

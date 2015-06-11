@@ -11,6 +11,9 @@
 				</div>
 				<div class="panel-body">
 					<form class="form" name="form" ng-controller="ExecFuncInServiceCtrl">
+						<pre>{{ entity.isMulti }}</pre>
+						<pre>{{ entity.results.length }}</pre>
+						<pre>{{ entity.isMulti && entity.results.length }}</pre>
 						<div class="form-group">
 							<label for="">调用方法</label>
 							<button type="button" class="btn btn-primary" ng-click="execFuncInService()">调用方法</button>
