@@ -1,0 +1,327 @@
+<style>
+	.thumb-contact-list { width: 40px; height: 40px !important; }
+	.thumb-contact-list .child-org { width: 20px; height: 20px; border-left: 1px solid #B3B3B3; border-bottom: 1px solid #B3B3B3; margin: 10px 0 0 20px; }
+	.thumb-contact-list .addtion-org { width: 20px; height: 20px; border-bottom: 1px solid #B3B3B3; margin: 10px 0 0 20px; }
+	.padder-v-6 { padding-top: 6px; padding-bottom: 6px; }
+	.p-6 { padding-left: 6px; pading-right: 6px; }
+	.col-p-60 { width: 60%; }
+	.not-height-full { height: auto !important; }
+	.w-60 { width: 60px; }
+	.btn-org-filter { padding: 3px 6px; }
+	.w-70 { width: 70px; }
+	.p-t-7 { padding-top: 7px; }
+	.bg-bar { background-color: #F2F5FA; }
+	.contact-list-title { color: #808080; }
+	/* .breadcrumb-contact-list > li + li:before {
+	    color: #CCCCCC;
+	    content: ">";
+	    padding: 0 5px;
+	} */
+	.breadcrumb-contact-list a,
+	.breadcrumb-contact-list a:hover,
+	.breadcrumb-contact-list a:focus {
+		color: #23b7e5;
+	}
+	.text-muted-dk {
+		color: #808080;
+	}
+	.text-muted-lter {
+		color: #1a1a1a;
+	}
+	.text-form {
+		font-size: 17px; 
+	}
+	.label-part-time {
+		padding: 1px 3px;
+	}
+	
+	@media (min-width: 768px) {
+		.modal-body {
+			top: 45px !important; 
+		}
+	}
+	.h-40 {
+		height: 40px !important;
+	}
+	.p-b-90 { padding-bottom: 90px; }
+	 .w-40 { width: 40px; }
+	 .text-8x { font-size: 8em; }
+	 .text-dker { color: #B3B3B3; }
+	 .b-user-info a:active { color: #51C6EA; }
+	.btn-unfollow {
+		background-color: #eee;
+		color: #888;
+		border: 1px solid #ddd;
+		border-radius: 4px;
+		min-width: 100px;
+	}
+	.btn-follow {
+		color: #23B7E5;
+		background-color: #FFFFFF;
+		border: 1px solid #23B7E5;
+		min-width: 100px;
+	}
+	.btn-follow:hover {
+		color: #23B7E5;
+		border: 2px solid #23B7E5;
+	}
+	.btn-contact-list.disabled { cursor: not-allowed; }
+	.breadcrumb-contact-list {
+		color: #23b7e5;
+	}
+	.breadcrumb-contact-list li + li:before {
+		display: inline-block;
+	    font: normal normal normal 14px/1 FontAwesome;
+	    font-size: inherit;
+	    text-rendering: auto;
+	    -webkit-font-smoothing: antialiased;
+	    -moz-osx-font-smoothing: grayscale;
+		content: "\f105";
+	}
+	.breadcrumb-contact-list li:last-child {
+		color: #000;
+	}
+	.btn-org-filter-confirm, .btn-org-filter-confirm:hover, .btn-org-filter-confirm:active {
+		color:#fff;
+	}
+	.org-info { position: relative; overflow: hidden; top:0; height: 100%; overflow: hidden; }
+	.org-info-content { position: absolute; overflow: auto; top: 0; bottom: 150px; }
+	.org-info-content.no-bottom { bottom: 50px; overflow: auto; }
+	.b-org-staffs {
+		position: absolute;
+		bottom: 0;
+		background-color: #fff;
+		overflow: none;
+		z-index: 1002;
+		height: 145px;
+	}
+<<<<<<< .mine
+	.b-org-staffs.show-all {
+		height: 80%;
+	}
+=======
+>>>>>>> .r12547
+	.org-staffs-overlay {
+		background-color: black;
+	  	/* IE8 */
+	  	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=40)";
+	  	/* IE8 */
+	  	background-color: rgba(0, 0, 0, 0.4);
+	  	position: fixed;
+	  	left: 0;
+	  	right: 0;
+	  	top: 0;
+	  	bottom: 0;
+	  	z-index: 1001;
+	 }
+	 .overlay-hidden {
+	 	display: none;
+	 }
+	 .child-orgs.no-srcoll { height: 100%; overflow: hidden; }
+	 .org-staffs-title { position: absolute; }
+	 .org-staffs-content { position: absolute; top: 45px; bottom: 45px; overflow: auto !important; }
+	 .no-scroll { overflow: none !important; }
+
+/* added by 都*/
+.child-orgs {
+ 	overflow: hidden; 
+ 	height: 100%;
+ }
+.orgs-list {
+ 	position: absolute;    
+ 	top: 0;    
+ 	bottom: 145px; 
+ 	left: 0; 
+ 	right: 0;   
+	overflow: auto;"
+}
+.b-org-staffs {
+	position: absolute;
+	height: 145px;
+}
+.b-org-staffs.open {
+	position: absolute;
+	height: 80%;
+}
+.staff-cell-content {
+	line-height: 38px;
+}
+.staff-cell-content-th {
+	line-height: 40px;
+}
+/**/
+</style>
+<div class="">
+	<div class="hbox padder-md padder-v-sm">
+		<button type="button" class="form-control btn r-3x bg-white" ng-model="query" ng-click="orgAndStaffSearchClick($event)">
+			<i class="fa fa-search m-r-xs"></i>搜索
+		</button>
+	</div>
+		
+	<div class="bg-white contact-list p-l-sm">
+		<div class="hbox padder-v-sm">
+			<div class="col">
+				<div class="text-md text-primary">组织架构</div>
+			</div>
+		</div>
+		
+		<div class="hbox">
+			<div class="col thumb-contact-list padder-v-xs">
+				<div class="avatar thumb-contact-list m-r bg-primary text-center v-middle">
+					<span class="fa fa-home text-2x padder-v-xs"></span>
+				</div>
+			</div>
+			<a href="#" ng-click="orgItemClick(staffOrgInfo.corpOrg.ID, $event)">
+				<div class="b-b padder-v-xs">
+					<div class="p-l-sm inline">
+						<div class="text-md">{{ staffOrgInfo.corpOrg.ID_HR_ORG_UNIT }}</div>
+						<div class="text-base text-dker">{{ staffOrgInfo.corpOrg.ORG_UNIT_TYPE_HR_ORG_UNIT_TYPE }}</div>
+					</div>
+					<div class="v-middle text-2x inline pull-right p-r-sm">
+						<i class="fa fa-angle-right text-dker"></i>
+					</div>
+				</div>
+			</a>
+		</div>
+		
+		<div class="hbox">
+			<div class="col thumb-contact-list padder-v-xs">
+				<div class="child-org"></div>
+			</div>
+			<a href="#" ng-click="orgItemClick(staffOrgInfo.myOrg.ORG_UNIT_ID, $event)">
+				<div class="b-b padder-v-xs">
+					<div class="p-l-sm inline">
+						<div class="text-md">{{ staffOrgInfo.myOrg.ORG_UNIT_ID_HR_ORG_UNIT }}</div>
+						<div class="text-base text-dker">我的部门</div>	
+					</div>
+					<div class="v-middle text-2x inline pull-right p-r-sm">
+						<i class="fa fa-angle-right text-dker"></i>
+					</div>
+				</div>
+			</a>
+		</div>
+		
+		<div ng-if="staffOrgInfo.additionOrg.length > 0">
+			<div class="hbox padder-v-xs" ng-repeat="org in staffOrgInfo.additionOrg track by $index">
+				<div class="col thumb-contact-list m-r">
+					<div class="addtion-org"></div>
+				</div>
+			<!-- <a href="#" ng-click="orgItemClick(staffOrgInfo.myOrg.ORG_UNIT_ID, $event)">
+				<div class="b-b padder-v-xs">
+					<div class="p-l-sm inline">
+						<div class="text-md">{{ staffOrgInfo.myOrg.ORG_UNIT_ID_HR_ORG_UNIT }}</div>
+						<div class="text-base text-dker">我的部门</div>	
+					</div>
+					<div class="v-middle text-2x inline pull-right p-r-sm">
+						<i class="fa fa-angle-right text-dker"></i>
+					</div>
+				</div>
+			</a> -->
+				<a href="#" ng-click="orgItemClick(org.ORG_UNIT_ID, $event)">
+					<div class="b-b ">
+						<div class="p-l-sm inline padder-v-xs">
+							<div class="text-md v-middle">
+								<span class="inline">{{org.ORG_UNIT_ID_HR_ORG_UNIT}}</span>
+								<!-- <span class="inline">科南</span> -->
+								<span class="btn btn-sm bg-primary label-part-time">兼</span>
+							</div>
+							<div class="text-base text-dker">兼任的部门</div>
+						</div>
+						<div class="v-middle text-2x inline pull-right p-r-sm">
+							<i class="fa fa-angle-right text-dker"></i>
+						</div>
+					</div>
+				</a>
+			</div>
+		</div>
+		
+		<div class="hbox">
+			<!-- <div class="col thumb-contact-list padder-v-xs">
+				<img src="img/logo/Alogo.png" style="width:40px; height:40px;">
+			</div> -->
+			<div class="col thumb-contact-list padder-v-xs">
+				<div class="avatar thumb-contact-list m-r bg-primary text-center v-middle">
+					<span class="fa fa-home text-2x padder-v-xs"></span>
+				</div>
+			</div>
+			<a href="#" ng-click="orgItemClick(rootOrgInfo.ID, $event)">
+				<div class="padder-v-xs">
+					<div class="p-l-sm inline padder-v-sm">
+						<div class="text-md">{{rootOrgInfo.ORG_UNIT_SHORT_NAME}}</div>		
+					</div>
+					<div class="v-middle text-2x inline pull-right p-r-sm">
+						<i class="fa fa-angle-right text-dker"></i>
+					</div>
+				</div>
+			</a>
+		</div>
+	</div>
+	
+	<div class="bg-white p-l-sm m-t-sm">
+		<div class="hbox">
+			<div class="col thumb-contact-list padder-v-xs">
+				<div class="avatar thumb-contact-list m-r bg-primary text-center v-middle">
+					<span class="fa fa-sitemap text-2x padder-v-xs"></span>
+				</div>
+			</div>
+			<a href="#" ng-click="followedOrgClick($event)">
+				<div class="b-b padder-v-xs">
+					<div class="p-l-sm inline padder-v-sm">
+						<div class="text-md">关注的组织</div>
+					</div>
+					<div class="inline pull-right p-r-sm">
+						<div class="inline v-middle p-r-sm">
+							<span class="text-md text-dker pull-right">{{followedOrgItems.length}}</span>
+						</div>
+						<div class="inline v-middle text-2x">
+							<i class="fa fa-angle-right text-dker"></i>
+						</div>
+					</div>
+				</div>
+			</a>
+		</div>
+		<div class="hbox">
+			<div class="col thumb-contact-list padder-v-xs">
+				<div class="avatar thumb-contact-list m-r bg-primary text-center v-middle">
+					<div class="fa fa-user text-2x padder-v-xs"></div>
+				</div>
+			</div>
+			<a href="#" ng-click="followedStaffClick($event)">
+				<div class="padder-v-xs">
+					<div class="inline padder-v-sm p-l-sm">
+						<div class="text-md">关注的人</div>	
+					</div>
+					<div class="inline pull-right p-r-sm">
+						<div class="inline v-middle p-r-sm">
+							<span class="text-md text-dker pull-right">{{followedStaffItems.length}}</span>
+						</div>
+						<div class="inline v-middle text-2x">
+							<i class="fa fa-angle-right text-dker"></i>
+						</div>
+					</div>
+				</div>
+			</a>
+		</div>
+	</div>
+
+	<div class="bg-white padder-sm recent-contacts m-t-sm">
+		<div class="hbox padder-v-sm">
+			<div class="col">
+				<div class="text-md text-primary">最近联系人</div>
+			</div>
+		</div>
+		
+		<div class="hbox b-b padder-v-xs" ng-repeat="staff in recentContactArray track by $index">
+			<div class="col avatar thumb-contact-list m-r" ng-class="{true: staff.userPhoto}[(staff.userPhoto.indexOf('/') == -1)]">
+				<div class="text-ellipsis thumb-contact-list padder-v-sm text-center" ng-if="(staff.userPhoto.indexOf('/') == -1)">{{ staff.userName | limitTo:-2 }}</div>
+				<img ng-src="{{staff.userPhoto}}" ng-if="(staff.userPhoto.indexOf('/') > -1)" style="width:40px;height:40px;">
+			</div>
+			<div class="col p-l-sm padder-v-sm">
+				<a ng-click="staffItemClick(staff, $event)">
+					<div class="text-md">{{ staff.userName }}</div>
+					<!-- <div class="text-base">{{ staff.org }}</div> -->
+				</a>
+			</div>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,224 @@
+<!-- <div class="bg-light b-b header-md" ng-init="app.settings.equSwitch = true;">
+    <h1 class="m-n font-thin h3">响应式表格</h1>
+</div> -->
+
+<title-bar name="响应式表格"></title-bar>
+<div class="wrapper-md pos-rlt" ng-controller="footableCtrl">
+  <div class="row">
+    <div class="col-sm-6">
+      <div class="panel panel-success">
+        <div class="panel-heading font-bold">组件演示</div>
+        <div class="panel-body">
+       
+        <!-- json-data="jsons" 
+        	url="/service/notice!queryAllNoticeList"
+        -->
+					<conow-footable search-name="姓名" show-light="true"
+						ft-result-array="result" ft-top-title="标题不带超链接的"						
+						json-data="jsons"
+						url="/service/notice!queryAllNoticeList"
+						ft-titile="标题:format;来源:format:phone;创建者:phone;操作:phone"
+						ft-search="search"
+						ft-item="<input type='checkbox'><span ng-bind='item.TITLE'></span>;<label class='i-switch m-t-xs m-r'><input checked='' type='checkbox'><i></i></label><span ng-bind='item.date'></span>;CONTRIBUTOR;save():btn-info:保存">
+					<a class="btn btn-info">aaaa</a> </conow-footable>
+
+					<conow-footable 
+						row-link="app.table.contentList"  
+						search-name="姓名" 
+						no-search="true" 
+						ft-result-array="result1"  
+						url="/service/notice!queryAllNoticeList" 
+						ft-titile="标题;来源;创建者:phone;操作:phone"  
+						ft-search="search1" 
+						ft-item="TITLE;SOURCE;CREATE_TIME.substr(0,19);save():btn-info:保存">
+           	<span>带超链接不带标题的</span>
+           </conow-footable>
+        </div>
+      </div>
+      
+      <div class="panel panel-info">
+      	<div class="panel-heading">
+          <div class="panel-title">响应式表格选择功能</div>
+        </div>
+        <div class="panel-body">
+          <!-- <conow-footable 
+            row-link="app.table.contentList" 
+            search-name="姓名"
+            no-search="false" 
+            ft-result-array="result" 
+            url="/service/notice!queryAllNoticeList" 
+            ft-titile="标题;来源;创建者:phone;操作:phone"  
+            ft-search="search1" 
+            ft-item="TITLE;SOURCE;CREATE_TIME.substr(0,19);save():btn-info:保存"> -->
+            <div class="row">
+              <label for="">点击选择</label>
+              <button type="button" class="btn btn-primary" ng-click="showSelect()"></button>
+            </div>
+            </conow-footable>
+        </div>
+      </div>
+      
+      
+      <div class="panel panel-warning">
+        <div class="panel-heading">
+          <div class="panel-title">常见问题</div>
+        </div>
+        <div class="panel-body">
+          <ol>
+            <li>
+            <p><span class="text-danger">Q:</span>不能排序</p>
+            <!-- <p><span class="text-primary">A:</span>form添加name、conow-form-validate、novalidate属性，class中添加conow-form</p>
+            <p>此指令依赖的完整form属性：
+              <code>
+                &lt;form class="conow-form" name="validateForm" conow-form-validate="validateOptions" novalidate role="form"&gt;&lt;/form&gt;
+              </code>
+            </p>
+            </li>
+            <li>
+              <p><span class="text-danger">Q:</span>form的其他字段可以进行校验，某个字段不能触发校验</p>
+              <p><span class="text-primary">A:</span>为该字段添加name属性</p>
+            </li>
+            <li>
+              <p><span class="text-danger">Q:</span>出现错误：<code>TypeError: Cannot read property '$valid' of undefined</code></p>
+              <p><span class="text-primary">A:</span>为该字段添加ng-model绑定</p>
+            </li> -->
+          </ol>
+        </div>
+        <div class="panel-footer">注释</div>
+      </div>
+
+      <div class="panel panel-danger">
+        <div class="panel-heading">
+          <div class="panel-title">待解决问题：（欢迎补充[格式：XXX问题 - by XX @时间]）</div>
+        </div>
+        <div class="panel-body">
+          <ol>
+            <li> <p><span class="text-danger">Q:</span>不能排序</p></li>
+          </ol>
+          <ol>
+            <li> <p><span class="text-danger">Q:</span>表头图标的显示 - by huyifeng @2015-05-26</p></li>
+          </ol>
+          <ol>
+          	<li> <p><span class="text-danger">Q:</span>请求中有日期，关于日期格式是否有格式化 - by huyifeng @2015-05-26</p></li>
+          </ol>
+          <ol>
+          	<li> <p><span class="text-danger">Q:</span>操作一栏中点删除没有刷新列表 - by huyifeng @2015-05-26</p></li>
+          </ol>
+        </div>
+      </div>
+
+      <div class="panel panel-info">
+        <div class="panel-heading">
+          <div class="panelt-title">版本维护说明</div>
+        </div>
+        <div class="panel-body">
+          <ul class="list-unstyled">
+          	 <li>增加“暂无数据”信息自定义- by liangguojian & duzhihui  @2015-06-11</li>
+             <li>修改一个页面使用多个奔溃问题- by zhengyiling  @2015-05-04</li>
+             <li>每次发送两个请求的问题- by zhengyiling  @2015-05-04</li>
+             <li>排序问题- by zhengyiling  @2015-05-04</li>
+             <li>点击尚亮问题- by zhengyiling  @2015-05-25</li>
+             <li>增加单选多选尚亮切换- by zhengyiling  @2015-05-25</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-6">
+      <div class="panel panel-info">
+        <div class="panel-heading font-bold">组件描述</div>
+        <div class="panel-body">
+                            封装后的响应式表格使用只需要在所开发的页面中使用到一条<label class="bg-danger dker"> conow-footable </label>指令即可。<br />
+                            示例如下：<br />
+                            <pre>
+                            
+                              &lt;conow-footable  search-name="姓名" ft-result-array="result" ft-top-title="带标题不带超链接的" url="/service/notice!queryAllNoticeList" ft-titile="标题;来源;创建者:phone;操作:phone"  ft-search="search" ft-item="TITLE;SOURCE;CONTRIBUTOR;save():btn-info:保存">
+					           	&lt;a class="btn btn-info"&gtaaaa&lt;/a&gt
+					          &lt;/conow-footable&gt
+                           </pre>
+                           
+                           
+                           <pre>
+                           需导入以下文件:
+                          .state('app.table.conowFootable', {
+                  url: '/conowFootable',
+                  templateUrl: 'other/demo/conow-footable/conowFootableDemo.html',
+                  resolve: {
+                      deps: ['uiLoad',
+                        function( uiLoad){
+                          return uiLoad.load([
+                                              'vendor/modules/conow-footable/directive/conow-footable.js',
+                                              'vendor/plugins/jquery/footable/footable.core.css',
+                                              ]);
+                      }]
+                  }
+              })
+                           </pre>
+           <br />
+           <div class="row b-b text-left m">
+           <label>指令属性说明：</label>
+           </div>
+           <div class="row b-b m">
+           <div class="col-xs-3 bt">url(必填)</div>
+           <div class="col-xs-9 b-l">例：<label class="bg-primary"> url="/service/notice!queryAllNoticeList" </label><br />生成表格内容数据的请求地址</div>
+           </div>
+           <div class="row b-b m">
+           <div class="col-xs-3">search-name</div>
+           <div class="col-xs-9 b-l">例：<label class="bg-primary"> search-name="姓名" </label><br />自动生成搜索栏里的label名</div>
+           </div>
+           <div class="row b-b m">
+           <div class="col-xs-3">no-search</div>
+           <div class="col-xs-9 b-l">例：<label class="bg-primary"> no-search="true" </label><br />是否启用搜索栏，若为true则不启用 默认不写为启用</div>
+           </div>
+           <div class="row b-b m">
+           <div class="col-xs-3">ft-top-title</div>
+           <div class="col-xs-9 b-l">例：<label class="bg-primary"> ft-top-title="带标题不带超链接的" </label> <br />标题,不写则不带标题</div>
+           </div>
+           <div class="row b-b m">
+           <div class="col-xs-3">ft-titile(必填)</div>
+           <div class="col-xs-9 b-l">例：<label class="bg-primary"> ft-titile="标题;来源;创建者:phone;操作:phone" </label> <br />标题名称</div>
+           </div>  
+           <br />
+           <div class="row b-b m">
+           <div class="col-xs-3">ft-item(必填)</div>
+           <div class="col-xs-9 b-l">例：<label class="bg-primary"> ft-item="TITLE;SOURCE;CONTRIBUTOR;save():btn-info:保存" </label> <br />每一单元格的属性</div>
+           </div>
+           <br />
+           <div class="row b-b m">
+           <div class="col-xs-3">ft-search(必填)</div>
+           <div class="col-xs-9 b-l">例：<label class="bg-primary"> ft-search="search" </label> <br />搜索条件对象</div>
+           </div>
+           <br />
+           <div class="row b-b m">
+           <div class="col-xs-3">ft-result-array(必填)</div>
+           <div class="col-xs-9 b-l">例：<label class="bg-primary"> ft-result-array="result" </label> <br />远程数据返回的结果集</div>
+           </div>
+           <br />
+           <div class="row b-b m">
+           <div class="col-xs-3">row-link</div>
+           <div class="col-xs-9 b-l">例：<label class="bg-primary"> row-link="app.table.contentList"(暂时只支持这种格式) </label> <br />点击跳转的超链接</div>
+           </div>
+           <br />
+            <div class="row b-b m">
+           <div class="col-xs-3">pagesize</div>
+           <div class="col-xs-9 b-l">例：<label class="bg-primary"> pagesize="6" </label> <br />每页显示条数：默认6</div>
+           </div>
+           <br />
+           <div class="row b-b m">
+           <div class="col-xs-3">maxsize</div>
+           <div class="col-xs-9 b-l">例：<label class="bg-primary"> maxsize="6" </label> <br />最多显示多少页：默认6</div>
+           </div>
+           <br />
+           <div class="row b-b m">
+           <div class="col-xs-3">no-data-tip</div>
+           <div class="col-xs-9 b-l">例：<label class="bg-primary"> no-data-tip="滚蛋，不提供信息" </label> <br />无数据情况下的提示信息：默认“暂无数据”</div>
+           </div>
+           <br />
+           <div class="row b-b m">
+           <div class="col-xs-3">show-light</div>
+           <div class="col-xs-9 b-l">例：<label class="bg-primary"> show-light="true"(多选) ，show-light="single"(单选) </label> <br />点击尚亮</div>
+           </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
