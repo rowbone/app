@@ -1,5 +1,5 @@
 
-angular.module('app')
+angular.module('demoApp')
     .factory('$$conowStackedMap', function () {
         return {
             createNew: function () {

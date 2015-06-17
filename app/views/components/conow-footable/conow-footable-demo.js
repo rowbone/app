@@ -1,12 +1,58 @@
 
-app.controller('footableCtrl', ['$scope', '$http',
-    function($scope, $http) {
+app.controller('footableCtrl', ['$scope', '$http', 'conowModals', 
+    function($scope, $http, conowModals) {
 	$scope.search = {};
 	$scope.result = [];
 	$scope.search1 = {};
 	$scope.result1 = [];
 	$scope.save = function(){
 		arp.alert('你点击了保存');
+	};
+	
+	$scope.selected = 
+		[{
+	           "TITLE": "请假审批",
+	           "date":"2014-12-2 12:20",
+	           "avatar": "img/person/person_photo_2.png",
+	           "content":"有请假流程到你审批环节",
+	           "url":"app.oa.chat"
+	         }, {
+		           "TITLE": "区文辉",
+		           "date":"2014-10-1 12:20",
+		           "avatar": "img/person/person_photo_3.png",
+		           "content":"XXXXXXXX",
+		           "url":"app.oa.chat"
+		         }];
+	
+	$http.get('views/components/conow-footable/data/footable-list.json')
+		.success(function(data, status, config, header) {
+			console.log(data);
+			$scope.jsons2 = data;
+		})
+		.error(function(data) {
+			console.log('error data-->', data);
+		});
+	
+	$scope.showSelect = function() {
+		
+		var modalInstance = conowModals.open({
+			templateUrl: 'views/components/conow-footable/footable-sel.html',
+			controller: 'footableSelCtrl',
+			title: '选择',
+			size: 'lg',
+			resolve: {
+				modalParams: function() {
+					return {
+						'selected': $scope.selected,
+						'jsons': $scope.jsons2
+					};
+				}
+			}
+		});
+		
+		modalInstance.result.then(function(data) {
+			console.log('in result-->', data);
+		});
 	};
 	$scope.jsons = {
 			  "obj":[
@@ -126,6 +172,25 @@ app.controller('footableCtrl', ['$scope', '$http',
 			     }
 }]);
 
-
+// 响应式列表弹出层选择 controller
+app.controller('footableSelCtrl', ['$scope', '$conowModalInstance', 'modalParams', '$http', 
+    function($scope, $conowModalInstance, modalParams, $http) {
+		console.log(modalParams);
+		$scope.search = {};
+		$scope.result = [];
+		
+		$scope.jsons = modalParams.jsons;
+		$scope.selected = modalParams.selected; 
+		
+		$scope.save = function(){
+			arp.alert('你点击了保存');
+		};
+		
+		$scope.ok = function() {
+			console.log('')
+			$conowModalInstance.close($scope.selected);
+		}
+	}
+])
 
 

@@ -51,5 +51,9 @@ angular.module('app.components', ['ui.router'])
 					url: '/tabs',
 					templateUrl: 'views/components/conow-tabs/tabs.html'
 				})
+				.state('app.components.footable', {
+					url: '/footable',
+					templateUrl: 'views/components/conow-footable/conow-footable-demo.html'
+				})
 
 	}]);

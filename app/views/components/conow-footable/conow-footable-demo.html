@@ -1,6 +1,9 @@
 <!-- <div class="bg-light b-b header-md" ng-init="app.settings.equSwitch = true;">
     <h1 class="m-n font-thin h3">响应式表格</h1>
 </div> -->
+<style>
+.ft-tr.active { background-color: blue; }
+</style>
 
 <title-bar name="响应式表格"></title-bar>
 <div class="wrapper-md pos-rlt" ng-controller="footableCtrl">
@@ -11,53 +14,44 @@
         <div class="panel-body">
        
         <!-- json-data="jsons" 
-        	url="/service/notice!queryAllNoticeList"
+          url="/service/notice!queryAllNoticeList"
         -->
-					<conow-footable search-name="姓名" show-light="true"
-						ft-result-array="result" ft-top-title="标题不带超链接的"						
-						json-data="jsons"
-						url="/service/notice!queryAllNoticeList"
-						ft-titile="标题:format;来源:format:phone;创建者:phone;操作:phone"
-						ft-search="search"
-						ft-item="<input type='checkbox'><span ng-bind='item.TITLE'></span>;<label class='i-switch m-t-xs m-r'><input checked='' type='checkbox'><i></i></label><span ng-bind='item.date'></span>;CONTRIBUTOR;save():btn-info:保存">
-					<a class="btn btn-info">aaaa</a> </conow-footable>
+          <conow-footable search-name="姓名" show-light="true"
+            ft-result-array="result" ft-top-title="标题不带超链接的"            
+            json-data="jsons"
+            url="/service/notice!queryAllNoticeList"
+            ft-titile="标题:format;来源:format:phone;创建者:phone;操作:phone"
+            ft-search="search"
+            ft-item="<input type='checkbox'><span ng-bind='item.TITLE'></span>;<label class='i-switch m-t-xs m-r'><input checked='' type='checkbox'><i></i></label><span ng-bind='item.date'></span>;CONTRIBUTOR;save():btn-info:保存">
+          <a class="btn btn-info">aaaa</a> </conow-footable>
 
-					<conow-footable 
-						row-link="app.table.contentList"  
-						search-name="姓名" 
-						no-search="true" 
-						ft-result-array="result1"  
-						url="/service/notice!queryAllNoticeList" 
-						ft-titile="标题;来源;创建者:phone;操作:phone"  
-						ft-search="search1" 
-						ft-item="TITLE;SOURCE;CREATE_TIME.substr(0,19);save():btn-info:保存">
-           	<span>带超链接不带标题的</span>
-           </conow-footable>
+          <!-- <conow-footable 
+            row-link="app.table.contentList"  
+            search-name="姓名" 
+            no-search="true" 
+            ft-result-array="result1"  
+            url="/service/notice!queryAllNoticeList" 
+            ft-titile="标题;来源;创建者:phone;操作:phone"  
+            ft-search="search1" 
+            ft-item="TITLE;SOURCE;CREATE_TIME.substr(0,19);save():btn-info:保存">
+              <span>带超链接不带标题的</span>
+           </conow-footable> -->
         </div>
       </div>
       
       <div class="panel panel-info">
-      	<div class="panel-heading">
+        <div class="panel-heading">
           <div class="panel-title">响应式表格选择功能</div>
         </div>
-        <div class="panel-body">
-          <!-- <conow-footable 
-            row-link="app.table.contentList" 
-            search-name="姓名"
-            no-search="false" 
-            ft-result-array="result" 
-            url="/service/notice!queryAllNoticeList" 
-            ft-titile="标题;来源;创建者:phone;操作:phone"  
-            ft-search="search1" 
-            ft-item="TITLE;SOURCE;CREATE_TIME.substr(0,19);save():btn-info:保存"> -->
+        <div class="panel-body">         
+            
             <div class="row">
               <label for="">点击选择</label>
-              <button type="button" class="btn btn-primary" ng-click="showSelect()"></button>
+              <button type="button" class="btn btn-primary" ng-click="showSelect()">选择</button>
             </div>
-            </conow-footable>
+            
         </div>
-      </div>
-      
+      </div>      
       
       <div class="panel panel-warning">
         <div class="panel-heading">
@@ -99,10 +93,10 @@
             <li> <p><span class="text-danger">Q:</span>表头图标的显示 - by huyifeng @2015-05-26</p></li>
           </ol>
           <ol>
-          	<li> <p><span class="text-danger">Q:</span>请求中有日期，关于日期格式是否有格式化 - by huyifeng @2015-05-26</p></li>
+            <li> <p><span class="text-danger">Q:</span>请求中有日期，关于日期格式是否有格式化 - by huyifeng @2015-05-26</p></li>
           </ol>
           <ol>
-          	<li> <p><span class="text-danger">Q:</span>操作一栏中点删除没有刷新列表 - by huyifeng @2015-05-26</p></li>
+            <li> <p><span class="text-danger">Q:</span>操作一栏中点删除没有刷新列表 - by huyifeng @2015-05-26</p></li>
           </ol>
         </div>
       </div>
@@ -113,7 +107,7 @@
         </div>
         <div class="panel-body">
           <ul class="list-unstyled">
-          	 <li>增加“暂无数据”信息自定义- by liangguojian & duzhihui  @2015-06-11</li>
+             <li>增加“暂无数据”信息自定义- by liangguojian & duzhihui  @2015-06-11</li>
              <li>修改一个页面使用多个奔溃问题- by zhengyiling  @2015-05-04</li>
              <li>每次发送两个请求的问题- by zhengyiling  @2015-05-04</li>
              <li>排序问题- by zhengyiling  @2015-05-04</li>
@@ -132,8 +126,8 @@
                             <pre>
                             
                               &lt;conow-footable  search-name="姓名" ft-result-array="result" ft-top-title="带标题不带超链接的" url="/service/notice!queryAllNoticeList" ft-titile="标题;来源;创建者:phone;操作:phone"  ft-search="search" ft-item="TITLE;SOURCE;CONTRIBUTOR;save():btn-info:保存">
-					           	&lt;a class="btn btn-info"&gtaaaa&lt;/a&gt
-					          &lt;/conow-footable&gt
+                      &lt;a class="btn btn-info"&gtaaaa&lt;/a&gt
+                    &lt;/conow-footable&gt
                            </pre>
                            
                            
