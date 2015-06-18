@@ -55,5 +55,9 @@ angular.module('app.components', ['ui.router'])
 					url: '/footable',
 					templateUrl: 'views/components/conow-footable/conow-footable-demo.html'
 				})
+				.state('app.components.cascadeSel', {
+					url: '/cascadeSel',
+					templateUrl: 'views/components/cascade-sel/cascade-sel-demo.html'
+				})
 
 	}]);

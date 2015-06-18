@@ -1,0 +1,217 @@
+[
+	{
+		"code": "0",
+		"name": "国家公务员职别",
+		"children": null
+	}, {
+		"code": "1",
+		"name": "国家公务员职别",
+		"children": [
+			{
+				"code": "111",
+				"name": "总理职",
+				"children": null
+			}, {
+				"code": "112",
+				"name": "副总理(国务委员)职",
+				"children": null
+			}, {
+				"code": "121",
+				"name": "正部、省职",
+				"children": null
+			}, {
+				"code": "122",
+				"name": "副部、省职",
+				"children": null
+			}
+		]
+	}, {
+		"code": "1",
+		"name": "国家公务员级别",
+		"children": [
+			{
+				"code": "10",
+				"name": "国家公务员级别",
+				"children": [
+					{
+						"code": "1001",
+						"name": "一级公务员",
+						"children": null
+					}, {
+						"code": "1002",
+						"name": "二级公务员",
+						"children": null
+					}, {
+						"code": "1003",
+						"name": "三级公务员",
+						"children": null
+					}, {
+						"code": "1004",
+						"name": "四级公务员",
+						"children": null
+					}
+				]
+			}
+		]
+	}, {
+		"code": "2",
+		"name": "事业单位职员级别",
+		"children": [
+			{
+				"code": "20",
+				"name": "事业单位职员级别",
+				"children": [
+					{
+						"code": "2011",
+						"name": "一级职员(正部)",
+						"children": null
+					}, {
+						"code": "2012",
+						"name": "二级职员(副部)",
+						"children": null
+					}, {
+						"code": "2021",
+						"name": "三级职员(正局)",
+						"children": null
+					}, {
+						"code": "2022",
+						"name": "四级职员(副局)",
+						"children": null
+					}
+				]
+			}
+		]
+	}, {
+		"code": "3",
+		"name": "金融单位行员级别",
+		"children": [
+			{
+				"code": "30",
+				"name": "金融单位行员级别",
+				"children": [
+					{
+						"code": "3012",
+						"name": "一级行员(副部)",
+						"children": null
+					}, {
+						"code": "3021",
+						"name": "二级行员(正局)",
+						"children": null
+					}, {
+						"code": "3032",
+						"name": "三级行员(副局)",
+						"children": null
+					}, {
+						"code": "3041",
+						"name": "四级行员(正处)",
+						"children": null
+					}
+				]
+			}
+		]
+	}, {
+		"code": "6",
+		"name": "军队干部职别",
+		"children": [
+			{
+				"code": "61",
+				"name": "军事、政治、后勤军官职别",
+				"children": [
+					{
+						"code": "6101",
+						"name": "军委主席职",
+						"children": null
+					}, {
+						"code": "6102",
+						"name": "军委副主席职",
+						"children": null
+					}, {
+						"code": "6103",
+						"name": "军委秘书长",
+						"children": null
+					}, {
+						"code": "6104",
+						"name": "军委副秘书长",
+						"children": null
+					}
+				]
+			}, {
+				"code": "62",
+				"name": "非专业技术文职干部职务级别",
+				"children": [
+					{
+						"code": "6252",
+						"name": "正局级",
+						"children": null
+					}, {
+						"code": "6254",
+						"name": "副局级",
+						"children": null
+					}
+				]
+			}
+		]
+	}, {
+		"code": "8",
+		"name": "曾实行过的级别",
+		"children": [
+			{
+				"code": "81",
+				"name": "国家机关行政人员级别",
+				"children": [
+					{
+						"code": "8101",
+						"name": "国家机关行政一级",
+						"children": null
+					}, {
+						"code": "8102",
+						"name": "国家机关行政二级",
+						"children": null
+					}
+				]
+			}, {
+				"code": "82",
+				"name": "基层公安干警级别",
+				"children": [
+					{
+						"code": "8201",
+						"name": "基层民警一级",
+						"children": null
+					}, {
+						"code": "8202",
+						"name": "基层民警二级",
+						"children": null
+					}
+				]
+			}, {
+				"code": "83",
+				"name": "国家机关技术人员级别",
+				"children": [
+					{
+						"code": "8301",
+						"name": "国家机关技术一级",
+						"children": null
+					}, {
+						"code": "8302",
+						"name": "国家机关技术二级",
+						"children": null
+					}
+				]
+			}, {
+				"code": "84",
+				"name": "国家机关翻译工作人员级别",
+				"children": [
+					{
+						"code": "8401",
+						"name": "国家机关翻译一等一级",
+						"children": null
+					}, {
+						"code": "8402",
+						"name": "国家机关翻译一等二级",
+						"children": null
+					}
+				]
+			}
+		]
+	}
+]
