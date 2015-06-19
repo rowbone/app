@@ -1,0 +1,262 @@
+// http://10.0.3.20:8080/arppub/service/common!queryOptions?type=DICT_LEVEL&DICT_CODE=HR_RETIRED_ARMY_RANK
+{
+    "message": null,
+    "obj": [{
+        "OPTION_VALUE": "1",
+        "OPTION_NAME": "军衔",
+        "children": [{
+            "OPTION_VALUE": "11",
+            "OPTION_NAME": "元帅",
+            "children": [{
+                "OPTION_VALUE": "1100",
+                "OPTION_NAME": "中华人民共和国大元帅"
+            }, {
+                "OPTION_VALUE": "1110",
+                "OPTION_NAME": "中华人民共和国元帅"
+            }]
+        }, {
+            "OPTION_VALUE": "12",
+            "OPTION_NAME": "将官",
+            "children": [{
+                "OPTION_VALUE": "1200",
+                "OPTION_NAME": "大将"
+            }, {
+                "OPTION_VALUE": "1210",
+                "OPTION_NAME": "一级上将"
+            }, {
+                "OPTION_VALUE": "1220",
+                "OPTION_NAME": "上将"
+            }, {
+                "OPTION_VALUE": "1230",
+                "OPTION_NAME": "中将"
+            }, {
+                "OPTION_VALUE": "1240",
+                "OPTION_NAME": "少将"
+            }]
+        }, {
+            "OPTION_VALUE": "13",
+            "OPTION_NAME": "校官",
+            "children": [{
+                "OPTION_VALUE": "1310",
+                "OPTION_NAME": "大校"
+            }, {
+                "OPTION_VALUE": "1320",
+                "OPTION_NAME": "上校"
+            }, {
+                "OPTION_VALUE": "1330",
+                "OPTION_NAME": "中校"
+            }, {
+                "OPTION_VALUE": "1340",
+                "OPTION_NAME": "少校"
+            }]
+        }, {
+            "OPTION_VALUE": "14",
+            "OPTION_NAME": "尉官",
+            "children": [{
+                "OPTION_VALUE": "1410",
+                "OPTION_NAME": "大尉"
+            }, {
+                "OPTION_VALUE": "1420",
+                "OPTION_NAME": "上尉"
+            }, {
+                "OPTION_VALUE": "1430",
+                "OPTION_NAME": "中尉"
+            }, {
+                "OPTION_VALUE": "1440",
+                "OPTION_NAME": "少尉"
+            }, {
+                "OPTION_VALUE": "1450",
+                "OPTION_NAME": "准尉"
+            }]
+        }, {
+            "OPTION_VALUE": "15",
+            "OPTION_NAME": "士官",
+            "children": [{
+                "OPTION_VALUE": "1511",
+                "OPTION_NAME": "四级军士长"
+            }, {
+                "OPTION_VALUE": "1512",
+                "OPTION_NAME": "三级军士长"
+            }, {
+                "OPTION_VALUE": "1513",
+                "OPTION_NAME": "二级军士长"
+            }, {
+                "OPTION_VALUE": "1514",
+                "OPTION_NAME": "一级军士长"
+            }, {
+                "OPTION_VALUE": "1521",
+                "OPTION_NAME": "四级专业军士"
+            }, {
+                "OPTION_VALUE": "1522",
+                "OPTION_NAME": "三级专业军士"
+            }, {
+                "OPTION_VALUE": "1523",
+                "OPTION_NAME": "二级专业军士"
+            }, {
+                "OPTION_VALUE": "1524",
+                "OPTION_NAME": "一级专业军士"
+            }]
+        }, {
+            "OPTION_VALUE": "16",
+            "OPTION_NAME": "军士",
+            "children": [{
+                "OPTION_VALUE": "1610",
+                "OPTION_NAME": "上士"
+            }, {
+                "OPTION_VALUE": "1620",
+                "OPTION_NAME": "中士"
+            }, {
+                "OPTION_VALUE": "1630",
+                "OPTION_NAME": "下士"
+            }]
+        }, {
+            "OPTION_VALUE": "17",
+            "OPTION_NAME": "兵",
+            "children": [{
+                "OPTION_VALUE": "1710",
+                "OPTION_NAME": "上等兵"
+            }, {
+                "OPTION_VALUE": "1720",
+                "OPTION_NAME": "列兵"
+            }]
+        }, {
+            "OPTION_VALUE": "18",
+            "OPTION_NAME": "学员",
+            "children": [{
+                "OPTION_VALUE": "1880",
+                "OPTION_NAME": "学员衔"
+            }]
+        }, {
+            "OPTION_VALUE": "19",
+            "OPTION_NAME": "未授衔",
+            "children": [{
+                "OPTION_VALUE": "1990",
+                "OPTION_NAME": "未授衔"
+            }]
+        }]
+    }, {
+        "OPTION_VALUE": "2",
+        "OPTION_NAME": "警衔",
+        "children": [{
+            "OPTION_VALUE": "20",
+            "OPTION_NAME": "总警监",
+            "children": [{
+                "OPTION_VALUE": "2011",
+                "OPTION_NAME": "总警监"
+            }, {
+                "OPTION_VALUE": "2012",
+                "OPTION_NAME": "副总警监"
+            }]
+        }, {
+            "OPTION_VALUE": "21",
+            "OPTION_NAME": "警监",
+            "children": [{
+                "OPTION_VALUE": "2101",
+                "OPTION_NAME": "一级警监"
+            }, {
+                "OPTION_VALUE": "2102",
+                "OPTION_NAME": "二级警监"
+            }, {
+                "OPTION_VALUE": "2103",
+                "OPTION_NAME": "三级警监"
+            }]
+        }, {
+            "OPTION_VALUE": "22",
+            "OPTION_NAME": "警督",
+            "children": [{
+                "OPTION_VALUE": "2201",
+                "OPTION_NAME": "一级警督"
+            }, {
+                "OPTION_VALUE": "2202",
+                "OPTION_NAME": "二级警督"
+            }, {
+                "OPTION_VALUE": "2203",
+                "OPTION_NAME": "三级警督"
+            }]
+        }, {
+            "OPTION_VALUE": "23",
+            "OPTION_NAME": "警司",
+            "children": [{
+                "OPTION_VALUE": "2301",
+                "OPTION_NAME": "一级警司"
+            }, {
+                "OPTION_VALUE": "2302",
+                "OPTION_NAME": "二级警司"
+            }, {
+                "OPTION_VALUE": "2303",
+                "OPTION_NAME": "三级警司"
+            }]
+        }, {
+            "OPTION_VALUE": "24",
+            "OPTION_NAME": "警员",
+            "children": [{
+                "OPTION_VALUE": "2401",
+                "OPTION_NAME": "一级警员"
+            }, {
+                "OPTION_VALUE": "2402",
+                "OPTION_NAME": "二级警员"
+            }]
+        }, {
+            "OPTION_VALUE": "25",
+            "OPTION_NAME": "总警监(技术)",
+            "children": [{
+                "OPTION_VALUE": "2511",
+                "OPTION_NAME": "总警监(技术)"
+            }, {
+                "OPTION_VALUE": "2512",
+                "OPTION_NAME": "副总警监(技术)"
+            }]
+        }, {
+            "OPTION_VALUE": "26",
+            "OPTION_NAME": "警监(技术)",
+            "children": [{
+                "OPTION_VALUE": "2601",
+                "OPTION_NAME": "一级警监(技术)"
+            }, {
+                "OPTION_VALUE": "2602",
+                "OPTION_NAME": "二级警监(技术)"
+            }, {
+                "OPTION_VALUE": "2603",
+                "OPTION_NAME": "三级警监(技术)"
+            }]
+        }, {
+            "OPTION_VALUE": "27",
+            "OPTION_NAME": "警督(技术)",
+            "children": [{
+                "OPTION_VALUE": "2701",
+                "OPTION_NAME": "一级警督(技术)"
+            }, {
+                "OPTION_VALUE": "2702",
+                "OPTION_NAME": "二级警督(技术)"
+            }, {
+                "OPTION_VALUE": "2703",
+                "OPTION_NAME": "三级警督(技术)"
+            }]
+        }, {
+            "OPTION_VALUE": "28",
+            "OPTION_NAME": "警司(技术)",
+            "children": [{
+                "OPTION_VALUE": "2801",
+                "OPTION_NAME": "一级警司(技术)"
+            }, {
+                "OPTION_VALUE": "2802",
+                "OPTION_NAME": "二级警司(技术)"
+            }, {
+                "OPTION_VALUE": "2803",
+                "OPTION_NAME": "三级警司(技术)"
+            }]
+        }, {
+            "OPTION_VALUE": "29",
+            "OPTION_NAME": "警员(技术)",
+            "children": [{
+                "OPTION_VALUE": "2901",
+                "OPTION_NAME": "一级警员(技术)"
+            }, {
+                "OPTION_VALUE": "2902",
+                "OPTION_NAME": "二级警员(技术)"
+            }]
+        }]
+    }],
+    "pageInfo": null,
+    "success": true
+}

@@ -11,18 +11,24 @@ app.controller('footableCtrl', ['$scope', '$http', 'conowModals',
 	
 	$scope.selected = 
 		[{
-	           "TITLE": "请假审批",
-	           "date":"2014-12-2 12:20",
-	           "avatar": "img/person/person_photo_2.png",
-	           "content":"有请假流程到你审批环节",
-	           "url":"app.oa.chat"
-	         }, {
-		           "TITLE": "区文辉",
-		           "date":"2014-10-1 12:20",
-		           "avatar": "img/person/person_photo_3.png",
-		           "content":"XXXXXXXX",
-		           "url":"app.oa.chat"
-		         }];
+	     "TITLE": "请假审批",
+	     "date":"2014-12-2 12:20",
+	     "avatar": "img/person/person_photo_2.png",
+	     "content":"有请假流程到你审批环节",
+	     "url":"app.oa.chat"
+	   }, {
+	       "TITLE": "区文辉",
+	       "date":"2014-10-1 12:20",
+	       "avatar": "img/person/person_photo_3.png",
+	       "content":"XXXXXXXX",
+	       "url":"app.oa.chat"
+	     }, {
+			           "TITLE": "通知审批",
+			           "date":"2014-12-1 12:20",
+			           "avatar": "img/person/person_photo_3.png",
+			           "content":"有待审批的通知需要处理",
+			           "url":"app.oa.noticeAudit"
+			         }];
 	
 	$http.get('views/components/conow-footable/data/footable-list.json')
 		.success(function(data, status, config, header) {
@@ -175,7 +181,6 @@ app.controller('footableCtrl', ['$scope', '$http', 'conowModals',
 // 响应式列表弹出层选择 controller
 app.controller('footableSelCtrl', ['$scope', '$conowModalInstance', 'modalParams', '$http', 
     function($scope, $conowModalInstance, modalParams, $http) {
-		console.log(modalParams);
 		$scope.search = {};
 		$scope.result = [];
 		
@@ -186,11 +191,11 @@ app.controller('footableSelCtrl', ['$scope', '$conowModalInstance', 'modalParams
 			arp.alert('你点击了保存');
 		};
 		
-		$scope.ok = function() {
-			console.log('')
+		$scope.confirm = function() {
 			$conowModalInstance.close($scope.selected);
 		}
 	}
-])
+]);
+
 
 

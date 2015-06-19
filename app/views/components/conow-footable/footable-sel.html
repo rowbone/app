@@ -1,12 +1,17 @@
 <modal-body>
+<!-- url="/service/notice!queryAllNoticeList"  -->
 	<conow-footable 
     row-link="app.table.contentList" 
     search-name="姓名"
     no-search="false" 
     ft-result-array="result" 
-    url="/service/notice!queryAllNoticeList" 
+    json-data="jsons"
     ft-titile="标题;来源;创建者:phone;操作:phone"  
-    ft-search="search1" 
+    ft-search="search" 
     ft-item="TITLE;SOURCE;CREATE_TIME.substr(0,19);save():btn-info:保存">
   </conow-footable>
 </modal-body>
+
+<modal-btn>
+    <button type="button" class="btn btn-bar-success" ng-click="confirm()">确定</button>
+</modal-btn>

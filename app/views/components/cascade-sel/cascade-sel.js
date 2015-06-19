@@ -1,7 +1,23 @@
 'use strict';
 
-app.directive('cascadeSel', ['DataService', 'conowModals', 
-	function(DataService, conowModals) {
+app.service('cascadeSelService', ['$http', 
+	function($http) {
+		// 
+		var selected = [];
+
+		this.setSelected = function(sel) {
+			selected = sel;
+		};
+
+		this.getSelected = function() {
+			return selected;
+		};
+
+	}
+]);
+
+app.directive('cascadeSel', ['DataService', 'conowModals', 'cascadeSelService', 
+	function(DataService, conowModals, cascadeSelService) {
 		return {
 			restrict: 'A',
 			// templateUrl: 'views/components/cascade-sel/tpls/cascade-sel.html',
@@ -9,11 +25,13 @@ app.directive('cascadeSel', ['DataService', 'conowModals',
 			scope: {
 				titles: '=',
 				url: '=',
-				selected: '='
+				sel: '='
 			},
 			link: function(scope, elem, attrs) {
 
-				elem.bind('click', function(e) {console.log('in click...')
+				elem.bind('click', function(e) {
+					cascadeSelService.setSelected(scope.sel);
+
 					var modalInstance = conowModals.open({
 						templateUrl: 'views/components/cascade-sel/tpls/cascade-sel.html',
 						title: '选择',
@@ -23,12 +41,11 @@ app.directive('cascadeSel', ['DataService', 'conowModals',
 							modalParams: function() {
 								return {
 									titles: scope.titles,
-									url: scope.url,
-									selected: scope.selected
+									url: scope.url
 								}
 							}
 						}
-					})
+					});
 
 					modalInstance.result.then(function(data) {
 						console.log('data-->', data);
@@ -42,30 +59,39 @@ app.directive('cascadeSel', ['DataService', 'conowModals',
 	}
 ]);
 
-app.controller('cascadeSelDemoCtrl', ['$scope', 
-	function($scope) {
-		//
+app.controller('cascadeSelDemoCtrl', ['$scope', 'DataService', 
+	function($scope, DataService) {
 		$scope.titles = ['级别1', '级别2', '级别3'];
 
 		var entity = $scope.entity = {
-			selected: ['军队干部职别', '军事、政治、后勤军官职别', '军委副主席职']
-		}
+			sel: '6102'
+		};
+
+		var urlSelected = 'views/components/cascade-sel/data/selected.json';
+		DataService.getData(urlSelected)
+			.then(function(data) {
+				$scope.sel = data;
+			}, function(msg) {
+				console.error('msg-->', msg);
+			});
 	}
 ]);
 
-app.controller('cascadeSelCtrl', ['$scope', 'DataService', '$conowModalInstance', 'modalParams', 
-	function($scope, DataService, $conowModalInstance, modalParams) {
-		//
+app.controller('cascadeSelCtrl', ['$scope', 'DataService', '$conowModalInstance', 'modalParams', 'cascadeSelService', 
+	function($scope, DataService, $conowModalInstance, modalParams, cascadeSelService) {
 		$scope.titles = modalParams.titles;
-		$scope.selected = [];
-
-		$scope.selected = modalParams.selected;
-
+		$scope.selected = cascadeSelService.getSelected();
+console.log('selected-->', $scope.selected);
 		var init = function() {
 			var url = modalParams.url;
 			DataService.getData(url)
 				.then(function(data) {
 					$scope.dataLevel1 = data;
+					// var iLen = data.length;
+					// for(var i=0; i<iLen; i++) {
+					// 	if(data[i]['code'] === )
+					// }
+
 				}, function(msg) {
 					console.error('msg-->', msg);
 				});
@@ -93,7 +119,8 @@ app.controller('cascadeSelCtrl', ['$scope', 'DataService', '$conowModalInstance'
 		$scope.indexInArr = function(item, items) {
 			var iLen = items.length;
 			for(var i=0; i<iLen; i++) {
-				if(angular.equals(item, items[i])) {
+				// if(angular.equals(item, items[i])) {
+				if(item.code === items[i].code) {
 					return i;
 				}
 			}
@@ -103,6 +130,7 @@ app.controller('cascadeSelCtrl', ['$scope', 'DataService', '$conowModalInstance'
 
 		$scope.confirm = function() {
 			console.log('111');
+			cascadeSelService.setSelected($scope.selected);
 			$conowModalInstance.close($scope.selected);
 		};
 

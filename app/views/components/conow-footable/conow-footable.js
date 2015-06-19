@@ -36,7 +36,7 @@ app.filter('conowFootableSize', function() {
 /**
  * 响应式列表指令
  */
-app.directive('conowFootable', function($http,$compile,$timeout) {
+app.directive('conowFootable', function($http,$compile,$timeout, $parse) {
     return {
         restrict: 'E',
         template:function(e,iAttrs) {
@@ -164,7 +164,6 @@ app.directive('conowFootable', function($http,$compile,$timeout) {
         transclude: true,
         compile:function(element, attributes){
           return function(scope, iElement, iAttrs, controller,transcludeFn) {
-   
             if(!iAttrs.url && !iAttrs.jsonData){
               arp.alert("url and jsonData is undifined!!!");
             }
@@ -172,38 +171,48 @@ app.directive('conowFootable', function($http,$compile,$timeout) {
             
             var footBodyH = iElement.find(".footable-body");
             
+            if(iAttrs.selectedArr) {
+              console.log('selectedArr-->', iAttrs.selectedArr);
+              scope.selectedArr = $parse(iAttrs.selectedArr);
+            }
+            
             /**
              * 添加点击尚亮
              */
             //TODO 暂时使用js的方法(效率较低暂时这样做着先)
             var setLight = function(){
-              
               $timeout(function(){
                 $('.ft-tr').click(function(){
                   if(iAttrs.showLight=='single'){
-                    $('.ft-tr').removeClass('bg-primary lter');
+                    $('.ft-tr').removeClass('bg-light dker');
                   }
-                  $(this).toggleClass('bg-primary lter');
+                  $(this).toggleClass('bg-light dker');
                 });
                 
               },200);
             };
             
+            /**
+             * add by wlj @2015.06.17
+             * start
+             * */
+            // 列表行点击事件[维护已选择数组-添加或删除]
             var clickFunc = function(item) {
-              console.log('in click-->', item);
               var index = -1;
               if((index = scope.isIn(item, scope.selected)) > -1) {
                 scope.selected.splice(index, 1);
               } else {
                 scope.selected.push(item);
               }
-              
-              console.log('scope.selected-->', scope.selected);
             }
-            
-            var isIn = function(item, items) {
+            // 判断列表行是否在已选择数组里面，用于添加样式
+            var isIn = function(item) {
+              var items = scope.selected;
               for(var i=0; i<items.length; i++) {
-                if(item.TITLE == items[i].TITLE) {
+//                if(item.TITLE == items[i].TITLE) {
+//                  return i;
+//                }
+                if(angular.equals(item, items[i])) {
                   return i;
                 }
               }
@@ -213,6 +222,10 @@ app.directive('conowFootable', function($http,$compile,$timeout) {
             
             scope.isIn = isIn;
             scope.click = clickFunc;
+            /**
+             * add by wlj @2015.06.17
+             * end
+             * */
             
             /**
              * 初始化页码
@@ -309,8 +322,7 @@ app.directive('conowFootable', function($http,$compile,$timeout) {
             if(iAttrs.ftItem){
               items = iAttrs.ftItem.split(";");
             }
-console.log('titles-->', titles);
-console.log('items-->', items);           
+            
             var showMoreArrayName = 'showMoreArray' + new UUID().id;
             var showMoreFunctionName = 'showMoreFunction' + new UUID().id;
             scope[showMoreArrayName] = [];
@@ -439,19 +451,17 @@ console.log('items-->', items);
             }
             if(scope['jsonData']){
               footBodyH.attr('ng-repeat','item in '+iAttrs.ftResultArray+'|conowFootablePaging:'+iAttrs.ftSearch+'.page:'+iAttrs.ftSearch+'.pagesize');
-              
             }
             footBodyH.attr('ng-click', 'click(item)');
-            footBodyH.attr('ng-class',"{'footable-odd': $index%2==1, 'footable-even': $index%2==0, 'bg-primary lter': isIn(item, selected) > -1}");
+            footBodyH.attr('ng-class',"{'footable-odd': $index%2==1, 'footable-even': $index%2==0, 'bg-light dker': isIn(item) > -1}");
             footBodyH.html('');
             iElement.find("#footable-thead").append(thead);
             footBodyH.append(content);
             footBodyH.append(content_show);
-console.log('footBodyH-->', footBodyH);
+            
             $compile(iElement.find("table"))(scope);
 
           };
         }
     };
 });
-
