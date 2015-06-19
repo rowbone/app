@@ -59,5 +59,9 @@ angular.module('app.components', ['ui.router'])
 					url: '/cascadeSel',
 					templateUrl: 'views/components/cascade-sel/cascade-sel-demo.html'
 				})
+				.state('app.components.timeSelect', {
+					url: '/timeSelect',
+					templateUrl: 'views/components/conow-timeSelect/timeSelectDemo.html'
+				})
 
 	}]);

@@ -1,0 +1,252 @@
+<div class="bg-light b-b header-md" ng-init="app.settings.equSwitch = true;">
+    <h1 class="m-n font-thin h3">日期显示组件</h1>
+</div>
+<div class="wrapper-md pos-rlt" >
+    <div class="col-sm-6">
+	      <div class="panel panel-info">
+	        <div class="panel-heading font-bold">组件演示</div>
+	        <div class="panel-body" ng-init="dateModel.time='12:12';dateModel.NOALL_START_TIME='2015-05-06 12:12:12';dateModel.NOALL_END_TIME='2015-05-08';dateModel.NOALL_START_TIME_SING='2015-06-07';dateModel.NOALL_START_TIME2='2015-06-18 12:12:12';dateModel.NOALL_END_TIME2='2015-06-18';dateModel.NOALL_START_TIME_SING2='2015-06-18'">
+					<div>无确定按钮日期组件演示</div>
+				<div class="hbox">
+					<conow-date-selet  class="col v-middle  text-primary b-b" min-date="'2015-05-25'" max-date="'2015-06-25'" format="YYYY-MM-DD"  start-date="dateModel.NOALL_START_TIME" end-date="dateModel.NOALL_END_TIME" >
+						<div class="hbox padder-v padder-sm">
+							<div class="col text-center">
+								{{dateModel.NOALL_START_TIME.parseToDate().parseStr('YYYY-MM-DD CWEEK')}}
+							</div>
+							<div class="col col-xxs text-center font-bold">—</div>
+							<div class="col text-center">
+								{{dateModel.NOALL_END_TIME.parseToDate().parseStr('YYYY-MM-DD CWEEK')}}
+							</div>
+							<div class="col col-xxs text-right"><i class="modal-xs-icon ion-ios-arrow-right"></i></div>
+						</div>
+			    	</conow-date-selet>
+				</div>
+				<div>带确定按钮日期组件演示</div>
+				<div class="hbox ">
+					<conow-date-selet class="col v-middle  text-primary b-b" comf-btn="true"  start-date="dateModel.NOALL_START_TIME" end-date="dateModel.NOALL_END_TIME">
+						<div class="hbox padder-v padder-sm">
+							<div class="col text-center">
+								{{dateModel.NOALL_START_TIME.parseToDate().parseStr('YYYY-MM-DD CWEEK')}}
+							</div>
+							<div class="col col-xxs text-center font-bold">—</div>
+							<div class="col text-center">
+								{{dateModel.NOALL_END_TIME.parseToDate().parseStr('YYYY-MM-DD CWEEK')}}
+							</div>
+							<div class="col col-xxs text-right"><i class="modal-xs-icon ion-ios-arrow-right"></i></div>
+						</div>
+			    	</conow-date-selet>
+				</div>
+				<div>带确定按钮可选全天、上午、下午日期组件演示</div>
+				<div class="hbox">
+					<conow-date-selet class="col v-middle  text-primary b-b" half-day-choose="true" choose-type="dateModel.chooseType" comf-btn="true"  start-date="dateModel.NOALL_START_TIME2" end-date="dateModel.NOALL_END_TIME2">
+						<div class="hbox padder-v padder-sm">
+							<div class="col text-center">
+								<div>{{dateModel.NOALL_START_TIME2.parseToDate().parseStr('YYYY-MM-DD CWEEK')}}</div>
+								<div>{{dateModel.chooseType.startDate.type | ampmFormat}}</div>
+							</div>
+							<div class="col col-xxs text-center font-bold">—</div>
+							<div class="col text-center">
+								<div class="text-center">
+								{{dateModel.NOALL_END_TIME2.parseToDate().parseStr('YYYY-MM-DD CWEEK')}}</div>
+								<div>{{dateModel.chooseType.endDate.type | ampmFormat}}</div>
+							</div>
+							<div class="col col-xxs text-right v-middle"><i class="modal-xs-icon ion-ios-arrow-right"></i></div>
+						</div>
+			    	</conow-date-selet>
+				
+				</div>
+				<div>单选不带确定按钮日期组件演示</div>
+				<div class="hbox">
+					<conow-date-selet single-time="true"   min-date="'2015-05-25'" max-date="'2015-06-25'" class="col v-middle  text-primary b-b"  start-date="dateModel.NOALL_START_TIME_SING">
+			    		<div class="padder-v" >
+							<div class="text-center">
+								{{dateModel.NOALL_START_TIME_SING.parseToDate().parseStr('YYYY-MM-DD CWEEK')}}
+							</div>
+						</div>
+			    	</conow-date-selet>
+				
+				</div>
+				
+				<div>单选带确定按钮日期组件演示</div>
+				<div class="hbox">
+					<conow-date-selet single-time="true" class="col v-middle  text-primary b-b" comf-btn="true" start-date="dateModel.NOALL_START_TIME_SING">
+			    		<div class="padder-v" >
+							<div class="text-center">
+								{{dateModel.NOALL_START_TIME_SING.parseToDate().parseStr('YYYY-MM-DD CWEEK')}}
+							</div>
+						</div>
+			    	</conow-date-selet>
+				
+				</div>
+				<div>单选带确定可选全天、上午、下午按钮日期组件演示</div>
+				<div class="hbox">
+					<conow-date-selet single-time="true" class="col v-middle  text-primary b-b" half-day-choose="true" choose-type="dateModel.chooseType_single" comf-btn="true" start-date="dateModel.NOALL_START_TIME_SING2">
+			    		<div class="padder-v" >
+							<div class="text-center">
+								{{dateModel.NOALL_START_TIME_SING2.parseToDate().parseStr('YYYY-MM-DD CWEEK')}}
+								{{dateModel.chooseType_single.startDate.type | ampmFormat}}
+							</div>
+						</div>
+			    	</conow-date-selet>
+				
+				</div>
+					<div>时间组件演示</div>
+				<div class="hbox">
+					<div class="col v-middle text-center text-primary b-b">
+			    		<conow-time-selet class="padder-v b-b" min-time="'20:12'" max-time="'23:30'" format="hh:mm"  time ="dateModel.time">
+							<div class="text-center">
+								{{dateModel.time}}
+							</div>
+						</conow-time-selet>
+			    	</div>
+				</div>
+
+	    	</div>
+	    </div>
+	    
+	    
+	    
+	    
+	     <div class="panel panel-warning">
+        <div class="panel-heading">
+          <div class="panel-title">常见问题</div>
+        </div>
+        <div class="panel-body">
+          <ol>
+            <!-- <li>
+            <p><span class="text-danger">Q:</span>不{{search1}}能{{result1}}排{{search}}序{{result}}</p>
+            </li> -->
+          </ol>
+        </div>
+        <div class="panel-footer">注释</div>
+      </div>
+
+      <div class="panel panel-danger">
+        <div class="panel-heading">
+          <div class="panel-title">待解决问题：（欢迎补充[格式：XXX问题 - by XX @时间]）</div>
+        </div>
+        <div class="panel-body">
+          <ol>
+           <!--  <li> <p><span class="text-danger">Q:</span>不能排序</p></li> -->
+          </ol>
+        </div>
+      </div>
+
+      <div class="panel panel-info">
+        <div class="panel-heading">
+          <div class="panelt-title">版本维护说明</div>
+        </div>
+        <div class="panel-body">
+          <ul class="list-unstyled">
+             <li>组件开发人员 zhengyiling  @2015-05-08</li>
+             <li>新增版本v1.0- by zhengyiling  @2015-05-08</li>
+             <li>增加了日期范围控制v2.0- by zhengyiling  @2015-05-18</li>
+              <li>增加了日期 选择全天上午下午v3.0- by wangdacheng  @2015-06-18</li>
+          </ul>
+        </div>
+      </div>
+      
+      <div class="panel panel-danger">
+        <div class="panel-heading">
+          <div class="panelt-title">外部框架依赖</div>
+        </div>
+        <div class="panel-body">
+          <ul class="list-unstyled">
+             <li>暂无</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-6">
+      <div class="panel panel-info">
+        <div class="panel-heading font-bold">组件描述</div>
+        <div class="panel-body">
+        	   <h5 class="h5 font-bold">可选属性</h5>
+   	<pre>
+   	日期组件
+{
+    start-date(必填)    : "双向数据绑定的开始时间"
+    end-date(必填)      : "双向数据绑定的结束时间"
+    date-init(非必填)    : "设置一开始选中的天数：YYYY-MM-DD"
+    comf-btn(非必填)      ："为true则显示确定按钮"
+	single-time(是否单选 非必填):"为true则只需填写一个"
+	format(非必须)       :'设置返回的时间格式' eg.YYYY-MM-DD
+	min-date(非必须)	   :最小日期,格式为字符串eg.min-date="'2015-05-25'"
+	max-date(非必须)	   :最大日期,格式为字符串(同上)
+	half-day-choose="true"(非必填) 设置为true时，并且有确定按钮时，才可以选择全天、上午、下午。
+	choose-type(非必填)       : "双向数据绑定的全天、上午、下午"
+}
+
+ 	时间组件
+{
+    time(必填)    : "双向数据绑定的时间:格式可以为hh:mm ,YYYY-MM-DD hh:mm:ss,YYYY-MM-DD等"
+    end-date(必填)      : "双向数据绑定的结束时间"
+    date-init(非必填)    : "若为true则每次点击组件不带原时间,默认为false,带原时间"
+    format(非必须)       :'设置返回的时间格式' eg.YYYY-MM-DD
+	ex-date(非必须)      :'可以使用他来添加前面日期'
+	min-time(非必须)	   :设置最小时间，格式为字符串 eg.min-time="'20:12'"
+	max-time(非必须)	   :设置最大时间，格式为字符串 (同上)
+}
+
+依赖的js
+{
+   'js/directives/conow-timeSelect/dateCommond.js',
+    'js/directives/conow-timeSelect/service/dateHandleServ.js'
+
+}
+
+   </pre>
+   
+   
+     <h5 class="h5 font-bold">使用例子</h5>
+   	<pre>
+{
+日期组件
+&ltconow-date-selet class="col v-middle  text-primary b-b" format="YYYY-MM-DD"  start-date="dateModel.NOALL_START_TIME" end-date="dateModel.NOALL_END_TIME"&gt
+中间可以自己实现
+&lt/conow-date-selet&gt
+
+
+&ltconow-date-selet class="col v-middle  text-primary b-b" format="YYYY-MM-DD"  start-date="dateModel.NOALL_START_TIME" end-date="dateModel.NOALL_END_TIME"&gt
+  		&ltdiv class="padder-v" &gt
+		&ltdiv class="hbox text-muted padder-v-xs"&gt
+    		&ltdiv class="col col-md v-middle text-base"&gt从&lt/div&gt
+    	&lt/div&gt
+		&ltdiv class="text-center"&gt
+			{{dateModel.NOALL_START_TIME}}
+		&lt/div&gt
+	&lt/div&gt
+	
+	&ltdiv class="padder-v b-b" &gt
+		&ltdiv class="hbox text-muted padder-v-xs"&gt
+    		&ltdiv class="col col-md v-middle text-base"&gt到&lt/div&gt
+    	&lt/div&gt
+		&ltdiv class="text-center"&gt
+			{{dateModel.NOALL_END_TIME.parseToDate().parseStr('YYYY-MM-DD CWEEK')}}
+		&lt/div&gt
+	&lt/div&gt
+&lt/conow-date-selet&gt
+
+时间组件
+
+&ltconow-time-selet class="padder-v b-b"   time ="dateModel.NOALL_START_TIME"&gt
+	可以自己实现
+&lt/conow-time-selet&gt
+
+
+
+&ltconow-time-selet class="padder-v b-b"   time ="dateModel.NOALL_START_TIME"&gt
+	&ltdiv class="hbox text-muted padder-v-xs"&gt
+   		&ltdiv class="col col-md v-middle text-base"&gt&nbsp&lt/div&gt
+   	&lt/div&gt
+	&ltdiv class="text-center"&gt
+		{{dateModel.NOALL_START_TIME}}
+	&lt/div&gt
+&lt/conow-time-selet&gt
+
+}
+   </pre>
+        </div>
+      </div>
+    </div>
+</div>

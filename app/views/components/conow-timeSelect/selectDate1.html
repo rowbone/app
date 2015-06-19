@@ -1,0 +1,57 @@
+<style>
+.padder-xlg {
+  padding-left: 25px;
+  padding-right: 25px;
+}
+.calendar-pointer{
+	cursor:pointer;
+}
+.bg-week{
+	background-color:rgb(217,230,239)
+}
+.h-full1{
+	height:89px;
+} 
+</style>
+<div class="wrapper no-padder">
+		<!-- 月份选择 -->
+	<div class="hbox padder-v-xs padder bg-primary">
+		<div class="col col-p-xs v-middle" ng-click="calPreMonthAllDay()"><i class="ion-ios-arrow-left text-arrow calendar-pointer"></i></div>
+		<div class="col v-middle text-center font-bold text-lg">{{currentMonth.parseStr('YYYY年MM月')}}</div>
+		<div class="col col-p-xs v-middle" ng-click="calNextMonthAllDay()"><i class="ion-ios-arrow-right text-arrow pull-right calendar-pointer" ></i></div>
+	</div>
+	<!-- /月份选择 -->
+	
+	<!-- 星期 -->
+	<div class="hbox">
+		<div class="col bg-week text-center padder-v-xxs">日</div>
+		<div class="col bg-week text-center padder-v-xxs">一</div>
+		<div class="col bg-week text-center padder-v-xxs">二</div>
+		<div class="col bg-week text-center padder-v-xxs">三</div>
+		<div class="col bg-week text-center padder-v-xxs">四</div>
+		<div class="col bg-week text-center padder-v-xxs">五</div>
+		<div class="col bg-week text-center padder-v-xxs">六</div>		
+	</div>
+	<!-- /星期 -->
+	
+	<!-- 日期 -->
+	<div class="hbox h-full1" ng-repeat = " row in calendarArrays">
+		<div class="col b-a text-md font-bold" ng-class="{'text-muted':!(date.DATE | isCurrMonth :currentMonth),'bg-primary lter':date.CHOOSED,'bg-light dk':!date.isClicked}" ng-click="chooseDate(date)" ng-repeat="date in row">
+			<div class=' m-l-xs' ng-class="{'text-primary':(date.DATE | isToday) }">{{date.DAY}}</div>
+			<div class="text-center" ng-if="date.SEday">{{date.SEday}}</div>
+			<div class=" lter text-xs text-white text-center text-ellipsis" ng-if="date.FESTIVAL"  ng-style="{'background-color':color.FEST_SCHED}">{{date.FESTIVAL}}</div>
+			<div class=" lter text-xs text-white text-center text-ellipsis" ng-repeat = "item in date.SCHEDS"  ng-show="($index<2&&date.FESTIVAL)||($index<=2&&!date.FESTIVAL)" ng-style="{'background-color':color[TYPE[item.TYPE]]}">{{item.TITLE}}</div>
+			<div class="text-xs text-center" ng-if="(date.FESTIVAL&&date.SCHEDS.length>2)||(!date.FESTIVAL&&date.SCHEDS.length>3)">....</div>
+			<!-- <div class="bg-success lter text-xs text-center">出差北京</div>
+			<div class="bg-warning lter text-xs text-center">出差北京</div>
+			<div class="text-xs text-center">....</div> -->
+		</div>
+	</div>
+	<!-- /日期 -->
+	  <div class="bbox" ng-if="comfBtn_show">
+    	<div class="col bg-primary text-center text-lg font-bold"  ng-click="ok()">
+    		确定
+    	</div>
+    </div>
+	
+</div>

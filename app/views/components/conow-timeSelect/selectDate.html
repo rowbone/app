@@ -1,0 +1,85 @@
+<style>
+.bg-week{background-color:#f2f5fa;}
+.bg-date{height:44px;background-color:#f2f5fa;}
+.week-box{height:25px;line-height:25px;font-size:15px;}
+.date-box{padding:12px 0;}
+.date-box-inner{padding:3px 0;font-size:17px;text-align:center;}
+.date-single-box span{display:inline-block;width:30px;height:30px;line-height:30px;text-align:center;}
+.date-single-box .none{display:none;}
+.text-weekend{color:#f47566;}
+.date-disabled{color:#999;}
+.date-choosed-day,.date-choosed-am,.date-choosed-pm,.date-isToday,.date-all-day{border-radius:50%;}
+.date-single-box .date-isToday{line-height:28px;border:1px solid #22b7e5;color:#1c2b36;}
+.date-single-box .date-choosed-day{background:#22b7e5;color:#fff;}
+.date-single-box .date-all-day{background:#22b8e5;color:#fff;}
+.date-single-box .date-choosed-am{background:#45b7af;color:#fff;}
+.date-single-box .date-choosed-pm{background:#f7a67b;color:#fff;}
+.date-allDay,.date-am,.date-pm{display:inline-block;margin:5px;width:34px;height:34px;line-height:34px;text-align:center;color:#fff;font-size:13px;background:#999;border-radius:50%;}
+.date-allDay.selected{background:#22b8e5;}
+.date-am.selected{background:#45b7af;}
+.date-pm.selected{background:#f7a67b;}
+.text-lg-18{font-size:18px;}
+.text-preNextBtn{color:#91dbf2;}
+.modal-month-box{height:44px;}
+</style>
+<modal-body>
+<div class="wrapper no-padder">
+		<!-- 月份选择 -->
+	<div class="hbox padder modal-month-box">
+		<div class="col col-p-xs v-middle text-center" ng-click="calPreMonthAllDay()"><i class="ion-ios-arrow-left text-arrow cursor-h text-preNextBtn"></i></div>
+		<div class="col v-middle text-center font-bold text-lg-18">{{currentMonth.parseStr('YYYY年MM月')}}</div>
+		<div class="col col-p-xs v-middle text-center" ng-click="calNextMonthAllDay()"><i class="ion-ios-arrow-right text-arrow cursor-h text-preNextBtn" ></i></div>
+	</div>
+	<!-- /月份选择 -->
+	
+	<!-- 星期 -->
+	<div class="hbox text-primary font-bold week-box">
+		<div class="col bg-week text-center">日</div>
+		<div class="col bg-week text-center">一</div>
+		<div class="col bg-week text-center">二</div>
+		<div class="col bg-week text-center">三</div>
+		<div class="col bg-week text-center">四</div>
+		<div class="col bg-week text-center">五</div>
+		<div class="col bg-week text-center">六</div>		
+	</div>
+	<!-- /星期 -->
+	
+	<!-- 日期 -->
+	<div class="date-box">
+		<div class="hbox date-box-inner" ng-repeat = " row in calendarArrays">
+			<div class="col text-lg date-single-box" ng-click="chooseDate(date)" ng-repeat="date in row">
+				<div>
+					<span ng-class = "{'text-weekend': $first,'text-danger': $last,'none':!(date.DATE | isCurrMonth :currentMonth),'date-choosed-day':date.CHOOSED,'date-disabled':!date.isClicked,'date-isToday':(date.DATE | isToday),'date-all-day':date.ALLDAY,'date-choosed-am':date.AMDAY,'date-choosed-pm':date.PMDAY}">{{date.DAY}}</span>
+				</div>
+				<!-- 
+				<div class="text-center" ng-if="date.SEday">{{date.SEday}}</div>
+				<div class=" lter text-xs text-white text-center text-ellipsis" ng-if="date.FESTIVAL"  ng-style="{'background-color':color.FEST_SCHED}">{{date.FESTIVAL}}</div>
+				<div class=" lter text-xs text-white text-center text-ellipsis" ng-repeat = "item in date.SCHEDS"  ng-show="($index<2&&date.FESTIVAL)||($index<=2&&!date.FESTIVAL)" ng-style="{'background-color':color[TYPE[item.TYPE]]}">{{item.TITLE}}</div>
+				<div class="text-xs text-center" ng-if="(date.FESTIVAL&&date.SCHEDS.length>2)||(!date.FESTIVAL&&date.SCHEDS.length>3)">....</div>
+				 -->
+				 <!-- <div class="bg-success lter text-xs text-center">出差北京</div>
+				<div class="bg-warning lter text-xs text-center">出差北京</div>
+				<div class="text-xs text-center">....</div> -->
+			</div>
+		</div>
+	</div>
+	<!-- /日期 -->
+<!-- 	  <div class="bbox" ng-if="comfBtn_show">
+    	<div class="col bg-primary text-center text-lg font-bold"  ng-click="ok()">
+    		确定
+    	</div>
+    </div> -->
+	<div class="hbox bg-date padder-sm r-b-3x" ng-if="comfBtn_show && halfDayChoose">
+	  <div ng-if="daystate" class="pull-left">
+		  <span class="text-lg m-r-xs font-bold text-primary cursor-h inline">{{clickedDate}}</span>
+		  <span class="text-lg date-allDay cursor-h" ng-class="{'selected':ALLDay}" ng-click="allDay(lastClickDate)">全天</span>
+		  <span class="text-lg date-am cursor-h" ng-class="{'selected':AMDay}" ng-click="amDay(lastClickDate)">上午</span>
+		  <span class="text-lg date-pm cursor-h" ng-if="show_pm" ng-class="{'selected':PMDay}" ng-click="pmDay(lastClickDate)">下午</span>
+	  </div>
+	  <span ng-click="clear()" class="pull-right m-t-sm cursor-h text-lg font-bold text-primary">清空</span>
+ 	</div>
+</div>
+ </modal-body>
+	<modal-btn ng-if="comfBtn_show">
+    	<a class="btn btn-bar-success"  ng-disabled="comfBtn_disabled" ng-click="ok()">确定</a>
+	</modal-btn>

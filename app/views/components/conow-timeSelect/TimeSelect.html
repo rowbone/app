@@ -1,0 +1,62 @@
+<style>
+.hbox .col-p-xxs {
+  width: 10px;
+}
+.hbox .col-xmd {
+  width: 15px;
+}
+.bg-graying {
+  background-color: rgb(221,224,224);
+}
+</style>
+<div class="wrapper  no-padder">
+<div class="hbox">
+	<div class="bg-primary padder-v-sm text-center text-lg">时间选择</div>
+</div>
+	<form role="form" name="tripReqForm" ng-submit="commitTrip()">
+		<div class="hbox padder-v-s">
+			<div class="col col-p-xs"></div>
+			<div class="col text-center text-primary font-bold text-arrow b-b b-black" ng-class="{'b-a':inp[0].state}" ng-click="changeInp(0)" ng-bind="inp[0].num">0</div>
+			<div class="col col-p-xxs"></div>
+			<div class="col text-center text-primary font-bold text-arrow b-b b-black"  ng-class="{'b-a':inp[1].state}"  ng-click="changeInp(1)" ng-bind="inp[1].num">2</div>
+			<div class="col col-p-xxs"></div>
+			<div class="col text-center text-primary font-bold text-arrow">:</div>
+			<div class="col col-p-xxs"></div>
+			<div class="col text-center text-primary font-bold text-arrow b-b b-black"  ng-class="{'b-a':inp[2].state}"  ng-click="changeInp(2)" ng-bind="inp[2].num">1</div>
+			<div class="col col-p-xxs"></div>
+			<div class="col text-center text-primary font-bold text-arrow b-b b-black"  ng-class="{'b-a':inp[3].state}"  ng-click="changeInp(3)" ng-bind="inp[3].num">5</div>
+			<div class="col col-p-xs"></div>
+		</div>
+		
+		<div class="wrapper">
+			<div class="hbox">
+				<div class="col text-arrow text-center padder-v-sm  disable" ng-class="{'bg-graying':clickNum[1].gray,'bg-primary font-bold':clickNum[1].blue}"  ng-click="setInp(1)">1</div>
+				<div class="col col-xmd"></div>
+				<div class="col text-arrow text-center padder-v-sm"  ng-class="{'bg-graying':clickNum[2].gray,'bg-primary font-bold':clickNum[2].blue}"  ng-click="setInp(2)">2</div>
+				<div class="col col-xmd"></div>
+				<div class="col text-arrow text-center padder-v-sm"  ng-class="{'bg-graying':clickNum[3].gray,'bg-primary font-bold':clickNum[3].blue}"  ng-click="setInp(3)">3</div>
+			</div>
+			<div class="hbox m-t">
+				<div class="col text-arrow text-center padder-v-sm"  ng-class="{'bg-graying':clickNum[4].gray,'bg-primary font-bold':clickNum[4].blue}"  ng-click="setInp(4)">4</div>
+				<div class="col col-xmd"></div>
+				<div class="col text-arrow text-center padder-v-sm"  ng-class="{'bg-graying':clickNum[5].gray,'bg-primary font-bold':clickNum[5].blue}"   ng-click="setInp(5)">5</div>
+				<div class="col col-xmd"></div>
+				<div class="col text-arrow text-center padder-v-sm"  ng-class="{'bg-graying':clickNum[6].gray,'bg-primary font-bold':clickNum[6].blue}"   ng-click="setInp(6)">6</div>
+			</div>
+			<div class="hbox m-t">
+				<div class="col text-arrow text-center padder-v-sm" ng-class="{'bg-graying':clickNum[7].gray,'bg-primary font-bold':clickNum[7].blue}"  ng-click="setInp(7)">7</div>
+				<div class="col col-xmd"></div>
+				<div class="col text-arrow text-center padder-v-sm" ng-class="{'bg-graying':clickNum[8].gray,'bg-primary font-bold':clickNum[8].blue}"  ng-click="setInp(8)">8</div>
+				<div class="col col-xmd"></div>
+				<div class="col text-arrow text-center padder-v-sm" ng-class="{'bg-graying':clickNum[9].gray,'bg-primary font-bold':clickNum[9].blue}"  ng-click="setInp(9)">9</div>
+			</div>
+			<div class="hbox m-t">
+				<div class="col text-center padder-v-sm text-arrow" ng-class="{'bg-graying':clickNum[0].gray,'bg-primary font-bold':clickNum[0].blue}"  ng-click="setInp(0)">0</div>
+			</div>
+		</div>
+		
+	</form>
+<div class="hbox" ng-click="ok()">
+	<div class="bg-primary padder-v-sm text-center text-lg font-bold">确定</div>
+</div>
+</div>
