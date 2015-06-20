@@ -24,7 +24,7 @@
 		<conow-tabs-content>
 			<conow-tabs-content-text>
 				<div ng-if="dataLevel1.length == 0">没有可选项</div>
-				<a href="#" class="btn m cascade-sel" ng-class="{'btn-success': indexInArr(item, selected) > -1}" skip-click=1 ng-click="select($event, '1', item)" ng-repeat="item in dataLevel1 track by $index">{{ item.name }}</a>
+				<a href="#" class="btn m cascade-sel" ng-class="{'btn-success': selected[0]['code'] == item['code']}" skip-click=1 ng-click="select($event, '1', item)" ng-repeat="item in dataLevel1 track by $index">{{ item.name }}</a>
 			</conow-tabs-content-text>
 			<conow-tabs-content-text>
 				<div ng-if="dataLevel2.length == 0">没有可选项</div>

@@ -87,10 +87,19 @@ console.log('selected-->', $scope.selected);
 			DataService.getData(url)
 				.then(function(data) {
 					$scope.dataLevel1 = data;
-					// var iLen = data.length;
-					// for(var i=0; i<iLen; i++) {
-					// 	if(data[i]['code'] === )
-					// }
+					var iLen = data.length;
+					for(var i=0; i<iLen; i++) {
+						if(data[i]['code'] === $scope.selected[0]['code']) {
+							$scope.dataLevel2 = data[i].children;
+						}
+					}
+					var dataLevel2 = $scope.dataLevel2;
+					iLen = dataLevel2.length;
+					for(var i = 0; i<iLen; i++) {
+						if (dataLevel2[i].code === $scope.selected[1].code) {
+							$scope.dataLevel3 = dataLevel2[i].children;
+						};
+					}
 
 				}, function(msg) {
 					console.error('msg-->', msg);
@@ -106,6 +115,7 @@ console.log('selected-->', $scope.selected);
 				case '1':
 					$scope.selected = [item];
 					$scope.dataLevel2 = item.children;
+					$scope.dataLevel3 = null;
 					break;
 				case '2':
 					$scope.selected = [$scope.selected[0], item];
