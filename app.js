@@ -12,6 +12,7 @@ var home = require('./routes/home');
 var service = require('./routes/service');
 var dataGenerate = require('./routes/dataGenerate.js');
 var contactlist = require('./routes/contactlist');
+var cascaseSel = require('./routes/cascadeSel');
 
 var ejs = require('ejs');
 
@@ -44,6 +45,7 @@ app.use('/home', home);
 app.use('/service', service);
 app.use('/dataGenerate', dataGenerate);
 app.use('/contactlist', contactlist);
+app.use('/cascaseSel', cascaseSel);
 
 // app.get('/userlist', users.userlist(db));
 

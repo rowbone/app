@@ -81,6 +81,10 @@ app.controller('cascadeSelCtrl', ['$scope', 'DataService', '$conowModalInstance'
 	function($scope, DataService, $conowModalInstance, modalParams, cascadeSelService) {
 		$scope.titles = modalParams.titles;
 		$scope.selected = cascadeSelService.getSelected();
+
+		var options = $scope.options = {
+			tabs: [true, false, false]
+		};
 console.log('selected-->', $scope.selected);
 		var init = function() {
 			var url = modalParams.url;
@@ -116,10 +120,14 @@ console.log('selected-->', $scope.selected);
 					$scope.selected = [item];
 					$scope.dataLevel2 = item.children;
 					$scope.dataLevel3 = null;
+
+					options.tabs = [false, true, false];
 					break;
 				case '2':
 					$scope.selected = [$scope.selected[0], item];
 					$scope.dataLevel3 = item.children;
+					
+					options.tabs = [false, false, true];
 					break;
 				case '3':
 					$scope.selected = [$scope.selected[0], $scope.selected[1], item];
