@@ -173,6 +173,16 @@ app.directive('conowFootable', ['$http', '$compile', '$timeout', '$parse',
           transclude: true,
           compile:function(element, attributes) {
             return function(scope, iElement, iAttrs, controller, transcludeFn) {
+
+              // 增加是否可选中的判断 add by wlj @2015.06.22
+              var options = scope.options = {
+                allowSelect: true
+              };
+
+              if(iAttrs.allowSelect && iAttrs.allowSelect === 'false') {
+                options.allowSelect = false;
+              }
+
               if(!iAttrs.url && !iAttrs.jsonData){
                 arp.alert("url and jsonData is undifined!!!");
               }
@@ -180,8 +190,9 @@ app.directive('conowFootable', ['$http', '$compile', '$timeout', '$parse',
               
               var footBodyH = iElement.find(".footable-body");
               
+              // 增加已选中数组 add by wlj @2015.06.22
+              scope.selectedArr = [];
               if(iAttrs.selectedArr) {
-                console.log('selectedArr-->', scope.$eval(iAttrs.selectedArr));
                 scope.selectedArr = scope.$eval(iAttrs.selectedArr);
               }
               
@@ -192,7 +203,7 @@ app.directive('conowFootable', ['$http', '$compile', '$timeout', '$parse',
               var setLight = function(){
                 $timeout(function(){
                   $('.ft-tr').click(function(){
-                    if(iAttrs.showLight=='single'){
+                    if(iAttrs.showLight == 'single') {
                       $('.ft-tr').removeClass('bg-light dker');
                     }
                     $(this).toggleClass('bg-light dker');
@@ -206,24 +217,27 @@ app.directive('conowFootable', ['$http', '$compile', '$timeout', '$parse',
                * start
                * */
               // 列表行点击事件[维护已选择数组-添加或删除]
-              var clickFunc = function(item) {console.log('in click');
+              var clickFunc = function(item) {
                 var index = -1;
                 if((index = scope.isIn(item, scope.selectedArr)) > -1) {
                   scope.selectedArr.splice(index, 1);
-                } else {console.log('else')
+                } else {
                   scope.selectedArr.push(item);
                 }
               }
               // 判断列表行是否在已选择数组里面，用于添加样式
-              var isIn = function(item) {console.log('selectedArr-->', scope.selectedArr);
-                var items = scope.selected;
+              var isIn = function(item) {
+                if(!scope.selectedArr) {
+                  scope.selectedArr = [];
+                }
+                var items = scope.selectedArr;
                 for(var i=0; i<items.length; i++) {
-  //                if(item.TITLE == items[i].TITLE) {
-  //                  return i;
-  //                }
-                  if(angular.equals(item, items[i])) {
-                    return i;
-                  }
+                   if(item.ID == items[i].ID) {
+                     return i;
+                   }
+                  // if(angular.equals(item, items[i])) {
+                  //   return i;
+                  // }
                 }
                 
                 return -1;
@@ -315,12 +329,12 @@ app.directive('conowFootable', ['$http', '$compile', '$timeout', '$parse',
               } else {
                 scope[iAttrs.ftResultArray] = scope['jsonData'].obj;
                 scope.conowFootablePaging= {index: 1};
-                if(iAttrs.showLight){
-                  $('.ft-tr').click(function(){
-                    $(this).toggleClass('bg-warning lter');
-                  });
-                  setLight(scope.conowFootablePaging);
-                }                
+                // if(iAttrs.showLight){
+                //   $('.ft-tr').click(function(){
+                //     $(this).toggleClass('bg-warning lter');
+                //   });
+                //   setLight(scope.conowFootablePaging);
+                // }                
               }           
               
               var titles = [];
@@ -414,8 +428,8 @@ app.directive('conowFootable', ['$http', '$compile', '$timeout', '$parse',
               
               if(iAttrs.sortIndex&&iAttrs.sortIndex.indexOf(i+";")){
                  sort_templ = '<i class="fa fa-sort-up ft_pointer" ng-if="('+iAttrs.ftSearch+'.ORDER_'+items[i]+'| ftOrderfilt)==\'TRUE\'" ng-click="'+orderByfun+'_desc(\''+iAttrs.ftSearch+'\',\''+items[i]+'\')"></i>'+
-              '<i class="fa fa-asterisk  ft_pointer" ng-if="('+iAttrs.ftSearch+'.ORDER_'+items[i]+'| ftOrderfilt)==\'NONE\'" ng-click="'+orderByfun+'_asc(\''+iAttrs.ftSearch+'\',\''+items[i]+'\')"></i>'+
-              '<i class="fa fa-sort-down ft_pointer" ng-if="(('+iAttrs.ftSearch+'.ORDER_'+items[i]+')| ftOrderfilt)==\'FALSE\'" ng-click="'+orderByfun+'_none(\''+iAttrs.ftSearch+'\',\''+items[i]+'\')"></i>';
+                '<i class="fa fa-asterisk  ft_pointer" ng-if="('+iAttrs.ftSearch+'.ORDER_'+items[i]+'| ftOrderfilt)==\'NONE\'" ng-click="'+orderByfun+'_asc(\''+iAttrs.ftSearch+'\',\''+items[i]+'\')"></i>'+
+                '<i class="fa fa-sort-down ft_pointer" ng-if="(('+iAttrs.ftSearch+'.ORDER_'+items[i]+')| ftOrderfilt)==\'FALSE\'" ng-click="'+orderByfun+'_none(\''+iAttrs.ftSearch+'\',\''+items[i]+'\')"></i>';
               }
                   
               if(titles[i].indexOf('phone')>=0){
@@ -456,8 +470,11 @@ app.directive('conowFootable', ['$http', '$compile', '$timeout', '$parse',
             if(scope['jsonData']) {
               footBodyH.attr('ng-repeat','item in '+iAttrs.ftResultArray+'|conowFootablePaging:'+iAttrs.ftSearch+'.page:'+iAttrs.ftSearch+'.pagesize');
             }
-            footBodyH.attr('ng-click', 'click(item)');
-            footBodyH.attr('ng-class',"{'footable-odd': $index%2==1, 'footable-even': $index%2==0, 'bg-light dker': isIn(item) > -1}");
+            if(options.allowSelect) {
+              footBodyH.attr('ng-click', 'click(item)');
+              footBodyH.attr('ng-class',"{'footable-odd': $index%2==1, 'footable-even': $index%2==0, 'bg-light dker': isIn(item) > -1}");
+            }
+console.log('options-->', options);
             footBodyH.html('');
             iElement.find("#footable-thead").append(thead);
             footBodyH.append(content);
