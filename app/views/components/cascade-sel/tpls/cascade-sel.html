@@ -8,31 +8,32 @@
 	  }
 	</style>
 
+	<div class="hbox h-auto p-sm">
+		<input type="text" class="form-control" ng-model="entity.searchKey" placeholder="搜索">
+	</div>
+
 	<conow-tabs>
 		<conow-tabs-titles theme="3" class="">
 			<conow-tabs-titles-diy show="options.tabs[0]" class="w-p-3 m-n" class-a="bg-white">
-				<span class="text-base font-bold">{{ titles[0] }}</span>
+				<span class="text-base font-bold cascade-sel-tab">{{ titles[0] }}</span>
 			</conow-tabs-titles-diy>
 			<conow-tabs-titles-diy show="options.tabs[1]" class="w-p-3 m-n" class-a="bg-white">
-				<span class="text-base font-bold">{{ titles[1] }}</span>
+				<span class="text-base font-bold cascade-sel-tab">{{ titles[1] }}</span>
 			</conow-tabs-titles-diy>
 			<conow-tabs-titles-diy show="options.tabs[2]" class="w-p-3 m-n" class-a="bg-white">
-				<span class="text-base font-bold">{{ titles[2] }}</span>
+				<span class="text-base font-bold cascade-sel-tab">{{ titles[2] }}</span>
 			</conow-tabs-titles-diy>
 		</conow-tabs-titles>
 
 		<conow-tabs-content>
 			<conow-tabs-content-text>
-				<div ng-if="dataLevel1.length == 0">没有可选项</div>
-				<a href="#" class="btn m cascade-sel" ng-class="{'btn-success': selected[0]['code'] == item['code']}" ng-click="select($event, '1', item)" ng-repeat="item in dataLevel1 track by $index">{{ item.name }}</a>
+				<a href="#" class="btn m cascade-sel" ng-class="{'btn-success': selected[0]['code'] == item['code']}" skip-click=1 ng-click="select($event, '1', item)" ng-repeat="item in dataLevel1 | filter:entity.searchKey track by $index">{{ item.name }}</a>
 			</conow-tabs-content-text>
 			<conow-tabs-content-text>
-				<div ng-if="dataLevel2.length == 0">没有可选项</div>
-				<a href="#" class="btn m cascade-sel" ng-class="{'btn-success': indexInArr(item, selected) > -1}" ng-click="select($event, '2', item)" ng-repeat="item in dataLevel2 track by $index">{{ item.name }}</a>
+				<a href="#" class="btn m cascade-sel" ng-class="{'btn-success': indexInArr(item, selected) > -1}" skip-click=2 ng-click="select($event, '2', item)" ng-repeat="item in dataLevel2 | filter:entity.searchKey track by $index">{{ item.name }}</a>
 			</conow-tabs-content-text>
 			<conow-tabs-content-text>
-				<div ng-if="dataLevel3.length == 0">没有可选项</div>
-				<a href="#" class="btn m cascade-sel" ng-class="{'btn-success': indexInArr(item, selected) > -1}" ng-click="select($event, '3', item)" ng-repeat="item in dataLevel3 track by $index">{{ item.name }}</a>
+				<a href="#" class="btn m cascade-sel" ng-class="{'btn-success': indexInArr(item, selected) > -1}" ng-click="select($event, '3', item)" ng-repeat="item in dataLevel3 | filter:entity.searchKey track by $index">{{ item.name }}</a>
 			</conow-tabs-content-text>
 		</conow-tabs-content>
 	</conow-tabs>

@@ -142,7 +142,7 @@ app.service('OperationService', ['$http', '$state', '$timeout', 'SweetAlert', 'D
           } else {            
             swalUserParams = {
               title: options.errorTitle,
-              text: options.errorText,
+              text: data.message || options.errorText,
               type: 'error',
               timer: userTimer
             };
@@ -155,7 +155,7 @@ app.service('OperationService', ['$http', '$state', '$timeout', 'SweetAlert', 'D
         }, function(msg) {
           swalUserParams = {
             title: options.errorTitle,
-            text: options.errorText,
+            text: msg || options.errorText,
             type: 'error',
             timer: userTimer
           };
@@ -208,7 +208,6 @@ app.service('OperationService', ['$http', '$state', '$timeout', 'SweetAlert', 'D
 
     // 弹框中有 html 代码
     this.alertHtml = function(params) {
-console.log('in alertHtml-->', params);
       // var alertText = '<span class="text-md font-bold">更新所有重复日志?</span><label class="i-checks m-l-sm"><input type="radio" tabIndex="3" name="isConfirm" value="yes" checked="false" /><i></i>是</label><label class="i-checks m-l-sm"><input type="radio" tabIndex="3" name="isConfirm" value="no" checked="false" /><i></i>否</label>';
       var alertTextPrefix = '<span class="text-md font-bold">';
       var alertTextAfter = '</span><label class="i-checks m-l-sm"><input type="radio" tabIndex="3" name="isConfirm" value="yes" checked="false" /><i></i>是</label><label class="i-checks m-l-sm"><input type="radio" tabIndex="3" name="isConfirm" value="no" checked="false" /><i></i>否</label>';
@@ -226,7 +225,7 @@ console.log('in alertHtml-->', params);
       };
 
       SweetAlert.swal(angular.extend({}, swalParams, swalUserParams),
-        function(isConfirm) {console.log('isConfirm-->', isConfirm);
+        function(isConfirm) {
           if(isConfirm === 'yes') {
             if(params.yesUrl) {
               DataService.postData(params.yesUrl)

@@ -13,24 +13,42 @@ app.service('cascadeSelService', ['$http',
 			return selected;
 		};
 
+		this.getOptionName = function(optionCode) {
+			var optionName = '军委副主席职';
+
+			return optionName;
+		};
+
 	}
 ]);
 
-app.directive('cascadeSel', ['DataService', 'conowModals', 'cascadeSelService', 
-	function(DataService, conowModals, cascadeSelService) {
+app.directive('cascadeSel', ['DataService', 'conowModals', 'cascadeSelService', '$interval', 
+	function(DataService, conowModals, cascadeSelService, $interval) {
 		return {
 			restrict: 'A',
 			// templateUrl: 'views/components/cascade-sel/tpls/cascade-sel.html',
+			require: '?ngModel',
 			transclude: true,
 			scope: {
 				titles: '=',
 				url: '=',
 				sel: '='
 			},
-			link: function(scope, elem, attrs) {
+			link: function(scope, elem, attrs, ctrl) {
+
+				var interval = $interval(function() {
+					if(!angular.equals(ctrl.$modelValue, NaN)) {
+						$interval.cancel(interval);
+
+						elem.val(cascadeSelService.getOptionName(ctrl.$modelValue));
+					}
+				}, 100);
 
 				elem.bind('click', function(e) {
-					cascadeSelService.setSelected(scope.sel);
+					
+					if(angular.equals(cascadeSelService.getSelected(), [])) {
+						cascadeSelService.setSelected(scope.sel);
+					}
 
 					var modalInstance = conowModals.open({
 						templateUrl: 'views/components/cascade-sel/tpls/cascade-sel.html',
@@ -48,7 +66,9 @@ app.directive('cascadeSel', ['DataService', 'conowModals', 'cascadeSelService',
 					});
 
 					modalInstance.result.then(function(data) {
-						console.log('data-->', data);
+						var value = data[data.length - 1];
+						elem.val(value.name);
+						ctrl.$setViewValue(value.code);
 					});
 
 					e.stopPropagation();
@@ -59,8 +79,8 @@ app.directive('cascadeSel', ['DataService', 'conowModals', 'cascadeSelService',
 	}
 ]);
 
-app.controller('cascadeSelDemoCtrl', ['$scope', 'DataService', 
-	function($scope, DataService) {
+app.controller('cascadeSelDemoCtrl', ['$scope', 'DataService', 'cascadeSelService', 
+	function($scope, DataService, cascadeSelService) {
 		$scope.titles = ['级别1', '级别2', '级别3'];
 
 		var entity = $scope.entity = {
@@ -85,7 +105,7 @@ app.controller('cascadeSelCtrl', ['$scope', 'DataService', '$conowModalInstance'
 		var options = $scope.options = {
 			tabs: [true, false, false]
 		};
-console.log('selected-->', $scope.selected);
+
 		var init = function() {
 			var url = modalParams.url;
 			DataService.getData(url)
@@ -102,6 +122,8 @@ console.log('selected-->', $scope.selected);
 					for(var i = 0; i<iLen; i++) {
 						if (dataLevel2[i].code === $scope.selected[1].code) {
 							$scope.dataLevel3 = dataLevel2[i].children;
+
+							options.tabs = [false, false, true];
 						};
 					}
 
@@ -126,12 +148,15 @@ console.log('selected-->', $scope.selected);
 				case '2':
 					$scope.selected = [$scope.selected[0], item];
 					$scope.dataLevel3 = item.children;
-					
+
 					options.tabs = [false, false, true];
 					break;
 				case '3':
 					$scope.selected = [$scope.selected[0], $scope.selected[1], item];
+
+					$scope.confirm();
 			}
+
 		};
 
 		$scope.indexInArr = function(item, items) {
@@ -147,7 +172,6 @@ console.log('selected-->', $scope.selected);
 		};
 
 		$scope.confirm = function() {
-			console.log('111');
 			cascadeSelService.setSelected($scope.selected);
 			$conowModalInstance.close($scope.selected);
 		};

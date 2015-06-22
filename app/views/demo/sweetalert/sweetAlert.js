@@ -24,8 +24,6 @@ app.controller('SweetAlertCtrl', ['$scope', 'SweetAlert', 'OperationService',
 
     $scope.alertHtml = function() {
       var callbackFunc = function(data) {
-        // console.log('This is the alertHtml callback function... -->', msg);
-
         console.log('alertHtml callbackFunc-->', data);
       };
 

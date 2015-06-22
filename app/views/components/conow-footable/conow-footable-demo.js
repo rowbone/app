@@ -5,12 +5,12 @@ app.controller('footableCtrl', ['$scope', '$http', 'conowModals',
 	$scope.result = [];
 	$scope.search1 = {};
 	$scope.result1 = [];
+
 	$scope.save = function(){
 		arp.alert('你点击了保存');
 	};
 	
-	$scope.selected = 
-		[{
+	$scope.selected = [{
 				"ID": "3",
 		    "TITLE": "请假审批",
 		    "date": "2014-12-2 12:20",
@@ -18,14 +18,14 @@ app.controller('footableCtrl', ['$scope', '$http', 'conowModals',
 		    "content": "有请假流程到你审批环节",
 		    "url": "app.oa.chat"
 		}, {
-				"ID": "",
+				"ID": "5",
 		    "TITLE": "区文辉",
 		    "date": "2014-10-1 12:20",
 		    "avatar": "img/person/person_photo_3.png",
 		    "content": "XXXXXXXX",
 		    "url": "app.oa.chat"
 		}, {
-				"ID": "",
+				"ID": "16",
 		    "TITLE": "通知审批",
 		    "date": "2014-12-1 12:20",
 		    "avatar": "img/person/person_photo_3.png",
@@ -36,7 +36,6 @@ app.controller('footableCtrl', ['$scope', '$http', 'conowModals',
 	
 	$http.get('views/components/conow-footable/data/footable-list.json')
 		.success(function(data, status, config, header) {
-			console.log(data);
 			$scope.jsons2 = data;
 		})
 		.error(function(data) {
@@ -197,7 +196,8 @@ app.controller('footableSelCtrl', ['$scope', '$conowModalInstance', 'modalParams
 		
 		$scope.confirm = function() {
 			$conowModalInstance.close($scope.selected);
-		}
+		};
+
 	}
 ]);
 

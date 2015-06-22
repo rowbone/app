@@ -1,13 +1,14 @@
 <modal-body>
-<!-- url="/service/notice!queryAllNoticeList"  -->
 	<conow-footable 
     row-link="app.table.contentList" 
     search-name="姓名"
+    ft-top-title="This is the top title."
     no-search="false" 
     ft-result-array="result" 
     json-data="jsons"
     ft-titile="标题;来源;创建者:phone;操作:phone"  
     ft-search="search" 
+    selected-arr="selected"
     ft-item="TITLE;SOURCE;CREATE_TIME.substr(0,19);save():btn-info:保存">
   </conow-footable>
 </modal-body>
