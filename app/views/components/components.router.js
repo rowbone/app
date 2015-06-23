@@ -57,7 +57,7 @@ angular.module('app.components', ['ui.router'])
 				})
 				.state('app.components.cascadeSel', {
 					url: '/cascadeSel',
-					templateUrl: 'views/components/cascade-sel/cascade-sel-demo.html'
+					templateUrl: 'views/components/conow-cascade-select/cascade-select-demo.html'
 				})
 				.state('app.components.timeSelect', {
 					url: '/timeSelect',

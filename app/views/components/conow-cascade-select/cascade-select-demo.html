@@ -2,7 +2,7 @@
 
 <div class="wrapper-md pos-rlt">
 	<div class="col-md-6 col-sm-12">
-		<div class="panel panel-info" ng-controller="cascadeSelDemoCtrl">
+		<div class="panel panel-info" ng-controller="cascadeSelectDemoCtrl">
 			<div class="panel-heading">
 				<div class="panel-title">通用级联选择</div>
 			</div>
@@ -10,7 +10,7 @@
 				<div class="form-group">
 					<label for="" class="control-label">选择</label>
 					
-					<input type="text" class="form-control" cascade-sel sel="sel" titles="titles" url="'views/components/cascade-sel/data/data.json'" ng-model="entity.sel">
+					<input type="text" class="form-control" conow-cascade-select sel="sel" titles="titles" url="'/service/common!queryOptions?type=DICT_LEVEL&DICT_CODE=HR_RETIRED_ARMY_RANK'" ng-model="entity.sel">
 				</div>
 
 				<div class="form-group">
@@ -24,6 +24,19 @@
 						选择
 					</button>
 				</div> -->
+			</div>
+		</div>
+	</div>
+	
+	<div class="col-md-6 col-sm-12">
+		<div class="panel panel-info">
+			<div class="panel-heading">
+				<div class="panel-title">使用说明</div>
+			</div>
+			<div class="panel-body">
+				<ol>
+					<li>调用指令：<code>conow-cascade-select</code></li>
+				</ol>
 			</div>
 		</div>
 	</div>

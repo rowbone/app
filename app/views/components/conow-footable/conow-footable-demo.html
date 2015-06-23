@@ -2,7 +2,6 @@
     <h1 class="m-n font-thin h3">响应式表格</h1>
 </div> -->
 <style>
-.ft-tr.active { background-color: blue; }
 </style>
 
 <title-bar name="响应式表格"></title-bar>
@@ -49,8 +48,13 @@
         <div class="panel-body">         
             
             <div class="form-group">
-              <label for="control-label">点击选择</label>
+              <label class="control-label">点击选择</label>
               <button type="button" class="btn btn-primary" ng-click="showSelect()">选择</button>
+            </div>
+
+            <div class="form-group">
+              <label for="" class="control-labe">已选择</label>
+              <pre>{{ selected | json }}</pre>
             </div>
             
         </div>

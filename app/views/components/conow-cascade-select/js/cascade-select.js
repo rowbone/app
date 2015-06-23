@@ -1,6 +1,6 @@
 'use strict';
 
-app.service('cascadeSelService', ['$http', 
+app.service('cascadeSelectService', ['$http', 
 	function($http) {
 		// 
 		var selected = [];
@@ -22,8 +22,8 @@ app.service('cascadeSelService', ['$http',
 	}
 ]);
 
-app.directive('cascadeSel', ['DataService', 'conowModals', 'cascadeSelService', '$interval', 
-	function(DataService, conowModals, cascadeSelService, $interval) {
+app.directive('conowCascadeSelect', ['DataService', 'conowModals', 'cascadeSelectService', '$interval', 
+	function(DataService, conowModals, cascadeSelectService, $interval) {
 		return {
 			restrict: 'A',
 			// templateUrl: 'views/components/cascade-sel/tpls/cascade-sel.html',
@@ -40,21 +40,21 @@ app.directive('cascadeSel', ['DataService', 'conowModals', 'cascadeSelService', 
 					if(!angular.equals(ctrl.$modelValue, NaN)) {
 						$interval.cancel(interval);
 
-						elem.val(cascadeSelService.getOptionName(ctrl.$modelValue));
+						elem.val(cascadeSelectService.getOptionName(ctrl.$modelValue));
 					}
 				}, 100);
 
 				elem.bind('click', function(e) {
 					
-					if(angular.equals(cascadeSelService.getSelected(), [])) {
-						cascadeSelService.setSelected(scope.sel);
+					if(angular.equals(cascadeSelectService.getSelected(), [])) {
+						cascadeSelectService.setSelected(scope.sel);
 					}
 
 					var modalInstance = conowModals.open({
-						templateUrl: 'views/components/cascade-sel/tpls/cascade-sel.html',
+						templateUrl: 'views/components/conow-cascade-select/tpls/cascade-select.html',
 						title: '选择',
 						size: 'full',
-						controller: 'cascadeSelCtrl',
+						controller: 'cascadeSelectCtrl',
 						resolve: {
 							modalParams: function() {
 								return {
@@ -79,28 +79,10 @@ app.directive('cascadeSel', ['DataService', 'conowModals', 'cascadeSelService', 
 	}
 ]);
 
-app.controller('cascadeSelDemoCtrl', ['$scope', 'DataService', 'cascadeSelService', 
-	function($scope, DataService, cascadeSelService) {
-		$scope.titles = ['级别1', '级别2', '级别3'];
-
-		var entity = $scope.entity = {
-			sel: '6102'
-		};
-
-		var urlSelected = 'views/components/cascade-sel/data/selected.json';
-		DataService.getData(urlSelected)
-			.then(function(data) {
-				$scope.sel = data;
-			}, function(msg) {
-				console.error('msg-->', msg);
-			});
-	}
-]);
-
-app.controller('cascadeSelCtrl', ['$scope', 'DataService', '$conowModalInstance', 'modalParams', 'cascadeSelService', 
-	function($scope, DataService, $conowModalInstance, modalParams, cascadeSelService) {
+app.controller('cascadeSelectCtrl', ['$scope', 'DataService', '$conowModalInstance', 'modalParams', 'cascadeSelectService', 
+	function($scope, DataService, $conowModalInstance, modalParams, cascadeSelectService) {
 		$scope.titles = modalParams.titles;
-		$scope.selected = cascadeSelService.getSelected();
+		$scope.selected = cascadeSelectService.getSelected();
 
 		var options = $scope.options = {
 			tabs: [true, false, false]
@@ -172,7 +154,7 @@ app.controller('cascadeSelCtrl', ['$scope', 'DataService', '$conowModalInstance'
 		};
 
 		$scope.confirm = function() {
-			cascadeSelService.setSelected($scope.selected);
+			cascadeSelectService.setSelected($scope.selected);
 			$conowModalInstance.close($scope.selected);
 		};
 
