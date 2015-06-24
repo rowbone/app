@@ -1,12 +1,12 @@
 [
 	{
-		"code": "6",
-		"name": "军队干部职别"
+		"OPTION_VALUE": "6",
+		"OPTION_NAME": "军队干部职别"
 	}, {
-		"code": "61",
-		"name": "军事、政治、后勤军官职别"
+		"OPTION_VALUE": "61",
+		"OPTION_NAME": "军事、政治、后勤军官职别"
 	}, {
-		"code": "6102",
-		"name": "军委副主席职"
+		"OPTION_VALUE": "6102",
+		"OPTION_NAME": "军委副主席职"
 	}
 ]

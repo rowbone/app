@@ -1,13 +1,59 @@
 
-app.controller('footableCtrl', ['$scope', '$http', 'conowModals', 
-    function($scope, $http, conowModals) {
+app.controller('footableCtrl', ['$scope', '$http', 'conowModals', '$timeout', 'footableRefresh', 
+    function($scope, $http, conowModals, $timeout, footableRefresh) {
 	$scope.search = {};
 	$scope.result = [];
 	$scope.search1 = {};
 	$scope.result1 = [];
 
-	$scope.save = function(){
-		arp.alert('你点击了保存');
+	$scope.save1 = function(){
+		console.log('in save1');
+
+		var modalInstance = conowModals.open({
+			templateUrl: 'views/components/conow-footable/tpl-modal.html',
+			title: '弹出层',
+			controller: 'footableModalCtrl',
+			size: 'full'
+		});
+
+		modalInstance.result.then(function(data) {
+			if(data === 'yes') {
+				// refresh
+				footableRefresh.setRefresh(true);
+			} else if(data === 'no') {
+				// no refresh
+				footableRefresh.setRefresh(false);
+			} else {
+				// wrong return value
+			}
+		}, function(msg) {
+			console.log('msg-->', msg);
+		});
+	};
+
+	$scope.save2 = function(){
+		console.log('in save2')
+
+		var modalInstance = conowModals.open({
+			templateUrl: 'views/components/conow-footable/tpl-modal.html',
+			title: '弹出层',
+			controller: 'footableModalCtrl',
+			size: 'full'
+		});
+
+		modalInstance.result.then(function(data) {
+			if(data === 'yes') {
+				// refresh
+				footableRefresh.setRefresh(true);
+			} else if(data === 'no') {
+				// no refresh
+				footableRefresh.setRefresh(false);
+			} else {
+				// wrong return value
+			}
+		}, function(msg) {
+			console.log('msg-->', msg);
+		});
 	};
 	
 	$scope.selected = [{
@@ -194,7 +240,7 @@ app.controller('footableSelCtrl', ['$scope', '$conowModalInstance', 'modalParams
 		$scope.selected = modalParams.selected; 
 		
 		$scope.save = function(){
-			arp.alert('你点击了保存');
+			alert('你点击了保存');
 		};
 		
 		$scope.confirm = function() {console.log('confirm-->', $scope.selected);
@@ -204,5 +250,15 @@ app.controller('footableSelCtrl', ['$scope', '$conowModalInstance', 'modalParams
 	}
 ]);
 
+// 弹出层操作 controller
+app.controller('footableModalCtrl', ['$scope', '$conowModalInstance', 
+	function($scope, $conowModalInstance) {
 
+		$scope.isRefresh = 'no';
 
+		$scope.confirm = function() {
+			$conowModalInstance.close($scope.isRefresh);
+		};
+
+	}
+]);

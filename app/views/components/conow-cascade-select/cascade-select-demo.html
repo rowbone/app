@@ -36,8 +36,33 @@
 			<div class="panel-body">
 				<ol>
 					<li>调用指令：<code>conow-cascade-select</code></li>
+					<li>示例
+						<pre>&lt;input type="text" class="form-control" conow-cascade-select sel="sel" titles="titles" url="'/service/common!queryOptions?type=DICT_LEVEL&DICT_CODE=HR_RETIRED_ARMY_RANK'" ng-model="entity.sel"&gt;</pre>
+					</li>
+					<li>属性说明：
+						<ul class="list-unstyled">
+							<li class="l-h-2x"><code>sel</code>：已选项</li>
+							<li class="l-h-2x"><code>titles</code>：选择页签标题</li>
+							<li class="l-h-2x"><code>url</code>：读取数据的后台接口</li>
+						</ul>
+					</li>
 				</ol>
 			</div>
 		</div>
 	</div>
+	
+	<div class="col-md-6 col-sm-12">
+		<div class="panel panel-info">
+			<div class="panel-heading">
+				<div class="panel-title">功能扩展</div>
+			</div>
+			<div class="panel-body">
+				<ol>
+					<li>根据参数确定选择的层级数</li>
+					<li>不能选择的层级隐藏或者disabled掉</li>
+				</ol>
+			</div>
+		</div>
+	</div>
+	
 </div>

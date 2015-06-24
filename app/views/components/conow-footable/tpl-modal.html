@@ -1,0 +1,17 @@
+<modal-body></modal-body>
+	<div class="hbox h-auto p">
+		<span for="" class="col col-lg">是否更新列表数据:</span>
+		<div class="col">
+			<label for="" class="i-checks" ng-click="isRefresh='yes'">
+				<input type="radio" name="isRefresh" value="yes" ng-model="isRefresh">
+				<i></i>是
+			</label>
+			<label for="" class="i-checks" ng-click="isRefresh='no'">
+				<input type="radio" name="isRefresh" value="no" ng-model="isRefresh">
+				<i></i>否
+			</label>
+		</div>
+	</div>
+<modal-btn>
+	<a class="btn btn-bar-primary" ng-click="confirm()">确定</a>
+</modal-btn>

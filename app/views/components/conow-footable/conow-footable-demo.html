@@ -24,20 +24,22 @@
             ft-titile="标题:format;来源:format:phone;创建者:phone;操作:phone"
             ft-search="search"
             allow-select="false"
-            ft-item="<input type='checkbox'><span ng-bind='item.TITLE'></span>;<label class='i-switch m-t-xs m-r'><input checked='' type='checkbox'><i></i></label><span ng-bind='item.date'></span>;CONTRIBUTOR;save():btn-info:保存">
+            refresh="isRefresh1"
+            ft-item="<input type='checkbox'><span ng-bind='item.TITLE'></span>;<label class='i-switch m-t-xs m-r'><input checked='' type='checkbox'><i></i></label><span ng-bind='item.date'></span>;CONTRIBUTOR;save1():btn-info:保存">
           <a class="btn btn-info">aaaa</a> </conow-footable>
 
-          <!-- <conow-footable 
+          <conow-footable 
             row-link="app.table.contentList"  
             search-name="姓名" 
             no-search="true" 
             ft-result-array="result1"  
-            url="/service/notice!queryAllNoticeList" 
+            url="views/components/conow-footable/data/notice-list-page1.json" 
             ft-titile="标题;来源;创建者:phone;操作:phone"  
             ft-search="search1" 
-            ft-item="TITLE;SOURCE;CREATE_TIME.substr(0,19);save():btn-info:保存">
+            refresh="isRefresh2"
+            ft-item="TITLE;SOURCE;CREATE_TIME.substr(0,19);save2():btn-info:保存">
               <span>带超链接不带标题的</span>
-           </conow-footable> -->
+           </conow-footable>
         </div>
       </div>
       

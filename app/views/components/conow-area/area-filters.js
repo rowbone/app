@@ -1,6 +1,6 @@
 'use strict';
 
-// 对市一级数据进行分组
+// 对市一级数据进行分组，返回数组中包含分组字母对应的索引值
 app.filter('cityGroup', function() {
   return function(input) {
     var arr = [0];
@@ -72,7 +72,7 @@ app.filter('areaNameFilter', function($rootScope) {
     var arrCitiesFilter = ['藏族羌族自治州', '地区', '市', '蒙古自治州', '回族自治州', '彝族自治州', 
       '白族自治州', '傣族景颇族自治州', '藏族自治州', '土家族苗族自治州', '蒙古族藏族自治州', '尼族彝族自治州',
       '傈傈族自治州', '苗族侗族自治州', '布依族苗族自治州', '壮族苗族自治州', '土家族苗族自治州', 
-      '傣族自治州', '朝鲜族自治州', '哈萨克自治州', '自治'];
+      '傣族自治州', '朝鲜族自治州', '哈萨克自治州', '自治', '哈尼族', '蒙古族'];
     var arrCountiesFilter = ['土家族苗族自治县', '土家族自治县', '瑶族自治县', '仡佬族苗族自治县', '布依族苗族自治县',
       '苗族布依族自治县', '苗族自治县', '侗族自治县', '满族蒙古族自治县', '蒙古族自治县', '满族自治县', 
       '特区', '矿区', '区', '县', '市'];
@@ -135,3 +135,56 @@ app.filter('areaNameFilter', function($rootScope) {
     return arr;
   }
 });
+
+// 根据编码获取名称[市]
+app.filter('AreaCodeToName', ['$filter', 'AreaService', 
+  function($filter, AreaService) {
+  return function(input) {
+    if(input) {
+      return AreaService.getArea(input);
+    } else {
+      return '';
+    }
+  };
+  
+}]);
+
+// 根据编码获取名称[级联]
+app.filter('AreaCodeToPath', ['$filter', 'AreaService', 
+  function($filter, AreaService) {
+  return function(input) {
+    if(input) {
+      return AreaService.getAreaPath(input);
+    } else {
+      return '';
+    }
+  };
+  
+}]);
+
+// 根据 code 获取对应市的名称
+app.filter('cityNameShort', ['AreaService', 
+    function(AreaService) {
+    return function(cityCode) {
+      var origData = AreaService.getOrigData();
+      var cityName = origData[cityCode][0];
+      var arrCitiesFilter = ['藏族羌族自治州', '地区', '市', '蒙古自治州', '回族自治州', '彝族自治州', 
+                             '白族自治州', '傣族景颇族自治州', '藏族自治州', '土家族苗族自治州', '蒙古族藏族自治州', '尼族彝族自治州',
+                             '傈傈族自治州', '苗族侗族自治州', '布依族苗族自治州', '壮族苗族自治州', '土家族苗族自治州', 
+                             '傣族自治州', '朝鲜族自治州', '哈萨克自治州', '自治', '哈尼族', '蒙古族'];
+//      var index = -1;
+//      var iLen = arrCitiesFilter.length;
+//      for(var i=0; i<iLen; i++) {
+//        if(cityName.indexOf(arrCitiesFilter[i]) > -1) {
+//          cityName = cityName.replace(arrCitiesFilter[i], '');
+//          break;
+//        }
+//      }
+      
+      var regExp = new RegExp(arrCitiesFilter.join('|'), 'g');
+      cityName = cityName.replace(regExp, '');
+      
+      return cityName;
+    }
+  }
+]);

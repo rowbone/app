@@ -33,10 +33,24 @@ app.filter('conowFootableSize', function() {
     }
   });
 
+// 响应式表格刷新服务
+app.service('footableRefresh', function() {
+  var refreshFlag = false;
+  var self = this;
+
+  this.setRefresh = function(refresh) {
+    self.refreshFlag = refresh;
+  };
+
+  this.getRefresh = function() {
+    return self.refreshFlag;
+  };
+});
+
 /**
  * 响应式列表指令
  */
-app.directive('conowFootable', function($http,$compile,$timeout) {
+app.directive('conowFootable', function($http,$compile,$timeout, footableRefresh) {
     return {
         restrict: 'E',
         template:function(e,iAttrs) {
@@ -171,19 +185,19 @@ app.directive('conowFootable', function($http,$compile,$timeout) {
         transclude: true,
         compile:function(element, attributes){
           return function(scope, iElement, iAttrs, controller,transcludeFn) {
-                
+
             if(!iAttrs.url && !iAttrs.jsonData){
               arp.alert("url and jsonData is undifined!!!");
             }
 
-                // 增加是否可选中的判断 add by wlj @2015.06.22
-                var options = scope.options = {
-                  allowSelect: true
-                };
+            // 增加是否可选中的判断 add by wlj @2015.06.22
+            var options = scope.options = {
+              allowSelect: true
+            };
 
-                if(iAttrs.allowSelect && iAttrs.allowSelect === 'false') {
-                  options.allowSelect = false;
-                }
+            if(iAttrs.allowSelect && iAttrs.allowSelect === 'false') {
+              options.allowSelect = false;
+            }
                 
             var url = iAttrs.url;
             
@@ -215,32 +229,32 @@ app.directive('conowFootable', function($http,$compile,$timeout) {
              * add by wlj @2015.06.17
              * start
              * */
-                // 列表行点击事件[维护已选择数组-添加或删除]
-                var clickFunc = function(item) {
-                  var index = -1;
-                  if((index = scope.isIn(item, scope.selectedArr)) > -1) {
-                    scope.selectedArr.splice(index, 1);
-                  } else {
-                    scope.selectedArr.push(item);
-                  }
-                }
-                // 判断列表行是否在已选择数组里面，用于添加样式
-                var isIn = function(item) {
-                  if(!scope.selectedArr) {
-                    scope.selectedArr = [];
-                  }
-                  var items = scope.selectedArr;
-                  for(var i=0; i<items.length; i++) {
-                     if(item.ID == items[i].ID) {
-                       return i;
-                     }
-                    // if(angular.equals(item, items[i])) {
-                    //   return i;
-                    // }
-                  }
-                  
-                  return -1;
-                }
+            // 列表行点击事件[维护已选择数组-添加或删除]
+            var clickFunc = function(item) {
+              var index = -1;
+              if((index = scope.isIn(item, scope.selectedArr)) > -1) {
+                scope.selectedArr.splice(index, 1);
+              } else {
+                scope.selectedArr.push(item);
+              }
+            }
+            // 判断列表行是否在已选择数组里面，用于添加样式
+            var isIn = function(item) {
+              if(!scope.selectedArr) {
+                scope.selectedArr = [];
+              }
+              var items = scope.selectedArr;
+              for(var i=0; i<items.length; i++) {
+                 if(item.ID == items[i].ID) {
+                   return i;
+                 }
+                // if(angular.equals(item, items[i])) {
+                //   return i;
+                // }
+              }
+              
+              return -1;
+            }
             
             scope.isIn = isIn;
             scope.click = clickFunc;
@@ -253,7 +267,9 @@ app.directive('conowFootable', function($http,$compile,$timeout) {
              * 初始化页码
              */
 /*            var ftSearch = scope[iAttrs.ftSearch];*/
-            scope[iAttrs.ftSearch] = {};
+            if(typeof(scope[iAttrs.ftSearch]) !== 'object') {
+              scope[iAttrs.ftSearch] = {};
+            };
             scope[iAttrs.ftSearch].page=1;
             scope[iAttrs.ftSearch].pagesize=6;
             scope['jsonData'] = scope.$eval(iAttrs.jsonData);
@@ -288,7 +304,7 @@ app.directive('conowFootable', function($http,$compile,$timeout) {
              * 初始化数据
              */
             if(url && !scope['jsonData']){
-              $http.post(url,scope[iAttrs.ftSearch])
+              $http.get(url,scope[iAttrs.ftSearch])
                 .success(function(data){
                   if(data.success){
                     scope[iAttrs.ftResultArray] = data.obj;
@@ -300,25 +316,49 @@ app.directive('conowFootable', function($http,$compile,$timeout) {
                       setLight();
                     }
                     /**
-                         * 观察搜索条件变化
-                         */
-                        scope.$watch(iAttrs.ftSearch, function(newVal, oldVal) {
-                            if(newVal!=oldVal){
-                              if(newVal.ft_pageCount!=oldVal.ft_pageCount){
-                                return;
+                     * 观察搜索条件变化
+                     */
+                    scope.$watch(function() {
+                      return {
+                        'search': iAttrs.ftSearch
+                        // ,
+                        // 'refresh': scope.$eval(iAttrs.refresh)
+                      }
+                    }, function(newVal, oldVal) {
+                        if (newVal != oldVal) {
+                          if(newVal.ft_pageCount != oldVal.ft_pageCount) {
+                            return;
+                          }
+                          $http.get(url,scope[iAttrs.ftSearch]).success(function(data){
+                              if(data.success){
+                                scope[iAttrs.ftResultArray] = data.obj;
+                                scope[iAttrs.ftSearch].ft_pageCount = data.pageInfo.count;
+                                if(iAttrs.showLight){
+                                  setLight();
+                                }
+                                
                               }
-                              $http.post(url,scope[iAttrs.ftSearch]).success(function(data){
-                                  if(data.success){
-                                    scope[iAttrs.ftResultArray] = data.obj;
-                                    scope[iAttrs.ftSearch].ft_pageCount = data.pageInfo.count;
-                                    if(iAttrs.showLight){
-                                      setLight();
-                                    }
-                                    
-                                  }
-                                });
-                            }
-                        },true);
+                            });
+                        }
+                    },true);
+
+                    scope.$watch(function() {
+                      return footableRefresh.getRefresh();
+                    }, function(newVal, oldVal) {
+                      if(newVal === true) {
+                          footableRefresh.setRefresh(false);
+
+                          $http.get(url,scope[iAttrs.ftSearch]).success(function(data){
+                              if(data.success){
+                                scope[iAttrs.ftResultArray] = data.obj;
+                                scope[iAttrs.ftSearch].ft_pageCount = data.pageInfo.count;
+                                if(iAttrs.showLight){
+                                  setLight();
+                                }
+                              }
+                            });
+                      }
+                    }, true);
                         
                   }
                 })
@@ -481,12 +521,12 @@ app.directive('conowFootable', function($http,$compile,$timeout) {
             if(scope['jsonData']){
               footBodyH.attr('ng-repeat','item in '+iAttrs.ftResultArray+'|conowFootablePaging:'+iAttrs.ftSearch+'.page:'+iAttrs.ftSearch+'.pagesize');
             }
-                if(options.allowSelect) {
-                  footBodyH.attr('ng-click', 'click(item)');
-                  footBodyH.attr('ng-class',"{'footable-odd': $index%2==1, 'footable-even': $index%2==0, 'bg-light dker': isIn(item) > -1}");
-              } else {
-                footBodyH.attr('ng-class',"{'footable-odd': $index%2==1, 'footable-even': $index%2==0}");
-              }
+            if(options.allowSelect) {
+              footBodyH.attr('ng-click', 'click(item)');
+              footBodyH.attr('ng-class',"{'footable-odd': $index%2==1, 'footable-even': $index%2==0, 'bg-light dker': isIn(item) > -1}");
+            } else {
+              footBodyH.attr('ng-class',"{'footable-odd': $index%2==1, 'footable-even': $index%2==0}");
+            }
             footBodyH.html('');
             iElement.find("#footable-thead").append(thead);
             footBodyH.append(content);
