@@ -38,6 +38,7 @@
 				</div>
 			</div>
 		</div>
+
 		<div class="col-sm-12 col-md-6">
 			<div class="panel panel-info">
 				<div class="panel-heading">
@@ -86,6 +87,37 @@
 					</div>
 				</div>
 			</div>
+		</div>
+		<style>
+		.w-auto-important { width: auto !important; }
+		.w-200 { width: 200px;}
+		</style>
+		<div class="col-sm-12 col-md-6">
+			<div class="div breadcrumb swiper-container contact-list w-200 pull-left">
+				<ul class="swiper-wrapper p-l-sm m-xs list-unstyled">
+					<li class="swiper-slide w-auto-important">11111</li>
+					<li class="swiper-slide w-auto-important">22222</li>
+					<li class="swiper-slide w-auto-important">33333</li>
+					<li class="swiper-slide w-auto-important">44444</li>
+					<li class="swiper-slide w-auto-important">55555</li>
+				</ul>
+			</div>
+
+			<div class="text-ellipsis pull-left">
+				11111111111
+			</div>
+
+			<script>
+			var swiper = new Swiper('.swiper-container', {
+				pagination: '.swiper-pagination',
+				slidesPerView: 4,
+				centeredSlides: false,
+				paginationClickable: true,
+				spaceBetween: 10,
+				grabCursor: true,
+				watchSlidesProgress: true
+			});
+			</script>
 		</div>
 	</div>
 </div>
