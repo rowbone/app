@@ -36,8 +36,8 @@ app.service('OperationService', ['$http', '$state', '$timeout', 'SweetAlert', 'D
 	    swalUserParams = {},
 	    optionsDefault = angular.copy(options);
 
-    // 初始化方法
-    var init = function(params) {
+    // interAction 初始化方法
+    var interInit = function(params) {
       // 重置 options
       options = angular.copy(optionsDefault);
       
@@ -108,6 +108,9 @@ app.service('OperationService', ['$http', '$state', '$timeout', 'SweetAlert', 'D
 
       return true;
     };
+
+    // confirmAction 初始化方法
+    var confirmInit = function(params) {};
     
     // 调用后台的接口
     var interFunc = function() {
@@ -170,7 +173,7 @@ app.service('OperationService', ['$http', '$state', '$timeout', 'SweetAlert', 'D
     // 与后台接口的操作方法
     this.interAction = function(params) {
       // 
-      if(!init(params)) {
+      if(!interInit(params)) {
         return false;
       }
 
@@ -305,6 +308,27 @@ app.service('OperationService', ['$http', '$state', '$timeout', 'SweetAlert', 'D
         // 
       }
       SweetAlert.swal(angular.extend({}, swalParams, swalUserParams));
+    };
+    
+    // confirm
+    this.confirmAction = function(params) {
+      if (angular.isObject(params)) {
+            swalUserParams = {
+              title: params.alertMsg,
+              type: params.type || 'warning',
+              confirmButtonText: params.confirmButtonText || '确定',
+              cancelBtnText: params.cancelBtnText || '取消',
+              closeOnConfirm: true
+            };
+          } else if (angular.isString(params)) {
+            swalUserParams = {
+              title: params,
+              type: 'info'
+            };
+          } else {
+            // 
+          }
+          SweetAlert.swal(angular.extend({}, swalParams, swalUserParams));
     };
 
     // Prompt

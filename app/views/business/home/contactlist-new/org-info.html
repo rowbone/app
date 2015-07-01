@@ -1,226 +1,178 @@
-<<<<<<< .mine
-<modal-body class="org-info" ng-class="{'no-scroll': options.showAllStaffs || (childOrgs.length == 0 && orgStaffs.length == 0)}">
-	<div class="padder-sm org-info-content" ng-class="{'no-bottom': childOrgs.length == 0 || orgStaffs.length == 0}">
-		<div class="hbox padder-md padder-v-sm h-auto">
-=======
-<modal-body class="child-orgs" ng-class="{'no-srcoll': options.showAllStaffs}">
-	<div class="padder-sm p-b-90 orgs-list" ng-style="(childOrgs.length == 0&&orgStaffs.length !== 0)?{bottom:0}:{}">
-		<div class="hbox padder-sm padder-v-sm h-auto">
->>>>>>> .r12547
+<modal-body class="org-info bg-light no-scroll">
+	<style>
+	.modal-full .modal-body.org-info { position: relative; overflow: hidden; top: 0; height: 100%; }
+	.org-info-content { position: absolute; top: 102px; bottom: 54px; overflow: auto; }
+	.child-orgs .header { height: 40px; }
+	.child-orgs .content {  }
+	
+	.org-staffs .header { height: 40px; }
+	.org-staffs .content {  }
+	.org-staff-fixed { position: absolute; bottom: 50px; width: 100%; height: 93px; }
+	.w-auto-important { width: auto !important; }
+	</style>
+	
+	<div class="">
+		<div class="hbox p-sm h-auto">
 			<button type="button" class="form-control btn r-3x bg-white" ng-click="orgAndStaffSearchClick($event)">
 				<i class="fa fa-search m-r-xs"></i>搜索
 			</button>
 		</div>
 		
-		<div class="hbox padder-xs h-auto bg-light padder-v-xs">
-			<ul class="breadcrumb breadcrumb-contact-list m-b-xs">
-				<li ng-repeat="org in orgAndFatherOrgs track by $index" ng-class="{'active': $last}">
-<<<<<<< .mine
-					<a href="#" class="text-md" ng-class="{false: 'text-primary', true: 'disabled'}[$last]" ng-click="orgItemClick(org, $event)">{{ org.ORG_UNIT_SHORT_NAME }}</a>
-=======
-					<a href="#" class="text-md" ng-if="!$last" ng-click="orgItemClick(org, $event)">{{ org.ORG_UNIT_SHORT_NAME }}</a>
-					<span class="text-md" ng-if="$last">{{ org.ORG_UNIT_SHORT_NAME }}</span>
->>>>>>> .r12547
-				</li>
-			</ul>
-		</div>
-		
-		<div class="hbox h-auto padder-v-sm p-l-sm" ng-if="childOrgs.length == 0 && orgStaffs.length == 0">
-			<span class="text-md">该组织下没有对应的组织和人员信息</span>
-		</div>
-		
-		<div class="child-orgs-items">
-			<a href="#" ng-repeat="org in childOrgs track by $index" ng-click="orgItemClick({ID:org.ORG_UNIT_ID}, $event)">
-				<div class="hbox b-b padder-v-xs h-auto">
-					<div class="col padder-v-sm padder-sm">
-						<span class="text-md">{{ org.ORG_UNIT_ID_HR_ORG_UNIT }}</span>
-					</div>
-					<!-- <div class="text-base">{{ org.ORG_UNIT_NAME }}</div> -->
-					<div class="col col-p-sm padder-v-sm p-r">
-						<span class="text-md pull-right text-dker">{{ org.count }}</span>
-					</div>
-					<div class="col col-xxs p-t-7">
-						<i class="fa fa-angle-right text-2x text-dker"></i>
-					</div>
-				</div>			
+		<div class="hbox h-auto bg-breadcrumb-contact-list">
+			<div class="col swiper-container">
+				<ul class="breadcrumb breadcrumb-contact-list m-b-xs swiper-wrapper padder-sm">
+					<li class="swiper-slide w-auto-important" ng-repeat="org in orgAndFatherOrgs track by $index" ng-class="{'active': $last}">
+						<a href="#" class="text-md" ng-if="!$last" ng-click="orgItemClick(org, $event)">{{ org.ORG_UNIT_SHORT_NAME }}</a>
+						<span class="text-md" ng-if="$last">{{ org.ORG_UNIT_SHORT_NAME }}</span>
+					</li>
+				</ul>
+			</div>
+			<div class="col v-middle col-org-info-icon-split p-l-xs" ng-if="orgAndFatherOrgs.length > 0">
+				<div class="org-info-icon-split"></div>
+			</div>
+			<a href="#" class="col v-middle col-org-info-icon p-l" ng-click="orgInfoClick(org, $event)" ng-if="orgAndFatherOrgs.length > 0">
+				<i class="fa fa-bank text-xlg text-primary"></i>
 			</a>
 		</div>
+		<script>
 		
-		<div class="org-staffs-items">
-			<div class="hbox padder-v-xs h-auto" ng-repeat="staff in orgStaffs track by $index" ng-if="childOrgs.length == 0">				
-				<div class="col avatar thumb-contact-list m-r" ng-class="{true: staff.PHOTO}[(staff.PHOTO.indexOf('/') == -1)]">
-					<div class="text-ellipsis padder-v-sm text-center" ng-if="(staff.PHOTO.indexOf('/') == -1)">{{ staff.NAME | limitTo:-2 }}</div>
-					<img ng-src="{{staff.PHOTO}}" ng-if="(staff.PHOTO.indexOf('/') > -1)" style="width:40px;height:40px;">
+		</script>
+		<div class="org-info-content">
+			<div class="child-orgs">
+				<div class="header1">
+					
 				</div>
-				<div class="col b-b p-l-sm">
-					<a href="#" ng-click="staffItemClick(staff, $event)">
-						<div class="text-md padder-v-sm">
-							<span class="text-md text-muted-lter">{{ staff.NAME }}</span>
-							<span class="text-base text-muted-dk m-l">{{ staff.ORG_UNIT_ID_HR_ORG_UNIT }}</span>
-							<span class="text-base text-muted-dk m-l">{{ staff.JOBS_ID_HR_JOBS_INFO }}</span>
-							<span class="text-base bg-primary label-part-time text-white" ng-if="staff.STAFF_ADDITION">{{ staff.STAFF_ADDITION }}</span>
+				
+				<div class="content">
+					<div class="hbox h-auto padder-v-xs text-muted-dk text-md text-center" ng-if="childOrgs.length == 0">
+						暂无下级组织
+					</div>	
+					<a href="#" ng-repeat="org in childOrgs track by $index" ng-click="orgItemClick({ID:org.ID}, $event)">
+						<div class="hbox h-auto b-b padder-v-xs bg-white">
+							<div class="col padder-v-sm padder-sm">
+								<span class="text-md">{{ org.ORG_UNIT_NAME }}</span>
+							</div>
+							<div class="col col-p-sm padder-v-sm padder-xs">
+								<span class="text-md pull-right text-dker">{{ org.COUNT }}</span>
+							</div>
+							<div class="col col-xxs p-t-7">
+								<i class="fa fa-angle-right text-2x text-dker"></i>
+							</div>
 						</div>
+						
 					</a>
 				</div>
 			</div>
-<<<<<<< .mine
-=======
 			
-		</a>
+			<div class="org-staffs">
+				<div class="header">					
+					<a ng-click="showAllStaffsClick($event)">
+						<div class="hbox h-auto bg-dark dker padder-v-xs padder-sm text-white">
+							<div class="col padder-v-xs text-md font-bold text-ellipsis">
+								<span>当前组织人员(</span><span class="">{{orgStaffs.length}}</span><span>)</span>
+							</div>
+							<div class="col pull-right v-middle text-lg">
+								<div class="inline">
+									<i class="padder-v-xs padder-xs icon-list" ng-if="options.orgStaffsShowType == 'th'" ng-click="changeShowTypeClick($event)"></i>
+									<i class="padder-v-xs padder-xs fa fa-th-large" ng-if="options.orgStaffsShowType == 'list'" ng-click="changeShowTypeClick($event)"></i>
+								</div>
+							</div>
+						</div>
+					</a>
+				</div>
+				
+				<div class="content">
+					<div class="hbox h-auto padder-sm padder-v-xs text-center text-md text-muted-dk" ng-if="orgStaffs.length == 0">
+						暂无人员信息
+					</div>
+					<div class="" ng-if="options.orgStaffsShowType == 'list'">
+						<div class="hbox h-auto padder-sm padder-v-xs" ng-repeat="staff in orgStaffs track by $index">						
+							<conowstaffphoto class="thumb-sm col thumb-contact-list" photo="staff.PHOTO" name="staff.NAME"></conowstaffphoto>
+							
+							<div class="col b-b p-l-sm staff-cell">
+								<a href="#" ng-click="staffItemClick(staff, $event)">
+									<div class="staff-cell-content">
+										<span class="text-md text-muted-lter">{{ staff.NAME }}</span>
+										<span class="text-base bg-primary label-part-time text-white" ng-if="staff.STAFF_ADDITION">{{ staff.STAFF_ADDITION }}</span>
+										<span class="text-base text-muted-dk">{{ staff.CORP_ORG_ID_HR_ORG_UNIT }}</span>
+										<span class="text-base text-muted-dk m-l">{{ staff.JOBS_ID_HR_JOBS_INFO }}</span>
+									</div>
+								</a>
+							</div>
+						</div>
+					</div>
+					
+					<div class="" ng-if="options.orgStaffsShowType == 'th'">
+						<div class="hbox h-auto padder-sm padder-v-xs inline">
+							<a href="#" class="btn r-3x text-md text-center" ng-repeat="staff in orgStaffs track by $index" ng-click="staffItemClick(staff, $event)">
+								<div class="text-center">	
+									<conowstaffphoto class="thumb-sm col thumb-contact-list" photo="staff.PHOTO" name="staff.NAME"></conowstaffphoto>
+									<div class="text-md w-50">
+										<div class="text-ellipsis">{{ staff.NAME }}</div>
+									</div>
+								</div>
+							</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
 		
-		<div class="hbox padder-v-xs h-auto" ng-repeat="staff in orgStaffs track by $index" ng-if="childOrgs.length == 0">
+		<div class="org-staff-fixed">
+			<div class="hbox h-auto">
+				<a ng-click="showAllStaffsClick($event)">
+					<div class="hbox h-auto bg-dark dker padder-v-xs padder-sm text-white">
+						<div class="col padder-v-xs text-md font-bold text-ellipsis">
+							<span>当前组织人员(</span><span class="">{{orgStaffs.length}}</span><span>)</span>
+						</div>
+						<div class="col pull-right v-middle text-lg">
+							<div class="inline">
+								<i class="padder-v-xs padder-xs icon-list" ng-if="options.orgStaffsShowType == 'th'" ng-click="changeShowTypeClick($event)"></i>
+								<i class="padder-v-xs padder-xs fa fa-th-large" ng-if="options.orgStaffsShowType == 'list'" ng-click="changeShowTypeClick($event)"></i>
+							</div>
+						</div>
+					</div>
+				</a>	
+			</div>
 			
-			<div class="col avatar thumb-contact-list m-r" ng-class="{true: staff.PHOTO}[(staff.PHOTO.indexOf('/') == -1)]">
-				<div class="text-ellipsis padder-v-sm text-center" ng-if="(staff.PHOTO.indexOf('/') == -1)">{{ staff.NAME | limitTo:-2 }}</div>
-				<img ng-src="{{staff.PHOTO}}" ng-if="(staff.PHOTO.indexOf('/') > -1)" style="width:40px;height:40px;">
-			</div>
-			<div class="col b-b p-l-sm staff-cell">
-				<a href="#" ng-click="staffItemClick(staff, $event)">
-					<div class="text-md staff-cell-content">
-						<span class="text-md text-muted-lter">{{ staff.NAME }}</span>
-						<span class="text-base text-muted-dk m-l">{{ staff.ORG_UNIT_ID_HR_ORG_UNIT }}</span>
-						<span class="text-base text-muted-dk m-l">{{ staff.JOBS_ID_HR_JOBS_INFO }}</span>
-						<span class="text-base bg-primary label-part-time text-white" ng-if="staff.STAFF_ADDITION">{{ staff.STAFF_ADDITION }}</span>
-					</div>
-				</a>
-			</div>
->>>>>>> .r12547
-		</div>
-		
-		<div class="hbox padder-v-md text-center h-auto" ng-if="childOrgs.length == 0&&orgStaffs.length == 0">
-			<span class="text-md text-muted-dk">该组织下暂无人员信息</span>
-		</div>
-	</div>
-	
-	<div class="org-staffs-overlay" ng-class="{'hidden': !options.showAllStaffs}" ng-click="options.showAllStaffs = false">
-	</div>
-<<<<<<< .mine
-	<div class="b-org-staffs w-full" ng-class="{'show-all': options.showAllStaffs}" ng-if="childOrgs.length > 0 && orgStaffs.length > 0">
-		<div class="hbox h-auto bg-dark dker padder-v-xs padder-sm text-white org-staffs-title">
-			<a ng-click="showAllStaffsClick($event)" class="block">
-				<div class="col padder-v-xs text-md font-bold inline">
-=======
-	<div class="b-org-staffs w-full" ng-if="childOrgs.length > 0 && orgStaffs.length > 0" ng-class="options.showAllStaffs?'open':''">
-		<a ng-click="showAllStaffsClick($event)">
-			<div class="hbox h-auto bg-dark dker padder-v-xs padder-sm text-white">
-				<div class="col padder-v-xs text-md font-bold">
->>>>>>> .r12547
-					<span>当前组织人员(</span><span class="">{{orgStaffs.length}}</span><span>)</span>
+			<div class="hbox b-b h-auto padder-sm padder-v-xs bg-white">
+				<div class="hbox h-auto padder-sm padder-v-xs text-md text-center text-muted-dk" ng-if="orgStaffs.length == 0">
+					暂无人员信息
 				</div>
-				<div class="col pull-right v-middle text-lg inline">
-					<div class="inline" ng-if="options.showAllStaffs">
-						<i class="padder padder-v-xs icon-list" ng-if="options.orgStaffsShowType == 'th'" ng-click="changeShowTypeClick($event)"></i>
-						<i class="padder padder-v-xs fa fa-th-large" ng-if="options.orgStaffsShowType == 'list'" ng-click="changeShowTypeClick($event)"></i>
-					</div>
-					<div class="inline padder-v-xs p-r">
-						<i class="fa" ng-class="{true: 'fa-angle-double-down', false: 'fa-angle-double-up'}[options.showAllStaffs]"></i>
-					</div>
-				</div>
-			</a>
-		</div>
-		
-		<div class="hbox b-b h-auto m-t-xs padder-sm padder-v-xs org-staffs-content" ng-if="!options.showAllStaffs">
-			<!-- <div class="col avatar thumb-contact-list m-r bg-primary">
-				<div class="text-ellipsis padder-v-sm text-center">{{ orgStaffs[0].nick }}</div>
-			</div> -->
-			<div class="col avatar thumb-contact-list m-r" ng-class="{true: orgStaffs[0].PHOTO}[(orgStaffs[0].PHOTO.indexOf('/') == -1)]">
-				<div class="text-ellipsis padder-v-sm text-center" ng-if="(orgStaffs[0].PHOTO.indexOf('/') == -1)">{{ orgStaffs[0].NAME | limitTo:-2 }}</div>
-				<img ng-src="{{orgStaffs[0].PHOTO}}" ng-if="(orgStaffs[0].PHOTO.indexOf('/') > -1)" style="width:40px;height:40px;">
-			</div>
-			<div class="col p-l-sm  staff-cell">
-				<a href="#" ng-click="staffItemClick(orgStaffs[0], $event)">
-					<div class="staff-cell-content">
-						<span class="text-md text-muted-lter">{{ orgStaffs[0].NAME }}</span>
-						<span class="text-base text-muted-dk m-l">{{ orgStaffs[0].ORG_UNIT_ID_HR_ORG_UNIT }}</span>
-						<span class="text-base text-muted-dk m-l">{{ orgStaffs[0].JOBS_ID_HR_JOBS_INFO }}</span>
-						<span class="text-base bg-primary label-part-time text-white" ng-if="orgStaffs[0].STAFF_ADDITION">{{ orgStaffs[0].STAFF_ADDITION }}</span>						
-					</div>
-				</a>
-			</div>
-		</div>
-		<div class="org-staffs-content">
-			<div class="hbox h-auto m-t-xs padder-sm padder-v-xs" ng-repeat="staff in orgStaffs track by $index" ng-if="options.showAllStaffs && options.orgStaffsShowType == 'list'">
-				<!-- <div class="col avatar thumb-contact-list m-r bg-primary">
-					<div class="text-ellipsis padder-v-sm text-center">{{ staff.nick }}</div>
-				</div> -->
-				<div class="col avatar thumb-contact-list m-r" ng-class="{true: staff.PHOTO}[(staff.PHOTO.indexOf('/') == -1)]">
-					<div class="text-ellipsis padder-v-sm text-center" ng-if="(staff.PHOTO.indexOf('/') == -1)">{{ staff.NAME | limitTo:-2 }}</div>
-					<img ng-src="{{staff.PHOTO}}" ng-if="(staff.PHOTO.indexOf('/') > -1)" style="width:40px;height:40px;">
-				</div>
-				<!-- <div class="col p-l-sm padder-v-sm">
-					<a href="#" ng-click="staffItemClick(staff, $event)">
-						<div class="text-md">{{ staff.NAME }}</div>
-						<div class="text-base">{{ staff.CORP_ORG_ID_HR_ORG_UNIT }}</div>
-					</a>
-				</div> -->
-				<div class="col b-b p-l-sm">
-					<a href="#" ng-click="staffItemClick(staff, $event)">
-						<div class="padder-v-sm">
-							<span class="text-md text-muted-lter">{{ staff.NAME }}</span>
-							<span class="text-base text-muted-dk p-l-sm">{{ staff.ORG_UNIT_ID_HR_ORG_UNIT }}</span>
-							<span class="text-base text-muted-dk p-l-sm">{{ staff.JOBS_ID_HR_JOBS_INFO }}</span>
-							<span class="text-base bg-primary label-part-time text-white" ng-if="staff.STAFF_ADDITION">{{ staff.STAFF_ADDITION }}</span>
+				<div class="" ng-if="options.orgStaffsShowType == 'list'">
+					<div class="hbox h-auto padder-sm padder-v-xs" ng-repeat="staff in orgStaffs track by $index">						
+						<conowstaffphoto class="thumb-sm col thumb-contact-list text-center" photo="staff.PHOTO" name="staff.NAME"></conowstaffphoto>
+						
+						<div class="col b-b p-l-sm staff-cell">
+							<a href="#" ng-click="staffItemClick(staff, $event)">
+								<div class="staff-cell-content">
+									<span class="text-md text-muted-lter">{{ staff.NAME }}</span>
+									<span class="text-base bg-primary label-part-time text-white" ng-if="staff.STAFF_ADDITION">{{ staff.STAFF_ADDITION }}</span>
+									<span class="text-base text-muted-dk">{{ staff.CORP_ORG_ID_HR_ORG_UNIT }}</span>
+									<span class="text-base text-muted-dk m-l">{{ staff.JOBS_ID_HR_JOBS_INFO }}</span>
+								</div>
+							</a>
 						</div>
-					</a>
-				</div>
-			</div>
-<<<<<<< .mine
-			<div class="hbox h-auto m-t-xs padder-sm padder-v-xs inline" ng-if="options.showAllStaffs && options.orgStaffsShowType == 'th'">
-				<a href="#" class="btn r-3x text-md text-center" ng-repeat="staff in orgStaffs track by $index" ng-click="staffItemClick(staff, $event)">
-					<div class="text-center">
-						<!-- <div class="col avatar thumb-contact-list m-r bg-primary">
-							<div class="text-ellipsis padder-v-sm text-center">{{ staff.nick }}</div>
-						</div> -->
-						<div class="col avatar thumb-contact-list m-r" ng-class="{true: staff.PHOTO}[(staff.PHOTO.indexOf('/') == -1)]">
-							<div class="text-ellipsis padder-v-sm text-center" ng-if="(staff.PHOTO.indexOf('/') == -1)">{{ staff.NAME | limitTo:-2 }}</div>
-							<img ng-src="{{staff.PHOTO}}" ng-if="(staff.PHOTO.indexOf('/') > -1)" style="width:40px;height:40px;">
-						</div>
-						<div class="text-md w-40">
-							<div class="text-ellipsis">{{ staff.NAME }}</div>
-						</div>
-=======
-			<!-- <div class="col p-l-sm padder-v-sm">
-				<a href="#" ng-click="staffItemClick(staff, $event)">
-					<div class="text-md">{{ staff.NAME }}</div>
-					<div class="text-base">{{ staff.CORP_ORG_ID_HR_ORG_UNIT }}</div>
-				</a>
-			</div> -->
-			<div class="col b-b p-l-sm  staff-cell">
-				<a href="#" ng-click="staffItemClick(staff, $event)">
-					<div class="staff-cell-content">
-						<span class="text-md text-muted-lter">{{ staff.NAME }}</span>
-						<span class="text-base text-muted-dk m-l">{{ staff.ORG_UNIT_ID_HR_ORG_UNIT }}</span>
-						<span class="text-base text-muted-dk m-l">{{ staff.JOBS_ID_HR_JOBS_INFO }}</span>
-						<span class="text-base bg-primary label-part-time text-white" ng-if="staff.STAFF_ADDITION">{{ staff.STAFF_ADDITION }}</span>
->>>>>>> .r12547
 					</div>
-				</a>
-<<<<<<< .mine
-			</div>	
-		</div>	
-=======
+				</div>
+				
+				<div class="" ng-if="options.orgStaffsShowType == 'th'">
+					<div class="hbox h-auto padder-sm padder-v-xs inline">
+						<a href="#" class="btn r-3x text-md text-center" ng-repeat="staff in orgStaffs track by $index" ng-click="staffItemClick(staff, $event)">
+							<div class="text-center">	
+								<conowstaffphoto class="thumb-sm col thumb-contact-list" photo="staff.PHOTO" name="staff.NAME"></conowstaffphoto>
+								<div class="text-md w-50">
+									<div class="text-ellipsis">{{ staff.NAME }}</div>
+								</div>
+							</div>
+						</a>
+					</div>
+				</div>
 			</div>
 		</div>
-		<div class="hbox h-auto m-t-xs padder-sm padder-v-xs inline" ng-if="options.showAllStaffs && options.orgStaffsShowType == 'th'">
-			<a href="#" class="btn r-3x text-md text-center" ng-repeat="staff in orgStaffs track by $index" ng-click="staffItemClick(staff, $event)">
-				<div class="text-center">
-					<!-- <div class="col avatar thumb-contact-list m-r bg-primary">
-						<div class="text-ellipsis padder-v-sm text-center">{{ staff.nick }}</div>
-					</div> -->
-					<div class="col avatar thumb-contact-list m-r" ng-class="{true: staff.PHOTO}[(staff.PHOTO.indexOf('/') == -1)]">
-						<div class="text-ellipsis staff-cell-content-th text-center" ng-if="(staff.PHOTO.indexOf('/') == -1)">{{ staff.NAME | limitTo:-2 }}</div>
-						<img ng-src="{{staff.PHOTO}}" ng-if="(staff.PHOTO.indexOf('/') > -1)" style="width:40px;height:40px;">
-					</div>
-					<div class="text-md w-50">
-						<div class="text-ellipsis">{{ staff.NAME }}</div>
-					</div>
-				</div>
-			</a>
-		</div>		
->>>>>>> .r12547
 	</div>
 </modal-body>
 
-<modal-btn>
+<!-- <modal-btn>
     <a href="#" class="btn btn-bar-success" ng-click="orgInfoClick(org, $event)">组织信息</a>
-</modal-btn>
+</modal-btn> -->
