@@ -63,5 +63,9 @@ angular.module('app.components', ['ui.router'])
 					url: '/timeSelect',
 					templateUrl: 'views/components/conow-timeSelect/timeSelectDemo.html'
 				})
+				.state('app.components.delaySearch', {
+					url: '/delaySearch',
+					templateUrl: 'views/components/conow-delay-search/delay-search-demo.html'
+				})
 
 	}]);
