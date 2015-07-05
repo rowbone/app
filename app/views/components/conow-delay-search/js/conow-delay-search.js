@@ -4,6 +4,8 @@
 	http://stackoverflow.com/questions/21121460/angular-directive-encapsulating-a-delay-for-ng-change
 	https://github.com/brentvatne/angular-delay
 	http://stackoverflow.com/questions/15304562/how-to-put-a-delay-on-angularjs-instant-search
+	https://github.com/angular-ui/bootstrap/issues/1680
+	http://stackoverflow.com/questions/1909441/jquery-keyup-delay
 */
 
 // app.directive('conowDelaySearch', ['$timeout', 

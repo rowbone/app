@@ -1,0 +1,42 @@
+
+<title-bar name="自动补全"></title-bar>
+
+<div class="wrapper pos-rlt">
+	<div class="col-md-6 col-sm-12">
+		<div class="panel panel-info" ng-controller="autocompleteCtrl">
+			<div class="panel-heading">
+				<div class="panel-title">组件演示</div>
+			</div>
+			<div class="panel-body">
+				<div class="form-group">
+					<label for="" class="control-label">自动补全</label>
+					<input class="form-control" type="text" ng-model="search" ng-model-options="{ debounce: 300 }" ng-change="showOptions()">
+				</div>
+
+				<div>
+					<span ng-repeat="item in listItems">{{ item.name }}</span>
+				</div>
+				
+				<div class="list-items">
+					<div>title</div>
+					<ul class="lit-item-group">
+						<li class="list-item" ng-repeat="item in listItems track by item.id" ng-click="listItemClick(item)">{{ item.name }}</li>
+					</ul>
+				</div>
+			</div>
+			<div class="panel-footer"></div>
+		</div>
+	</div>
+
+	<div class="col-md-6 col-sm-12">
+		<div class="panel panel-info">
+			<div class="panel-heading">
+				<div class="panel-title">参数说明</div>
+			</div>
+			<div class="panel-body">
+				
+			</div>
+			<div class="panel-footer"></div>
+		</div>
+	</div>
+</div>

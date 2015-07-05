@@ -67,5 +67,9 @@ angular.module('app.components', ['ui.router'])
 					url: '/delaySearch',
 					templateUrl: 'views/components/conow-delay-search/delay-search-demo.html'
 				})
+				.state('app.components.autocomplete', {
+					url: '/autocomplete',
+					templateUrl: 'views/components/conow-autocomplete/autocomplete-demo.html'
+				})
 
 	}]);
