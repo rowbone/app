@@ -20,6 +20,7 @@ var app = angular.module('demoApp', [
 	'app.components',
 	'conow.datepicker',
 	'app.home',
+	'ja.qr',
 	'app.hr'
 	// 'angularBootstrapNavTree'
 	]);

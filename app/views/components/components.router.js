@@ -71,5 +71,9 @@ angular.module('app.components', ['ui.router'])
 					url: '/autocomplete',
 					templateUrl: 'views/components/conow-autocomplete/autocomplete-demo.html'
 				})
+				.state('app.components.qrcode', {
+					url: '/qrcode',
+					templateUrl: 'views/components/conow-qrcode/qrcode-demo.html'
+				})
 
 	}]);

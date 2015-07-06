@@ -34,3 +34,11 @@
 1、响应式表格，刷新操作
     a、监听属性变化，做刷新操作
     b、业务controller的触发方法
+
+
+2015.07.06：
+  二维码：[keywords] qrcode、angular qrcode、vcard
+
+  https://github.com/monospaced/angular-qrcode
+  https://github.com/nhawa/vcard-bootstrap-angularjs
+  

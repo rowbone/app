@@ -1,0 +1,33 @@
+
+<title-bar name="二维码"></title-bar>
+
+<div class="wrapper pos-rlt">
+	<div class="col-md-6 col-sm-12">
+		<div class="panel panel-info" ng-controller="qrcodeCtrl">
+			<div class="panel-heading">
+				<div class="panel-title">组件演示</div>
+			</div>
+			<div class="panel-body">
+				<div class="form-group">
+					<label for="" class="control-label">qrcode directive</label>
+					<!-- <qr type-number="8" correction-level="'M'" size="200" input-mode="'ALPHA_NUM'" text="string" image="true"></qr> -->
+					<qr text="qrcodeString" type-number="typeNumber" correction-level="correctionLevel" size="size" input-mode="inputMode" image="image"></qr>
+				</div>
+
+			</div>
+			<div class="panel-footer"></div>
+		</div>
+	</div>
+
+	<div class="col-md-6 col-sm-12">
+		<div class="panel panel-info">
+			<div class="panel-heading">
+				<div class="panel-title">参数说明</div>
+			</div>
+			<div class="panel-body">
+				
+			</div>
+			<div class="panel-footer"></div>
+		</div>
+	</div>
+</div>
