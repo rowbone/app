@@ -1,6 +1,11 @@
 
 <title-bar name="二维码"></title-bar>
-
+<style>
+	.conow-qrcode {
+		width: 200px;
+		height: 200px;
+	}
+</style>
 <div class="wrapper pos-rlt">
 	<div class="col-md-6 col-sm-12">
 		<div class="panel panel-info" ng-controller="qrcodeCtrl">
@@ -10,10 +15,14 @@
 			<div class="panel-body">
 				<div class="form-group">
 					<label for="" class="control-label">qrcode directive</label>
-					<!-- <qr type-number="8" correction-level="'M'" size="200" input-mode="'ALPHA_NUM'" text="string" image="true"></qr> -->
-					<qr text="qrcodeString" type-number="typeNumber" correction-level="correctionLevel" size="size" input-mode="inputMode" image="image"></qr>
+					<!-- <qr text="qrcodeString" type-number="typeNumber" correction-level="correctionLevel" size="size" input-mode="inputMode" image="image"></qr> -->
 				</div>
 
+				<div class="form-group">
+					<label for="" class="control-label">conow-qrcode</label>
+					<conow-qrcode text="qrcodeString"></conow-qrcode>
+					<!-- <div id="qrcode"></div> -->
+				</div>
 			</div>
 			<div class="panel-footer"></div>
 		</div>
