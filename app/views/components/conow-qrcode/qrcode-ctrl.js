@@ -2,7 +2,7 @@
 
 app.controller('qrcodeCtrl', ['$scope', '$http', '$filter', 
     function($scope, $http, $filter) {
-      $scope.qrcodeString = '';
+      // $scope.qrcodeString = '';
       
       $http.get('views/components/conow-qrcode/data/qrcode.json')
         .success(function(data) {

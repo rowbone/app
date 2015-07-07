@@ -38,12 +38,7 @@ app.directive('conowQrcode', ['DataService', '$filter',
 			}, 
 			link: function(scope, elem, attrs) {
 				console.log(scope.text);
-				console.log(attrs.text);
-
-				scope.$watch(scope.text, function(newVal, oldVal) {
-					console.log('newVal-->', newVal);
-				});
-				
+								
 				var $qrcode = elem.find('.conow-qrcode');
 				var qrcodeDom = $qrcode[0];
 				var qrcode = new QRCode(qrcodeDom, {

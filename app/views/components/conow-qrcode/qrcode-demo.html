@@ -2,8 +2,14 @@
 <title-bar name="二维码"></title-bar>
 <style>
 	.conow-qrcode {
-		width: 200px;
-		height: 200px;
+		width: 256px;
+		height: 256px;
+	}
+	.block-align-center {
+		margin: 0 auto;
+	}
+	.conow-qrcode {
+		margin: 0 auto;
 	}
 </style>
 <div class="wrapper pos-rlt">
@@ -20,7 +26,7 @@
 
 				<div class="form-group">
 					<label for="" class="control-label">conow-qrcode</label>
-					<conow-qrcode text="qrcodeString"></conow-qrcode>
+					<conow-qrcode class="block-align-center" text="qrcodeString" ng-if="qrcodeString"></conow-qrcode>
 					<!-- <div id="qrcode"></div> -->
 				</div>
 			</div>
