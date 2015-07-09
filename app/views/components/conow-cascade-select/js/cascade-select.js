@@ -38,13 +38,14 @@ app.directive('conowCascadeSelect', ['DataService', 'conowModals', 'cascadeSelec
 			},
 			link: function(scope, elem, attrs, ctrl) {
 
-				var interval = $interval(function() {
-					if(!angular.equals(ctrl.$modelValue, NaN)) {
-						$interval.cancel(interval);
+console.log(ctrl)
+				// var interval = $interval(function() {
+				// 	if(!angular.equals(ctrl.$modelValue, NaN)) {
+				// 		$interval.cancel(interval);
 
-						elem.val(cascadeSelectService.getOptionName(ctrl.$modelValue));
-					}
-				}, 100);
+				// 		elem.val(cascadeSelectService.getOptionName(ctrl.$modelValue));
+				// 	}
+				// }, 100);
 
 				elem.bind('click', function(e) {
 					e.preventDefault();
@@ -101,13 +102,13 @@ console.log('in cascadeSelectCtrl')
 		
 		var init = function() {
 			var url = modalParams.url;
-			url = 'views/components/conow-cascade-select/data/service-common-queryOptions-type-DICT_OPTION_LEVEL&DICT_CODE-HR_RETIRED_ARMY_RANK2.json';
+			// url = 'views/components/conow-cascade-select/data/service-common-queryOptions-type-DICT_OPTION_LEVEL&DICT_CODE-HR_RETIRED_ARMY_RANK2.json';
 			DataService.getData(url)
 				.then(function(data) {
 					if(data.obj) {
 						data = data.obj;
 					}
-					$scope.dataLevel1 = data;console.log('dataLevel1-->', $scope.dataLevel1);
+					$scope.dataLevel1 = data;
 					var iLen = data.length;
 					for(var i=0; i<iLen; i++) {
 						if(data[i].OPTION_VALUE === $scope.selected[0].OPTION_VALUE) {

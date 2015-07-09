@@ -1,0 +1,54 @@
+<title-bar name="stepper"></title-bar>
+
+<div class="wrapper pos-rlt">
+	<div class="row">
+		<div class="col-md-6 col-sm-12">
+			<div class="panel panel-info" ng-controller="stepperDemoCtrl">
+				<div class="panel-heading">
+					<div class="panel-title">组件演示</div>
+				</div>
+				<div class="panel-body">
+						<div class="form-group">
+							<label for="" class="control-label">数字</label>
+								<conow-stepper  
+									decimals="vm.decimals"
+									step="vm.step" 
+									ng-model="vm.defaultValue" 
+									min="vm.min"
+									max="vm.max"> 							
+								</conow-stepper> 
+						</div>
+				</div>
+
+				<div class="p-sm">
+					<pre>{{ vm | json }}</pre>
+				</div>
+				<div class="panel-footer"></div>
+			</div>		
+		</div>
+
+		<div class="col-md-6 col-sm-12">
+			<div class="panel panel-info" ng-controller="stepperDemoCtrl">
+				<div class="panel-heading">
+					<div class="panel-title">使用说明</div>
+				</div>
+				<div class="panel-body">
+					<ul class="list-unstyled">
+						<li>
+						<pre class="text-danger">&lt;conow-stepper decimals="vm.decimals" step="vm.step" ng-model="vm.defaultValue" min="vm.min" max="vm.max"&gt; &lt;/conow-stepper&gt;</pre></li>
+						<li>参数说明
+							<ol>
+								<li><code>ng-model</code>:业务controller绑定的值</li>
+								<li><code>decimals</code>:显示数字的精度[默认为0，即只显示整数部分]</li>
+								<li><code>step</code>:每次点击加(递增)/减(递减)的步长</li>
+								<li><code>min</code>:数字的最小值</li>
+								<li><code>mix</code>:数字的最大值</li>
+							</ol>
+						</li>
+					</ul>
+				</div>
+				<div class="panel-footer"></div>
+			</div>		
+		</div>
+	</div>
+</div>

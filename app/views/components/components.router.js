@@ -75,5 +75,13 @@ angular.module('app.components', ['ui.router'])
 					url: '/qrcode',
 					templateUrl: 'views/components/conow-qrcode/qrcode-demo.html'
 				})
+				.state('app.components.stepper', {
+					url: '/stepper',
+					templateUrl: 'views/components/conow-stepper/stepper-demo.html'
+				})
+				.state('app.components.countrySel', {
+					url: '/countrySel',
+					templateUrl: 'views/components/conow-country-sel/country-sel-demo.html'
+				})
 
 	}]);
