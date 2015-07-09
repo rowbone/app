@@ -14,10 +14,10 @@
 	<div class="hbox h-auto p-sm">
 		<input type="text" class="form-control" ng-model="entity.searchKey" placeholder="搜索">
 	</div>
-
+	
 	<conow-tabs>
 		<conow-tabs-titles theme="3" class="">
-			<conow-tabs-titles-diy show="options.tabs[0]" class="w-p-3 m-n" class-a="bg-white">
+			<!-- <conow-tabs-titles-diy show="options.tabs[0]" class="w-p-3 m-n" class-a="bg-white">
 				<span class="text-base font-bold cascade-sel-tab">{{ titles[0] }}</span>
 			</conow-tabs-titles-diy>
 			<conow-tabs-titles-diy show="options.tabs[1]" class="w-p-3 m-n" class-a="bg-white">
@@ -25,11 +25,17 @@
 			</conow-tabs-titles-diy>
 			<conow-tabs-titles-diy show="options.tabs[2]" class="w-p-3 m-n" class-a="bg-white">
 				<span class="text-base font-bold cascade-sel-tab">{{ titles[2] }}</span>
+			</conow-tabs-titles-diy> -->
+			<conow-tabs-titles-diy class="w-p-3 m-n" ng-repeat="title in options.titles track by $index">
+				<span class="text-base font-bold cascade-sel-tab" ng-bind="title"></span>
 			</conow-tabs-titles-diy>
 		</conow-tabs-titles>
 
 		<conow-tabs-content>
-			<conow-tabs-content-text>
+			<conow-tabs-content-text ng-repeat="dataLevel in vm.dataCascade track by $index">
+				<a href="#" class="btn m cascade-sel" ng-click="select($event, item)" ng-repeat="item in dataLevel track by $index" ng-bind="item.name">{{$index}}</a>
+			</conow-tabs-content-text>
+			<!-- <conow-tabs-content-text>
 				<a href="#" class="btn m cascade-sel" ng-class="{'btn-success': selected[0]['OPTION_VALUE'] == item['OPTION_VALUE']}" skip-click=1 ng-click="select($event, '1', item)" ng-repeat="item in dataLevel1 | filter:entity.searchKey track by $index">{{ item.OPTION_NAME }}</a>
 			</conow-tabs-content-text>
 			<conow-tabs-content-text>
@@ -37,7 +43,7 @@
 			</conow-tabs-content-text>
 			<conow-tabs-content-text>
 				<a href="#" class="btn m cascade-sel" ng-class="{'btn-success': selected[2]['OPTION_VALUE'] == item['OPTION_VALUE']}" ng-click="select($event, '3', item)" ng-repeat="item in dataLevel3 | filter:entity.searchKey track by $index">{{ item.OPTION_NAME }}</a>
-			</conow-tabs-content-text>
+			</conow-tabs-content-text> -->
 		</conow-tabs-content>
 	</conow-tabs>
 </modal-body>

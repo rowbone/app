@@ -93,12 +93,28 @@ console.log('before open');
 
 app.controller('cascadeSelectCtrl', ['$scope', 'DataService', '$conowModalInstance', 'modalParams', 'cascadeSelectService', 
 	function($scope, DataService, $conowModalInstance, modalParams, cascadeSelectService) {
-		$scope.titles = modalParams.titles;
+		// $scope.titles = modalParams.titles;
 		$scope.selected = cascadeSelectService.getSelected();
+
 console.log('in cascadeSelectCtrl')
 		var options = $scope.options = {
-			tabs: [true, false, false]
+			titles: modalParams.titles,
+			tabsLen: modalParams.titles.length,
+			tabs: [],
+			contentIndex: 0
 		};
+
+		var vm = $scope.vm = {
+			dataCascade: []
+		};
+
+		for(var i=0; i<options.tabsLen; i++) {
+			if(0 === i) {
+				options.tabs[i] = true;
+			}
+			options.tabs[i] = false;
+			vm.dataCascade.push([]);
+		}
 		
 		var init = function() {
 			var url = modalParams.url;
@@ -106,25 +122,27 @@ console.log('in cascadeSelectCtrl')
 			DataService.getData(url)
 				.then(function(data) {
 					if(data.obj) {
-						data = data.obj;
+						vm.dataAll = data.obj;
+						vm.dataCascade[0] = data.obj;
 					}
-					$scope.dataLevel1 = data;
-					var iLen = data.length;
-					for(var i=0; i<iLen; i++) {
-						if(data[i].OPTION_VALUE === $scope.selected[0].OPTION_VALUE) {
-							$scope.dataLevel2 = data[i].children;
-							var dataLevel2 = $scope.dataLevel2;
-							iLen = dataLevel2.length;
-							for(var i = 0; i<iLen; i++) {
-								if (dataLevel2[i].OPTION_VALUE === $scope.selected[1].OPTION_VALUE) {
-									$scope.dataLevel3 = dataLevel2[i].children;
 
-									options.tabs = [false, false, true];
-								};
-							}
+					// $scope.dataLevel1 = data;
+					// var iLen = data.length;
+					// for(var i=0; i<iLen; i++) {
+					// 	if(data[i].OPTION_VALUE === $scope.selected[0].OPTION_VALUE) {
+					// 		$scope.dataLevel2 = data[i].children;
+					// 		var dataLevel2 = $scope.dataLevel2;
+					// 		iLen = dataLevel2.length;
+					// 		for(var i = 0; i<iLen; i++) {
+					// 			if (dataLevel2[i].OPTION_VALUE === $scope.selected[1].OPTION_VALUE) {
+					// 				$scope.dataLevel3 = dataLevel2[i].children;
+
+					// 				options.tabs = [false, false, true];
+					// 			};
+					// 		}
 							
-						}
-					}
+					// 	}
+					// }
 
 				}, function(msg) {
 					console.error('msg-->', msg);
@@ -135,7 +153,7 @@ console.log('in cascadeSelectCtrl')
 
 		$scope.select = function(e, selectedLevel, item) {
 			e.preventDefault();
-
+console.log('selectedLevel-->', selectedLevel)
 			switch(selectedLevel) {
 				case '1':
 					$scope.selected = [item];
