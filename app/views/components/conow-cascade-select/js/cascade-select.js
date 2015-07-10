@@ -38,7 +38,6 @@ app.directive('conowCascadeSelect', ['DataService', 'conowModals', 'cascadeSelec
 			},
 			link: function(scope, elem, attrs, ctrl) {
 
-console.log(ctrl)
 				// var interval = $interval(function() {
 				// 	if(!angular.equals(ctrl.$modelValue, NaN)) {
 				// 		$interval.cancel(interval);
@@ -47,7 +46,7 @@ console.log(ctrl)
 				// 	}
 				// }, 100);
 
-				elem.bind('click', function(e) {
+				elem.bind('click.cascadeSelect', function(e) {
 					e.preventDefault();
 					
 					elem.attr('disabled', true);
@@ -55,7 +54,7 @@ console.log(ctrl)
 					if(angular.equals(cascadeSelectService.getSelected(), [])) {
 						cascadeSelectService.setSelected(scope.sel);
 					}
-console.log('before open');
+
 					var modalInstance = conowModals.open({
 						templateUrl: 'views/components/conow-cascade-select/tpls/cascade-select.html',
 						title: '选择',
@@ -71,10 +70,23 @@ console.log('before open');
 						}
 					});
 
-					modalInstance.result.then(function(data) {console.log('result-->', data);
-						var value = data[data.length - 1];
+					modalInstance.result.then(function(data) {
+console.log('result-->', data);
+						var iLen = data.length,
+								value = {};				// to hold selected value which is not {}
+						for(var i=iLen - 1; i>=0; i--) {
+							console.log(angular.equals(data[i], {}));
+							if(!angular.equals(data[i], {})) {
+								value = data[i];
+								break;
+							}
+						}
+
 						elem.val(value.OPTION_NAME);
 						ctrl.$setViewValue(value.OPTION_VALUE);
+
+						// elem.val(value.name);
+						// ctrl.$setViewValue(value.id);
 						
 						elem.attr('disabled', false);
 					}, function(msg) {
@@ -96,35 +108,40 @@ app.controller('cascadeSelectCtrl', ['$scope', 'DataService', '$conowModalInstan
 		// $scope.titles = modalParams.titles;
 		$scope.selected = cascadeSelectService.getSelected();
 
-console.log('in cascadeSelectCtrl')
 		var options = $scope.options = {
 			titles: modalParams.titles,
 			tabsLen: modalParams.titles.length,
 			tabs: [],
-			contentIndex: 0
+			contentIndex: 0					// contentIndex 索引当前操作的内容层级
 		};
 
 		var vm = $scope.vm = {
-			dataCascade: []
+			dataCascade: [],
+			selected: []
 		};
-
-		for(var i=0; i<options.tabsLen; i++) {
-			if(0 === i) {
-				options.tabs[i] = true;
-			}
-			options.tabs[i] = false;
-			vm.dataCascade.push([]);
-		}
 		
 		var init = function() {
+			// data init
+			for(var i=0; i<options.tabsLen; i++) {
+				if(0 === i) {
+					options.tabs[i] = true;
+				}
+				options.tabs[i] = false;
+				
+				vm.dataCascade.push([]);
+				vm.selected.push({});
+			}
+
+			// todo: support json datasource
 			var url = modalParams.url;
 			// url = 'views/components/conow-cascade-select/data/service-common-queryOptions-type-DICT_OPTION_LEVEL&DICT_CODE-HR_RETIRED_ARMY_RANK2.json';
 			DataService.getData(url)
 				.then(function(data) {
 					if(data.obj) {
-						vm.dataAll = data.obj;
-						vm.dataCascade[0] = data.obj;
+						data = data.obj;
 					}
+					vm.dataAll = data;
+					vm.dataCascade[0] = data;
 
 					// $scope.dataLevel1 = data;
 					// var iLen = data.length;
@@ -151,27 +168,27 @@ console.log('in cascadeSelectCtrl')
 
 		init();
 
-		$scope.select = function(e, selectedLevel, item) {
+		// select operation
+		$scope.select = function(e, item) {
 			e.preventDefault();
-console.log('selectedLevel-->', selectedLevel)
-			switch(selectedLevel) {
-				case '1':
-					$scope.selected = [item];
-					$scope.dataLevel2 = item.children;
-					$scope.dataLevel3 = null;
 
-					options.tabs = [false, true, false];
-					break;
-				case '2':
-					$scope.selected = [$scope.selected[0], item];
-					$scope.dataLevel3 = item.children;
+			vm.selected[options.contentIndex] = item;
+console.log(item);
+			vm.dataCascade[options.contentIndex + 1] = item.children;
 
-					options.tabs = [false, false, true];
-					break;
-				case '3':
-					$scope.selected = [$scope.selected[0], $scope.selected[1], item];
+			if(vm.dataCascade.length - 1 > options.contentIndex + 1) {
+				for(var i=0; i<vm.dataCascade.length; i++) {
+					if(i > options.contentIndex) {
+						vm.dataCascade[i] = [];
 
-					$scope.confirm();
+						vm.selected[i] = {};
+					}
+				}
+			}
+
+			// update contentIndex
+			if(options.contentIndex < options.tabsLen) {
+				options.contentIndex += 1;
 			}
 
 		};
@@ -187,10 +204,17 @@ console.log('selectedLevel-->', selectedLevel)
 			return -1;
 		};
 
+		// 页签标题点击，更新当前操作的 contentIndex
+		$scope.tabTitleClick = function(index) {
+
+			options.contentIndex = index;
+		};
+
 		// 确定返回
 		$scope.confirm = function() {
-			cascadeSelectService.setSelected($scope.selected);
-			$conowModalInstance.close($scope.selected);
+			// cascadeSelectService.setSelected($scope.selected);
+
+			$conowModalInstance.close(vm.selected);
 		};
 
 	}

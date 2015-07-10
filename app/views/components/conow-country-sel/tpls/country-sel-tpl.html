@@ -1,0 +1,41 @@
+<modal-body>
+	<style>
+	  .cascade-sel:hover, .cascade-sel:hover, .cascade-sel:hover {
+	    color: #F99696;
+	  }
+	  .area-selected:hover {
+	    cursor: pointer;
+	  }
+	  .w-p-2 {
+	  	width: 50%;
+	  }
+	</style>
+
+	<div class="hbox h-auto p-sm">
+		<input type="text" class="form-control" ng-model="entity.searchKey" placeholder="搜索">
+	</div>
+	
+	<conow-tabs>
+		<conow-tabs-titles class="">
+			<conow-tabs-titles-diy show="options.tabs[0]" class="w-p-2 m-n" class-a="bg-white">
+				<span class="text-base font-bold cascade-sel-tab">{{ options.titles[0] }}</span>
+			</conow-tabs-titles-diy>
+			<conow-tabs-titles-diy show="options.tabs[1]" class="w-p-2 m-n" class-a="bg-white">
+				<span class="text-base font-bold cascade-sel-tab">{{ options.titles[1] }}</span>
+			</conow-tabs-titles-diy>
+		</conow-tabs-titles>
+
+		<conow-tabs-content>
+			<conow-tabs-content-text>
+				<a href="#" class="btn m cascade-sel" ng-class="{'btn-success': selected[0]['OPTION_VALUE'] == item['OPTION_VALUE']}" skip-click=1 ng-click="select($event, '1', item)" ng-repeat="item in vm.dataCascade[0] | filter:entity.searchKey track by $index">{{ item.OPTION_NAME }}</a>
+			</conow-tabs-content-text>
+			<conow-tabs-content-text>
+				<a href="#" class="btn m cascade-sel" ng-class="{'btn-success': selected[1]['OPTION_VALUE'] == item['OPTION_VALUE']}" skip-click=2 ng-click="select($event, '2', item)" ng-repeat="item in vm.dataCascade[1] | filter:entity.searchKey track by $index">{{ item.OPTION_NAME }}</a>
+			</conow-tabs-content-text>
+		</conow-tabs-content>
+	</conow-tabs>
+</modal-body>
+
+<modal-btn>
+	<a class="btn btn-bar-success" ng-click="confirm()">确定</a>
+</modal-btn>

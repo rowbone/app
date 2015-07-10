@@ -64,17 +64,17 @@
     <div class='hbox text-lg stepper-box-outer'>
         <div class="col v-middle text-center cursor-h stepper-box" ng-click="minusNum()" ng-class="{'disabled': inputVal == options.min}">
             <span class="stepper-minus">
-              <i class="ion-minus-round l-h-0x" ng-class="{'stepper-disabled': inputVal == options.min}"></i>
-              <!-- <i class="fa fa-minus l-h-0x" ng-class="{'stepper-disabled': inputVal == options.min}"></i> -->
+              <!-- <i class="ion-minus-round l-h-0x" ng-class="{'stepper-disabled': inputVal == options.min}"></i> -->
+              <i class="fa fa-minus l-h-0x" ng-class="{'stepper-disabled': vm.inputVal == options.min}"></i>
            </span>
         </div>
         <div class="col text-primary-dker v-middle">
-            <input type="text" class="no-borders no-padder w-full text-center stepper-input text-primary" ng-model="vm.inputVal" ng-blur="numberBlur($event)" ng-keydown="numberKeydown($event)" />            
+            <input type="text" class="no-padder w-full text-center stepper-input text-primary" ng-model="vm.inputVal" ng-blur="numberBlur($event)" ng-keydown="numberKeydown($event)" />            
         </div>
         <div class="col v-middle text-center cursor-h stepper-box" ng-click="addNum()" ng-class="{'disabled': inputVal == options.max}">
           <span class="stepper-plus">
-            <i class="ion-plus-round l-h-0x" ng-class="{'stepper-disabled': inputVal == options.min}"></i>
-            <!-- <i class="fa fa-plus l-h-0x" ng-class="{'stepper-disabled': inputVal == options.max}"></i> -->
+            <!-- <i class="ion-plus-round l-h-0x" ng-class="{'stepper-disabled': inputVal == options.min}"></i> -->
+            <i class="fa fa-plus l-h-0x" ng-class="{'stepper-disabled': vm.inputVal == options.max}"></i>
           </span>
         </div>
     </div>
