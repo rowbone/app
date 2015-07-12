@@ -38,14 +38,15 @@ app.directive('conowCascadeSelect', ['DataService', 'conowModals', 'cascadeSelec
 			},
 			link: function(scope, elem, attrs, ctrl) {
 
-				// var interval = $interval(function() {
-				// 	if(!angular.equals(ctrl.$modelValue, NaN)) {
-				// 		$interval.cancel(interval);
+				var interval = $interval(function() {
+					if(!angular.equals(ctrl.$modelValue, NaN)) {
+						$interval.cancel(interval);
 
-				// 		elem.val(cascadeSelectService.getOptionName(ctrl.$modelValue));
-				// 	}
-				// }, 100);
+						elem.val(cascadeSelectService.getOptionName(ctrl.$modelValue));
+					}
+				}, 100);
 
+				// click  to open select modal
 				elem.bind('click.cascadeSelect', function(e) {
 					e.preventDefault();
 					
@@ -72,7 +73,7 @@ app.directive('conowCascadeSelect', ['DataService', 'conowModals', 'cascadeSelec
 
 					modalInstance.result.then(function(data) {
 console.log('result-->', data);
-						var iLen = data.length,
+						/*var iLen = data.length,
 								value = {};				// to hold selected value which is not {}
 						for(var i=iLen - 1; i>=0; i--) {
 							console.log(angular.equals(data[i], {}));
@@ -83,7 +84,7 @@ console.log('result-->', data);
 						}
 
 						elem.val(value.OPTION_NAME);
-						ctrl.$setViewValue(value.OPTION_VALUE);
+						ctrl.$setViewValue(value.OPTION_VALUE);*/
 
 						// elem.val(value.name);
 						// ctrl.$setViewValue(value.id);
@@ -103,6 +104,7 @@ console.log('result-->', data);
 	}
 ]);
 
+// cascade select modal controller
 app.controller('cascadeSelectCtrl', ['$scope', 'DataService', '$conowModalInstance', 'modalParams', 'cascadeSelectService', 
 	function($scope, DataService, $conowModalInstance, modalParams, cascadeSelectService) {
 		// $scope.titles = modalParams.titles;
@@ -112,7 +114,7 @@ app.controller('cascadeSelectCtrl', ['$scope', 'DataService', '$conowModalInstan
 			titles: modalParams.titles,
 			tabsLen: modalParams.titles.length,
 			tabs: [],
-			contentIndex: 0					// contentIndex 索引当前操作的内容层级
+			contentIndex: 1					// contentIndex 索引当前操作的内容层级
 		};
 
 		var vm = $scope.vm = {
@@ -172,25 +174,24 @@ app.controller('cascadeSelectCtrl', ['$scope', 'DataService', '$conowModalInstan
 		$scope.select = function(e, item) {
 			e.preventDefault();
 
-			vm.selected[options.contentIndex] = item;
-console.log(item);
-			vm.dataCascade[options.contentIndex + 1] = item.children;
+			vm.selected[options.contentIndex - 1] = item;
+			vm.dataCascade[options.contentIndex] = item.children;
 
-			if(vm.dataCascade.length - 1 > options.contentIndex + 1) {
-				for(var i=0; i<vm.dataCascade.length; i++) {
-					if(i > options.contentIndex) {
-						vm.dataCascade[i] = [];
+			// if(vm.dataCascade.length - 1 > options.contentIndex + 1) {
+			// 	for(var i=0; i<vm.dataCascade.length; i++) {
+			// 		if(i > options.contentIndex) {
+			// 			vm.dataCascade[i] = [];
 
-						vm.selected[i] = {};
-					}
-				}
-			}
+			// 			vm.selected[i] = {};
+			// 		}
+			// 	}
+			// }
 
 			// update contentIndex
-			if(options.contentIndex < options.tabsLen) {
+			if(options.contentIndex < options.tabsLen + 1) {
 				options.contentIndex += 1;
 			}
-
+console.log(vm.dataCascade)
 		};
 
 		$scope.indexInArr = function(item, items) {
@@ -214,7 +215,12 @@ console.log(item);
 		$scope.confirm = function() {
 			// cascadeSelectService.setSelected($scope.selected);
 
-			$conowModalInstance.close(vm.selected);
+			$conowModalInstance.close(
+				{
+					'selected': vm.selected,
+					'contentIndex': options.contentIndex
+				}
+			);
 		};
 
 	}

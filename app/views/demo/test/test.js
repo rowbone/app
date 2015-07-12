@@ -143,3 +143,12 @@ app.controller('DataGenerateCtrl', ['$scope', 'DataService',
 
 	}
 ]);
+
+app.controller('listItemCtrl', ['$scope', 
+	function ($scope) {
+		// 
+		var vm = $scope.vm = {
+			countries: ['中国', '英国', '美国', '法国', '俄罗斯', '印度', '德国', '西班牙', '南非', '中非', '埃及', '墨西哥']
+		};
+	}
+]);

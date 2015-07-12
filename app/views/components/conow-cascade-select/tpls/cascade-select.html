@@ -6,9 +6,9 @@
 	  .area-selected:hover {
 	    cursor: pointer;
 	  }
-	  .w-p-3 {
+	  /*.w-p-3 {
 	  	width: 33.33%;
-	  }
+	  }*/
 	</style>
 
 	<div class="hbox h-auto p-sm">
@@ -33,9 +33,7 @@
 
 		<conow-tabs-content>
 			<conow-tabs-content-text ng-repeat="dataLevel in vm.dataCascade track by $index" show="options.tabs[$index]">
-			<pre>{{ $index }}</pre>
-			<pre>{{ options.contentIndex }}</pre>
-				<a href="#" class="btn m cascade-sel" ng-click="select($event, item)" ng-repeat="item in dataLevel track by $index" ng-bind="item.OPTION_NAME" skip-slick={{options.contentIndex + 1}}></a>
+				<a href="#" class="btn m cascade-sel" ng-click="select($event, item)" ng-repeat="item in dataLevel track by $index" ng-bind="item.OPTION_NAME" skip-slick="{{parseInt(options.contentIndex + 1)}}"></a>
 			</conow-tabs-content-text>
 			<!-- <conow-tabs-content-text>
 				<a href="#" class="btn m cascade-sel" ng-class="{'btn-success': selected[0]['OPTION_VALUE'] == item['OPTION_VALUE']}" skip-click=1 ng-click="select($event, '1', item)" ng-repeat="item in dataLevel1 | filter:entity.searchKey track by $index">{{ item.OPTION_NAME }}</a>
