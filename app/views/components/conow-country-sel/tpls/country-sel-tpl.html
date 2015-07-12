@@ -27,10 +27,10 @@
 
 		<conow-tabs-content>
 			<conow-tabs-content-text>
-				<a href="#" class="btn m cascade-sel" ng-class="{'btn-success': selected[0]['OPTION_VALUE'] == item['OPTION_VALUE']}" skip-click=1 ng-click="select($event, '1', item)" ng-repeat="item in vm.dataCascade[0] | filter:entity.searchKey track by $index">{{ item.OPTION_NAME }}</a>
+				<a href="#" class="btn m cascade-sel" ng-class="{'btn-success': vm.selected[0]['OPTION_VALUE'] == item['OPTION_VALUE']}" skip-click=1 ng-click="select($event, '1', item)" ng-repeat="item in vm.dataCascade[0] | filter: { OPTION_NAME: entity.searchKey } track by $index">{{ item.OPTION_NAME }}</a>
 			</conow-tabs-content-text>
 			<conow-tabs-content-text>
-				<a href="#" class="btn m cascade-sel" ng-class="{'btn-success': selected[1]['OPTION_VALUE'] == item['OPTION_VALUE']}" skip-click=2 ng-click="select($event, '2', item)" ng-repeat="item in vm.dataCascade[1] | filter:entity.searchKey track by $index">{{ item.OPTION_NAME }}</a>
+				<a href="#" class="btn m cascade-sel" ng-class="{'btn-success': vm.selected[1]['OPTION_VALUE'] == item['OPTION_VALUE']}" skip-click=2 ng-click="select($event, '2', item)" ng-repeat="item in vm.dataCascade[1] | filter: { OPTION_NAME: entity.searchKey } track by $index">{{ item.OPTION_NAME }}</a>
 			</conow-tabs-content-text>
 		</conow-tabs-content>
 	</conow-tabs>

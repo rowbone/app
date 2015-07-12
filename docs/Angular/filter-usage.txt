@@ -2,6 +2,7 @@ from:http://www.tuicool.com/articles/ueUZBv
 
 1、在模板中使用
 	{{ expression | filter1:arg1:arg2 | filter2 | filter3}}
+	{{ expression | filter: { name: searchKey } }}
 
 2、在controller和service中使用
 	注入 $filter 服务
