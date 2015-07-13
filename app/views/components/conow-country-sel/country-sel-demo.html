@@ -3,6 +3,23 @@
 <div class="wrapper pos-rlt">
 	<div class="row">
 		<div class="col-md-6 col-sm-12">
+			<div class="panel panel-info" ng-controller="countryCascadeSelDemoCtrl">
+				<div class="panel-heading">
+					<div class="panel-title">国家级联选择</div>
+				</div>
+				<div class="panel-body">
+					<div class="form-group">
+						<label for="" class="control-label">选择</label>
+						<!-- <input type="text" class="form-control" conow-cascade-select titles="vm.titles" url="vm.url" ng-model="vm.sel"> -->
+						<input type="text" class="form-control" conow-country-cascade-select titles="vm.titles" url="vm.url" ng-model="vm.sel" selected-val="vm.sel">
+					</div>
+
+					<pre>{{ vm | json }}</pre>
+				</div>
+			</div>
+		</div>
+
+		<div class="col-md-6 col-sm-12">
 			<div class="panel panel-info" ng-controller="countrySelDemoCtrl">
 				<div class="panel-heading">
 					<div class="panel-title">国家选择</div>
@@ -10,8 +27,7 @@
 				<div class="panel-body">
 					<div class="form-group">
 						<label for="" class="control-label">选择</label>
-						<!-- <input type="text" class="form-control" conow-cascade-select titles="vm.titles" url="vm.url" ng-model="vm.sel"> -->
-						<input type="text" class="form-control" conow-country-select titles="vm.titles" url="vm.url" ng-model="vm.sel" selected-val="vm.sel">
+						<input type="text" class="form-control" conow-country-select ng-model="vm.sel">
 					</div>
 
 					<pre>{{ vm | json }}</pre>

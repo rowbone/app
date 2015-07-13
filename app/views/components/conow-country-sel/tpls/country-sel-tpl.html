@@ -1,41 +1,79 @@
-<modal-body>
+
+<modal-body class="no-scoll">
 	<style>
-	  .cascade-sel:hover, .cascade-sel:hover, .cascade-sel:hover {
-	    color: #F99696;
-	  }
-	  .area-selected:hover {
-	    cursor: pointer;
-	  }
-	  .w-p-2 {
-	  	width: 50%;
-	  }
+		.sub-label {
+			display: inline-block;
+			width: 12%;
+			vertical-align: middle;
+			margin-right: 10px;
+			color: #000;
+		}
+		.sub-label.active {
+			color: #5BB9E7;
+			/*background-color: #FAFAFB;*/
+		}
+
+		.no-scoll {
+			overflow: hidden; 
+		}
+		.search-group {
+			position: absolute;
+			width: 100%;
+		}
+		.search-group input {
+			display: block;
+			padding-left: 25px;
+		}
+		.search-group .search-group-btn {
+			position: absolute;
+			left: 10px;
+			top: 17px;
+			margin-left: 10px;
+			margin-right: 5px;
+			padding: 0;
+			background: transparent;
+			border: none;
+			color: #cacaca;
+		}
+		.country-label {
+			font-size: 18px;
+		}
+		.country-content {
+			font-size: 17px;
+			background-color: #dfeaf2;
+		}
+		.country-name { display: inline-block; padding: 10px; }
+		.country-label a:hover, .country-name:hover { color: #23b7e5;}
+		.w-p-5 { width: 15%; }
+		.country-expand-icon { color: #acacac; }
+		.country-sel-body { position: relative; top: 55px; height: 300px; overflow: auto; }
 	</style>
 
-	<div class="hbox h-auto p-sm">
-		<input type="text" class="form-control" ng-model="entity.searchKey" placeholder="搜索">
-	</div>
-	
-	<conow-tabs>
-		<conow-tabs-titles class="">
-			<conow-tabs-titles-diy show="options.tabs[0]" class="w-p-2 m-n" class-a="bg-white">
-				<span class="text-base font-bold cascade-sel-tab">{{ options.titles[0] }}</span>
-			</conow-tabs-titles-diy>
-			<conow-tabs-titles-diy show="options.tabs[1]" class="w-p-2 m-n" class-a="bg-white">
-				<span class="text-base font-bold cascade-sel-tab">{{ options.titles[1] }}</span>
-			</conow-tabs-titles-diy>
-		</conow-tabs-titles>
+	<div>
+		<div class="search-group p-sm">
+			<input ng-model="vm.searchKey" type="text" class="form-control" ng-change="enterPress($event)" placeholder="请输入关键字...">
+			<button type="button" class="search-group-btn" ng-click="searchClick($event)" tabindex="-1">
+				<!-- <i class="fa ion-ios-search"></i> -->
+				<i class="fa fa-search"></i>
+			</button>
+		</div>
 
-		<conow-tabs-content>
-			<conow-tabs-content-text>
-				<a href="#" class="btn m cascade-sel" ng-class="{'btn-success': vm.selected[0]['OPTION_VALUE'] == item['OPTION_VALUE']}" skip-click=1 ng-click="select($event, '1', item)" ng-repeat="item in vm.dataCascade[0] | filter: { OPTION_NAME: entity.searchKey } track by $index">{{ item.OPTION_NAME }}</a>
-			</conow-tabs-content-text>
-			<conow-tabs-content-text>
-				<a href="#" class="btn m cascade-sel" ng-class="{'btn-success': vm.selected[1]['OPTION_VALUE'] == item['OPTION_VALUE']}" skip-click=2 ng-click="select($event, '2', item)" ng-repeat="item in vm.dataCascade[1] | filter: { OPTION_NAME: entity.searchKey } track by $index">{{ item.OPTION_NAME }}</a>
-			</conow-tabs-content-text>
-		</conow-tabs-content>
-	</conow-tabs>
+		<div class="country-sel-body">
+			<ul class="list-group list-unstyled">
+				<div ng-repeat="group in vm.groupData track by $index">
+					<li class="list-group-item country-label" ng-click="group.expanded = !group.expanded">
+						<a href="#" class="inline w-p-5" ng-repeat="item in group track by $index" ng-bind="item.label" ng-click="labelClick($event, item, group)" ng-if="item.children.length > 0"></a>
+						<i class="fa fa-angle-down pull-right"></i>
+					</li>
+					<div class="country-content" ng-repeat="item in group track by $index" ng-if="group.expanded">
+						<span class="btn btn-default country-name" ng-repeat="child in item.children track by $index" ng-bind="child.VALUE" ng-click="countryClick($event, child)"></span>
+					</div>
+				</div>
+			</ul>
+		</div>
+	</div>
 </modal-body>
 
 <modal-btn>
-	<a class="btn btn-bar-success" ng-click="confirm()">确定</a>
+	<a href="#" class="btn btn-bar-success" ng-click="confirm($event)">确定</a>
 </modal-btn>
