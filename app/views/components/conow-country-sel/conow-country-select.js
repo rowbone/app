@@ -107,6 +107,20 @@ app.service('countriesService', ['$q', 'DataService',
 			return getSelectedFromData(keyCode, dataAll, codeName);
 		}
 
+		this.getGroupIndex = function(label) {
+			var strAlphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+			var index = strAlphabet.indexOf(label);
+			var groupIndex = -1;
+
+			if(index >= 20) {
+				groupIndex = 4;
+			} else {
+				groupIndex = parseInt(index / 5);
+			}
+
+			return groupIndex;
+		};
+
 		// other methods
 
 	}
@@ -205,6 +219,7 @@ app.directive('conowCountrySelect', ['DataService', 'conowModals', 'countriesSer
 					});
 
 					modalInstance.result.then(function(data) {
+console.log('data-->', data);
 						$scope.ngModel = data.CODE;
 
 						$timeout(function() {
@@ -220,11 +235,12 @@ app.directive('conowCountrySelect', ['DataService', 'conowModals', 'countriesSer
 	}
 ]);
 
-app.controller('countrySelCtrl', ['$scope', '$conowModalInstance', 'modalParams', 
-	function($scope, $conowModalInstance, modalParams) {
+app.controller('countrySelCtrl', ['$scope', '$conowModalInstance', 'modalParams', 'countriesService', 
+	function($scope, $conowModalInstance, modalParams, countriesService) {
 
 		var vm = $scope.vm = {
-			groupData: modalParams.groupData
+			groupData: modalParams.groupData,
+			contentData: [[], [], [], [], []]
 		};
 
 		console.log(modalParams.groupData);
@@ -235,7 +251,10 @@ app.controller('countrySelCtrl', ['$scope', '$conowModalInstance', 'modalParams'
 
 			group.expanded = true;
 			group.selectedLabel = item.label;
-console.log('group-->', group);
+
+			var groupIndex = countriesService.getGroupIndex(item.label);
+			vm.contentData[groupIndex] = item.children;
+
 			e.stopPropagation();
 		};
 

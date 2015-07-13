@@ -65,8 +65,11 @@
 						<a href="#" class="inline w-p-5" ng-repeat="item in group track by $index" ng-bind="item.label" ng-click="labelClick($event, item, group)" ng-if="item.children.length > 0"></a>
 						<i class="fa fa-angle-down pull-right"></i>
 					</li>
-					<div class="country-content" ng-repeat="item in group track by $index" ng-if="group.expanded">
+					<!-- <div class="country-content" ng-repeat="item in group track by $index" ng-if="group.expanded">
 						<span class="btn btn-default country-name" ng-repeat="child in item.children track by $index" ng-bind="child.VALUE" ng-click="countryClick($event, child)"></span>
+					</div> -->
+					<div class="country-content">
+						<span class="btn btn-default country-name" ng-repeat="item in vm.contentData[$index] track by $index" ng-bind="item.VALUE" ng-click="countryClick($event, item)"></span>
 					</div>
 				</div>
 			</ul>
