@@ -42,21 +42,43 @@ app.service('countriesService', ['$q', 'DataService',
 		// data init
 		// self.getAllCountries();
 
-		var getAllSelected = function(keyCode, dataAll, codeName) {
+		var getAllSelected = function(keyCode, dataAll, codeName, selected) {
 			var iLen = dataAll.length;
-			var selected = [];
 
 			for(var i=0; i<iLen; i++) {
-				selected.push(dataAll[i]);
+				// selected.push(dataAll[i]);
 
+				// if(dataAll[i][codeName] == keyCode) {
+				// 	return selected;
+				// } else {
+				// 	if (dataAll[i].children) {
+				// 		return getAllSelected(keyCode, dataAll[i].children, codeName, selected);
+				// 	} else {
+				// 		selected.pop();
+				// 		continue;
+				// 	}
+				// }
 				if(dataAll[i][codeName] == keyCode) {
-					break;
-				} else {
-					//
+					return dataAll[i];
+				}
+			}
+			var dataTmp = [];
+			for(var i=0; i<iLen; i++) {
+				dataTmp = dataAll[i].children;
+
+				for(var j=0; j<dataTmp.length; j++) {
+					if(dataTmp[j][codeName] == keyCode) {
+						return [dataAll[i], dataTmp[j]];
+					}
 				}
 			}
 
-			return selected;
+console.log('can\'t get');
+			return null;
+		};
+
+		this.getAllSelected = function(keyCode, dataAll, codeName) {
+			return getAllSelected(keyCode, dataAll, codeName, []);
 		};
 
 		// 根据 code 获取对应的已选项
@@ -152,13 +174,17 @@ app.filter('groupByAlphabet', [
 				arrTmp.push(arrSrc[i]);
 				if(i % 5 === 4) {
 					// 
-					arr.push(arrTmp);
+					// arr.push(arrTmp);
+					arr.push({
+						'expanded': false,
+						'children': arrTmp
+					});
 
 					arrTmp = [];
 				}
 			}
 
-			arr[arr.length - 1].push(arrSrc[iLen - 1]);
+			arr[arr.length - 1].children.push(arrSrc[iLen - 1]);
 
 			return arr;
 		};
@@ -188,8 +214,7 @@ app.directive('conowCountrySelect', ['DataService', 'conowModals', 'countriesSer
 					elem.val(data);
 				}, function(msg) {
 					console.info('msg-->', msg);
-				})
-				// console.log('value-->', value);
+				});
 
 				DataService.getData(url)
 					.then(function(data) {
@@ -197,6 +222,7 @@ app.directive('conowCountrySelect', ['DataService', 'conowModals', 'countriesSer
 						if(data.obj) {
 							data = data.obj;
 						}
+						vm.dataAll = data;
 						vm.groupData = $filter('groupByAlphabet')(data);
 					}, function(msg) {
 						console.error('msg-->', msg);
@@ -212,6 +238,7 @@ app.directive('conowCountrySelect', ['DataService', 'conowModals', 'countriesSer
 						resolve: {
 							modalParams: function() {
 								return {
+									dataAll: vm.dataAll,
 									groupData: vm.groupData
 								}
 							}
@@ -219,7 +246,6 @@ app.directive('conowCountrySelect', ['DataService', 'conowModals', 'countriesSer
 					});
 
 					modalInstance.result.then(function(data) {
-console.log('data-->', data);
 						$scope.ngModel = data.CODE;
 
 						$timeout(function() {
@@ -239,21 +265,81 @@ app.controller('countrySelCtrl', ['$scope', '$conowModalInstance', 'modalParams'
 	function($scope, $conowModalInstance, modalParams, countriesService) {
 
 		var vm = $scope.vm = {
+			dataAll: modalParams.dataAll,
 			groupData: modalParams.groupData,
-			contentData: [[], [], [], [], []]
+			contentData: [[], [], [], [], []],
+			selectedLabel: null
+		};
+		var options = $scope.options= {
+			search: false,
+			isLoading: false
 		};
 
-		console.log(modalParams.groupData);
+		var dataList = [];
+		angular.forEach(vm.dataAll, function(value, key) {
+			dataList = dataList.concat(value);
+		});
+		vm.dataList = dataList;
 
-		// label click function
-		$scope.labelClick = function(e, item, group) {
+		// 搜索框 keyup 触发搜索
+		$scope.searchKeyup = function(e) {
+			
+			if(e.keyCode === 13) {
+				options.search = true;
+				options.isLoading = true;
+			}
+		};
+
+		// 返回国家列表
+		$scope.backCountryList = function(e) {
 			e.preventDefault();
 
+			options.search = false;
+		};
+
+		// 搜索结果点击选择
+		$scope.countryItemClick = function(e, item) {
+			e.preventDefault();
+
+			vm.selected = item;
+
+			$scope.confirm();
+		};
+
+		// country label group click function
+		$scope.countryLabelClick = function(e, group) {
+			e.preventDefault();
+
+			if(group.expanded) {
+				group.expanded = false;
+				// group.selectedLabel = null;
+				vm.selectedLabel = null;
+			} else {
+				var children = group.children;
+				var child = null;
+				for(var i=0; i<children.length; i++) {
+					if(children[i]['children'].length > 0) {
+						child = children[i];
+						break;
+					}
+				}
+				$scope.labelItemClick(e, child, group);
+			}
+		};
+
+		// label item click function
+		$scope.labelItemClick = function(e, item, group) {
+			e.preventDefault();
+
+			// 清空搜索框
+			vm.searchKey = '';
+
 			group.expanded = true;
-			group.selectedLabel = item.label;
+			// group.selectedLabel = item.label;
 
 			var groupIndex = countriesService.getGroupIndex(item.label);
 			vm.contentData[groupIndex] = item.children;
+			vm.selectedLabel = item.label;
 
 			e.stopPropagation();
 		};
@@ -263,6 +349,10 @@ app.controller('countrySelCtrl', ['$scope', '$conowModalInstance', 'modalParams'
 			e.preventDefault();
 
 			vm.selected = item;
+
+			angular.forEach(vm.groupData, function(value, key) {
+				value.expanded = false;
+			});
 
 			$scope.confirm();
 		};
@@ -296,6 +386,9 @@ app.directive('conowCountryCascadeSelect', ['DataService', 'conowModals', 'count
 		
 				var promise = countriesService.getAllCountries(url);
 				promise.then(function(data) {
+var selectedAll = countriesService.getAllSelected($scope.ngModel, data, 'OPTION_VALUE');
+console.log('selectedAll-->', selectedAll);
+
 					selectedObj = countriesService.getSelected($scope.ngModel, data, 'OPTION_VALUE');
 
 					elem.val(selectedObj.OPTION_NAME);
