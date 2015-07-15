@@ -46,18 +46,6 @@ app.service('countriesService', ['$q', 'DataService',
 			var iLen = dataAll.length;
 
 			for(var i=0; i<iLen; i++) {
-				// selected.push(dataAll[i]);
-
-				// if(dataAll[i][codeName] == keyCode) {
-				// 	return selected;
-				// } else {
-				// 	if (dataAll[i].children) {
-				// 		return getAllSelected(keyCode, dataAll[i].children, codeName, selected);
-				// 	} else {
-				// 		selected.pop();
-				// 		continue;
-				// 	}
-				// }
 				if(dataAll[i][codeName] == keyCode) {
 					return dataAll[i];
 				}
@@ -73,7 +61,6 @@ app.service('countriesService', ['$q', 'DataService',
 				}
 			}
 
-console.log('can\'t get');
 			return null;
 		};
 
@@ -303,7 +290,7 @@ app.controller('countrySelCtrl', ['$scope', '$conowModalInstance', 'modalParams'
 
 			vm.selected = item;
 
-			$scope.confirm();
+			$scope.confirm(e);
 		};
 
 		// country label group click function
@@ -354,11 +341,13 @@ app.controller('countrySelCtrl', ['$scope', '$conowModalInstance', 'modalParams'
 				value.expanded = false;
 			});
 
-			$scope.confirm();
+			$scope.confirm(e);
 		};
 
 		// 确认
-		$scope.confirm = function() {
+		$scope.confirm = function(e) {
+			e.preventDefault();
+			
 			$conowModalInstance.close(vm.selected);
 		}
 
@@ -372,31 +361,27 @@ app.directive('conowCountryCascadeSelect', ['DataService', 'conowModals', 'count
 		return {
 			restrict: 'AE',
 			scope: {
-				titles: '=',
-				url: '=',
-				selectedVal: '=',
 				ngModel: '='
 			},
 			require: '?ngmodel',
 			replace: true,
 			template: '<input type="text" ng-click="countrySelClick($event)">',
 			link: function($scope, elem, attrs, ctrl) {
-				var selectedObj = null;
+				var vm = $scope.vm = {};
+
+				$scope.titles = ['大洲', '国家'];
+
 				var url = 'views/components/conow-country-sel/data/IC_COUNTRY.json';
 		
 				var promise = countriesService.getAllCountries(url);
 				promise.then(function(data) {
-var selectedAll = countriesService.getAllSelected($scope.ngModel, data, 'OPTION_VALUE');
-console.log('selectedAll-->', selectedAll);
 
-					selectedObj = countriesService.getSelected($scope.ngModel, data, 'OPTION_VALUE');
+					vm.selectedArr = countriesService.getAllSelected($scope.ngModel, data, 'OPTION_VALUE');
 
-					elem.val(selectedObj.OPTION_NAME);
+					elem.val(vm.selectedArr[vm.selectedArr.length - 1].OPTION_NAME);
 				}, function(msg) {
 					console.log('msg-->', msg);
 				})
-
-				var vm = $scope.vm = {};
 
 				$scope.countrySelClick = function(e) {
 					e.preventDefault();
@@ -410,8 +395,7 @@ console.log('selectedAll-->', selectedAll);
 							modalParams: function() {
 								return {
 									titles: $scope.titles,
-									url: $scope.url,
-									selected: $scope.selectedVal
+									selected: vm.selectedArr
 								}
 							}
 						}
@@ -450,18 +434,21 @@ console.log('selectedAll-->', selectedAll);
 // country cascade select controller
 app.controller('countryCascadeSelCtrl', ['$scope', '$conowModalInstance', 'DataService', 'modalParams', 
 	function($scope, $conowModalInstance, DataService, modalParams) {
-		// 
-		var vm = $scope.vm = {},
-				options = $scope.options = {
-					titles: modalParams.titles,
-					url: modalParams.url,
-					selected: modalParams.selected,
-					tabs: [true, false]
-				};
+		var url = 'views/components/conow-country-sel/data/IC_COUNTRY.json';
+		var vm = $scope.vm = {
+				selected: modalParams.selected
+			},
+			options = $scope.options = {
+				titles: modalParams.titles,
+				url: url,
+				tabs: [true, false]
+			};
 
 		var init = function() {
 			vm.dataCascade = [[], []];
-			vm.selected = [{}, {}];
+			if(!vm.selected) {
+				vm.selected = [{}, {}];
+			}
 
 			DataService.getData(options.url)
 				.then(function(data) {
@@ -470,6 +457,12 @@ app.controller('countryCascadeSelCtrl', ['$scope', '$conowModalInstance', 'DataS
 					}
 					vm.dataAll = data;
 					vm.dataCascade[0] = data;
+
+					if(!angular.equals(vm.selected[0], [])) {
+						vm.dataCascade[1] = vm.selected[0].children;
+
+						options.tabs = [false, true];
+					}
 
 				}, function(msg) {
 					console.error('msg-->', msg);
@@ -491,7 +484,7 @@ app.controller('countryCascadeSelCtrl', ['$scope', '$conowModalInstance', 'DataS
 				case '2':
 					vm.selected[1] = item;
 
-					$scope.confirm();
+					$scope.confirm(e);
 
 					break;
 			}
@@ -499,7 +492,9 @@ app.controller('countryCascadeSelCtrl', ['$scope', '$conowModalInstance', 'DataS
 		};
 
 		// 确定返回
-		$scope.confirm = function() {
+		$scope.confirm = function(e) {
+			e.preventDefault();
+
 			$conowModalInstance.close(vm.selected);
 		};
 

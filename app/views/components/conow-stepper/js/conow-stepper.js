@@ -1,7 +1,7 @@
 'use strict';
 
-app.controller('stepperDemoCtrl', ['$scope', 
-  function($scope) {
+app.controller('stepperDemoCtrl', ['$scope', 'conowModals', 
+  function($scope, conowModals) {
     var vm = $scope.vm = {
       defaultValue: 0,
       decimals: 1,
@@ -9,7 +9,38 @@ app.controller('stepperDemoCtrl', ['$scope',
       min: 2,
       max: 25
     };
+
+    $scope.openModal = function(e) {
+      e.preventDefault();
+
+      var modalInstance = conowModals.open({
+        size: 'full',
+        templateUrl: 'views/components/conow-stepper/stepper-modal-demo-tpl.html',
+        title: '选择',
+        controller: 'stepperModalCtrl', 
+        resolve: {
+          modalParams: function() {
+            return {
+              vm: vm
+            }
+          }
+        }
+      });
+
+      modalInstance.result.then(function(data) {
+        console.log(data);
+      }, function(msg) {
+        console.info('msg-->', msg);
+      });
+    };
     
+  }
+]);
+
+app.controller('stepperModalCtrl', ['$scope', 'modalParams', '$conowModalInstance', 
+  function($scope, modalParams, $conowModalInstance) {
+
+    var vm = $scope.vm = modalParams.vm;
   }
 ]);
 

@@ -10,14 +10,33 @@
 				<div class="panel-body">
 					<div class="form-group">
 						<label for="" class="control-label">选择</label>
-						<!-- <input type="text" class="form-control" conow-cascade-select titles="vm.titles" url="vm.url" ng-model="vm.sel"> -->
-						<input type="text" class="form-control" conow-country-cascade-select titles="vm.titles" url="vm.url" ng-model="vm.sel" selected-val="vm.sel">
+						<input type="text" class="form-control" conow-country-cascade-select ng-model="vm.sel">
 					</div>
 
 					<pre>{{ vm | json }}</pre>
 				</div>
 			</div>
 		</div>
+
+		<div class="col-md-6 col-sm-12">
+			<div class="panel panel-info">
+				<div class="panel-heading">
+					<div class="panel-title">使用说明</div>
+				</div>
+				<div class="panel-body">
+					<ol>
+						<li>调用指令：<code>conow-country-cascade-select</code></li>
+						<li>调用方式：<code>&lt;input type="text" class="form-control" conow-country-cascade-select ng-model="vm.sel"&gt;</code></li>
+						
+					</ol>
+
+				</div>
+			</div>
+		</div>
+
+	</div>
+
+	<div class="row">
 
 		<div class="col-md-6 col-sm-12">
 			<div class="panel panel-info" ng-controller="countrySelDemoCtrl">
@@ -34,5 +53,22 @@
 				</div>
 			</div>
 		</div>
+
+		<div class="col-md-6 col-sm-12">
+			<div class="panel panel-info">
+				<div class="panel-heading">
+					<div class="panel-title">使用说明</div>
+				</div>
+				<div class="panel-body">
+					<ol>
+						<li>调用指令：<code>conow-country-select</code></li>
+						<li>调用方式：<code>&lt;input type="text" class="form-control" conow-country-select ng-model="vm.sel"&gt;</code></li>
+						
+					</ol>
+
+				</div>
+			</div>
+		</div>
+
 	</div>
 </div>
