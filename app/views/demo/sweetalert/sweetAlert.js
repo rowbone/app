@@ -30,7 +30,7 @@ app.controller('SweetAlertCtrl', ['$scope', 'SweetAlert', 'OperationService',
       var params = {
         callback: callbackFunc,
         yesUrl: '/home',
-        noUrl: '/home',
+        noUrl: '/error',
         confirmTitle: '这里是操作提示！'
       };
       OperationService.alertHtml(params);

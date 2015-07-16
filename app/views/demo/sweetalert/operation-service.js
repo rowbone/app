@@ -105,6 +105,10 @@ app.service('OperationService', ['$http', '$state', '$timeout', 'SweetAlert', 'D
       if(angular.isDefined(params.cancelFunc) && angular.isFunction(params.cancelFunc)) {
         options.cancelFunc = params.cancelFunc;
       }
+      // 定时关闭操作提示：null 时不会自动关闭
+      if(angular.isDefined(params.timer)) {
+        userTimer = params.timer;
+      }
 
       return true;
     };
@@ -229,6 +233,7 @@ app.service('OperationService', ['$http', '$state', '$timeout', 'SweetAlert', 'D
 
       SweetAlert.swal(angular.extend({}, swalParams, swalUserParams),
         function(isConfirm) {
+// console.log('isConfirm-->', isConfirm)
           if(isConfirm === 'yes') {
             if(params.yesUrl) {
               DataService.postData(params.yesUrl)
