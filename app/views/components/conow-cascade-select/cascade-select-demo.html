@@ -10,20 +10,13 @@
 				<div class="form-group">
 					<label for="" class="control-label">选择</label>
 					
-					<input type="text" class="form-control" conow-cascade-select sel="vm.sel" titles="vm.titles" url="vm.url" ng-model="vm.sel">
+					<input type="text" class="form-control" conow-cascade-select sel="vm.sel" titles="vm.titles" url="vm.url" ng-model="vm.sel" select-level=3>
 				</div>
 
 				<div class="form-group">
 					<pre>{{ vm | json }}</pre>
 				</div>
-
-				<!-- <div class="form-group">
-					<label for="" class="control-label">选择</label>
-					
-					<button type="button" class="btn btn-primary" cascade-sel>
-						选择
-					</button>
-				</div> -->
+				
 			</div>
 		</div>
 	</div>

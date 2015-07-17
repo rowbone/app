@@ -17,5 +17,6 @@ app.controller('cascadeSelectDemoCtrl', ['$scope', 'DataService', 'cascadeSelect
 			}, function(msg) {
 				console.error('msg-->', msg);
 			});
+			
 	}
 ]);

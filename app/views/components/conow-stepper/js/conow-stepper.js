@@ -3,10 +3,10 @@
 app.controller('stepperDemoCtrl', ['$scope', 'conowModals', 
   function($scope, conowModals) {
     var vm = $scope.vm = {
-      defaultValue: 0,
+      defaultValue: 5,
       decimals: 1,
       step: 0.2,
-      min: 2,
+      min: 0,
       max: 25
     };
 
@@ -86,8 +86,8 @@ app.controller('stepperCtrl',['$scope',
 
       options.step = step ? step : options.step;
       options.decimals = (decimals >= 0) ? decimals : options.decimals;
-      options.min = min ? min : null;
-      options.max = max ? max : null;
+      options.min = (min || min == 0) ? min : null;
+      options.max = (max || max == 0) ? max : null;
     }
     // options init
     init();
@@ -106,6 +106,8 @@ app.controller('stepperCtrl',['$scope',
 
       if(options.max && (inputVal > options.max)) {
         inputVal = options.max;
+      } else if(options.max === 0 && (inputVal > options.max)) {
+        inputVal = 0;
       }
 
       vm.inputVal = inputVal.toFixed(options.decimals);
@@ -123,6 +125,8 @@ app.controller('stepperCtrl',['$scope',
 
       if(options.min && (inputVal < options.min)) {
         inputVal = options.min;
+      } else if(options.min === 0 && (inputVal < options.min)) {
+        inputVal = 0;
       }
 
       vm.inputVal = inputVal.toFixed(options.decimals);
@@ -139,10 +143,14 @@ app.controller('stepperCtrl',['$scope',
 
       if(options.max && (inputVal > options.max)) {
         inputVal = options.max;
+      } else if(options.max === 0 && (inputVal > options.max)) {
+        inputVal = 0;
       }
 
       if(options.min && (inputVal < options.min)) {
         inputVal = options.min;
+      } else if(options.min === 0 && (inputVal < options.min)) {
+        inputVal = 0;
       }
 
       vm.inputVal = inputVal.toFixed(options.decimals);

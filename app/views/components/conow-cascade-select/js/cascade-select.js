@@ -1,10 +1,12 @@
 'use strict';
 
 // 级联选择服务：持有已选择的级联项。用于选中待选项
-app.service('cascadeSelectService', ['$http', 
-	function($http) {
+app.service('cascadeSelectService', ['$q', 'DataService', 
+	function($q, DataService) {
 		// 
 		var selected = [];
+
+		var deferred = $q.defer();
 
 		this.setSelected = function(sel) {
 			selected = sel;
@@ -18,6 +20,25 @@ app.service('cascadeSelectService', ['$http',
 			var optionName = '二级警督(技术)';
 
 			return optionName;
+		};
+
+		// 获取所有数据
+		this.getDataAll = function(url) {
+			if(!url) {
+				console.error('Please provide the url param...');
+				return;
+			}
+
+			DataService.getData(url)
+				.then(function(data) {
+					console.log(data);
+
+					deferred.resolve(data);
+				}, function(msg) {
+					deferred.reject('Get url data wrong-->', msg);
+				});
+
+			return deferred.promise;
 		};
 
 	}
@@ -34,7 +55,8 @@ app.directive('conowCascadeSelect', ['DataService', 'conowModals', 'cascadeSelec
 			scope: {
 				titles: '=',
 				url: '=',
-				sel: '='
+				sel: '=',
+				selectLevel: '@'
 			},
 			link: function(scope, elem, attrs, ctrl) {
 
@@ -65,15 +87,16 @@ app.directive('conowCascadeSelect', ['DataService', 'conowModals', 'cascadeSelec
 							modalParams: function() {
 								return {
 									titles: scope.titles,
-									url: scope.url
+									url: scope.url,
+									selectLevel: scope.selectLevel
 								}
 							}
 						}
 					});
 
 					modalInstance.result.then(function(data) {
-console.log('result-->', data);
-						/*var iLen = data.length,
+						// 返回值是一个对象数组，获取最后一个不是{}的对象（对于仅能显示），作为最终选中的值
+						var iLen = data.length,
 								value = {};				// to hold selected value which is not {}
 						for(var i=iLen - 1; i>=0; i--) {
 							console.log(angular.equals(data[i], {}));
@@ -84,7 +107,7 @@ console.log('result-->', data);
 						}
 
 						elem.val(value.OPTION_NAME);
-						ctrl.$setViewValue(value.OPTION_VALUE);*/
+						ctrl.$setViewValue(value.OPTION_VALUE);
 
 						// elem.val(value.name);
 						// ctrl.$setViewValue(value.id);
@@ -114,7 +137,7 @@ app.controller('cascadeSelectCtrl', ['$scope', 'DataService', '$conowModalInstan
 			titles: modalParams.titles,
 			tabsLen: modalParams.titles.length,
 			tabs: [],
-			contentIndex: 1					// contentIndex 索引当前操作的内容层级
+			selectLevel: parseInt(modalParams.selectLevel)
 		};
 
 		var vm = $scope.vm = {
@@ -171,27 +194,13 @@ app.controller('cascadeSelectCtrl', ['$scope', 'DataService', '$conowModalInstan
 		init();
 
 		// select operation
-		$scope.select = function(e, item) {
+		$scope.select = function(e, item, parentIndex, index) {
 			e.preventDefault();
+console.log('parentIndex-->', parentIndex);
+console.log('index-->', index);
 
-			vm.selected[options.contentIndex - 1] = item;
-			vm.dataCascade[options.contentIndex] = item.children;
-
-			// if(vm.dataCascade.length - 1 > options.contentIndex + 1) {
-			// 	for(var i=0; i<vm.dataCascade.length; i++) {
-			// 		if(i > options.contentIndex) {
-			// 			vm.dataCascade[i] = [];
-
-			// 			vm.selected[i] = {};
-			// 		}
-			// 	}
-			// }
-
-			// update contentIndex
-			if(options.contentIndex < options.tabsLen + 1) {
-				options.contentIndex += 1;
-			}
-console.log(vm.dataCascade)
+			vm.selected[index] = item;
+			vm.dataCascade[index + 1] = item.children;
 		};
 
 		$scope.indexInArr = function(item, items) {
@@ -215,12 +224,7 @@ console.log(vm.dataCascade)
 		$scope.confirm = function() {
 			// cascadeSelectService.setSelected($scope.selected);
 
-			$conowModalInstance.close(
-				{
-					'selected': vm.selected,
-					'contentIndex': options.contentIndex
-				}
-			);
+			$conowModalInstance.close(vm.selected);
 		};
 
 	}

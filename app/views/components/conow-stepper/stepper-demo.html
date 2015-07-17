@@ -28,7 +28,9 @@
 				<div class="p-sm">
 					<pre>{{ vm | json }}</pre>
 				</div>
-				<div class="panel-footer"></div>
+				<div class="panel-footer">
+					@add by wlj
+				</div>
 			</div>		
 		</div>
 
@@ -45,15 +47,33 @@
 							<ol>
 								<li><code>ng-model</code>:业务controller绑定的值</li>
 								<li><code>decimals</code>:显示数字的精度[默认为0，即只显示整数部分]</li>
-								<li><code>step</code>:每次点击加(递增)/减(递减)的步长</li>
+								<li><code>step</code>:每次点击加(递增)/减(递减)的步长[默认为1]</li>
 								<li><code>min</code>:数字的最小值</li>
 								<li><code>mix</code>:数字的最大值</li>
 							</ol>
 						</li>
 					</ul>
 				</div>
-				<div class="panel-footer"></div>
+				<!-- <div class="panel-footer"></div> -->
 			</div>		
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-md-6 div-sm-12">
+			<div class="panel panel-info">
+				<div class="panel-heading">
+					<div class="panel-title">版本维护</div>
+				</div>
+				<div class="panel-body">
+					<ol>
+						<li>2015-07-17:修复最大值最小值为0时控制失效的问题</li>
+					</ol>
+				</div>
+				<div class="panel-footer">
+					@add by wlj:2015-7-17 10:48:35
+				</div>
+			</div>
 		</div>
 	</div>
 </div>

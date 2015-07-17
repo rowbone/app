@@ -8,6 +8,7 @@ http://my.oschina.net/ilivebox/blog/293771
 http://www.tuicool.com/articles/rUfmq2
 */
 
+// 后台数据 get/post 同步操作
 app.service('DataService', ['$http', '$q', '$interval', 
 	function($http, $q, $interval) {
 
