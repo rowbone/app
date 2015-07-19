@@ -22,6 +22,16 @@ app.service('cascadeSelectService', ['$q', 'DataService',
 			return optionName;
 		};
 
+		this.getAllSelected = function(optionCode) {
+			var arr = [
+				{ "OPTION_VALUE": "1","OPTION_NAME": "军衔"	}, 
+				{ "OPTION_VALUE": "12","OPTION_NAME": "将官"	},
+				{ "OPTION_VALUE": "1240","OPTION_NAME": "少将" }
+			];
+
+			return arr;
+		}
+
 		// 获取所有数据
 		this.getDataAll = function(url) {
 			if(!url) {
@@ -39,6 +49,53 @@ app.service('cascadeSelectService', ['$q', 'DataService',
 				});
 
 			return deferred.promise;
+		};
+
+		var getSelected = function(keyCode, dataAll, codeName) {
+			var iLen = dataAll.length;
+			for(var i=0; i<iLen; i++) {
+				if(dataAll[i][codeName] == keyCode) {
+					return dataAll[i];
+				}
+			}
+
+			return null;
+		}
+
+		var getAllSelected = function(keyCode, dataAll, codeName, selected) {
+			var iLen = dataAll.length;
+			var tmp = null;
+
+			tmp = getSelected(keyCode, dataAll, codeName);
+
+			for(var i=0; i<iLen; i++) {
+				if(dataAll[i][codeName] == keyCode) {
+					return dataAll[i];
+				}
+			}
+			var dataTmp = [];
+			for(var i=0; i<iLen; i++) {
+				dataTmp = dataAll[i].children;
+
+				for(var j=0; j<dataTmp.length; j++) {
+					if(dataTmp[j][codeName] == keyCode) {
+						return [dataAll[i], dataTmp[j]];
+					}
+				}
+			}
+
+			return null;
+		};
+
+		this.getOneSelected = function(keyCode, dataAll, codeName, selected) {
+			var iLen = dataAll.length;
+			for(var i=0; i<iLen; i++) {
+				if(dataAll[i][codeName] == keyCode) {
+					return dataAll[i];
+				}
+			}
+
+			return null;
 		};
 
 	}
@@ -64,7 +121,10 @@ app.directive('conowCascadeSelect', ['DataService', 'conowModals', 'cascadeSelec
 					if(!angular.equals(ctrl.$modelValue, NaN)) {
 						$interval.cancel(interval);
 
-						elem.val(cascadeSelectService.getOptionName(ctrl.$modelValue));
+						// elem.val(cascadeSelectService.getOptionName(ctrl.$modelValue));
+						scope.allSelected = cascadeSelectService.getAllSelected(ctrl.$modelValue);
+
+						elem.val(scope.allSelected[scope.allSelected.length - 1]['OPTION_NAME']);
 					}
 				}, 100);
 
@@ -88,7 +148,8 @@ app.directive('conowCascadeSelect', ['DataService', 'conowModals', 'cascadeSelec
 								return {
 									titles: scope.titles,
 									url: scope.url,
-									selectLevel: scope.selectLevel
+									selectLevel: scope.selectLevel,
+									allSelected: scope.allSelected
 								}
 							}
 						}
@@ -99,7 +160,6 @@ app.directive('conowCascadeSelect', ['DataService', 'conowModals', 'cascadeSelec
 						var iLen = data.length,
 								value = {};				// to hold selected value which is not {}
 						for(var i=iLen - 1; i>=0; i--) {
-							console.log(angular.equals(data[i], {}));
 							if(!angular.equals(data[i], {})) {
 								value = data[i];
 								break;
@@ -142,7 +202,7 @@ app.controller('cascadeSelectCtrl', ['$scope', 'DataService', '$conowModalInstan
 
 		var vm = $scope.vm = {
 			dataCascade: [],
-			selected: []
+			selected: modalParams.allSelected
 		};
 		
 		var init = function() {
@@ -154,7 +214,7 @@ app.controller('cascadeSelectCtrl', ['$scope', 'DataService', '$conowModalInstan
 				options.tabs[i] = false;
 				
 				vm.dataCascade.push([]);
-				vm.selected.push({});
+				// vm.selected.push({});
 			}
 
 			// todo: support json datasource
@@ -168,23 +228,13 @@ app.controller('cascadeSelectCtrl', ['$scope', 'DataService', '$conowModalInstan
 					vm.dataAll = data;
 					vm.dataCascade[0] = data;
 
-					// $scope.dataLevel1 = data;
-					// var iLen = data.length;
-					// for(var i=0; i<iLen; i++) {
-					// 	if(data[i].OPTION_VALUE === $scope.selected[0].OPTION_VALUE) {
-					// 		$scope.dataLevel2 = data[i].children;
-					// 		var dataLevel2 = $scope.dataLevel2;
-					// 		iLen = dataLevel2.length;
-					// 		for(var i = 0; i<iLen; i++) {
-					// 			if (dataLevel2[i].OPTION_VALUE === $scope.selected[1].OPTION_VALUE) {
-					// 				$scope.dataLevel3 = dataLevel2[i].children;
+					if(vm.selected.length > 0) {
+						for(var i=0; i<vm.selected.length; i++) {
+							vm.dataCascade[i+1] = cascadeSelectService.getOneSelected(vm.selected[i]['OPTION_VALUE'], vm.dataCascade[i], 'OPTION_VALUE').children;
+						}
+					}
 
-					// 				options.tabs = [false, false, true];
-					// 			};
-					// 		}
-							
-					// 	}
-					// }
+					options.tabs = [false, true];					
 
 				}, function(msg) {
 					console.error('msg-->', msg);
@@ -194,13 +244,15 @@ app.controller('cascadeSelectCtrl', ['$scope', 'DataService', '$conowModalInstan
 		init();
 
 		// select operation
-		$scope.select = function(e, item, parentIndex, index) {
+		$scope.select = function(e, item, paramIndex) {
 			e.preventDefault();
-console.log('parentIndex-->', parentIndex);
-console.log('index-->', index);
+console.log('paramIndex-->', paramIndex);
 
-			vm.selected[index] = item;
-			vm.dataCascade[index + 1] = item.children;
+console.log(vm.dataCascade[paramIndex]);
+console.log(item);
+
+			vm.selected[paramIndex] = item;
+			vm.dataCascade[paramIndex + 1] = item.children;
 		};
 
 		$scope.indexInArr = function(item, items) {
@@ -220,10 +272,18 @@ console.log('index-->', index);
 			options.contentIndex = index;
 		};
 
+		$scope.isInSelected = function(item, parentIndex) {
+			if(item['OPTION_VALUE'] == vm.selected[parentIndex]['OPTION_VALUE']) {
+				return true;
+			}
+
+			return false;
+		}
+
 		// 确定返回
 		$scope.confirm = function() {
 			// cascadeSelectService.setSelected($scope.selected);
-
+console.log('selected-->', vm.selected);
 			$conowModalInstance.close(vm.selected);
 		};
 

@@ -1,12 +1,156 @@
-[
-	{
-		"OPTION_VALUE": "6",
-		"OPTION_NAME": "军队干部职别"
-	}, {
-		"OPTION_VALUE": "61",
-		"OPTION_NAME": "军事、政治、后勤军官职别"
-	}, {
-		"OPTION_VALUE": "6102",
-		"OPTION_NAME": "军委副主席职"
-	}
-]
+[{
+    "OPTION_VALUE": "1",
+    "OPTION_NAME": "军衔",
+    "children": [{
+        "OPTION_VALUE": "11",
+        "OPTION_NAME": "元帅",
+        "children": [{
+            "OPTION_VALUE": "1100",
+            "OPTION_NAME": "中华人民共和国大元帅"
+        }, {
+            "OPTION_VALUE": "1110",
+            "OPTION_NAME": "中华人民共和国元帅"
+        }]
+    }, {
+        "OPTION_VALUE": "12",
+        "OPTION_NAME": "将官",
+        "children": [{
+            "OPTION_VALUE": "1200",
+            "OPTION_NAME": "大将"
+        }, {
+            "OPTION_VALUE": "1210",
+            "OPTION_NAME": "一级上将"
+        }, {
+            "OPTION_VALUE": "1220",
+            "OPTION_NAME": "上将"
+        }, {
+            "OPTION_VALUE": "1230",
+            "OPTION_NAME": "中将"
+        }, {
+            "OPTION_VALUE": "1240",
+            "OPTION_NAME": "少将"
+        }]
+    }, {
+        "OPTION_VALUE": "13",
+        "OPTION_NAME": "校官",
+        "children": [{
+            "OPTION_VALUE": "1310",
+            "OPTION_NAME": "大校"
+        }, {
+            "OPTION_VALUE": "1320",
+            "OPTION_NAME": "上校"
+        }, {
+            "OPTION_VALUE": "1330",
+            "OPTION_NAME": "中校"
+        }, {
+            "OPTION_VALUE": "1340",
+            "OPTION_NAME": "少校"
+        }]
+    }, {
+        "OPTION_VALUE": "14",
+        "OPTION_NAME": "尉官",
+        "children": [{
+            "OPTION_VALUE": "1410",
+            "OPTION_NAME": "大尉"
+        }, {
+            "OPTION_VALUE": "1420",
+            "OPTION_NAME": "上尉"
+        }, {
+            "OPTION_VALUE": "1430",
+            "OPTION_NAME": "中尉"
+        }, {
+            "OPTION_VALUE": "1440",
+            "OPTION_NAME": "少尉"
+        }, {
+            "OPTION_VALUE": "1450",
+            "OPTION_NAME": "准尉"
+        }]
+    }, {
+        "OPTION_VALUE": "15",
+        "OPTION_NAME": "士官",
+        "children": [{
+            "OPTION_VALUE": "1511",
+            "OPTION_NAME": "四级军士长"
+        }, {
+            "OPTION_VALUE": "1512",
+            "OPTION_NAME": "三级军士长"
+        }, {
+            "OPTION_VALUE": "1513",
+            "OPTION_NAME": "二级军士长"
+        }, {
+            "OPTION_VALUE": "1514",
+            "OPTION_NAME": "一级军士长"
+        }, {
+            "OPTION_VALUE": "1521",
+            "OPTION_NAME": "四级专业军士"
+        }, {
+            "OPTION_VALUE": "1522",
+            "OPTION_NAME": "三级专业军士"
+        }, {
+            "OPTION_VALUE": "1523",
+            "OPTION_NAME": "二级专业军士"
+        }, {
+            "OPTION_VALUE": "1524",
+            "OPTION_NAME": "一级专业军士"
+        }]
+    }, {
+        "OPTION_VALUE": "16",
+        "OPTION_NAME": "军士",
+        "children": [{
+            "OPTION_VALUE": "1610",
+            "OPTION_NAME": "上士"
+        }, {
+            "OPTION_VALUE": "1620",
+            "OPTION_NAME": "中士"
+        }, {
+            "OPTION_VALUE": "1630",
+            "OPTION_NAME": "下士"
+        }]
+    }, {
+        "OPTION_VALUE": "17",
+        "OPTION_NAME": "兵",
+        "children": [{
+            "OPTION_VALUE": "1710",
+            "OPTION_NAME": "上等兵"
+        }, {
+            "OPTION_VALUE": "1720",
+            "OPTION_NAME": "列兵"
+        }]
+    }, {
+        "OPTION_VALUE": "18",
+        "OPTION_NAME": "学员",
+        "children": [{
+            "OPTION_VALUE": "1880",
+            "OPTION_NAME": "学员衔"
+        }]
+    }, {
+        "OPTION_VALUE": "19",
+        "OPTION_NAME": "未授衔",
+        "children": [{
+            "OPTION_VALUE": "1990",
+            "OPTION_NAME": "未授衔"
+        }]
+    }]
+}, {
+    "OPTION_VALUE": "12",
+    "OPTION_NAME": "将官",
+    "children": [{
+        "OPTION_VALUE": "1200",
+        "OPTION_NAME": "大将"
+    }, {
+        "OPTION_VALUE": "1210",
+        "OPTION_NAME": "一级上将"
+    }, {
+        "OPTION_VALUE": "1220",
+        "OPTION_NAME": "上将"
+    }, {
+        "OPTION_VALUE": "1230",
+        "OPTION_NAME": "中将"
+    }, {
+        "OPTION_VALUE": "1240",
+        "OPTION_NAME": "少将"
+    }]
+}, {
+    "OPTION_VALUE": "1240",
+    "OPTION_NAME": "少将"
+}]

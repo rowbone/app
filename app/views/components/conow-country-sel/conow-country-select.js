@@ -130,6 +130,15 @@ app.service('countriesService', ['$q', 'DataService',
 			return groupIndex;
 		};
 
+		this.getResetGroupData = function(groupData) {
+			var iLen = groupData.length;
+			for(var i=0; i<iLen; i++) {
+				groupData[i].expanded = false;
+			}
+
+			return groupData;
+		};
+
 		// other methods
 
 	}
@@ -198,6 +207,7 @@ app.directive('conowCountrySelect', ['DataService', 'conowModals', 'countriesSer
 
 				var getSelectedCountryPromise = countriesService.getSelectedCountryName($scope.ngModel);
 				getSelectedCountryPromise.then(function(data) {
+					vm.selectedName = data;
 					elem.val(data);
 				}, function(msg) {
 					console.info('msg-->', msg);
@@ -226,7 +236,8 @@ app.directive('conowCountrySelect', ['DataService', 'conowModals', 'countriesSer
 							modalParams: function() {
 								return {
 									dataAll: vm.dataAll,
-									groupData: vm.groupData
+									groupData: countriesService.getResetGroupData(vm.groupData),
+									selectedName: vm.selectedName
 								}
 							}
 						}
@@ -237,6 +248,8 @@ app.directive('conowCountrySelect', ['DataService', 'conowModals', 'countriesSer
 
 						$timeout(function() {
 							elem.val(data.VALUE);
+
+							vm.selectedName = data.VALUE;
 						}, 100);
 					}, function(msg) {
 						console.info('msg-->', msg);
@@ -261,6 +274,9 @@ app.controller('countrySelCtrl', ['$scope', '$conowModalInstance', 'modalParams'
 			search: false,
 			isLoading: false
 		};
+
+		// 已选项名称
+		vm.selectedName = modalParams.selectedName;
 
 		var dataList = [];
 		angular.forEach(vm.dataAll, function(value, key) {
@@ -289,6 +305,7 @@ app.controller('countrySelCtrl', ['$scope', '$conowModalInstance', 'modalParams'
 			e.preventDefault();
 
 			vm.selected = item;
+			vm.selectedName = item['OPTION_NAME'];
 
 			$scope.confirm(e);
 		};
@@ -336,6 +353,7 @@ app.controller('countrySelCtrl', ['$scope', '$conowModalInstance', 'modalParams'
 			e.preventDefault();
 
 			vm.selected = item;
+			vm.selectedName = item['OPTION_NAME'];
 
 			angular.forEach(vm.groupData, function(value, key) {
 				value.expanded = false;

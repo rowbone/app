@@ -33,7 +33,8 @@
 
 		<conow-tabs-content>
 			<conow-tabs-content-text ng-repeat="dataLevel in vm.dataCascade track by $index">
-				<a href="#" class="btn m cascade-sel" ng-click="select($event, item, $parent.$index, $index)" ng-repeat="item in dataLevel track by $index" ng-bind="item.OPTION_NAME" skip-click="{{$parent.$index + 1}}"></a>
+				<span class="hidden"ng-bind="index=$index"></span>
+				<a href="#" class="btn m cascade-sel" ng-class="{true: 'btn-primary', false: 'btn-default'}[vm.selected[index]['OPTION_VALUE'] == item['OPTION_VALUE']]" ng-click="select($event, item, index)" ng-repeat="item in dataLevel track by $index" ng-bind="item.OPTION_NAME" skip-click="{{$parent.$index + 1}}"></a>
 			</conow-tabs-content-text>
 			<!-- <conow-tabs-content-text>
 				<a href="#" class="btn m cascade-sel" ng-class="{'btn-success': selected[0]['OPTION_VALUE'] == item['OPTION_VALUE']}" skip-click=1 ng-click="select($event, '1', item)" ng-repeat="item in dataLevel1 | filter:entity.searchKey track by $index">{{ item.OPTION_NAME }}</a>

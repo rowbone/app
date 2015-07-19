@@ -5,8 +5,8 @@
 		.no-scoll {
 			overflow: hidden; 
 		}		
-		.country-sel-container { height: 295px; }
-		.country-sel-body, .country-search { position: absolute; top: 55px; height: 255px; bottom: 0; width: 100%; overflow: auto; border: 1px solid #ccc; }
+		.country-sel-container { height: 340px; }
+		.country-sel-body, .country-search { position: absolute; top: 90px; height: 255px; bottom: 0; width: 100%; overflow: auto; border: 1px solid #ccc; }
 		.search-group {
 			position: absolute;
 			width: 100%;
@@ -25,6 +25,10 @@
 			background: transparent;
 			border: none;
 			color: #cacaca;
+		}
+		.country-selected {
+			position: absolute;
+			top: 54px;
 		}
 		.country-label {
 			font-size: 18px;
@@ -54,6 +58,10 @@
 				<!-- <i class="fa ion-ios-search"></i> -->
 				<i class="fa fa-search"></i>
 			</button>
+		</div>
+
+		<div class="country-selected padder-sm">
+			已选择：<span class="text-primary" ng-bind="vm.selectedName"></span>
 		</div>
 
 		<div class="country-sel-body" ng-if="!options.search">
