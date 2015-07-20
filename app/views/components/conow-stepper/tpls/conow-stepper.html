@@ -16,6 +16,7 @@
 
     .stepper-box-outer {
         padding: 5px 0;
+        width: auto;
     }
     
     /*.stepper-box-outer-1-letter {
@@ -34,6 +35,14 @@
         width: 35px;
         height: 35px;
     }
+
+    .stepper-box-left {
+        margin-right: -5px;
+    }
+
+    .stepper-box-right {
+        margin-left: -5px;
+    }
     
     .stepper-minus {
         display: block;
@@ -46,7 +55,6 @@
         border-top-left-radius: 5px;
         border-bottom-left-radius: 5px;
         font-size: 20px;
-        margin-right: -5px;
     }
     
     .stepper-plus {
@@ -60,16 +68,17 @@
         border-top-right-radius: 5px;
         border-bottom-right-radius: 5px;
         font-size: 24px;
-        margin-left: -5px; 
     }
     
     .stepper-input {
         width: 65px!important;
         height: 35px;
         border: 1px solid #cdcdcd;
-        border-right: none; 
         color: #5cb8e6;
         text-align: center!important;
+    }
+    .b-r-none {
+        border-right: none;
     }
     .stepper-disabled {
         cursor: not-allowed;
@@ -81,12 +90,12 @@
         border-left: none;
         font-size: 17px;
         padding: 5px 3px 6px 3px;
-        /*margin-left: -5px;*/
+        margin-left: -5px;
     }
 
     </style>
-    <div class="text-lg stepper-box-outer1" ng-class="{'stepper-box-outer-1-letter': (options.unitName.length == 1), 'stepper-box-outer-2-letter': (options.unitName.length == 2), 'stepper-box-outer-3-letter': (options.unitName.length == 3)}">
-        <div class="inline v-middle text-center cursor-h stepper-box" ng-click="minusNum()" ng-class="{'disabled': inputVal == options.min}">
+    <div class="text-lg stepper-box-outer">
+        <div class="inline v-middle text-center cursor-h stepper-box stepper-box-left" ng-click="minusNum()" ng-class="{'disabled': inputVal == options.min}">
             <span class="stepper-minus">
               <!-- <i class="ion-minus-round l-h-0x" ng-class="{'stepper-disabled': inputVal == options.min}"></i> -->
               <i class="fa fa-minus l-h-0x" ng-class="{'stepper-disabled': vm.inputVal == options.min}"></i>
@@ -94,12 +103,12 @@
         </div>
         <div class="inline text-primary-dker v-middle">
             <!-- <div class="input-group"> -->
-                <input type="text" class="no-padder text-center stepper-input text-primary" ng-model="vm.inputVal" ng-blur="numberBlur($event)" ng-keydown="numberKeydown($event)" /> 
+                <input type="text" class="no-padder text-center stepper-input text-primary" ng-class="{'b-r-none': options.unitName.length > 0}" ng-model="vm.inputVal" ng-blur="numberBlur($event)" ng-keydown="numberKeydown($event)" /> 
 
-                <span class="stepper-addon" ng-class="{'no-padder': options.unitName.length == 0}" ng-bind="options.unitName"></span>           
+                <span class="stepper-addon" ng-if="options.unitName.length > 0" ng-bind="options.unitName"></span>           
             <!-- </div> -->
         </div>
-        <div class="inline v-middle text-center cursor-h stepper-box" ng-click="addNum()" ng-class="{'disabled': inputVal == options.max}">
+        <div class="inline v-middle text-center cursor-h stepper-box stepper-box-right" ng-click="addNum()" ng-class="{'disabled': inputVal == options.max}">
           <span class="stepper-plus">
             <!-- <i class="ion-plus-round l-h-0x" ng-class="{'stepper-disabled': inputVal == options.min}"></i> -->
             <i class="fa fa-plus l-h-0x" ng-class="{'stepper-disabled': vm.inputVal == options.max}"></i>

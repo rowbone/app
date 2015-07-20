@@ -18,7 +18,11 @@
             "OPTION_NAME": "将官",
             "children": [{
                 "OPTION_VALUE": "1200",
-                "OPTION_NAME": "大将"
+                "OPTION_NAME": "大将",
+                "children": [{
+                    "OPTION_VALUE": "120001",
+                    "OPTION_NAME": "abcdef"
+                    }]
             }, {
                 "OPTION_VALUE": "1210",
                 "OPTION_NAME": "一级上将"

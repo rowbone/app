@@ -135,6 +135,7 @@ app.directive('conowCascadeSelect', ['DataService', 'conowModals', 'cascadeSelec
 				// click  to open select modal
 				elem.bind('click.cascadeSelect', function(e) {
 					e.preventDefault();
+console.log(scope.allSelected)
 					
 					elem.attr('disabled', true);
 					
@@ -262,9 +263,13 @@ app.controller('cascadeSelectCtrl', ['$scope', 'DataService', '$conowModalInstan
 
 			// 当前选择的层级是可选择的最大层级时，直接返回
 			if(paramIndex + 1 == options.selectLevel) {
-				// $scope.confirm(e);
+				$scope.confirm(e);
 			} else {			// 初始化下一层级数据
 				vm.dataCascade[paramIndex + 1] = item.children;
+				// 清空隔一级的数据待选项[直接下一级的数据还没有选择]
+				if(paramIndex + 2 <= options.selectLevel) {
+					vm.dataCascade[paramIndex + 2] = [];
+				}
 			}
 		};
 
@@ -277,12 +282,6 @@ app.controller('cascadeSelectCtrl', ['$scope', 'DataService', '$conowModalInstan
 			}
 
 			return -1;
-		};
-
-		// 页签标题点击，更新当前操作的 contentIndex
-		$scope.tabTitleClick = function(index) {
-
-			options.contentIndex = index;
 		};
 
 		$scope.isInSelected = function(item, parentIndex) {
