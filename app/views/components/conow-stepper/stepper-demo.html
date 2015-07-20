@@ -8,25 +8,62 @@
 					<div class="panel-title">组件演示</div>
 				</div>
 				<div class="panel-body">
-						<div class="form-group">
-							<label for="" class="control-label">数字</label>
-								<conow-stepper  
-									decimals="vm.decimals"
-									step="vm.step" 
-									ng-model="vm.defaultValue" 
-									min="vm.min"
-									max="vm.max"> 							
-								</conow-stepper> 
-						</div>
+					<div class="form-group">
+						<label for="" class="control-label">数字-没有单位</label>
+							<conow-stepper  
+								decimals="vm.decimals"
+								step="vm.step" 
+								ng-model="vm.defaultValue" 
+								min="vm.min"
+								max="vm.max"
+								> 							
+							</conow-stepper> 
+					</div>
 
-						<div class="form-group">
-							<label for="">弹窗选择</label>
-							<button class="btn btn-primary" ng-click="openModal($event)">打开</button>
-						</div>
-				</div>
-
-				<div class="p-sm">
-					<pre>{{ vm | json }}</pre>
+					<div class="form-group p-sm m-t-md">
+						<pre>{{ vm | json }}</pre>
+					</div>
+					
+					<div class="form-group">
+						<label for="" class="control-label">数字-单位为一个字</label>
+							<conow-stepper  
+								decimals="vm.decimals"
+								step="vm.step" 
+								ng-model="vm.defaultValue" 
+								min="vm.min"
+								max="vm.max"
+								unit-name="vm.unit2"> 							
+							</conow-stepper> 
+					</div>
+					
+					<div class="form-group">
+						<label for="" class="control-label">数字-单位为二个字</label>
+							<conow-stepper  
+								decimals="vm.decimals"
+								step="vm.step" 
+								ng-model="vm.defaultValue" 
+								min="vm.min"
+								max="vm.max"
+								unit-name="vm.unit3"> 							
+							</conow-stepper> 
+					</div>
+					
+					<div class="form-group">
+						<label for="" class="control-label">数字-单位为三个字</label>
+							<conow-stepper  
+								decimals="vm.decimals"
+								step="vm.step" 
+								ng-model="vm.defaultValue" 
+								min="vm.min"
+								max="vm.max"
+								unit-name="vm.unit4"> 							
+							</conow-stepper> 
+					</div>
+					
+					<div class="form-group">
+						<label class="control-label">stepper弹窗</label>
+						<button class="btn btn-primary" ng-click="openModal($event)">弹出</button>
+					</div>
 				</div>
 				<div class="panel-footer">
 					@add by wlj
@@ -42,7 +79,7 @@
 				<div class="panel-body">
 					<ul class="list-unstyled">
 						<li>
-						<pre class="text-danger">&lt;conow-stepper decimals="vm.decimals" step="vm.step" ng-model="vm.defaultValue" min="vm.min" max="vm.max"&gt; &lt;/conow-stepper&gt;</pre></li>
+						<pre class="text-danger">&lt;conow-stepper decimals="vm.decimals" step="vm.step" ng-model="vm.defaultValue" min="vm.min" max="vm.max" unit-name="vm.unit2"&gt; &lt;/conow-stepper&gt;</pre></li>
 						<li>参数说明
 							<ol>
 								<li><code>ng-model</code>:业务controller绑定的值</li>
@@ -50,6 +87,7 @@
 								<li><code>step</code>:每次点击加(递增)/减(递减)的步长[默认为1]</li>
 								<li><code>min</code>:数字的最小值</li>
 								<li><code>mix</code>:数字的最大值</li>
+								<li><code>unit-name</code>:显示的单位名称</li>
 							</ol>
 						</li>
 					</ul>
@@ -68,6 +106,7 @@
 				<div class="panel-body">
 					<ol>
 						<li>2015-07-17:修复最大值最小值为0时控制失效的问题</li>
+						<li>2015-07-20:指令中增加单位的处理</li>
 					</ol>
 				</div>
 				<div class="panel-footer">

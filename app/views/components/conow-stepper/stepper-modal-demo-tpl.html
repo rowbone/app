@@ -4,10 +4,11 @@
 		step="vm.step" 
 		ng-model="vm.defaultValue" 
 		min="vm.min"
-		max="vm.max"> 							
+		max="vm.max"
+		unit-name="vm.unit"> 							
 	</conow-stepper> 
 </modal-body>
 
 <modal-btn>
-	<a href="" class="btn btn-bar-primary">确认</a>
+	<a href="#" class="btn btn-bar-primary" ng-click="confirm($event)">确认</a>
 </modal-btn>

@@ -22,12 +22,16 @@ app.service('cascadeSelectService', ['$q', 'DataService',
 			return optionName;
 		};
 
-		this.getAllSelected = function(optionCode) {
+		this.getAllSelected = function(optionCode, selectedLevel) {
 			var arr = [
 				{ "OPTION_VALUE": "1","OPTION_NAME": "军衔"	}, 
 				{ "OPTION_VALUE": "12","OPTION_NAME": "将官"	},
 				{ "OPTION_VALUE": "1240","OPTION_NAME": "少将" }
 			];
+
+			if(selectedLevel) {
+				return arr.slice(0, selectedLevel);
+			}
 
 			return arr;
 		}
@@ -122,7 +126,7 @@ app.directive('conowCascadeSelect', ['DataService', 'conowModals', 'cascadeSelec
 						$interval.cancel(interval);
 
 						// elem.val(cascadeSelectService.getOptionName(ctrl.$modelValue));
-						scope.allSelected = cascadeSelectService.getAllSelected(ctrl.$modelValue);
+						scope.allSelected = cascadeSelectService.getAllSelected(ctrl.$modelValue, scope.selectLevel);
 
 						elem.val(scope.allSelected[scope.allSelected.length - 1]['OPTION_NAME']);
 					}
@@ -234,7 +238,14 @@ app.controller('cascadeSelectCtrl', ['$scope', 'DataService', '$conowModalInstan
 						}
 					}
 
-					options.tabs = [false, true];					
+					// 		
+					for(var i=0; i<options.tabsLen; i++) {
+						if(i == options.tabsLen - 1) {
+							options.tabs[i] = true;
+						} else {
+							options.tabs[i] = false;
+						}
+					}
 
 				}, function(msg) {
 					console.error('msg-->', msg);
@@ -246,13 +257,15 @@ app.controller('cascadeSelectCtrl', ['$scope', 'DataService', '$conowModalInstan
 		// select operation
 		$scope.select = function(e, item, paramIndex) {
 			e.preventDefault();
-console.log('paramIndex-->', paramIndex);
-
-console.log(vm.dataCascade[paramIndex]);
-console.log(item);
 
 			vm.selected[paramIndex] = item;
-			vm.dataCascade[paramIndex + 1] = item.children;
+
+			// 当前选择的层级是可选择的最大层级时，直接返回
+			if(paramIndex + 1 == options.selectLevel) {
+				// $scope.confirm(e);
+			} else {			// 初始化下一层级数据
+				vm.dataCascade[paramIndex + 1] = item.children;
+			}
 		};
 
 		$scope.indexInArr = function(item, items) {
@@ -281,8 +294,10 @@ console.log(item);
 		}
 
 		// 确定返回
-		$scope.confirm = function() {
+		$scope.confirm = function(e) {
 			// cascadeSelectService.setSelected($scope.selected);
+			e.preventDefault();
+
 console.log('selected-->', vm.selected);
 			$conowModalInstance.close(vm.selected);
 		};
