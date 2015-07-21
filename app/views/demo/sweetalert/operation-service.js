@@ -133,8 +133,8 @@ app.service('OperationService', ['$http', '$state', '$timeout', 'SweetAlert', 'D
               // 
             }
             if(angular.isFunction(options.successFunc)) {
-	          (options.successFunc)(data);
-	        }
+  	          (options.successFunc)(data);
+  	        }
             if(options.isSuccessBack) {
               $timeout(function() {
                 history.back();
@@ -200,7 +200,7 @@ app.service('OperationService', ['$http', '$state', '$timeout', 'SweetAlert', 'D
                 (options.confirmFunc)();
               }
               interFunc();
-            } else {console.log(options);console.log(options.cancelFunc)
+            } else {
               if(angular.isFunction(options.cancelFunc)) {
                 (options.cancelFunc)();
               }
