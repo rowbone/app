@@ -136,13 +136,58 @@ OperationService.interAction({
         				</li>
         				<li>日程：[是否更新所有相同日程]
 <pre>
-OperationService.alertHtml({
-  callback: callbackFunc,
-  yesUrl: '/home',
-  noUrl: '/home',
-  confirmTitle: '这里是操作提示！'
-});
+$scope.alertHtml = function() {
+  var callbackFunc = function(data) {
+    console.log('alertHtml callbackFunc-->', data);
+  };
+
+  var params = {
+    yesConfirmFunc: function() {console.log('yes..........')},
+    noConfirmFunc: function() {console.log('no..........')},
+    callback: callbackFunc,
+    yesUrl: '/home',
+    noUrl: '/error',
+    confirmTitle: '这里是操作提示！',
+    isSuccessBack: 'false',
+    redirectState: 'app.components.stepper'
+  };
+  OperationService.alertHtml(params);
+};
 </pre>
+<table class="table table-bordered table-striped">
+	<thead>
+		<tr>
+			<th>参数</th>
+			<th>说明</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td>yesUrl</td>
+			<td>选择"是"所对应的后台接口</td>
+		</tr>
+		<tr>
+			<td>noUrl</td>
+			<td>选择"否"所对应的后台接口</td>
+		</tr>
+		<tr>
+			<td>yesConfirmFunc</td>
+			<td>选择"是"所对应的后台接口</td>
+		</tr>
+		<tr>
+			<td>noConfirmFunc</td>
+			<td>选择"否"所对应的后台接口</td>
+		</tr>
+		<tr>
+			<td>yesData</td>
+			<td>yesUrl对应提交到后台接口的参数</td>
+		</tr>
+		<tr>
+			<td>noData</td>
+			<td>noUrl对应提交到后台接口的参数</td>
+		</tr>
+	</tbody>
+</table>
         				</li>
 							</ol>
 						</li>
