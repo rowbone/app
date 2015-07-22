@@ -28,10 +28,14 @@ app.controller('SweetAlertCtrl', ['$scope', 'SweetAlert', 'OperationService',
       };
 
       var params = {
+        yesConfirmFunc: function() {console.log('yes..........')},
+        noConfirmFunc: function() {console.log('no..........')},
         callback: callbackFunc,
         yesUrl: '/home',
         noUrl: '/error',
-        confirmTitle: '这里是操作提示！'
+        confirmTitle: '这里是操作提示！',
+        isSuccessBack: 'false',
+        redirectState: 'app.components.stepper'
       };
       OperationService.alertHtml(params);
     };

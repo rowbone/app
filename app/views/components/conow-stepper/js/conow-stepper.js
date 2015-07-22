@@ -21,6 +21,9 @@ app.controller('stepperDemoCtrl', ['$scope', 'conowModals',
       unit4: '百万元'
     };
 
+    $scope.changeVal = function(newVal) {
+      vm.defaultValue = newVal;
+    };
 
     $scope.jsonData = {'name': 'abc', 'age': 12};
 
@@ -72,7 +75,7 @@ app.directive('conowStepper',['$timeout',
   function($timeout) {
     return {
         restrict: 'AE',
-        replace: true,
+        // replace: true,
         // require: '?^ngModel',
         scope: {
             ngModel: '=',
@@ -108,6 +111,30 @@ app.directive('conowStepper',['$timeout',
           // 格式化数值并加上单位[已废弃]
           var generateValStr = function(inputVal) {
             return parseFloat(inputVal).toFixed(options.decimals) + options.unitName;
+          };
+
+          // 数据大小判断，格式化
+          var numberCheck = function(inputVal) {
+
+            inputVal = parseFloat(inputVal);
+
+            if(!inputVal) {
+              inputVal = 0;
+            }
+
+            if(options.max && (inputVal > options.max)) {
+              inputVal = options.max;
+            } else if(options.max === 0 && (inputVal > options.max)) {
+              inputVal = 0;
+            }
+
+            if(options.min && (inputVal < options.min)) {
+              inputVal = options.min;
+            } else if(options.min === 0 && (inputVal < options.min)) {
+              inputVal = 0;
+            }
+
+            return generateVal(inputVal);
           };
 
           var init = function() {
@@ -197,9 +224,22 @@ app.directive('conowStepper',['$timeout',
           };
 
           // $watch to make $parent ng-model effect
-          scope.$watch('vm.inputVal', function(newVal, oldVal) {
+          // scope.$watch('vm.inputVal', function(newVal, oldVal) {
+          //   console.log('vm.inputVal')
+          //   scope.ngModel = newVal;
+          // });
+
+          // 外部通过 "设值" 的方式改变 ngModel 的值
+          scope.$watch(function() {
+            return scope.ngModel;
+          }, function(newVal, oldVal) {
+            if(options.doubleTrig) {
+              return;
+            }
+            newVal = numberCheck(newVal);
             scope.ngModel = newVal;
-          });
+            vm.inputVal = newVal;
+          }, true);
 
         }
     };

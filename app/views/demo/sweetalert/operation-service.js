@@ -233,36 +233,13 @@ app.service('OperationService', ['$http', '$state', '$timeout', 'SweetAlert', 'D
 
       SweetAlert.swal(angular.extend({}, swalParams, swalUserParams),
         function(isConfirm) {
-// console.log('isConfirm-->', isConfirm)
           if(isConfirm === 'yes') {
-            if(params.yesUrl) {
-              DataService.postData(params.yesUrl)
-                .then(function(data) {
-                    if(angular.isDefined(params.successTitle) && params.successTitle === '') {
-                      // 
-                    } else {
-                      swalUserParams = {
-                        type: 'success',
-                        title: params.successTitle || '操作成功',
-                        text: params.successText || '',
-                        timer: userTimer
-                      }
-
-                      SweetAlert.swal(angular.extend({}, swalParams, swalUserParams));
-                    }
-          
-                  if(params.callback && angular.isFunction(params.callback)) {
-                    (params.callback)(data);
-                  }
-                }, function(msg) {
-                  console.log(msg);
-                });
+            if(angular.isFunction(params.yesConfirmFunc)) {
+              (params.yesConfirmFunc)();
             }
-          } else if(isConfirm === 'no') {
-            if(params.noUrl) {
-              DataService.postData(params.noUrl)
+            if(params.yesUrl) {
+              DataService.postData(params.yesUrl, params.yesData)
                 .then(function(data) {
-
                   if(angular.isDefined(params.successTitle) && params.successTitle === '') {
                     // 
                   } else {
@@ -275,20 +252,102 @@ app.service('OperationService', ['$http', '$state', '$timeout', 'SweetAlert', 'D
 
                     SweetAlert.swal(angular.extend({}, swalParams, swalUserParams));
                   }
-        
-                   if(params.callback && angular.isFunction(params.callback)) {
-                     (params.callback)(data);
-                   }
+
+                  if(angular.isFunction(params.successFunc)) {
+                    (params.successFunc)(data);
+                  }
+                  if(params.isSuccessBack) {
+                    $timeout(function() {
+                      history.back();
+                    }, userTimer);
+                  } else {
+                    if(!params.redirectState) {
+                      $timeout(function() {
+                        $state.go(params.redirectState);
+                      }, userTimer);
+                    }
+                  }
+                }, function(msg) {
+                  console.log(msg);
+                  swalUserParams = {
+                    type: 'error',
+                    title: params.errorTitle || '操作失败',
+                    text: params.errorTitle || '',
+                    timer: null
+                  }
+
+                  SweetAlert.swal(angular.extend({}, swalParams, swalUserParams), function(isConfirm) {
+                      if(angular.isFunction(params.errorFunc)) {
+                        (params.errorFunc)();
+                      }
+                  });
+                });
+            }
+          } else if(isConfirm === 'no') {
+            if(angular.isFunction(params.noConfirmFunc)) {
+              (params.noConfirmFunc)();
+            }
+            if(params.noUrl) {
+              DataService.postData(params.noUrl, params.noData)
+                .then(function(data) {
+                  if(!data.success) {
+                      swalUserParams = {
+                        type: 'error',
+                        title: params.errorTitle || '操作失败',
+                        text: params.errorTitle || '',
+                        timer: null
+                      }
+
+                      SweetAlert.swal(angular.extend({}, swalParams, swalUserParams), function(isConfirm) {
+                        if(angular.isFunction(params.errorFunc)) {
+                          (params.errorFunc)();
+                        }
+                      });
+                      
+                      return;
+                  }
+                  
+                  if(angular.isDefined(params.successTitle) && params.successTitle === '') {
+                    // 
+                  } else {
+                    swalUserParams = {
+                      type: 'success',
+                      title: params.successTitle || '操作成功',
+                      text: params.successText || '',
+                      timer: userTimer
+                    }
+
+                    SweetAlert.swal(angular.extend({}, swalParams, swalUserParams));
+                  }
+
+                  if(angular.isFunction(params.successFunc)) {
+                    (params.successFunc)(data);
+                  }
+                  if(params.isSuccessBack) {
+                    $timeout(function() {
+                      history.back();
+                    }, userTimer);
+                  } else {
+                    if(!params.redirectState) {
+                      $timeout(function() {
+                        $state.go(params.redirectState);
+                      }, userTimer);
+                    }
+                  }
                 }, function(msg) {
                   console.log(msg);
                     swalUserParams = {
                       type: 'error',
                       title: params.errorTitle || '操作失败',
                       text: params.errorTitle || '',
-                      timer: userTimer
+                      timer: null
                     }
 
-                    SweetAlert.swal(angular.extend({}, swalParams, swalUserParams));
+                    SweetAlert.swal(angular.extend({}, swalParams, swalUserParams), function(isConfirm) {
+                      if(angular.isFunction(params.errorFunc)) {
+                        (params.errorFunc)();
+                      }
+                    });
                 });
             }
           } else if(isConfirm === false) {

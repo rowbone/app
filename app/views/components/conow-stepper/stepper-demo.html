@@ -20,6 +20,11 @@
 							</conow-stepper> 
 					</div>
 
+					<div class="form-group">
+						<input type="text" ng-model="vm.changeVal">
+						<button class="btn btn-primary" ng-click="changeVal(vm.changeVal)">改变数值</button>
+					</div>
+
 					<div class="form-group p-sm m-t-md">
 						<pre>{{ vm | json }}</pre>
 					</div>

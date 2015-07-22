@@ -1,4 +1,4 @@
-<div>
+<div class="conow-stepper-container">
     <style>
     @media (max-width: 767px) {
         .b-bottom {
@@ -16,7 +16,7 @@
 
     .stepper-box-outer {
         padding: 5px 0;
-        width: auto;
+        width: auto !important;
     }
     
     .stepper-box {
@@ -42,7 +42,7 @@
         color: #4d4d4d;
         border-top-left-radius: 5px;
         border-bottom-left-radius: 5px;
-        font-size: 20px;
+        font-size: 24px;
     }
     
     .stepper-plus {
@@ -59,28 +59,50 @@
     }
     
     .stepper-input {
-        width: 65px!important;
-        height: 35px;
+        padding-left: 10px; 
+        padding-right: 0 !important;
+        height: 35px !important;
         border: 1px solid #cdcdcd;
         color: #5cb8e6;
         text-align: center!important;
+        line-height: 33px !important;
+        vertical-align: top;
+        min-width: 2em; 
+        max-width: 10em;
     }
     .b-r-none {
-        border-right: none;
+        border-right: none !important;
     }
     .stepper-disabled {
         cursor: not-allowed;
     }
     .stepper-addon {
+        display: inline-block; 
         border-radius: 0;
         background-color: #fff;
         border: 1px solid #cdcdcd;
         border-left: none;
         font-size: 17px;
-        padding: 5px 3px 6px 3px;
+        padding: 0px 10px 0px 0px;
+        padding-right: 10px !important;
+        line-height: 33px;
         margin-left: -5px;
     }
-
+    .stepper-addon-place-holder {
+        display: inline-block; 
+        border-radius: 0;
+        background-color: #fff;
+        border: 1px solid #cdcdcd;
+        border-left: none;
+        font-size: 17px;
+        padding: 0px 10px 0px 0px;
+        padding-right: 10px !important;
+        line-height: 33px;
+        margin-left: -5px;
+        width: 5px;
+        height: 35px;
+        vertical-align: top;
+    }
     </style>
     <div class="text-lg stepper-box-outer">
         <div class="inline v-middle text-center cursor-h stepper-box stepper-box-left" ng-click="minusNum()" ng-class="{'disabled': inputVal == options.min}">
@@ -90,11 +112,9 @@
            </span>
         </div>
         <div class="inline text-primary-dker v-middle">
-            <!-- <div class="input-group"> -->
-                <input type="text" class="no-padder text-center stepper-input text-primary" ng-class="{'b-r-none': options.unitName.length > 0}" ng-model="vm.inputVal" ng-blur="numberBlur($event)" ng-keydown="numberKeydown($event)" /> 
-
-                <span class="stepper-addon" ng-if="options.unitName.length > 0" ng-bind="options.unitName"></span>           
-            <!-- </div> -->
+              <input type="text" pu-elastic-input class="text-center stepper-input text-primary b-r-none" ng-model="vm.inputVal" ng-blur="numberBlur($event)" ng-keydown="numberKeydown($event)" /> 
+              <span class="stepper-addon-place-holder" ng-if="options.unitName.length == 0"></span>
+              <span class="stepper-addon"  ng-if="options.unitName.length > 0" ng-class="{'no-padder': options.unitName.length == 0}" ng-bind="options.unitName"></span>           
         </div>
         <div class="inline v-middle text-center cursor-h stepper-box stepper-box-right" ng-click="addNum()" ng-class="{'disabled': inputVal == options.max}">
           <span class="stepper-plus">
