@@ -230,16 +230,16 @@ app.directive('conowStepper',['$timeout',
           // });
 
           // 外部通过 "设值" 的方式改变 ngModel 的值
-          scope.$watch(function() {
-            return scope.ngModel;
-          }, function(newVal, oldVal) {
-            if(options.doubleTrig) {
-              return;
-            }
-            newVal = numberCheck(newVal);
-            scope.ngModel = newVal;
-            vm.inputVal = newVal;
-          }, true);
+          // scope.$watch(function() {
+          //   return scope.ngModel;
+          // }, function(newVal, oldVal) {
+          //   if(options.doubleTrig) {
+          //     return;
+          //   }
+          //   newVal = numberCheck(newVal);
+          //   scope.ngModel = newVal;
+          //   vm.inputVal = newVal;
+          // }, true);
 
         }
     };

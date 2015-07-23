@@ -1,0 +1,12 @@
+
+<title-bar name="conow responsive table"></title-bar>
+
+<div class="wrapper-md pos-rlt h-auto" ng-controller="responsiveTableDemoCtrl">
+		<table ng-table class="table table-bordered">
+			<tr ng-repeat="user in users track by $index">
+				<td data-title="'Name'" ng-bind="user.name"></td>
+				<td data-title="'Age'" ng-bind="user.age"></td>
+			</tr>
+		</table>
+
+</div>

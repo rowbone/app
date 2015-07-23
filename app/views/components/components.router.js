@@ -83,5 +83,9 @@ angular.module('app.components', ['ui.router'])
 					url: '/countrySel',
 					templateUrl: 'views/components/conow-country-sel/country-sel-demo.html'
 				})
+				.state('app.components.responsiveTable', {
+					url: '/responsiveTable',
+					templateUrl: 'views/components/conow-responsive-table/responsive-table-demo.html'
+				})
 
 	}]);

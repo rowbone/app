@@ -23,4 +23,5 @@ var app = angular.module('demoApp', [
 	'ja.qr',
 	'app.hr'
 	// 'angularBootstrapNavTree'
+	, 'ngTable'
 	]);
