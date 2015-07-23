@@ -144,10 +144,9 @@ app.service('countriesService', ['$q', 'DataService',
 	}
 ]);
 
-app.filter('groupByAlphabet', [
-	function() {
+app.filter('groupByAlphabet', ['$filter', 
+	function($filter) {
 		var filterFunc = function(input) {
-			// 
 			var arrSrc = [];
 			var arr = [];
 			var arrTmp = [];
@@ -190,14 +189,14 @@ app.filter('groupByAlphabet', [
 ]);
 
 // conow country select directive
-app.directive('conowCountrySelect', ['DataService', 'conowModals', 'countriesService', '$timeout', '$filter', 
+app.directive('conowCountrySelect1', ['DataService', 'conowModals', 'countriesService', '$timeout', '$filter', 
 	function(DataService, conowModals, countriesService, $timeout, $filter) {
 		return {
 			restrict: 'AE', 
 			scope: {
 				ngModel: '='
 			},
-			require: '?ngModel',
+			// require: '?ngModel',
 			replace: true,
 			template: '<input type="text" ng-click="countrySelClick($event)">',
 			link: function($scope, elem, attrs, ctrl) {
@@ -216,6 +215,7 @@ app.directive('conowCountrySelect', ['DataService', 'conowModals', 'countriesSer
 				DataService.getData(url)
 					.then(function(data) {
 						// 
+						console.log('data-->', data);
 						if(data.obj) {
 							data = data.obj;
 						}
@@ -385,65 +385,65 @@ app.directive('conowCountryCascadeSelect', ['DataService', 'conowModals', 'count
 			replace: true,
 			template: '<input type="text" ng-click="countrySelClick($event)">',
 			link: function($scope, elem, attrs, ctrl) {
-				var vm = $scope.vm = {};
+			// 	var vm = $scope.vm = {};
 
-				$scope.titles = ['大洲', '国家'];
+			// 	$scope.titles = ['大洲', '国家'];
 
-				var url = 'views/components/conow-country-sel/data/IC_COUNTRY.json';
+			// 	var url = 'views/components/conow-country-sel/data/IC_COUNTRY.json';
 		
-				var promise = countriesService.getAllCountries(url);
-				promise.then(function(data) {
+			// 	var promise = countriesService.getAllCountries(url);
+			// 	promise.then(function(data) {
 
-					vm.selectedArr = countriesService.getAllSelected($scope.ngModel, data, 'OPTION_VALUE');
+			// 		vm.selectedArr = countriesService.getAllSelected($scope.ngModel, data, 'OPTION_VALUE');
 
-					elem.val(vm.selectedArr[vm.selectedArr.length - 1].OPTION_NAME);
-				}, function(msg) {
-					console.log('msg-->', msg);
-				})
+			// 		elem.val(vm.selectedArr[vm.selectedArr.length - 1].OPTION_NAME);
+			// 	}, function(msg) {
+			// 		console.log('msg-->', msg);
+			// 	})
 
-				$scope.countrySelClick = function(e) {
-					e.preventDefault();
+			// 	$scope.countrySelClick = function(e) {
+			// 		e.preventDefault();
 
-					var modalInstance = conowModals.open({
-						templateUrl: 'views/components/conow-country-sel/tpls/country-cascade-sel-tpl.html',
-						title: '选择',
-						size: 'full',
-						controller: 'countryCascadeSelCtrl',
-						resolve: {
-							modalParams: function() {
-								return {
-									titles: $scope.titles,
-									selected: vm.selectedArr
-								}
-							}
-						}
-					});
-					modalInstance.result.then(function(data) {
-						var selectedVal = null;
+			// 		var modalInstance = conowModals.open({
+			// 			templateUrl: 'views/components/conow-country-sel/tpls/country-cascade-sel-tpl.html',
+			// 			title: '选择',
+			// 			size: 'full',
+			// 			controller: 'countryCascadeSelCtrl',
+			// 			resolve: {
+			// 				modalParams: function() {
+			// 					return {
+			// 						titles: $scope.titles,
+			// 						selected: vm.selectedArr
+			// 					}
+			// 				}
+			// 			}
+			// 		});
+			// 		modalInstance.result.then(function(data) {
+			// 			var selectedVal = null;
 
-						for(var i=data.length - 1; i >= 0; i--) {
-							if(!angular.equals(data[i], [])) {
-								selectedVal = data[i];
-								break;
-							}
-						}
+			// 			for(var i=data.length - 1; i >= 0; i--) {
+			// 				if(!angular.equals(data[i], [])) {
+			// 					selectedVal = data[i];
+			// 					break;
+			// 				}
+			// 			}
 						
-						// 设置返回的值
-						// ctrl.$setViewValue(selectedVal.OPTION_VALUE);
-						// 直接设置 controller 绑定的值
-						$scope.ngModel = selectedVal.OPTION_VALUE;
+			// 			// 设置返回的值
+			// 			// ctrl.$setViewValue(selectedVal.OPTION_VALUE);
+			// 			// 直接设置 controller 绑定的值
+			// 			$scope.ngModel = selectedVal.OPTION_VALUE;
 
-						// 设置显示的值
-						$timeout(function() {
-							elem.val(selectedVal.OPTION_NAME);
-						}, 100);
+			// 			// 设置显示的值
+			// 			$timeout(function() {
+			// 				elem.val(selectedVal.OPTION_NAME);
+			// 			}, 100);
 
-					}, function(msg) {
-						console.log('dismiss msg-->', msg);
-					});
+			// 		}, function(msg) {
+			// 			console.log('dismiss msg-->', msg);
+			// 		});
 
-					e.stopPropagation();
-				}
+			// 		e.stopPropagation();
+			// 	}
 			}
 		};
 	}
@@ -488,7 +488,7 @@ app.controller('countryCascadeSelCtrl', ['$scope', '$conowModalInstance', 'DataS
 		};
 
 		// data init
-		init();
+		// init();
 
 		$scope.select = function(e, selectedLevel, item) {
 			e.preventDefault();

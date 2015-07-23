@@ -18,7 +18,7 @@ var app = angular.module('demoApp', [
 	'toaster',
 	'app.angular',
 	'app.components',
-	'conow.datepicker',
+	// 'conow.datepicker',
 	'app.home',
 	'ja.qr',
 	'app.hr'

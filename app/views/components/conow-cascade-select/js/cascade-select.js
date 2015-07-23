@@ -106,7 +106,7 @@ app.service('cascadeSelectService', ['$q', 'DataService',
 ]);
 
 // 级联选择指令实现
-app.directive('conowCascadeSelect', ['DataService', 'conowModals', 'cascadeSelectService', '$interval', 
+app.directive('conowCascadeSelect1', ['DataService', 'conowModals', 'cascadeSelectService', '$interval', 
 	function(DataService, conowModals, cascadeSelectService, $interval) {
 		return {
 			restrict: 'A',

@@ -43,10 +43,10 @@ angular.module('app.components', ['ui.router'])
 					url: '/area',
 					templateUrl: 'views/components/conow-area/area.html'
 				})
-				.state('app.components.datepicker', {
-					url: '/datepicker',
-					templateUrl: 'views/components/conow-datepicker/datepicker.html'
-				})
+				// .state('app.components.datepicker', {
+				// 	url: '/datepicker',
+				// 	templateUrl: 'views/components/conow-datepicker/datepicker.html'
+				// })
 				.state('app.components.tabs', {
 					url: '/tabs',
 					templateUrl: 'views/components/conow-tabs/tabs.html'
@@ -59,18 +59,18 @@ angular.module('app.components', ['ui.router'])
 					url: '/cascadeSel',
 					templateUrl: 'views/components/conow-cascade-select/cascade-select-demo.html'
 				})
-				.state('app.components.timeSelect', {
-					url: '/timeSelect',
-					templateUrl: 'views/components/conow-timeSelect/timeSelectDemo.html'
-				})
-				.state('app.components.delaySearch', {
-					url: '/delaySearch',
-					templateUrl: 'views/components/conow-delay-search/delay-search-demo.html'
-				})
-				.state('app.components.autocomplete', {
-					url: '/autocomplete',
-					templateUrl: 'views/components/conow-autocomplete/autocomplete-demo.html'
-				})
+				// .state('app.components.timeSelect', {
+				// 	url: '/timeSelect',
+				// 	templateUrl: 'views/components/conow-timeSelect/timeSelectDemo.html'
+				// })
+				// .state('app.components.delaySearch', {
+				// 	url: '/delaySearch',
+				// 	templateUrl: 'views/components/conow-delay-search/delay-search-demo.html'
+				// })
+				// .state('app.components.autocomplete', {
+				// 	url: '/autocomplete',
+				// 	templateUrl: 'views/components/conow-autocomplete/autocomplete-demo.html'
+				// })
 				.state('app.components.qrcode', {
 					url: '/qrcode',
 					templateUrl: 'views/components/conow-qrcode/qrcode-demo.html'
