@@ -4,8 +4,14 @@ app.controller('AreaSelCtrl', ['$scope', '$http', '$filter', 'AreaService',
     function($scope, $http, $filter, AreaService) {
         var entity = $scope.entity = {
             area: '44010000',
-            area2: '44010600'
+            area2: '44010600',
+            area3: '44010600',
+            area4: '44010600'
         };
+
+        // var name = $filter('AreaCodeToName')(entity.area3);
+
+        // console.log('name-->', name);
 
     }
 ]);

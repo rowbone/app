@@ -49,16 +49,5 @@ app.service('DataService', ['$http', '$q', '$interval',
 			return deferred.promise;
 		};
 
-		$http.get()
-			.sucess(function() {
-				// 
-			})
-			.error(function() {
-				// 
-			});
-
-			promise.then(function() {
-				//
-			})
 	}
 ]);

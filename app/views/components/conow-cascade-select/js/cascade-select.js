@@ -106,7 +106,7 @@ app.service('cascadeSelectService', ['$q', 'DataService',
 ]);
 
 // 级联选择指令实现
-app.directive('conowCascadeSelect1', ['DataService', 'conowModals', 'cascadeSelectService', '$interval', 
+app.directive('conowCascadeSelect', ['DataService', 'conowModals', 'cascadeSelectService', '$interval', 
 	function(DataService, conowModals, cascadeSelectService, $interval) {
 		return {
 			restrict: 'A',
@@ -120,6 +120,13 @@ app.directive('conowCascadeSelect1', ['DataService', 'conowModals', 'cascadeSele
 				selectLevel: '@'
 			},
 			link: function(scope, elem, attrs, ctrl) {
+				// url: '/service/common!queryOptions?type=DICT_LEVEL&DICT_CODE=HR_RETIRED_ARMY_RANK'
+				var index = -1;
+				var optionType = '';
+				if((index = scope.url.indexOf('DICT_CODE=')) > -1) {
+					optionType = scope.url.substring(index);
+					console.log('optionsType-->', optionsType)
+				}
 
 				var interval = $interval(function() {
 					if(!angular.equals(ctrl.$modelValue, NaN)) {
@@ -135,7 +142,6 @@ app.directive('conowCascadeSelect1', ['DataService', 'conowModals', 'cascadeSele
 				// click  to open select modal
 				elem.bind('click.cascadeSelect', function(e) {
 					e.preventDefault();
-console.log(scope.allSelected)
 					
 					elem.attr('disabled', true);
 					
@@ -240,8 +246,8 @@ app.controller('cascadeSelectCtrl', ['$scope', 'DataService', '$conowModalInstan
 					}
 
 					// 		
-					for(var i=0; i<options.tabsLen; i++) {
-						if(i == options.tabsLen - 1) {
+					for(var i=0; i<options.selectLevel; i++) {
+						if(i == options.selectLevel - 1) {
 							options.tabs[i] = true;
 						} else {
 							options.tabs[i] = false;

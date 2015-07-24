@@ -2,7 +2,7 @@
 
 <div class="wrapper pos-rlt">
 	<div class="row">
-		<div class="col-md-6 col-sm-12">
+		<div class="col-md-6 col-sm-12" ng-controller="countryCascadeSelDemoCtrl">
 			<div class="panel panel-info">
 				<div class="panel-heading">
 					<div class="panel-title">国家级联选择</div>
@@ -10,7 +10,7 @@
 				<div class="panel-body">
 					<div class="form-group">
 						<label for="" class="control-label">选择</label>
-						<!-- <input type="text" class="form-control" conow-country-cascade-select ng-model="vm.sel"> -->
+						<input type="text" class="form-control" conow-country-cascade-select ng-model="vm.sel">
 					</div>
 
 					<pre>{{ vm | json }}</pre>
@@ -38,7 +38,7 @@
 
 	<div class="row">
 
-		<div class="col-md-6 col-sm-12">
+		<div class="col-md-6 col-sm-12" ng-controller="countrySelDemoCtrl">
 			<div class="panel panel-info">
 				<div class="panel-heading">
 					<div class="panel-title">国家选择</div>
