@@ -144,6 +144,36 @@ app.service('countriesService', ['$q', 'DataService',
 	}
 ]);
 
+/**
+ * @param  {input}
+ * @return {[type]}
+ */
+app.filter('countryCodeToName', ['countriesService', '$q', 
+	function(countriesService, $q) {
+		return function(input) {
+			// var getSelectedCountryNamePromise = countriesService.getSelectedCountryName($scope.ngModel);
+			// getSelectedCountryNamePromise.then(function(data) {
+			// 	vm.selectedName = data;
+			// 	elem.val(data);
+			// }, function(msg) {
+			// 	console.info('msg-->', msg);
+			// });
+
+			countriesService.getSelectedCountryName(input)
+				.then(function(data) {
+					console.log('resolve-->', data);
+					return data;
+				}, function(msg) {
+					console.log('rejest-->', msg);
+					return '';
+				})
+		};
+
+console.log('return func');
+		return filterFunc;
+	}
+]);
+
 app.filter('groupByAlphabet', ['$filter', 
 	function($filter) {
 		var filterFunc = function(input) {
@@ -204,18 +234,22 @@ app.directive('conowCountrySelect', ['DataService', 'conowModals', 'countriesSer
 				var url = 'views/components/conow-country-sel/data/country-letter.json';
 				var vm = $scope.vm = {};
 
-				var getSelectedCountryPromise = countriesService.getSelectedCountryName($scope.ngModel);
-				getSelectedCountryPromise.then(function(data) {
-					vm.selectedName = data;
-					elem.val(data);
-				}, function(msg) {
-					console.info('msg-->', msg);
-				});
+				// 当绑定的code以数字开始时，才调用转换方法
+				var regExp = /^\d+/;
+
+				if(regExp.test($scope.ngModel)) {
+					var getSelectedCountryPromise = countriesService.getSelectedCountryName($scope.ngModel);
+					getSelectedCountryPromise.then(function(data) {
+						vm.selectedName = data;
+						elem.val(data);
+					}, function(msg) {
+						console.info('msg-->', msg);
+					});
+				}
+				
 
 				DataService.getData(url)
 					.then(function(data) {
-						// 
-						console.log('data-->', data);
 						if(data.obj) {
 							data = data.obj;
 						}

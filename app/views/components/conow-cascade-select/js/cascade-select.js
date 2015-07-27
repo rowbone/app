@@ -22,12 +22,17 @@ app.service('cascadeSelectService', ['$q', 'DataService',
 			return optionName;
 		};
 
+		/**
+		 * @param  { optionsCode }
+		 * @param  { optionsType }
+		 * @param  { [selectedLevel] }
+		 * @return { selected promise }
+		 */
 		this.getAllSelected = function(optionCode, optionsType, selectedLevel) {
 			var url = 'views/components/conow-cascade-select/data/selected.json';
 
 			DataService.getData(url, optionsType)
 				.then(function(data) {
-					console.log(data);
 					deferred.resolve(data);
 				}, function(msg) {
 					deferred.reject(msg);
@@ -137,7 +142,6 @@ app.directive('conowCascadeSelect', ['DataService', 'conowModals', 'cascadeSelec
 				var optionsType = '';
 				if((index = scope.url.indexOf('DICT_CODE=')) > -1) {
 					optionsType = scope.url.substring(index);
-					console.log('optionsType-->', optionsType)
 				}
 
 				var interval = $interval(function() {
@@ -219,8 +223,9 @@ app.controller('cascadeSelectCtrl', ['$scope', 'DataService', '$conowModalInstan
 		var options = $scope.options = {
 			titles: modalParams.titles,
 			tabsLen: modalParams.titles.length,
-			tabs: [],
-			selectLevel: parseInt(modalParams.selectLevel)
+			// tabs: [],
+			selectLevel: parseInt(modalParams.selectLevel),
+			currentTab: 0
 		};
 
 		var vm = $scope.vm = {
@@ -230,14 +235,16 @@ app.controller('cascadeSelectCtrl', ['$scope', 'DataService', '$conowModalInstan
 		
 		var init = function() {
 			// data init
+					
 			for(var i=0; i<options.selectLevel; i++) {
-				if(0 === i) {
-					options.tabs[i] = true;
-				}
-				options.tabs[i] = false;
+				
+				// 用tabs 数组来判断当前所在层级[已废弃]
+				// if(0 === i) {
+				// 	options.tabs[i] = true;
+				// }
+				// options.tabs[i] = false;
 				
 				vm.dataCascade.push([]);
-				// vm.selected.push({});
 			}
 
 			// todo: support json datasource
@@ -252,7 +259,7 @@ app.controller('cascadeSelectCtrl', ['$scope', 'DataService', '$conowModalInstan
 					vm.dataCascade[0] = data;
 
 					if(vm.selected.length > 0) {
-						for(var i=0; i<vm.selected.length - 1; i++) {
+						for(var i=0; i<vm.selected.length; i++) {
 							var objTmp = vm.selected[i];
 							if(!angular.equals(objTmp, {})) {
 								vm.dataCascade[i + 1] = cascadeSelectService.getOneSelected(objTmp['OPTION_VALUE'], vm.dataCascade[i], 'OPTION_VALUE').children;
@@ -260,16 +267,16 @@ app.controller('cascadeSelectCtrl', ['$scope', 'DataService', '$conowModalInstan
 						}
 					}
 
-					// 		
-					for(var i=0; i<options.selectLevel; i++) {
-						// if(vm.selected)
-						if(i == options.selectLevel - 1) {
-							options.tabs[i] = true;
-						} else {
-							options.tabs[i] = false;
-						}
-					}
+					// 用tabs 数组来判断当前所在层级[已废弃]
+					// for(var i=0; i<options.selectLevel; i++) {
+					// 	if(i == vm.selected.length - 1) {
+					// 		options.tabs[i] = true;
+					// 	} else {
+					// 		options.tabs[i] = false;
+					// 	}
+					// }
 
+					options.currentTab = vm.selected.length - 1;
 				}, function(msg) {
 					console.error('msg-->', msg);
 				});
@@ -281,17 +288,13 @@ app.controller('cascadeSelectCtrl', ['$scope', 'DataService', '$conowModalInstan
 		$scope.select = function(e, item, paramIndex) {
 			e.preventDefault();
 
-			if(paramIndex > 0) {
-				vm.selected = vm.selected.substring(0, paramIndex);
+			var arrTmp = [];
+			for(var i=0; i<paramIndex; i++) {
+				arrTmp.push(vm.selected[i]);
 			}
+			arrTmp.push(item)
 
-			vm.selected[paramIndex] = item;
-
-			// for(var i=0; i<options.selectLevel; i++) {
-			// 	if(i > paramIndex) {
-			// 		vm.selected[i] = {};
-			// 	}
-			// }
+			vm.selected = angular.copy(arrTmp);
 
 			// 当前选择的层级是可选择的最大层级时，直接返回
 			if(paramIndex + 1 == options.selectLevel) {
@@ -326,7 +329,6 @@ app.controller('cascadeSelectCtrl', ['$scope', 'DataService', '$conowModalInstan
 
 		// 确定返回
 		$scope.confirm = function(e) {
-			// cascadeSelectService.setSelected($scope.selected);
 			e.preventDefault();
 
 console.log('selected-->', vm.selected);

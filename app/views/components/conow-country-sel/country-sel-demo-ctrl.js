@@ -13,7 +13,7 @@ app.controller('countrySelDemoCtrl', ['$scope',
 	function($scope) {
 		// 
 		var vm = $scope.vm = {
-			sel: '446'
+			sel: ''
 		};
 	}
 ]);
