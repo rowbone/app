@@ -88,6 +88,7 @@
 							  	<li>data: {},                   // 提交到后台的数据</li>
 							  	<li>isSuccessBack: true,        // 操作成功是否返回</li>
 							  	<li>redirectState: 'app.home'   // 操作成功的重定向地址(state跳转，isSuccessBack为false时起作用)</li>
+							  	<li>redirectParams:{} 				// 重定向参数</li>
 							  	<li>successFunc: func,          // 操作成功的回调方法</li>
 							  	<li>errorFunc: func              // 操作失败的回调方法</li>								
 							</ul>
@@ -154,6 +155,36 @@ $scope.alertHtml = function() {
   OperationService.alertHtml(params);
 };
 </pre>
+        				</li>
+        				<li>操作成功后点击确认再进行返回或者重定向操作
+<pre>	
+OperationService.interAction({
+  'actionUrl': '/home',
+  'isSuccessBack': false,
+  'redirectState': 'app.conowArea'
+});
+</pre>
+        				</li>
+        				<li>操作成功后直接进行返回或者重定向操作
+<pre>	
+OperationService.interAction({
+  'actionUrl': '/home',
+  'isSuccessBack': false,
+  'redirectState': 'app.conowArea',
+  'successTitle': ''
+});
+</pre>
+        				</li>
+        				<li>带参数的重定向操作
+<pre>	
+OperationService.interAction({
+  'actionUrl': '/home',
+  'isSuccessBack': false,
+  'redirectState': 'app.conowArea',
+  'redirectParams': { 'staffId': $scope.staffId }
+});
+</pre>
+        				</li>
 <table class="table table-bordered table-striped">
 	<thead>
 		<tr>
@@ -188,7 +219,6 @@ $scope.alertHtml = function() {
 		</tr>
 	</tbody>
 </table>
-        				</li>
 							</ol>
 						</li>
 					</ol>
@@ -230,7 +260,13 @@ $scope.alertHtml = function() {
 				<div class="panel-heading">
 					<div class="panel-title">维护日志</div>
 				</div>
-				<div class="panel-body"></div>
+				<div class="panel-body">
+					<ul class="list-unstyled">
+						<li>2015.07.22：实现“是否更新所有相同日程”功能</li>
+						<li>2015.07.28：增加页面重定向提供参数-<code>redirectParams</code></li>
+						<li>2015.07.28：操作成功后有确认操作时，点击确认再进行下一步操作</li>
+					</ul>
+				</div>
 			</div>
 		</div>
 	</div>

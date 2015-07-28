@@ -5,7 +5,7 @@ router.post('/', function(req, res) {
 	console.log('name-->', req.param('name'));
 	console.log('age-->', req.param('age'));
 	res.send({
-		success: false,
+		success: true,
 		obj: {
 			sex: 'male'
 		}

@@ -1,8 +1,10 @@
 'use strict';
 
-app.controller('countryCascadeSelDemoCtrl', ['$scope', 
-	function($scope) {
+app.controller('countryCascadeSelDemoCtrl', ['$scope', '$stateParams',
+	function($scope, $stateParams) {
 		// 
+		console.log('$stateParams-->', $stateParams);
+
 		var vm = $scope.vm = {
 			sel: '208'
 		};

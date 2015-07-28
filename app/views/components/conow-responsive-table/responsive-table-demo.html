@@ -2,11 +2,10 @@
 <title-bar name="conow responsive table"></title-bar>
 
 <div class="wrapper-md pos-rlt h-auto" ng-controller="responsiveTableDemoCtrl">
-		<table ng-table="tableParams" class="table table-hover bg-white ng-table-responsive">
-			<tr ng-repeat="user in $data track by $index">
-				<td data-title="'Name'" ng-bind="user.name"></td>
-				<td data-title="'Age'" ng-bind="user.age"></td>
+		<table ng-table="tableParams" class="table table-hover bg-white">
+			<tr ng-repeat="user in $data">
+				<td data-title="'Name'" ng-bind="user.name" sortable="'name'"></td>
+				<td data-title="'Age'" ng-bind="user.age" sortable="'age'"></td>
 			</tr>
 		</table>
-
 </div>

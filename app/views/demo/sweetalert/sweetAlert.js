@@ -101,15 +101,49 @@ app.controller('SweetAlertCtrl', ['$scope', 'SweetAlert', 'OperationService',
       });
     };
 
+    $scope.staffId = '123';
+
     $scope.interAction4 = function() {
       OperationService.interAction({
         'actionUrl': '/home',
         'isSuccessBack': false,
-        'redirectState': 'app.home.contactlist2',
+        'redirectState': 'app.components.countrySel',
+        'redirectParams': {'staffId': $scope.staffId },
         successFunc: successFunc,
-        errorFunc: errorFunc
+        errorFunc: errorFunc,
+        // successTitle: '',
       });
     };
+    
+    // 操作成功自动重定向
+    $scope.directRedirect = function() {
+      OperationService.interAction({
+        'actionUrl': '/home',
+        'isSuccessBack': false,
+        'redirectState': 'app.conowArea',
+        'successTitle': ''
+      });
+    }
+    
+    // 点击确认操作后才进行重定向操作
+    $scope.confirmBeforeRedirect = function() {
+      OperationService.interAction({
+        'actionUrl': '/home',
+        'isSuccessBack': false,
+        'redirectState': 'app.conowArea',
+        'redirectParams': { 'staffId': $scope.staffId }
+      });
+    };
+    
+    // 重定向传参
+    $scope.redirectWithParams = function() {
+      OperationService.interAction({
+        'actionUrl': '/home',
+        'isSuccessBack': false,
+        'redirectState': 'app.conowArea',
+        'redirectParams': { 'staffId': $scope.staffId }
+      });
+    }
 
     var confirmFunc = function() {
       console.log('This is the confirm function');

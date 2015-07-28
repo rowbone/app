@@ -18,6 +18,7 @@ app.service('OperationService', ['$http', '$state', '$timeout', 'SweetAlert', 'D
 	      paramsData: {},
 	      isSuccessBack: true,
 	      redirectState: '',
+        redirectParams: {}, 
 	      successFunc: null,
 	      errorFunc: null,
 	      confirmBtnText: '确认',
@@ -109,6 +110,10 @@ app.service('OperationService', ['$http', '$state', '$timeout', 'SweetAlert', 'D
       if(angular.isDefined(params.timer)) {
         userTimer = params.timer;
       }
+      // 页面重定向参数
+      if(angular.isDefined(params.redirectParams)) {
+        options.redirectParams = params.redirectParams;
+      }
 
       return true;
     };
@@ -126,12 +131,25 @@ app.service('OperationService', ['$http', '$state', '$timeout', 'SweetAlert', 'D
                 title: options.successTitle,
                 text: options.successText,
                 type: 'success',
-                timer: userTimer
+                timer: null
               };
               SweetAlert.swal(angular.extend({}, swalParams, swalUserParams), 
                 function(isConfirm) {
                   if(isConfirm) {
-                    console.log('success confirm');
+                    if(angular.isFunction(options.successFunc)) {
+                      (options.successFunc)(data);
+                    }
+                    if(options.isSuccessBack) {
+                      // $timeout(function() {
+                        history.back();
+                      // }, userTimer);
+                    } else {
+                      if(options.redirectState != '') {
+                        // $timeout(function() {
+                          $state.go(options.redirectState, options.redirectParams);
+                        // }, userTimer);
+                      }
+                    }
                   } else {
                     console.log('error cancel')
                   }
@@ -139,21 +157,22 @@ app.service('OperationService', ['$http', '$state', '$timeout', 'SweetAlert', 'D
               );
             } else {
               // 
-            }
-            if(angular.isFunction(options.successFunc)) {
-  	          (options.successFunc)(data);
-  	        }
-            if(options.isSuccessBack) {
-              $timeout(function() {
-                history.back();
-              }, userTimer);
-            } else {
-              if(options.redirectState != '') {
+              if(angular.isFunction(options.successFunc)) {
+                (options.successFunc)(data);
+              }
+              if(options.isSuccessBack) {
                 $timeout(function() {
-                  $state.go(options.redirectState);
+                  history.back();
                 }, userTimer);
+              } else {
+                if(options.redirectState != '') {
+                  $timeout(function() {
+                    $state.go(options.redirectState, options.redirectParams);
+                  }, userTimer);
+                }
               }
             }
+            
           } else {            
             swalUserParams = {
               title: options.errorTitle,

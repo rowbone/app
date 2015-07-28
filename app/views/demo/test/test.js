@@ -152,3 +152,19 @@ app.controller('listItemCtrl', ['$scope',
 		};
 	}
 ]);
+
+// directive bind strategy
+app.directive('directParam', function() {
+		return {
+			restrict: 'ECMA',
+			template: '<div>指令中:{{ name }}</div>',
+			scope: {
+				name: '@forName'
+			}
+		}
+	})
+	.controller('nameCtrl', ['$scope', 
+		function($scope){
+			$scope.name = '张三';
+		}
+	])

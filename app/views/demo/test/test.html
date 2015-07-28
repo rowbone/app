@@ -131,65 +131,79 @@
 		.w-p-5 { width: 18%; background: #5115CF; }
 		.area-item-content > a { background: #EB0C0C; }
 	</style>
-	<div class="col-md-6 col-sm-12" ng-controller="listItemCtrl">
-		<div class="panel panel-info">
-			<div class="panel-heading">
-				<div class="panel-title">list-group</div>
+	<div class="row">
+		<div class="col-md-6 col-sm-12" ng-controller="listItemCtrl">
+			<div class="panel panel-info">
+				<div class="panel-heading">
+					<div class="panel-title">list-group</div>
+				</div>
+				<div class="panel-body">
+					<ul class="list-group list-unstyled">
+						<li class="list-group-item area-item-title">
+							<a href="" class="inline text-center w-p-5">A</a>
+							<a href="" class="inline text-center w-p-5">B</a>
+							<a href="" class="inline text-center w-p-5">C</a>
+							<a href="" class="inline text-center w-p-5">D</a>
+							<a href="" class="inline text-center w-p-5">E</a>
+						</li>
+						<li class="list-group-item area-item-content">
+							<!-- {{ vm.countries | json }}
+							<a href="" class="inline" ng-repeat="country in vm.countries $track by $index">{{ country }}</a> -->
+							<a href="" class="inline btn btn-default">中国</a>
+							<a href="" class="inline btn btn-default">中国</a>
+							<a href="" class="inline btn btn-default">中国</a>
+							<a href="" class="inline btn btn-default">中国</a>
+							<a href="" class="inline btn btn-default">中国</a>
+							<a href="" class="inline btn btn-default">中国</a>
+							<a href="" class="inline btn btn-default">中国</a>
+							<a href="" class="inline btn btn-default">中国</a>
+							<a href="" class="inline btn btn-default">中国</a>
+							<a href="" class="inline btn btn-default">中国</a>
+							<a href="" class="inline btn btn-default">中国</a>
+							<a href="" class="inline btn btn-default">中国</a>
+						</li>
+						<li class="list-group-item">
+							<a href="" class="inline text-center w-p-5">A</a>
+							<a href="" class="inline text-center w-p-5">B</a>
+							<a href="" class="inline text-center w-p-5">C</a>
+							<a href="" class="inline text-center w-p-5">D</a>
+							<a href="" class="inline text-center w-p-5">E</a>
+						</li>
+						<li class="list-group-item">
+							<a href="" class="inline text-center w-p-5">A</a>
+							<a href="" class="inline text-center w-p-5">B</a>
+							<a href="" class="inline text-center w-p-5">C</a>
+							<a href="" class="inline text-center w-p-5">D</a>
+							<a href="" class="inline text-center w-p-5">E</a>
+						</li>
+						<li class="list-group-item">
+							<a href="" class="inline text-center w-p-5">A</a>
+							<a href="" class="inline text-center w-p-5">B</a>
+							<a href="" class="inline text-center w-p-5">C</a>
+							<a href="" class="inline text-center w-p-5">D</a>
+							<a href="" class="inline text-center w-p-5">E</a>
+						</li>
+						<li class="list-group-item">
+							<a href="" class="inline text-center w-p-5">A</a>
+							<a href="" class="inline text-center w-p-5">B</a>
+							<a href="" class="inline text-center w-p-5">C</a>
+							<a href="" class="inline text-center w-p-5">D</a>
+							<a href="" class="inline text-center w-p-5">E</a>
+						</li>
+					</ul>
+				</div>
 			</div>
-			<div class="panel-body">
-				<ul class="list-group list-unstyled">
-					<li class="list-group-item area-item-title">
-						<a href="" class="inline text-center w-p-5">A</a>
-						<a href="" class="inline text-center w-p-5">B</a>
-						<a href="" class="inline text-center w-p-5">C</a>
-						<a href="" class="inline text-center w-p-5">D</a>
-						<a href="" class="inline text-center w-p-5">E</a>
-					</li>
-					<li class="list-group-item area-item-content">
-						<!-- {{ vm.countries | json }}
-						<a href="" class="inline" ng-repeat="country in vm.countries $track by $index">{{ country }}</a> -->
-						<a href="" class="inline btn btn-default">中国</a>
-						<a href="" class="inline btn btn-default">中国</a>
-						<a href="" class="inline btn btn-default">中国</a>
-						<a href="" class="inline btn btn-default">中国</a>
-						<a href="" class="inline btn btn-default">中国</a>
-						<a href="" class="inline btn btn-default">中国</a>
-						<a href="" class="inline btn btn-default">中国</a>
-						<a href="" class="inline btn btn-default">中国</a>
-						<a href="" class="inline btn btn-default">中国</a>
-						<a href="" class="inline btn btn-default">中国</a>
-						<a href="" class="inline btn btn-default">中国</a>
-						<a href="" class="inline btn btn-default">中国</a>
-					</li>
-					<li class="list-group-item">
-						<a href="" class="inline text-center w-p-5">A</a>
-						<a href="" class="inline text-center w-p-5">B</a>
-						<a href="" class="inline text-center w-p-5">C</a>
-						<a href="" class="inline text-center w-p-5">D</a>
-						<a href="" class="inline text-center w-p-5">E</a>
-					</li>
-					<li class="list-group-item">
-						<a href="" class="inline text-center w-p-5">A</a>
-						<a href="" class="inline text-center w-p-5">B</a>
-						<a href="" class="inline text-center w-p-5">C</a>
-						<a href="" class="inline text-center w-p-5">D</a>
-						<a href="" class="inline text-center w-p-5">E</a>
-					</li>
-					<li class="list-group-item">
-						<a href="" class="inline text-center w-p-5">A</a>
-						<a href="" class="inline text-center w-p-5">B</a>
-						<a href="" class="inline text-center w-p-5">C</a>
-						<a href="" class="inline text-center w-p-5">D</a>
-						<a href="" class="inline text-center w-p-5">E</a>
-					</li>
-					<li class="list-group-item">
-						<a href="" class="inline text-center w-p-5">A</a>
-						<a href="" class="inline text-center w-p-5">B</a>
-						<a href="" class="inline text-center w-p-5">C</a>
-						<a href="" class="inline text-center w-p-5">D</a>
-						<a href="" class="inline text-center w-p-5">E</a>
-					</li>
-				</ul>
+		</div>
+		<div class="col-md-6 col-sm-12" ng-controller="nameCtrl">
+			<div class="panel panel-info">
+				<div class="panel-heading">
+					<div class="panel-title">指令的绑定策略</div>
+				</div>
+				<div class="panel-body">
+					<div class="form-group">
+						<span direct-param for-name="{{name}}"></span>
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>
