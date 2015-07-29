@@ -2,10 +2,32 @@
 <title-bar name="conow responsive table"></title-bar>
 
 <div class="wrapper-md pos-rlt h-auto" ng-controller="responsiveTableDemoCtrl">
-		<table ng-table="tableParams" class="table table-hover bg-white">
-			<tr ng-repeat="user in $data">
-				<td data-title="'Name'" ng-bind="user.name" sortable="'name'"></td>
+		<table ng-table="tableParams" class="table table-hover bg-white" show-filter="true">
+			<tr ng-repeat="user in $data track by $index">
+				<td data-title="'序号'">{{ (tableParams.page() - 1) * tableParams.count() + $index}}</td>
+				<td data-title="'Name'" ng-bind="user.name" sortable="'name'" filter="{ 'name': 'text' }"></td>
 				<td data-title="'Age'" ng-bind="user.age" sortable="'age'"></td>
 			</tr>
 		</table>
+
+		<!-- <table ng-table="tableParams" class="table bg-white">
+		        <tbody ng-repeat="group in $groups">
+		        <tr class="ng-table-group">
+		            <td colspan="{{$columns.length}}">
+		                <a href="" ng-click="group.$hideRows = !group.$hideRows">
+		                    <span class="glyphicon" ng-class="{ 'glyphicon-chevron-right': group.$hideRows, 'glyphicon-chevron-down': !group.$hideRows }"></span>
+		                    <strong>{{ group.value }}</strong>
+		                </a>
+		            </td>
+		        </tr>
+		        <tr ng-hide="group.$hideRows" ng-repeat="user in group.data">
+		            <td sortable="'name'" data-title="'Name'">
+		                {{user.name}}
+		            </td>
+		            <td sortable="'age'" data-title="'Age'">
+		                {{user.age}}
+		            </td>
+		        </tr>
+		        </tbody>
+		    </table> -->
 </div>

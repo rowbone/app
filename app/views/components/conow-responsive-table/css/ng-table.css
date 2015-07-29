@@ -134,3 +134,11 @@
     display: block;
   }
 }
+
+.ng-table > tbody > tr > td {
+  vertical-align: middle !important;
+}
+
+.ng-table > tbody > tr > td > span {
+  display: inline-block; 
+}
