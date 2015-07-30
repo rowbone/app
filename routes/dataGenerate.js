@@ -34,4 +34,21 @@ router.get('/scroll', function(req, res) {
 	res.send('222222222222222');
 });
 
+router.get('/users', function(req, res) {
+	fs.readFile('./app/views/components/conow-responsive-table/data/users.json', {encoding: 'UTF-8'},
+		function(err, data) {
+			if(err)	throw err;
+			data = JSON.parse(data);
+			var random = parseInt(10 * Math.random(0, 1));
+      if(random % 2) {
+        data.unshift({'name': 'abc', 'age': 3});
+      } else {
+        data.unshift({'name': 'aaa', 'age': 2});
+      }
+      
+			res.send(JSON.stringify(data));
+		});
+
+})
+
 module.exports = router;

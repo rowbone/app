@@ -2,6 +2,11 @@
 
 app.controller('ExecFuncInServiceCtrl', ['$scope', 'ExecFuncService', 'foo', '$log', 'DataService', 
 	function($scope, ExecFuncService, foo, $log, DataService) {
+
+		var str = '中华人民共和国';
+		console.log('before convert-->', str);
+		console.log('after convert-->', codefans_net_CC2PY(str));
+
 		$scope.entity = {
 			'email': 'abc111@email.com',
 			'sex': 'female',

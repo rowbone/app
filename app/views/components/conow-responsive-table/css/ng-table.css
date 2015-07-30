@@ -142,3 +142,6 @@
 .ng-table > tbody > tr > td > span {
   display: inline-block; 
 }
+.ng-table tr.row-selected, .ng-table tr.row-selected:active {
+  background-color: #DDDDDD;
+}
