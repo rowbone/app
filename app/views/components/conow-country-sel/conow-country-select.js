@@ -1,5 +1,42 @@
 'use strict';
 
+app.service('countriesService2', ['$q', 'DataService', 
+	function($q, DataService) {
+		// 
+		var objCountries = {};
+		var self = this;
+		var deferred = $q.defer();
+
+		// get all countries data
+		this.getAllCountries = function(url) {
+			DataService.getData(url)
+				.then(function(data) {
+					if(data.success) {
+						data = data.obj;
+					}
+					objCountries = data;
+					deferred.resolve(data);
+				}, function(msg) {
+					console.error('msg-->', msg);
+					deferred.reject('Get getAllCountries wrong...');
+				});
+
+			return deferred.promise;
+		};
+
+		/**
+		 * 根据 code 获取对应的国家名称
+		 * @param  {countryCode} 已选择国家的 code
+		 * @return {countryName} 已选择国家的名称
+		 */
+		this.getSelectedCountryName = function(countryCode) {
+			var countryName = '';
+
+			return countryName;
+		};
+	}
+]);
+
 // countries data service
 app.service('countriesService', ['$q', 'DataService', 
 	function ($q, DataService) {
@@ -123,11 +160,13 @@ app.service('countriesService', ['$q', 'DataService',
 
 			if(index >= 20) {
 				groupIndex = 4;
+			} else if(index == -1) {
+				groupIndex = -1;
 			} else {
 				groupIndex = parseInt(index / 5);
 			}
 
-			return groupIndex;
+			return groupIndex + 1;
 		};
 
 		this.getResetGroupData = function(groupData) {
@@ -182,8 +221,8 @@ app.filter('groupByAlphabet', ['$filter',
 			var arrTmp = [];
 
 			if(angular.isObject(input)) {
+
 				angular.forEach(input, function(value, key) {
-					// console.log('key-->', key, ';value-->', value);
 					this.push({
 						'label': key,
 						'children': value,
@@ -194,7 +233,25 @@ app.filter('groupByAlphabet', ['$filter',
 				console.info('Data source is not an object');
 			}
 
+			// 如果有 COMMON 数据，则单独处理[生成的数据"热门"一项需要单独一行显示]
 			var iLen = arrSrc.length;
+			for(var i=0; i<iLen; i++) {
+				if(arrSrc[i].label === 'COMMON') {
+					arrSrc[i].label = '热门';
+					arrTmp.push(arrSrc[i]);
+					arr.push({
+						'expanded': false,
+						'children': arrTmp
+					});
+
+					arrSrc.splice(i, 1);
+					arrTmp = [];			// arrTmp 置空
+
+					break;
+				}
+			}
+
+			iLen = arrSrc.length;
 			for(var i=0; i<iLen; i++) {
 				arrTmp.push(arrSrc[i]);
 				if(i % 5 === 4) {
@@ -219,8 +276,8 @@ app.filter('groupByAlphabet', ['$filter',
 ]);
 
 // conow country select directive
-app.directive('conowCountrySelect', ['DataService', 'conowModals', 'countriesService', '$timeout', '$filter', 
-	function(DataService, conowModals, countriesService, $timeout, $filter) {
+app.directive('conowCountrySelect', ['DataService', 'conowModals', 'countriesService', '$timeout', '$filter', 'countriesService2', 
+	function(DataService, conowModals, countriesService, $timeout, $filter, countriesService2) {
 		return {
 			restrict: 'AE', 
 			scope: {
@@ -231,10 +288,11 @@ app.directive('conowCountrySelect', ['DataService', 'conowModals', 'countriesSer
 			template: '<input type="text" ng-click="countrySelClick($event)">',
 			link: function($scope, elem, attrs, ctrl) {
 				//
-				var url = 'views/components/conow-country-sel/data/country-letter.json';
+				var url = 'views/components/conow-country-sel/data/country-queryAllCountry.json';
 				var vm = $scope.vm = {};
 
 				// 当绑定的code以数字开始时，才调用转换方法
+				/*
 				var regExp = /^\d+/;
 
 				if(regExp.test($scope.ngModel)) {
@@ -246,18 +304,25 @@ app.directive('conowCountrySelect', ['DataService', 'conowModals', 'countriesSer
 						console.info('msg-->', msg);
 					});
 				}
-				
-
-				DataService.getData(url)
+				*/
+				countriesService2.getAllCountries(url)
 					.then(function(data) {
-						if(data.obj) {
-							data = data.obj;
-						}
 						vm.dataAll = data;
 						vm.groupData = $filter('groupByAlphabet')(data);
 					}, function(msg) {
 						console.error('msg-->', msg);
-					});
+					})
+
+				// DataService.getData(url)
+				// 	.then(function(data) {
+				// 		if(data.obj) {
+				// 			data = data.obj;
+				// 		}
+				// 		vm.dataAll = data;
+				// 		vm.groupData = $filter('groupByAlphabet')(data);
+				// 	}, function(msg) {
+				// 		console.error('msg-->', msg);
+				// 	});
 
 				// click function
 				$scope.countrySelClick = function(e) {
@@ -301,7 +366,7 @@ app.controller('countrySelCtrl', ['$scope', '$conowModalInstance', 'modalParams'
 		var vm = $scope.vm = {
 			dataAll: modalParams.dataAll,
 			groupData: modalParams.groupData,
-			contentData: [[], [], [], [], []],
+			contentData: [[], [], [], [], [], []],
 			selectedLabel: null
 		};
 		var options = $scope.options= {

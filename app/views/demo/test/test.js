@@ -5,7 +5,7 @@ app.controller('ExecFuncInServiceCtrl', ['$scope', 'ExecFuncService', 'foo', '$l
 
 		var str = '中华人民共和国';
 		console.log('before convert-->', str);
-		console.log('after convert-->', codefans_net_CC2PY(str));
+		console.log('after convert-->', chinese2Pinyin.getPinyin(str));
 
 		$scope.entity = {
 			'email': 'abc111@email.com',
@@ -173,3 +173,32 @@ app.directive('directParam', function() {
 			$scope.name = '张三';
 		}
 	])
+
+
+// pinyin filter ctrl
+app.controller('pinyinCtrl', ['$scope', 'DataService', '$filter', 
+	function($scope, DataService, $filter) {
+		var vm = $scope.vm = {};
+
+		var url = 'views/demo/test/data/group-users.json';
+		DataService.getData(url)
+			.then(function(data) {
+				if(data.success) {
+					data = data.obj;
+// console.log($filter('orderBy')(data, 'FROM_USER_ID_HR_STAFF_INFO'));
+console.log($filter('getGroupLabel')(data, 'FROM_USER_ID_HR_STAFF_INFO'));
+					vm.pinyin = $filter('groupBy')($filter('getGroupLabel')(data, 'FROM_USER_ID_HR_STAFF_INFO'), 'groupLabel');
+					console.log(vm.pinyin)
+				} else {
+					console.log('Get ', url , ' wrong...-->', data.message);
+				}
+			}, function(msg) {
+				console.error('msg-->', msg);
+			});
+
+		$scope.pinyinConvert = function() {
+			vm.pinyin = chinese2Pinyin.getPinyin(vm.chinese);
+		};
+
+	}
+]);

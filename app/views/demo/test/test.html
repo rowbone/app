@@ -208,4 +208,26 @@
 		</div>
 	</div>
 
+	<div class="row">
+		<div class="col-md-6 col-sm-12" ng-controller="pinyinCtrl">
+			<div class="panel panel-info">
+				<div class="panel-heading">
+					<div class="panel-title">拼音转换filter示例</div>
+				</div>
+				<div class="panel-body">
+					<div class="form-group">
+						<input type="text" class="form-control" ng-model="vm.chinese">
+					</div>
+					<div class="form-group">
+						<button class="btn btn-primary" ng-click="pinyinConvert()">拼音转换</button>
+					</div>
+					<span ng-bind="vm.chinese | getGroupLabel"></span>
+					<div class="form-group">
+						<pre>{{ vm.pinyin | json }}</pre>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
 </div>

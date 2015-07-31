@@ -80,7 +80,7 @@ angular.module('app.components', ['ui.router'])
 					templateUrl: 'views/components/conow-stepper/stepper-demo.html'
 				})
 				.state('app.components.countrySel', {
-					url: '/countrySel/:staffId',
+					url: '/countrySel',
 					templateUrl: 'views/components/conow-country-sel/country-sel-demo.html'
 				})
 				.state('app.components.responsiveTable', {
