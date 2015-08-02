@@ -200,5 +200,16 @@ console.log($filter('getGroupLabel')(data, 'FROM_USER_ID_HR_STAFF_INFO'));
 			vm.pinyin = chinese2Pinyin.getPinyin(vm.chinese);
 		};
 
+		$scope.groupItemClick = function(group, e) {
+			e.preventDefault();
+			group.expanded = !group.expanded;
+
+			e.stopPropagation();
+		};
+
+		$scope.childItemClick = function(child, e) {
+			e.stopPropagation();
+		};
+
 	}
 ]);
