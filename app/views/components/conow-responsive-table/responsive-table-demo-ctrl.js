@@ -6,6 +6,11 @@ app.controller('responsiveTableDemoCtrl', ['$scope', 'ngTableParams', '$filter',
     var options = $scope.options = {
       multiSelect: false
     };
+
+    var vm = $scope.vm = {
+      'searchKey': '',
+      'selected': []
+    };
     
     // $interval(function() {
     //   $scope.tableParams.reload();
@@ -41,6 +46,7 @@ app.controller('responsiveTableDemoCtrl', ['$scope', 'ngTableParams', '$filter',
 
               orderedData = params.sorting() ? $filter('orderBy')(orderedData, params.orderBy()) : data;
               orderedData = params.filter() ? $filter('filter')(orderedData, params.filter()) : data;
+              orderedData = $filter('filter')(orderedData, vm.searchKey);
 
               $defer.resolve(orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count()));
             }, function(msg) {
@@ -48,6 +54,13 @@ app.controller('responsiveTableDemoCtrl', ['$scope', 'ngTableParams', '$filter',
             });
 
         }
+    });
+
+    /**
+     * 单个搜索
+     */
+    $scope.$watch('vm.searchKey', function() {
+      $scope.tableParams.reload();
     });
 
     // $scope.userEditClick = function(user, e) {
@@ -66,21 +79,48 @@ app.controller('responsiveTableDemoCtrl', ['$scope', 'ngTableParams', '$filter',
       $scope.tableParams.reload();
     };
 
+    /**
+     * 判断行数据是否包含在已选择数组
+     */
+    $scope.indexInSelectedArr = function(row) {
+      var selectedArr = vm.selected;
+
+      for(var i=0; i<selectedArr.length; i++) {
+        if(angular.equals(row, selectedArr[i])) {
+          return i;
+        }
+      }
+
+      return -1;
+    };
+
     // 行点击事件触发
     $scope.changeSelection = function(row, e) {
       e.preventDefault();
 
-      console.log('one row click')
-      // console.log(row);
-      var tableData = $scope.tableParams.data;
-console.log(tableData)
-      for(var i=0; i<tableData.length; i++) {
-        $scope.tableParams.data[i].$selected = false;
+      var selectedArr = vm.selected;
+      
+      var index = $scope.indexInSelectedArr(row);
+      if(index < 0) {
+        vm.selected.push(row);
+      } else {
+        vm.selected = vm.selected.splice(index, 1);
       }
-      row.$selected = true;
+
+      if(options.multiSelect) {
+      } else {
+      }
+      
 
       e.stopPropagation();
-    }
+    };
+
+    $scope.checkboxSel = function(e) {
+      e.preventDefault();
+
+      console.log('checkboxSel')
+      e.stopPropagation();
+    };
 
         
 	}

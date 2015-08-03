@@ -138,10 +138,7 @@
 					<div class="panel-title">list-group</div>
 				</div>
 				<div class="panel-body">
-<<<<<<< HEAD
-=======
-					
->>>>>>> 9afa754b35a54e1a4860d6dcb6a1288a330a3ccb
+
 				</div>
 			</div>
 		</div>
@@ -170,9 +167,6 @@
 					<div class="panel-title">拼音转换filter示例</div>
 				</div>
 				<div class="panel-body">
-					<style>
-					.group-item .child-item:hover { background-color: #BFB5B5; }
-					</style>
 					<div class="form-group">
 						<input type="text" class="form-control" ng-model="vm.chinese">
 					</div>
@@ -183,7 +177,6 @@
 					<div class="form-group">
 						<button class="btn btn-primary" ng-click="pinyinConvert()">拼音转换</button>
 					</div>
-<<<<<<< HEAD
 					<div class="form-group">
 						拼音全部：
 						<span ng-bind="vm.pinyinAll"></span>
@@ -197,25 +190,13 @@
 							</div>
 							<div ng-repeat="child in group.children" class="padder-v-xs padder-sm child-item" ng-click="childItemClick(child, $event)" ng-show="group.expanded">
 								<div ng-bind="child.FROM_USER_ID_HR_STAFF_INFO"></div>
-=======
-					<span ng-bind="vm.chinese | getGroupLabel"></span>
-					
-					<div>
-						<div class="group-item" ng-repeat="group in vm.pinyin track by $index" ng-click="groupItemClick(group, $event)" ng-if="group.children.length > 0">
-							<div class="bg-dark dker padder-v-xs m-t-xs m-b-xs padder-xs">
-								<div class="inline" ng-bind="group.groupLabel"></div>
-								<div class="inline pull-right" ng-bind="group.children.length"></div>
-							</div>
-							<div class="padder-v-xs padder-sm child-item" ng-repeat="child in group.children" ng-show="group.expanded" ng-click="childItemClick(child, $event)">
-								<div class="inline">{{child.FROM_USER_ID_HR_STAFF_INFO}}</div>
->>>>>>> 9afa754b35a54e1a4860d6dcb6a1288a330a3ccb
 							</div>
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
-
+		
 		<div class="col-md-6 col-sm-12">
 			<div class="panel panel-info">
 				<div class="panel-heading">
