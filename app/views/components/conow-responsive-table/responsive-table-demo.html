@@ -9,19 +9,23 @@
 			</div>
 			<div class="panel-body">
 				<div class="m-t-sm">
-					<pre>{{ optiosn | json }}</pre>
+					<pre>{{ options | json }}</pre>
 					<!-- <div class="form-group">
 						<input type="text" ng-model="options.">
 					</div> -->
 				</div>
 				<div class="m-t-sm">
-					<table ng-table="tableParams" class="table table-hover bg-white ng-table-rowselected" show-filter="true">		
+					<table ng-table="tableParams" class="table table-hover bg-white ng-table-rowselected">		
 						<tbody>
 							<tr ng-repeat="user in $data track by $index" ng-class="{'row-selected': user.$selected}" ng-click="changeSelection(user, $event)">
 								<td data-title="'序号'">{{ (tableParams.page() - 1) * tableParams.count() + $index + 1}}</td>
-								<td data-title="'姓名'" ng-bind="user.name" sortable="'name'" filter="{ 'name': 'text' }"></td>
-								<td data-title="'年龄'" ng-bind="user.age" sortable="'age'" filter="{'age': 'text'}"></td>
-								<td data-title="'性别'" ng-bind="user.sex" sortable="'sex'" filter="{'sex': 'text'}"></td>
+								
+								<td data-title="'姓名'" ng-bind="user.name" sortable="'name'"></td>
+								<td data-title="'姓名'" ng-bind="user.name" sortable="'name'"></td>
+								<td data-title="'姓名'" ng-bind="user.name" sortable="'name'"></td>
+								<td data-title="'姓名'" ng-bind="user.name" sortable="'name'"></td>
+								<td data-title="'年龄'" ng-bind="user.age" sortable="'age'" header-class="'hidden-sm'" class="hidden-sm"></td>
+								<td data-title="'性别'" ng-bind="user.sex" sortable="'sex'"></td>
 							</tr>
 						</tbody>
 					</table>
