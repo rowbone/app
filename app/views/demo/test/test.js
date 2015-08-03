@@ -178,17 +178,16 @@ app.directive('directParam', function() {
 // pinyin filter ctrl
 app.controller('pinyinCtrl', ['$scope', 'DataService', '$filter', 
 	function($scope, DataService, $filter) {
-		var vm = $scope.vm = {};
+		var vm = $scope.vm = {
+			chinese: '中国'
+		};
 
 		var url = 'views/demo/test/data/group-users.json';
 		DataService.getData(url)
 			.then(function(data) {
 				if(data.success) {
 					data = data.obj;
-// console.log($filter('orderBy')(data, 'FROM_USER_ID_HR_STAFF_INFO'));
-console.log($filter('getGroupLabel')(data, 'FROM_USER_ID_HR_STAFF_INFO'));
 					vm.pinyin = $filter('groupBy')($filter('getGroupLabel')(data, 'FROM_USER_ID_HR_STAFF_INFO'), 'groupLabel');
-					console.log(vm.pinyin)
 				} else {
 					console.log('Get ', url , ' wrong...-->', data.message);
 				}
@@ -197,7 +196,21 @@ console.log($filter('getGroupLabel')(data, 'FROM_USER_ID_HR_STAFF_INFO'));
 			});
 
 		$scope.pinyinConvert = function() {
-			vm.pinyin = chinese2Pinyin.getPinyin(vm.chinese);
+			vm.pinyinAll = chinese2Pinyin.getPinyin(vm.chinese);
+		};
+
+		$scope.groupItemClick = function(group, e) {
+			e.preventDefault();
+			group.expanded = !group.expanded;
+
+			e.stopPropagation();
+		};
+
+		$scope.childItemClick = function(group, e) {
+			e.preventDefault();
+			group.expanded = !group.expanded;
+
+			e.stopPropagation();
 		};
 
 	}

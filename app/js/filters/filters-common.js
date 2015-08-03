@@ -103,9 +103,7 @@ app.filter('getGroupLabel', ['$filter',
 ]);
 
 /**
- * [用于字母按照字母分组的 filter]
- * @param  {[type]} $filter) {		var       filterFn [description]
- * @return {[type]}          [description]
+ * [用于按照字母分组的 filter]
  */
 app.filter('groupBy', ['$filter', 
 	function($filter) {

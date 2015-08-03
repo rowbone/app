@@ -138,59 +138,6 @@
 					<div class="panel-title">list-group</div>
 				</div>
 				<div class="panel-body">
-					<ul class="list-group list-unstyled">
-						<li class="list-group-item area-item-title">
-							<a href="" class="inline text-center w-p-5">A</a>
-							<a href="" class="inline text-center w-p-5">B</a>
-							<a href="" class="inline text-center w-p-5">C</a>
-							<a href="" class="inline text-center w-p-5">D</a>
-							<a href="" class="inline text-center w-p-5">E</a>
-						</li>
-						<li class="list-group-item area-item-content">
-							<!-- {{ vm.countries | json }}
-							<a href="" class="inline" ng-repeat="country in vm.countries $track by $index">{{ country }}</a> -->
-							<a href="" class="inline btn btn-default">中国</a>
-							<a href="" class="inline btn btn-default">中国</a>
-							<a href="" class="inline btn btn-default">中国</a>
-							<a href="" class="inline btn btn-default">中国</a>
-							<a href="" class="inline btn btn-default">中国</a>
-							<a href="" class="inline btn btn-default">中国</a>
-							<a href="" class="inline btn btn-default">中国</a>
-							<a href="" class="inline btn btn-default">中国</a>
-							<a href="" class="inline btn btn-default">中国</a>
-							<a href="" class="inline btn btn-default">中国</a>
-							<a href="" class="inline btn btn-default">中国</a>
-							<a href="" class="inline btn btn-default">中国</a>
-						</li>
-						<li class="list-group-item">
-							<a href="" class="inline text-center w-p-5">A</a>
-							<a href="" class="inline text-center w-p-5">B</a>
-							<a href="" class="inline text-center w-p-5">C</a>
-							<a href="" class="inline text-center w-p-5">D</a>
-							<a href="" class="inline text-center w-p-5">E</a>
-						</li>
-						<li class="list-group-item">
-							<a href="" class="inline text-center w-p-5">A</a>
-							<a href="" class="inline text-center w-p-5">B</a>
-							<a href="" class="inline text-center w-p-5">C</a>
-							<a href="" class="inline text-center w-p-5">D</a>
-							<a href="" class="inline text-center w-p-5">E</a>
-						</li>
-						<li class="list-group-item">
-							<a href="" class="inline text-center w-p-5">A</a>
-							<a href="" class="inline text-center w-p-5">B</a>
-							<a href="" class="inline text-center w-p-5">C</a>
-							<a href="" class="inline text-center w-p-5">D</a>
-							<a href="" class="inline text-center w-p-5">E</a>
-						</li>
-						<li class="list-group-item">
-							<a href="" class="inline text-center w-p-5">A</a>
-							<a href="" class="inline text-center w-p-5">B</a>
-							<a href="" class="inline text-center w-p-5">C</a>
-							<a href="" class="inline text-center w-p-5">D</a>
-							<a href="" class="inline text-center w-p-5">E</a>
-						</li>
-					</ul>
 				</div>
 			</div>
 		</div>
@@ -208,6 +155,10 @@
 		</div>
 	</div>
 
+	<style>
+	.group-container .group-label:hover { cursor: pointer; }
+	.group-container .child-item:hover { cursor: pointer; background-color: #A89F9F; }
+	</style>
 	<div class="row">
 		<div class="col-md-6 col-sm-12" ng-controller="pinyinCtrl">
 			<div class="panel panel-info">
@@ -219,12 +170,46 @@
 						<input type="text" class="form-control" ng-model="vm.chinese">
 					</div>
 					<div class="form-group">
+						拼音首字母：
+						<span ng-bind="vm.chinese | getGroupLabel"></span>
+					</div>
+					<div class="form-group">
 						<button class="btn btn-primary" ng-click="pinyinConvert()">拼音转换</button>
 					</div>
-					<span ng-bind="vm.chinese | getGroupLabel"></span>
 					<div class="form-group">
-						<pre>{{ vm.pinyin | json }}</pre>
+						拼音全部：
+						<span ng-bind="vm.pinyinAll"></span>
 					</div>
+					
+					<div class="group-container">
+						<div ng-repeat="group in vm.pinyin" class="m-t-xs m-b-xs" ng-if="group.children.length > 0">
+							<div class="bg-dark dker p-xs m-b-xs group-label" ng-click="groupItemClick(group, $event)">
+								<div class="inline" ng-bind="group.groupLabel"></div>
+								<div class="inline pull-right" ng-bind="group.children.length"></div>
+							</div>
+							<div ng-repeat="child in group.children" class="padder-v-xs padder-sm child-item" ng-click="childItemClick(child, $event)" ng-show="group.expanded">
+								<div ng-bind="child.FROM_USER_ID_HR_STAFF_INFO"></div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="col-md-6 col-sm-12">
+			<div class="panel panel-info">
+				<div class="panel-heading">
+					<div class="panel-title">
+						使用说明
+					</div>
+				</div>
+				<div class="panel-body">
+					<ol>
+						<li>引入文件：<code>'js/filters/pinyin-convert.js'</code></li>
+						<li>获取拼音首字母：filter - <code>getGroupLabel</code></li>
+						<li>获取拼音：<code>chinese2Pinyin.getPinyin('中国')</code></li>
+						<li>分组：<code>$filter('groupBy')($filter('getGroupLabel')(data, 'FROM_USER_ID_HR_STAFF_INFO'), 'groupLabel');</code>。其中data是所有数据，'FROM_USER_ID_HR_STAFF_INFO'是用于分组的字段。</li>
+					</ol>
 				</div>
 			</div>
 		</div>
