@@ -4,7 +4,7 @@ app.controller('responsiveTableDemoCtrl', ['$scope', 'ngTableParams', '$filter',
 	function($scope, ngTableParams, $filter, $timeout, $interval, DataService) {
     var data = $scope.data = [];
     var options = $scope.options = {
-      multiSelect: false
+      multiSelect: 'true'
     };
 
     var vm = $scope.vm = {
@@ -17,7 +17,6 @@ app.controller('responsiveTableDemoCtrl', ['$scope', 'ngTableParams', '$filter',
     // }, 3000);
 
     $scope.tableParams = new ngTableParams({
-        filterDelay: 0,   // filter delay time
         page: 1,            // show first page
         count: 10,           // count per page
         // sorting: {
@@ -25,6 +24,8 @@ app.controller('responsiveTableDemoCtrl', ['$scope', 'ngTableParams', '$filter',
         // }
     }, {
         total: 0, // length of data
+        filterDelay: 0,   // filter delay time
+        // groupBy: 'name',
         getData: function($defer, params) {
 
           var url = 'views/components/conow-responsive-table/data/users.json';
@@ -47,6 +48,7 @@ app.controller('responsiveTableDemoCtrl', ['$scope', 'ngTableParams', '$filter',
               orderedData = params.sorting() ? $filter('orderBy')(orderedData, params.orderBy()) : data;
               orderedData = params.filter() ? $filter('filter')(orderedData, params.filter()) : data;
               orderedData = $filter('filter')(orderedData, vm.searchKey);
+              // orderedData = $filter('filter')(orderedData, {'name': vm.searchKey});
 
               $defer.resolve(orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count()));
             }, function(msg) {
@@ -101,16 +103,23 @@ app.controller('responsiveTableDemoCtrl', ['$scope', 'ngTableParams', '$filter',
       var selectedArr = vm.selected;
       
       var index = $scope.indexInSelectedArr(row);
-      if(index < 0) {
-        vm.selected.push(row);
-      } else {
-        vm.selected = vm.selected.splice(index, 1);
-      }
 
-      if(options.multiSelect) {
+      if(options.multiSelect === 'true') {
+        if(index < 0) {
+          vm.selected.push(row);
+        } else {
+          vm.selected.splice(index, 1);
+        }
       } else {
-      }
-      
+        if(index < 0) {
+          var arr = [];
+          arr.push(row);
+
+          vm.selected = arr;          
+        } else {
+          vm.selected = [];
+        }
+      }      
 
       e.stopPropagation();
     };

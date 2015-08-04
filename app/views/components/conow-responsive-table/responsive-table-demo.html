@@ -8,11 +8,24 @@
 				<div class="panel-title">组件演示</div>
 			</div>
 			<div class="panel-body">
-				<div class="m-t-sm">
+				<div class="form-group">
+					<div class="radio inline">
+						<label class="i-checks">
+							<input type="radio" name="multiSelect" ng-model="options.multiSelect" value=true><i></i>多选
+						</label>
+					</div>
+					<div class="radio inline">
+						<label class="i-checks">
+							<input type="radio" name="multiSelect" ng-model="options.multiSelect" value=false><i></i>单选
+						</label>
+					</div>
+				</div>
+				<div class="form-group m-t-sm">
 					<pre>{{ options | json }}</pre>
 					<!-- <div class="form-group">
 						<input type="text" ng-model="options.">
 					</div> -->
+					已选项：<pre>{{ vm.selected }}</pre>
 				</div>
 				<div class="m-t-sm">
 					<div class="form-group">
@@ -25,9 +38,25 @@
 								<!-- <td data-title="'序号'">{{ (tableParams.page() - 1) * tableParams.count() + $index + 1}}</td> -->
 								<!-- <td width="50" style="text-align: left">
 	                <label for="" class="i-checks">
-	                	<input type="checkbox" checked="checked" ng-model="vm.checkbox[user]"><i></i>
+	                	<input type="checkbox" ng-checked="indexInSelectedArr(user) >= 0"><i></i>
 	                </label>
 		            </td> -->
+								<td data-title="'姓名'" ng-bind="user.name" sortable="'name'"></td>
+								<td data-title="'姓名'" ng-bind="user.name" sortable="'name'" header-class="'hidden-sm hidden-xs'" class="hidden-sm hidden-xs"></td>
+								<td data-title="'年龄'" ng-bind="user.age" sortable="'age'" header-class="'hidden-sm'" class="hidden-sm"></td>
+								<td data-title="'性别'" ng-bind="user.sex" sortable="'sex'"></td>
+							</tr>
+						</tbody>
+					</table>
+
+					<table ng-table="projectTalbeParams" class="table table-hover bg-white ng-table-rowselected table-bordered">		
+						<tbody>
+							<tr ng-repeat="user in tableParams.data track by $index" ng-class="{'row-selected': indexInSelectedArr(user) >= 0}" ng-click="changeSelection(user, $event)">
+								<td width="50" style="text-align: left">
+	                <label for="" class="i-checks">
+	                	<input type="checkbox" ng-checked="indexInSelectedArr(user) >= 0"><i></i>
+	                </label>
+		            </td>
 								<td data-title="'姓名'" ng-bind="user.name" sortable="'name'"></td>
 								<td data-title="'姓名'" ng-bind="user.name" sortable="'name'" header-class="'hidden-sm hidden-xs'" class="hidden-sm hidden-xs"></td>
 								<td data-title="'年龄'" ng-bind="user.age" sortable="'age'" header-class="'hidden-sm'" class="hidden-sm"></td>
@@ -55,7 +84,68 @@
 				<div class="panel-heading">
 					<div class="panel-title">使用说明</div>
 				</div>
-				<div class="panel-body"></div>
+				<div class="panel-body">
+					<ol>
+						<li>使用前先引入<code>ng-table.js</code>和<code>ng-table.css</code></li>
+						<li><code>table</code>元素添加<code>ng-table</code>属性，属性值是对应的配置参数</li>
+						<li>controller中添加配置属性：<code>$scope.tableParams = new ngTableParams(parameters, settings)</code></li>
+						<li>配置参数说明：
+						<table class="table table-bordered table-hover">
+							<tr>
+								<th>参数对象</th>
+								<th>参数名称</th>
+								<th>说明</th>
+							</tr>
+							<tr>
+								<td rowspan="5" class="v-middle">parameters</td>
+								<td>page</td>
+								<td>当前显示的页码</td>
+							</tr>
+							<tr>
+								<td>count</td>
+								<td>每页显示的数据行数</td>
+							</tr>
+							<tr>
+								<td>filter</td>
+								<td>定义过滤器</td>
+							</tr>
+							<tr>
+								<td>sorting</td>
+								<td>定义排序</td>
+							</tr>
+							<tr>
+								<td></td>
+								<td></td>
+							</tr>
+							<tr>
+								<td rowspan="6" class="v-middle">settings</td>
+								<td>total</td>
+								<td>表格显示的总数据条数</td>
+							</tr>
+							<tr>
+								<td>counts</td>
+								<td></td>
+							</tr>
+							<tr>
+								<td>defaultSort</td>
+								<td></td>
+							</tr>
+							<tr>
+								<td>groupBy</td>
+								<td></td>
+							</tr>
+							<tr>
+								<td>getData</td>
+								<td></td>
+							</tr>
+							<tr>
+								<td>groupBy</td>
+								<td>待补充</td>
+							</tr>
+						</table>
+						</li>
+					</ol>
+				</div>
 			</div>
 		</div>
 		
