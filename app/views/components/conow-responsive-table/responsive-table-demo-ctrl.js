@@ -17,7 +17,7 @@ app.controller('responsiveTableDemoCtrl', ['$scope', 'ngTableParams', '$filter',
     // }, 3000);
 
     $scope.tableParams = new ngTableParams({
-        page: 1,            // show first page
+        page: 2,            // show first page
         count: 10,           // count per page
         // sorting: {
         //   name: 'asc'
@@ -42,6 +42,8 @@ app.controller('responsiveTableDemoCtrl', ['$scope', 'ngTableParams', '$filter',
               }
 
               params.total(data.length);
+
+              $scope.tableParams.total(data.length);
 
               var orderedData = data;
 

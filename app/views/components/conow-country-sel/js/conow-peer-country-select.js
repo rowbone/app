@@ -200,7 +200,9 @@ app.directive('conowCountrySelect', ['DataService', 'conowModals', 'countriesSer
 						var regExp = /^\d+/;
 						if(regExp.test($scope.ngModel)) {
 							vm.selectedName = peerCountriesService.getSelectedCountryName($scope.ngModel);
-							elem.val(vm.selectedName);
+							$timeout(function() {
+								elem.val(vm.selectedName);
+							});
 						}
 					});
 

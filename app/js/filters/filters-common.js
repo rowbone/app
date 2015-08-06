@@ -135,8 +135,17 @@ app.filter('groupBy', ['$filter',
 						children: arrTmp
 					});
 					arrTmp = [];
+					
+					arrTmp.push(input[i]);
 					groupLabel = input[i][groupCode];
 				}
+			}
+
+			if(!angular.equals(arrTmp, [])) {
+				arr.push({
+					groupLabel: groupLabel,
+					children: arrTmp
+				});
 			}
 
 			return arr;

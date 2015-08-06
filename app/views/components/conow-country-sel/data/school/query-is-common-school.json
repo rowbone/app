@@ -1,0 +1,33 @@
+{
+    "message": null,
+    "obj": [{
+        "CODE": "1",
+        "VALUE": "北京大学"
+    }, {
+        "CODE": "3",
+        "VALUE": "清华大学"
+    }, {
+        "CODE": "4",
+        "VALUE": "北京交通大学"
+    }, {
+        "CODE": "18",
+        "VALUE": "中国石油大学"
+    }, {
+        "CODE": "25",
+        "VALUE": "中国科学院大学"
+    }, {
+        "CODE": "26",
+        "VALUE": "北京工业大学"
+    }, {
+        "CODE": "27",
+        "VALUE": "北方工业大学"
+    }, {
+        "CODE": "28",
+        "VALUE": "北京工商大学"
+    }, {
+        "CODE": "29",
+        "VALUE": "北京建筑大学"
+    }],
+    "pageInfo": null,
+    "success": true
+}

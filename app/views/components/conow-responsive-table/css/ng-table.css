@@ -145,3 +145,8 @@
 .ng-table tr.row-selected, .ng-table tr.row-selected:active {
   background-color: #DDDDDD;
 }
+
+.ng-table > thead {
+  background-color: #77778e;
+  color: #fff;
+}

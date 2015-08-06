@@ -144,8 +144,9 @@ app.directive('conowCountryCascadeSelect', ['DataService', 'conowModals', 'count
 				promise.then(function(data) {
 
 					vm.selectedArr = countriesService.getAllSelected($scope.ngModel, data, 'OPTION_VALUE');
-
-					elem.val(vm.selectedArr[vm.selectedArr.length - 1].OPTION_NAME);
+					$timeout(function() {
+						elem.val(vm.selectedArr[vm.selectedArr.length - 1].OPTION_NAME);
+					});
 				}, function(msg) {
 					console.log('msg-->', msg);
 				})

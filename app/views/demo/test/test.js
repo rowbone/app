@@ -174,7 +174,6 @@ app.directive('directParam', function() {
 		}
 	])
 
-
 // pinyin filter ctrl
 app.controller('pinyinCtrl', ['$scope', 'DataService', '$filter', 
 	function($scope, DataService, $filter) {
@@ -187,7 +186,12 @@ app.controller('pinyinCtrl', ['$scope', 'DataService', '$filter',
 			.then(function(data) {
 				if(data.success) {
 					data = data.obj;
-					vm.pinyin = $filter('groupBy')($filter('getGroupLabel')(data, 'FROM_USER_ID_HR_STAFF_INFO'), 'groupLabel');
+					var pinyin = $filter('getGroupLabel')(data, 'FROM_USER_ID_HR_STAFF_INFO');
+console.log('pinyin-->', pinyin);
+					pinyin = $filter('groupBy')(pinyin, 'groupLabel');
+
+					// vm.pinyin = $filter('groupBy')($filter('getGroupLabel')(data, 'FROM_USER_ID_HR_STAFF_INFO'), 'groupLabel');
+					vm.pinyin = pinyin;
 				} else {
 					console.log('Get ', url , ' wrong...-->', data.message);
 				}
@@ -210,17 +214,6 @@ app.controller('pinyinCtrl', ['$scope', 'DataService', '$filter',
 			e.preventDefault();
 			group.expanded = !group.expanded;
 
-			e.stopPropagation();
-		};
-
-		$scope.groupItemClick = function(group, e) {
-			e.preventDefault();
-			group.expanded = !group.expanded;
-
-			e.stopPropagation();
-		};
-
-		$scope.childItemClick = function(child, e) {
 			e.stopPropagation();
 		};
 
