@@ -112,68 +112,6 @@ app.filter('countryCodeToName', ['peerCountriesService', '$q',
 	}
 ]);
 
-app.filter('groupByAlphabet', ['$filter', 
-	function($filter) {
-		var filterFunc = function(input) {
-			var arrSrc = [];
-			var arr = [];
-			var arrTmp = [];
-
-			if(angular.isObject(input)) {
-
-				angular.forEach(input, function(value, key) {
-					this.push({
-						'label': key,
-						'children': value,
-						'selected': false
-					})
-				}, arrSrc);
-			} else {
-				console.info('Data source is not an object');
-			}
-
-			// 如果有 COMMON 数据，则单独处理[生成的数据"热门"一项需要单独一行显示]
-			var iLen = arrSrc.length;
-			for(var i=0; i<iLen; i++) {
-				if(arrSrc[i].label === 'COMMON') {
-					arrSrc[i].label = '热门';
-					arrTmp.push(arrSrc[i]);
-					arr.push({
-						'expanded': false,
-						'children': arrTmp
-					});
-
-					arrSrc.splice(i, 1);
-					arrTmp = [];			// arrTmp 置空
-
-					break;
-				}
-			}
-
-			iLen = arrSrc.length;
-			for(var i=0; i<iLen; i++) {
-				arrTmp.push(arrSrc[i]);
-				if(i % 5 === 4) {
-					// 
-					// arr.push(arrTmp);
-					arr.push({
-						'expanded': false,
-						'children': arrTmp
-					});
-
-					arrTmp = [];
-				}
-			}
-
-			arr[arr.length - 1].children.push(arrSrc[iLen - 1]);
-
-			return arr;
-		};
-
-		return filterFunc;
-	}
-]);
-
 /*
  * conow country select directive
  */

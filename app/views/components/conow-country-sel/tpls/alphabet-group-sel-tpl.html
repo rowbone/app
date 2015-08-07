@@ -1,0 +1,101 @@
+
+<modal-body class="no-scoll">
+	<style>
+		.w-p-5 { width: 15%; }
+		.no-scoll {
+			overflow: hidden; 
+		}		
+		.country-sel-container { height: 380px; }
+		.country-sel-body, .country-search { position: absolute; top: 90px; height: 305px; bottom: 0; width: 100%; overflow: auto; border: 1px solid #ccc; }
+		.search-group {
+			position: absolute;
+			width: 100%;
+		}
+		.search-group input {
+			display: block;
+			padding-left: 25px;
+		}
+		.search-group .search-group-btn {
+			position: absolute;
+			left: 10px;
+			top: 17px;
+			margin-left: 10px;
+			margin-right: 5px;
+			padding: 0;
+			background: transparent;
+			border: none;
+			color: #cacaca;
+		}
+		.country-selected {
+			position: absolute;
+			top: 54px;
+		}
+		.country-label {
+			font-size: 18px;
+			border-bottom: 1px solid #ccc;
+		}
+		.country-label:last-child, .country-search-item:first-child, .country-search-item:last-child { border-bottom-right-radius: 0; border-bottom-left-radius: 0; border-top-left-radius: 0; border-top-right-radius: 0; }
+		.selected-label { color: #23b7e5; }
+		.country-content {
+			font-size: 17px;
+			background-color: #dfeaf2;
+		}
+		.country-name { display: inline-block; padding: 10px; background-color: #dfeaf2; }
+		.country-name:hover, .country-name:visited { background-color: #dfeaf2; }
+
+		.country-label a:hover { color: #23b7e5;}
+		.country-expand-icon { color: #acacac; font-size: 28px; padding-top: 8px; }
+		.back-country-list { cursor: pointer; }
+		.country-search-list { border-radius: 0 !important; }
+		.country-search-item { padding: 10px !important; }
+
+	</style>
+
+	<div class="country-sel-container">
+		<div class="search-group p-sm">
+			<input ng-model="vm.searchKey" type="text" class="form-control" ng-keyup="searchKeyup($event)" placeholder="请输入关键字...">
+			<button type="button" class="search-group-btn" tabindex="-1">
+				<!-- <i class="fa ion-ios-search"></i> -->
+				<i class="fa fa-search"></i>
+			</button>
+		</div>
+
+		<div class="country-selected padder-sm">
+			已选择：<span class="text-primary" ng-bind="vm.selectedName"></span>
+		</div>
+
+		<div class="country-sel-body" ng-if="!options.search">
+			<ul class="list-group list-unstyled">
+				<div ng-repeat="group in vm.groupData track by $index">
+					<li class="list-group-item no-border no-radius country-label" ng-click="countryLabelClick($event, group)">
+						<a href="#" class="inline w-p-5" ng-class="{'selected-label': item.label == vm.selectedLabel}" ng-repeat="item in group.children track by $index" ng-bind="item.label" ng-click="labelItemClick($event, item, group)" ng-if="item.children.length > 0"></a>
+						<i class="fa pull-right padder-sm country-expand-icon" ng-class="{true: 'fa-angle-up', false: 'fa-angle-down'}[group.expanded]"></i>
+					</li>
+					<div class="country-content" ng-if="group.expanded">
+						<a href="#" class="p-sm m-xs inline country-name" ng-repeat="item in vm.contentData[$index] | filter: vm.searchKey track by $index" ng-bind="item.VALUE" ng-click="countryClick($event, item)"></a>
+					</div>
+				</div>
+			</ul>
+		</div>
+
+		<div class="country-search" ng-if="options.search">
+			<div class="hbox h-auto p-sm bg-dark dker">
+				<div class="col text-md">搜索结果</div>
+				<div class="col col-xs text-right back-country-list" ng-click="backCountryList($event)">
+					<i class="fa fa-mail-reply p-r-xs"></i>
+					<span>返回</span>
+				</div>
+			</div>
+			<div class="p-sm text-md text-dark" ng-if="(vm.dataList | filter: vm.searchKey).length == 0">
+				没有对应的信息
+			</div>
+			<ul class="list-group list-unstyled country-search-list">
+				<li class="list-group-item country-search-item p-sm" ng-repeat="item in vm.dataList | filter: vm.searchKey track by $index" ng-bind="item.VALUE" ng-click="countryItemClick($event, item)"></li>
+			</ul>
+		</div>
+	</div>
+</modal-body>
+
+<modal-btn>
+	<a href="#" class="btn btn-bar-success" ng-click="confirm($event)">确定</a>
+</modal-btn>
