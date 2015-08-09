@@ -129,13 +129,20 @@ app.controller('schoolSelDemoCtrl', ['$scope',
 	function($scope) {
 		var options = $scope.options = {
 			dataSrcUrl: 'views/components/conow-country-sel/data/school/query-is-common-school.json',
+			getSelectedValueUrl: 'views/components/conow-country-sel/data/school/get-selected-value.json', 
 			isLoadingAll: false,
 			isHasCommon: true,
 			isShowAllLabels: true,
 			isShowSearch: true,
 			searchUrl: '',
-			isMultiSelect: false
+			isMultiSelect: false,
+			selectedKey: 'CODE',
+			selectedValue: 'VALUE'
 		};
+
+		var vm = $scope.vm = {
+			selected: '18'
+		}
 
 	}
 ]);
@@ -207,10 +214,11 @@ console.log('arr-->', arr);
 	}
 ]);
 
-app.factory('AlphabetGroupFactory', [
-	function() {
+app.factory('AlphabetGroupFactory', ['DataService', 
+	function(DataService) {
 		var service = {};
 
+		// 根据字母获取在分组中的索引
 		service.getGroupIndex = function(label) {
 			var strAlphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 			var index = strAlphabet.indexOf(label);
@@ -227,6 +235,22 @@ app.factory('AlphabetGroupFactory', [
 			return groupIndex + 1;
 		};
 
+		// 获取已选项的值
+		service.getSelectedValue = function(selectedKey, allData, keyCode, valueCode) {
+			keyCode = keyCode || 'CODE';
+			valueCode = valueCode || 'VALUE';
+
+			var iLen = allData.length;
+			for(var i=0; i<iLen; i++) {
+				if(allData[i][keyCode] == selectedKey) {
+					return allData[i][valueCode];
+				}
+			}
+
+			console.info('Get selectedValue wrong, return the selectedKey');
+			return selectedKey;
+		};
+
 		return service;
 	}
 ]);
@@ -234,10 +258,13 @@ app.factory('AlphabetGroupFactory', [
 /**
  * [conowAlphabetGroupSel]:字母分组选择指令
  */
-app.directive('conowAlphabetGroupSel', ['$filter', 'DataService', 'conowModals', 
-	function($filter, DataService, conowModals) {
+app.directive('conowAlphabetGroupSel', ['$filter', 'DataService', 'conowModals', '$timeout', 
+	function($filter, DataService, conowModals, $timeout) {
 		return {
 			restrict: 'AE',
+			scope: {
+				ngModel: '='
+			}, 
 			replace: true,
 			template: '<input type="text" ng-click="selClick($event)">',
 			link: function(scope, elem, attrs) {
@@ -255,9 +282,17 @@ app.directive('conowAlphabetGroupSel', ['$filter', 'DataService', 'conowModals',
 					.then(function(data) {
 						console.log(data);
 						if(data.success) {
-							vm.objData = data.obj;
+							var objData = data.obj;
 
-							vm.groupData = $filter('groupByAlphabet')(vm.objData);
+							var strAlphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+							var arrAlphabet = strAlphabet.split('');
+							for(var i=0; i<arrAlphabet.length; i++) {
+								objData[arrAlphabet[i]] = null
+							};
+
+							vm.groupData = $filter('groupByAlphabet')(objData);
+
+							vm.objData = objData;
 						} else {
 							console.error('Data init wrong...');
 						}
@@ -265,6 +300,23 @@ app.directive('conowAlphabetGroupSel', ['$filter', 'DataService', 'conowModals',
 						console.error('Data init wrong...');
 					});
 
+				// 如果页面没有获取到所有的额数据，则通过参数给点接口获取对应的已选择值
+				if(options.getSelectedValueUrl) {
+					DataService.getData(options.getSelectedValueUrl)
+						.then(function(data) {
+							if(data.success && data.obj) {
+								vm.selectedValue = data.obj;
+
+								$timeout(function() {
+									elem.val(data.obj);
+								});
+							} else {
+								console.error('Get selected value wrong...');
+							}
+						}, function(msg) {
+							console.error(msg);
+						})
+				}
 
 
 				/**
@@ -284,11 +336,18 @@ app.directive('conowAlphabetGroupSel', ['$filter', 'DataService', 'conowModals',
 								return {
 									dataAll: vm.dataAll,
 									groupData: vm.groupData,
-									selectedName: vm.selectedName
+									selectedValue: vm.selectedValue,
+									options: options
 								}
 							}
 						}
 					});
+
+					modalInstance.result.then(function(data) {
+						console.log(data);
+					}, function(msg) {
+						console.error('msg-->', msg);
+					})
 
 					e.stopPropagation();
 				};
@@ -313,9 +372,11 @@ app.controller('alphabetGroupSelCtrl', ['$scope', '$conowModalInstance', 'modalP
 			search: false,
 			isLoading: false
 		};
+		angular.extend(options, modalParams.options);
 
-		// 已选项名称
-		vm.selectedName = modalParams.selectedName;
+
+		// 已选项值
+		vm.selectedValue = modalParams.selectedValue;
 
 		var dataList = [];
 		angular.forEach(vm.dataAll, function(value, key) {
@@ -333,14 +394,14 @@ app.controller('alphabetGroupSelCtrl', ['$scope', '$conowModalInstance', 'modalP
 		};
 
 		// 返回国家列表
-		$scope.backCountryList = function(e) {
+		$scope.back2List = function(e) {
 			e.preventDefault();
 
 			options.search = false;
 		};
 
 		// 搜索结果点击选择
-		$scope.countryItemClick = function(e, item) {
+		$scope.searchItemClick = function(e, item) {
 			e.preventDefault();
 
 			vm.selected = item;
@@ -349,8 +410,8 @@ app.controller('alphabetGroupSelCtrl', ['$scope', '$conowModalInstance', 'modalP
 			$scope.confirm(e);
 		};
 
-		// country label group click function
-		$scope.countryLabelClick = function(e, group) {
+		// group label click function
+		$scope.groupLabelClick = function(e, group) {
 			e.preventDefault();
 
 			if(group.expanded) {
@@ -359,22 +420,23 @@ app.controller('alphabetGroupSelCtrl', ['$scope', '$conowModalInstance', 'modalP
 				vm.selectedLabel = null;
 			} else {
 				var children = group.children;
-				var child = null;
-				for(var i=0; i<children.length; i++) {
-					if(children[i]['children'].length > 0) {
-						child = children[i];
-						break;
-					}
-				}
-				$scope.labelItemClick(e, child, group);
+				var child = children[0];
+				// var child = null;
+				// for(var i=0; i<children.length; i++) {
+				// 	if(children[i]['children'].length > 0) {
+				// 		child = children[i];
+				// 		break;
+				// 	}
+				// }
+				$scope.itemLabelClick(e, child, group);
 			}
 		};
 
-		// label item click function
-		$scope.labelItemClick = function(e, item, group) {
+		// item label click function
+		$scope.itemLabelClick = function(e, item, group) {
 			e.preventDefault();
 
-			var alphabetGroupFactory = new AlphabetGroupFactory();
+			// var alphabetGroupFactory = new AlphabetGroupFactory();
 
 			// 清空搜索框
 			vm.searchKey = '';
@@ -382,23 +444,25 @@ app.controller('alphabetGroupSelCtrl', ['$scope', '$conowModalInstance', 'modalP
 			group.expanded = true;
 			// group.selectedLabel = item.label;
 
-			var groupIndex = alphabetGroupFactory.getGroupIndex(item.label);
+			var groupIndex = AlphabetGroupFactory.getGroupIndex(item.label);
+
+			// if(!item.children && options.)
 			vm.contentData[groupIndex] = item.children;
 			vm.selectedLabel = item.label;
 
 			e.stopPropagation();
 		};
 
-		// country click function
-		$scope.countryClick = function(e, item) {
+		// item click function
+		$scope.itemClick = function(e, item) {
 			e.preventDefault();
 
 			vm.selected = item;
-			vm.selectedName = item['OPTION_NAME'];
+			// vm.selectedName = item['OPTION_NAME'];
 
-			angular.forEach(vm.groupData, function(value, key) {
-				value.expanded = false;
-			});
+			// angular.forEach(vm.groupData, function(value, key) {
+			// 	value.expanded = false;
+			// });
 
 			$scope.confirm(e);
 		};
