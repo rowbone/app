@@ -11,13 +11,21 @@ app.controller('responsiveTableDemoCtrl', ['$scope', 'ngTableParams', '$filter',
       'searchKey': '',
       'selected': []
     };
+
+    $scope.filterFn = function(filterObj, keyWord) {
+      // return 
+      console.log(111111)
+      console.log(filterObj, keyWord);
+
+      return filterObj;
+    };
     
     // $interval(function() {
     //   $scope.tableParams.reload();
     // }, 3000);
 
     $scope.tableParams = new ngTableParams({
-        page: 2,            // show first page
+        page: 1,            // show first page
         count: 10,           // count per page
         // sorting: {
         //   name: 'asc'
@@ -41,7 +49,6 @@ app.controller('responsiveTableDemoCtrl', ['$scope', 'ngTableParams', '$filter',
                 data.unshift({'name': 'aaa', 'age': 2});
               }
 
-              params.total(data.length);
 
               $scope.tableParams.total(data.length);
 
@@ -49,8 +56,11 @@ app.controller('responsiveTableDemoCtrl', ['$scope', 'ngTableParams', '$filter',
 
               orderedData = params.sorting() ? $filter('orderBy')(orderedData, params.orderBy()) : data;
               orderedData = params.filter() ? $filter('filter')(orderedData, params.filter()) : data;
-              orderedData = $filter('filter')(orderedData, vm.searchKey);
-              // orderedData = $filter('filter')(orderedData, {'name': vm.searchKey});
+              // orderedData = $filter('filter')(orderedData, vm.searchKey);
+              // orderedData = $filter('filter')(orderedData, {'name': vm.searchKey} || {'age': vm.searchKey});
+              orderedData = $filter('filter')(orderedData, filterFn);
+
+              params.total(orderedData.length);
 
               $defer.resolve(orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count()));
             }, function(msg) {

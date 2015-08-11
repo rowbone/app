@@ -72,6 +72,9 @@ app.filter('groupByAlphabet', ['$filter',
 	}
 ]);
 
+/**
+ * [AlphabetGroupFactory]：字母分组服务，用于一些公共方法
+ */
 app.factory('AlphabetGroupFactory', ['DataService', 
 	function(DataService) {
 		var service = {};
