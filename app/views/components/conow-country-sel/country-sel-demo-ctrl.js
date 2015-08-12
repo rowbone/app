@@ -29,8 +29,9 @@ app.controller('countrySelDemoCtrl', ['$scope',
 			isShowAllLabels: true,
 			isShowSearch: true,
 			isMultiSelect: false,
-			selectedKey: 'CODE',
-			selectedValue: 'VALUE'
+			selectKey: 'CODE',
+			selectValue: 'VALUE',
+			colsPerRow: 2
 		};
 	}
 ]);
@@ -52,12 +53,40 @@ app.controller('schoolSelDemoCtrl', ['$scope',
 			isShowAllLabels: false,
 			isShowSearch: true,
 			isMultiSelect: false,
-			selectedKey: 'CODE',
-			selectedValue: 'VALUE'
+			selectKey: 'CODE',
+			selectValue: 'VALUE',
+			colsPerRow: 3
 		};
 
 		var vm = $scope.vm = {
 			selected: '18'
+		}
+
+	}
+]);
+
+/**
+ * areaSelDemoCtrl
+ * demo controller
+ */
+app.controller('areaSelDemoCtrl', ['$scope', 
+	function($scope) {
+		var options = $scope.options = {
+			dataSrcUrl: 'views/components/conow-alphabet-group/data/area/region-query-city.json',
+			isLoadingAll: true,
+			isHasCommon: true,
+			isCommonExpanded: true,
+			isShowAllLabels: false,
+			isShowSearch: true,
+			isMultiSelect: false,
+			selectKey: 'CODE',
+			selectValue: 'SHORT_NAME',
+			selectTitle: 'NAME',
+			colsPerRow: 4
+		};
+
+		var vm = $scope.vm = {
+			selected: '44120000'
 		}
 
 	}

@@ -71,6 +71,18 @@
         text-overflow: ellipsis;
         white-space: nowrap;
     }
+    .cols-per-row-4 {
+        width: 25%;
+    }
+    .cols-per-row-3 {
+        width: 32%;
+    }
+    .cols-per-row-2 {
+        width: 50%;
+    }
+    .cols-per-row-1 {
+        width: 100%;
+    }
     .alphabet-sel-item > span {
     	padding: 3px 6px;
     }
@@ -117,7 +129,7 @@
                         <i class="fa pull-right padder-sm alphabet-expand-icon" ng-class="{true: 'fa-angle-up', false: 'fa-angle-down'}[group.expanded]"></i>
                     </li>
                     <div class="alphabet-content" ng-if="group.expanded">
-                        <a href="#" class="alphabet-sel-item" ng-repeat="item in vm.contentData[$index] | filter: vm.searchKey track by $index" ng-click="itemClick($event, item)" title="{{ ::item.VALUE }}"><span ng-bind="item.VALUE" ng-class="{'selected': item == vm.selected}"></span></a>
+                        <a href="#" class="alphabet-sel-item" ng-repeat="item in vm.contentData[$index] | filter: vm.searchKey track by $index" ng-click="itemClick($event, item)" title="{{ item[options.selectTitle] }}" ng-class="{ 'cols-per-row-4': options.colsPerRow == 4, 'cols-per-row-2': options.colsPerRow == 2, 'cols-per-row-1': options.colsPerRow == 1 }"><span ng-bind="item[options.selectValue]" ng-class="{'selected': item == vm.selected}"></span></a>
                     </div>
                 </div>
             </ul>

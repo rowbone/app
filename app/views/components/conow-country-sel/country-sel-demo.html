@@ -100,4 +100,22 @@
 			</div>
 		</div>
 	</div>
+
+	<div class="row">
+		<div class="col-md-6 col-sm-12" ng-controller="areaSelDemoCtrl">
+			<div class="panel panel-info">
+				<div class="panel-heading">
+					<div class="panel-title">地区市一级字母分组选择</div>
+				</div>
+				<div class="panel-body">
+					<div class="form-group">
+						<input type="text" class="form-control" conow-alphabet-group-sel="{{options}}" ng-model="vm.selected">
+					</div>
+					<div class="form-group">
+						<pre>{{ vm | json }}</pre>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>

@@ -149,6 +149,10 @@ app.directive('conowAlphabetGroupSel', ['$filter', 'DataService', 'conowModals',
 				var options = scope.$eval(attrs.conowAlphabetGroupSel);
 				var vm = scope.vm = {};
 
+				if(angular.isUndefined(options.selectTitle)) {
+					options.selectTitle = options.selectValue;
+				}
+
 				// init options
 				if(!options.dataSrcUrl) {
 					console.error('Get dataSrcUrl wrong...');
@@ -157,7 +161,6 @@ app.directive('conowAlphabetGroupSel', ['$filter', 'DataService', 'conowModals',
 				// fetch init data
 				DataService.getData(options.dataSrcUrl)
 					.then(function(data) {
-						console.log(data);
 						if(data.success) {
 							var objData = data.obj;
 							if(!options.isLoadingAll) {
@@ -176,9 +179,9 @@ app.directive('conowAlphabetGroupSel', ['$filter', 'DataService', 'conowModals',
 								vm.dataList = dataList;
 								// 转换已选择 key 为 value
 								for(var i=0; i<dataList.length; i++) {
-									if(dataList[i][options.selectedKey] === scope.ngModel) {
+									if(dataList[i][options.selectKey] === scope.ngModel) {
 										$timeout(function() {
-											var selectedValue = dataList[i][options.selectedValue];
+											var selectedValue = dataList[i][options.selectValue];
 
 											elem.val(selectedValue);
 											vm.selectedValue = selectedValue;
@@ -204,12 +207,15 @@ app.directive('conowAlphabetGroupSel', ['$filter', 'DataService', 'conowModals',
 				} else if(!options.isLoadingAll && options.getSelectedValueUrl) {
 					// 如果页面没有获取到所有的数据，则通过参数给定接口获取对应的已选择值
 					DataService.getData(options.getSelectedValueUrl)
+					 // DataService.postData(options.getSelectedValueUrl, {'CODE': scope.ngModel})
 						.then(function(data) {
 							if(data.success && data.obj) {
-								vm.selectedValue = data.obj;
+								var selectedValue = data.obj[options.selectValue];
+								
+								vm.selectedValue = selectedValue;
 
 								$timeout(function() {
-									elem.val(data.obj);
+									elem.val(selectedValue);
 								});
 							} else {
 								console.error('Get selected value wrong...');
@@ -229,7 +235,8 @@ app.directive('conowAlphabetGroupSel', ['$filter', 'DataService', 'conowModals',
 				scope.selClick = function(e) {
 					e.preventDefault();
 					var modalInstance = conowModals.open({
-						templateUrl: 'views/components/conow-country-sel/tpls/alphabet-group-sel-tpl.html',
+						templateUrl: 'js/directives/conow-alphabet-group/tpls/alphabet-group-sel-tpl.html',
+//						templateUrl: 'views/components/conow-country-sel/tpls/alphabet-group-sel-tpl.html',
 						size: 'lg',
 						title: '选择',
 						controller: 'alphabetGroupSelCtrl',
@@ -247,11 +254,10 @@ app.directive('conowAlphabetGroupSel', ['$filter', 'DataService', 'conowModals',
 					});
 
 					modalInstance.result.then(function(data) {
-						console.log(data);
-						scope.ngModel = data[options.selectedKey];
+						scope.ngModel = data[options.selectKey];
 
 						$timeout(function() {
-							var selectedValue = data[options.selectedValue];
+							var selectedValue = data[options.selectValue];
 							elem.val(selectedValue);
 
 							vm.selectedValue = selectedValue;
@@ -305,7 +311,8 @@ app.controller('alphabetGroupSelCtrl', ['$scope', '$conowModalInstance', 'modalP
 				} else if(options.searchUrl) {
 					options.isLoading = true;
 
-					DataService.getData(options.searchUrl)
+//					DataService.getData(options.searchUrl)
+					DataService.postData(options.searchUrl, {'NAME': vm.searchKey})
 						.then(function(data) {
 							if(data.success && data.obj) {
 								data = data.obj;
@@ -382,10 +389,11 @@ app.controller('alphabetGroupSelCtrl', ['$scope', '$conowModalInstance', 'modalP
 			var groupIndex = AlphabetGroupFactory.getGroupIndex(item.label);
 
 			if(!item.children && !options.isLoadingAll && options.getDataInitialsUrl) {
-				DataService.getData(options.getDataInitialsUrl)
+				// DataService.getData(options.getDataInitialsUrl)
+				DataService.postData(options.getDataInitialsUrl, {'Initials': item.label})
 					.then(function(data) {
 						if(data.success && data.obj) {
-							data = data.obj;
+							data = data.obj[item.label];
 
 							item.children = data;
 							vm.contentData[groupIndex] = data;
@@ -411,7 +419,7 @@ app.controller('alphabetGroupSelCtrl', ['$scope', '$conowModalInstance', 'modalP
 
 			vm.selected = item;
 			$timeout(function() {
-				vm.selectedValue = item[options.selectedValue];
+				vm.selectedValue = item[options.selectValue];
 
 				// $scope.confirm(e);
 			});

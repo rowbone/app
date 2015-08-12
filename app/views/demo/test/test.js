@@ -219,3 +219,14 @@ console.log('pinyin-->', pinyin);
 
 	}
 ]);
+
+app.directive('conowDot', [
+	function() {
+		return {
+			restrict: 'AE',
+			link: function(scope, elem, attrs) {
+				elem.dotdotdot();
+			}
+		}
+	}
+]);
