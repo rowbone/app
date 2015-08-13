@@ -51,8 +51,6 @@ app.filter('groupByAlphabet', ['$filter',
 				for(var i=0; i<iLen; i++) {
 					arrTmp.push(arrSrc[i]);
 					if(i % 5 === 4) {
-						// 
-						// arr.push(arrTmp);
 						arr.push({
 							'expanded': false,
 							'children': arrTmp
@@ -80,7 +78,7 @@ app.factory('AlphabetGroupFactory', ['DataService',
 		var service = {};
 
 		// 根据字母获取在分组中的索引
-		service.getGroupIndex = function(label) {
+		service.getGroupIndex = function(label, isHasCommon) {
 			var strAlphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 			var index = strAlphabet.indexOf(label);
 			var groupIndex = -1;
@@ -93,7 +91,11 @@ app.factory('AlphabetGroupFactory', ['DataService',
 				groupIndex = parseInt(index / 5);
 			}
 
-			return groupIndex + 1;
+			if(isHasCommon) {
+				return groupIndex + 1;
+			} else {
+				return groupIndex;
+			}
 		};
 
 		// 获取已选项的值
@@ -235,8 +237,8 @@ app.directive('conowAlphabetGroupSel', ['$filter', 'DataService', 'conowModals',
 				scope.selClick = function(e) {
 					e.preventDefault();
 					var modalInstance = conowModals.open({
-						templateUrl: 'js/directives/conow-alphabet-group/tpls/alphabet-group-sel-tpl.html',
-//						templateUrl: 'views/components/conow-country-sel/tpls/alphabet-group-sel-tpl.html',
+						// templateUrl: 'js/directives/conow-alphabet-group/tpls/alphabet-group-sel-tpl.html',
+						templateUrl: 'views/components/conow-country-sel/tpls/alphabet-group-sel-tpl.html',
 						size: 'lg',
 						title: '选择',
 						controller: 'alphabetGroupSelCtrl',
@@ -386,11 +388,11 @@ app.controller('alphabetGroupSelCtrl', ['$scope', '$conowModalInstance', 'modalP
 			group.expanded = true;
 			// group.selectedLabel = item.label;
 
-			var groupIndex = AlphabetGroupFactory.getGroupIndex(item.label);
+			var groupIndex = AlphabetGroupFactory.getGroupIndex(item.label, options.isHasCommon);
 
 			if(!item.children && !options.isLoadingAll && options.getDataInitialsUrl) {
-				// DataService.getData(options.getDataInitialsUrl)
-				DataService.postData(options.getDataInitialsUrl, {'Initials': item.label})
+				DataService.getData(options.getDataInitialsUrl)
+				// DataService.postData(options.getDataInitialsUrl, {'Initials': item.label})
 					.then(function(data) {
 						if(data.success && data.obj) {
 							data = data.obj[item.label];
@@ -421,7 +423,7 @@ app.controller('alphabetGroupSelCtrl', ['$scope', '$conowModalInstance', 'modalP
 			$timeout(function() {
 				vm.selectedValue = item[options.selectValue];
 
-				// $scope.confirm(e);
+				$scope.confirm(e);
 			});
 		};
 

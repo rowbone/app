@@ -59,7 +59,7 @@ app.controller('schoolSelDemoCtrl', ['$scope',
 		};
 
 		var vm = $scope.vm = {
-			selected: '18'
+			selected: '25'
 		}
 
 	}

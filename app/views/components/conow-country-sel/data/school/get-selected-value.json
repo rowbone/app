@@ -1,6 +1,8 @@
 {
     "message": null,
-    "obj": "中国石油大学", 
+    "obj": {
+    	"VALUE": "中国科学院大学"
+  	}, 
     "pageInfo": null,
     "success": true
 }

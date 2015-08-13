@@ -99,6 +99,140 @@
 				</div>
 			</div>
 		</div>
+
+		<div class="col-md-6 col-sm-12">
+			<div class="panel panel-info">
+				<div class="panel-heading">
+					<div class="panel-title">字母分组使用说明</div>
+				</div>
+				<div class="panel-body">
+					<ol>
+						<li>路由跳转中引入文件：<code>'views/components/conow-country-sel/js/conow-alphabet-group-sel.js'</code></li>
+						<li>初始化指令：<code>&lt;input type="text" class="form-control" conow-alphabet-group-sel="对象参数" ng-model="vm.selected"&gt;</code></li>
+						<li>对象参数详细说明
+							<table class="table table-hover">
+								<tr>
+									<th>参数名称</th>
+									<th>参数说明</th>
+									<th>默认值</th>
+									<th>适用场景</th>
+								</tr>
+								<tr>
+									<td>dataSrcUrl</td>
+									<td>初始化时的数据接口地址</td>
+									<td>-</td>
+									<td>全部数据加载或者只加载COMMON数据</td>
+								</tr>
+								<tr>
+									<td>getSelectedValueUrl</td>
+									<td>根据code转换获取value的数据接口地址</td>
+									<td>-</td>
+									<td>部分数据加载时使用</td>
+								</tr>
+								<tr>
+									<td>getDataInitialsUrl</td>
+									<td>点击单个字母时获取对象选项的接口地址</td>
+									<td>-</td>
+									<td>部分数据加载时使用</td>
+								</tr>
+								<tr>
+									<td>searchUrl</td>
+									<td>搜索对应的数据接口地址</td>
+									<td>-</td>
+									<td>部分数据加载时使用</td>
+								</tr>
+								<tr>
+									<td>isShowSearch</td>
+									<td>是否显示搜索框</td>
+									<td></td>
+									<td>通用</td>
+								</tr>
+								<tr>
+									<td>isLoadingAll</td>
+									<td>是否加载所有</td>
+									<td>-</td>
+									<td>通用</td>
+								</tr>
+								<tr>
+									<td>isHasCommon</td>
+									<td>是否包含"热门"</td>
+									<td>true</td>
+									<td>通用</td>
+								</tr>
+								<tr>
+									<td>isCommonExpanded</td>
+									<td>"热门"是否默认展开</td>
+									<td>true</td>
+									<td>通用</td>
+								</tr>
+								<tr>
+									<td>isShowAllLabels</td>
+									<td>是否显示所有字母</td>
+									<td>false</td>
+									<td>通用</td>
+								</tr>
+								<tr>
+									<td>isMultiSelect</td>
+									<td>是否多选</td>
+									<td></td>
+								</tr>
+								<tr>
+									<td>selectKey</td>
+									<td>code 对应的数据字段</td>
+									<td>CODE</td>
+									<td>通用</td>
+								</tr>
+								<tr>
+									<td>selectValue</td>
+									<td>value 对应的数据字段</td>
+									<td>VALUE</td>
+									<td>通用</td>
+								</tr>
+								<tr>
+									<td>selectTitle</td>
+									<td>title 对应的数据字段</td>
+									<td>VALUE</td>
+									<td>通用</td>
+								</tr>
+								<tr>
+									<td>colsPerRow</td>
+									<td>待选项每一行显示的个数</td>
+									<td>3</td>
+									<td>通用</td>
+								</tr>
+							</table>
+						</li>
+						<li>接口字段说明
+							<table class="table table-hover">
+								<tr>
+									<th>接口名称</th>
+									<th>参考</th>
+								</tr>
+								<tr>
+									<td>dataSrcUrl</td>
+									<td>
+										<code>'/service/school!queryIsCommSchool'</code>(部分加载)
+										<code>'/service/country!queryAllCountry'</code>(全部加载)
+									</td>
+								</tr>
+								<tr>
+									<td>getSelectedValueUrl</td>
+									<td><code>'/service/school!queryByCode'</code></td>
+								</tr>
+								<tr>
+									<td>getDataInitialsUrl</td>
+									<td><code>'/service/school!querySchoolByInitials'</code></td>
+								</tr>
+								<tr>
+									<td>searchUrl</td>
+									<td><code>'/service/school!querySchoolByNameSpell'</code></td>
+								</tr>
+							</table>
+						</li>
+					</ol>
+				</div>
+			</div>
+		</div>
 	</div>
 
 	<div class="row">
