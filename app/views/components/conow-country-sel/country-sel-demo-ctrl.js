@@ -40,8 +40,14 @@ app.controller('countrySelDemoCtrl', ['$scope',
  * schoolSelDemoCtrl
  * demo controller
  */
-app.controller('schoolSelDemoCtrl', ['$scope', 
-	function($scope) {
+app.controller('schoolSelDemoCtrl', ['$scope', '$state',
+	function($scope, $state) {
+
+		$scope.alphabetGroupCallback = function(selected) {
+			console.log(111111111);
+			console.log(selected);
+		};
+
 		var options = $scope.options = {
 			dataSrcUrl: 'views/components/conow-country-sel/data/school/query-is-common-school.json',
 			getSelectedValueUrl: 'views/components/conow-country-sel/data/school/get-selected-value.json', 

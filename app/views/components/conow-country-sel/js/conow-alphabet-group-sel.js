@@ -142,7 +142,8 @@ app.directive('conowAlphabetGroupSel', ['$filter', 'DataService', 'conowModals',
 		return {
 			restrict: 'AE',
 			scope: {
-				ngModel: '='
+				ngModel: '=',
+				callbackFn: '&'
 			}, 
 			replace: true,
 			template: '<input type="text" ng-click="selClick($event)">',
@@ -263,6 +264,10 @@ app.directive('conowAlphabetGroupSel', ['$filter', 'DataService', 'conowModals',
 							elem.val(selectedValue);
 
 							vm.selectedValue = selectedValue;
+
+							if(angular.isFunction(scope.callbackFn)) {
+								(scope.callbackFn)({'selected': data});
+							}
 						}, 100);
 					}, function(msg) {
 						console.log('msg-->', msg);

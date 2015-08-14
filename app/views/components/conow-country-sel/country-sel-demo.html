@@ -91,7 +91,7 @@
 						<!-- <input type="text" class="form-control" conow-school-sel> -->
 					</div>
 					<div class="form-group">
-						<input type="text" class="form-control" conow-alphabet-group-sel="{{options}}" ng-model="vm.selected">
+						<input type="text" class="form-control" conow-alphabet-group-sel="{{options}}" ng-model="vm.selected" callback-fn="alphabetGroupCallback(selected)">
 					</div>
 					<div class="form-group">
 						<pre>{{ vm | json }}</pre>
@@ -108,7 +108,8 @@
 				<div class="panel-body">
 					<ol>
 						<li>路由跳转中引入文件：<code>'views/components/conow-country-sel/js/conow-alphabet-group-sel.js'</code></li>
-						<li>初始化指令：<code>&lt;input type="text" class="form-control" conow-alphabet-group-sel="对象参数" ng-model="vm.selected"&gt;</code></li>
+						<li>初始化指令：<code>&lt;input type="text" class="form-control" conow-alphabet-group-sel="对象参数" ng-model="vm.selected" callback-fn="callback(selected)"&gt;</code></li>
+						<li><code>callback-fn</code>:选中返回的回调方法,参数名称 <code>selected</code>。参考院校选择</li>
 						<li>对象参数详细说明
 							<table class="table table-hover">
 								<tr>
