@@ -1,7 +1,7 @@
 'use strict';
 
-app.controller('responsiveTableDemoCtrl', ['$scope', 'ngTableParams', '$filter', '$timeout', '$interval', 'DataService', 
-	function($scope, ngTableParams, $filter, $timeout, $interval, DataService) {
+app.controller('responsiveTableDemoCtrl', ['$scope', 'ngTableParams', '$filter', '$timeout', '$interval', 'DataService', '$parse', 
+	function($scope, ngTableParams, $filter, $timeout, $interval, DataService, $parse) {
     var data = $scope.data = [];
     var options = $scope.options = {
       multiSelect: 'true'
@@ -12,6 +12,11 @@ app.controller('responsiveTableDemoCtrl', ['$scope', 'ngTableParams', '$filter',
       'selected': []
     };
 
+    // parse function demo
+    $scope.parseFn = function() {
+      // var 
+    };
+
     $scope.filterFn = function(filterObj, keyWord) {
       // return 
       console.log(111111)
@@ -19,17 +24,14 @@ app.controller('responsiveTableDemoCtrl', ['$scope', 'ngTableParams', '$filter',
 
       return filterObj;
     };
-    
-    // $interval(function() {
-    //   $scope.tableParams.reload();
-    // }, 3000);
 
     $scope.tableParams = new ngTableParams({
         page: 1,            // show first page
         count: 10,           // count per page
-        // sorting: {
-        //   name: 'asc'
-        // }
+        sorting: {
+          name: 'asc'
+        },
+        isMultiSel: false
     }, {
         total: 0, // length of data
         filterDelay: 0,   // filter delay time
@@ -56,9 +58,9 @@ app.controller('responsiveTableDemoCtrl', ['$scope', 'ngTableParams', '$filter',
 
               orderedData = params.sorting() ? $filter('orderBy')(orderedData, params.orderBy()) : data;
               orderedData = params.filter() ? $filter('filter')(orderedData, params.filter()) : data;
-              // orderedData = $filter('filter')(orderedData, vm.searchKey);
+              orderedData = $filter('filter')(orderedData, vm.searchKey);
               // orderedData = $filter('filter')(orderedData, {'name': vm.searchKey} || {'age': vm.searchKey});
-              orderedData = $filter('filter')(orderedData, filterFn);
+              // orderedData = $filter('filter')(orderedData, filterFn);
 
               params.total(orderedData.length);
 

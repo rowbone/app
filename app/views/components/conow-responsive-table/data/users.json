@@ -3,77 +3,87 @@
     "name": "张三",
     "age": 50,
     "sex": "male",
+    "duty": "front-end",
     "id": 1
   }, {
       "name": "李四",
       "age": 43,
       "sex": "female",
-    "id": 2
+      "duty": "front-end",
+      "id": 2
   }, {
       "name": "王五",
       "age": 27,
       "sex": "male",
-    "id": 3
+      "duty": "front-end",
+      "id": 3
   }, {
       "name": "赵六",
       "age": 29,
       "sex": "female",
-    "id": 4
+      "duty": "front-end",
+      "id": 4
   }, {
       "name": "张三",
       "age": 34,
       "sex": "female",
-    "id": 5
+      "duty": "front-end",
+      "id": 5
   }, {
       "name": "李四",
       "age": 43,
       "sex": "male",
-    "id": 6
+      "duty": "back-end",
+      "id": 6
   }, {
       "name": "王五",
       "age": 27,
       "sex": "female",
-    "id": 7
+      "duty": "back-end",
+      "id": 7
   }, {
       "name": "赵六",
       "age": 29,
       "sex": "female",
-    "id": 8
+      "duty": "front-end",
+      "id": 8
   }, {
       "name": "张三",
       "age": 34,
       "sex": "male",
-    "id": 9
+      "duty": "front-end",
+      "id": 9
   }, {
       "name": "李四",
       "age": 43,
       "sex": "female",
-    "id": 10
+      "duty": "front-end",
+      "id": 10
   }, {
       "name": "22",
       "age": 7,
       "sex": "male",
-    "id": 11
+      "id": 11
   }, {
       "name": "赵六",
       "age": 29,
       "sex": "male",
-    "id": 12
+      "id": 12
   }, {
       "name": "张三",
       "age": 34,
       "sex": "female",
-    "id": 13
+      "id": 13
   }, {
       "name": "李四",
       "age": 43,
       "sex": "male",
-    "id": 14
+      "id": 14
   }, {
       "name": "王五",
       "age": 27,
       "sex": "male",
-    "id": 15
+      "id": 15
   }, {
       "name": "赵六",
       "age": 29,

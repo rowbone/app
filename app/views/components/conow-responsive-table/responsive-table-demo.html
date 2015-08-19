@@ -32,43 +32,20 @@
 						<label for="table-search" class="control-label">过滤</label>
 						<input type="text" id="table-search" class="form-control" ng-model="vm.searchKey">
 					</div>
-					<table ng-table="tableParams" class="table table-hover bg-white ng-table-rowselected table-bordered">		
+
+					<table ng-table="tableParams" class="table table-hover bg-white ng-table">		
 						<tbody>
 							<tr ng-repeat="user in tableParams.data track by $index" ng-click="changeSelection(user, $event)">
 								<!-- <td data-title="'序号'">{{ (tableParams.page() - 1) * tableParams.count() + $index + 1}}</td> -->
 								<td width="50" style="text-align: left">
-									<!-- <div class="checkbox"> -->
 	                <label class="i-checks">
 	                	<input type="checkbox" class="icheckbox_square" ng-checked="indexInSelectedArr(user) >= 0"><i></i>
 	                </label>
-									<!-- </div> -->
-	                <!-- <div class="checkbox">
-                        <label class="i-checks">
-                            <input type="checkbox" ng-checked="isAllItemsSelected" ng-click="clickSelectAll(childOrgs)">
-                            <i></i>全选
-                        </label>
-                    </div> -->
 		            </td>
 								<td data-title="'姓名'" ng-bind="user.name" sortable="'name'"></td>
-								<td data-title="'姓名'" ng-bind="user.name" sortable="'name'" header-class="'hidden-sm hidden-xs'" class="hidden-sm hidden-xs"></td>
 								<td data-title="'年龄'" ng-bind="user.age" sortable="'age'" header-class="'hidden-sm'" class="hidden-sm"></td>
 								<td data-title="'性别'" ng-bind="user.sex" sortable="'sex'"></td>
-							</tr>
-						</tbody>
-					</table>
-
-					<table ng-table="projectTalbeParams" class="table table-hover bg-white ng-table-rowselected table-bordered">		
-						<tbody>
-							<tr ng-repeat="user in tableParams.data track by $index" ng-click="changeSelection(user, $event)">
-								<td width="50" style="text-align: left">
-	                <label for="" class="i-checks">
-	                	<input type="checkbox" ng-checked="indexInSelectedArr(user) >= 0"><i></i>
-	                </label>
-		            </td>
-								<td data-title="'姓名'" ng-bind="user.name" sortable="'name'"></td>
-								<td data-title="'姓名'" ng-bind="user.name" sortable="'name'" header-class="'hidden-sm hidden-xs'" class="hidden-sm hidden-xs"></td>
-								<td data-title="'年龄'" ng-bind="user.age" sortable="'age'" header-class="'hidden-sm'" class="hidden-sm"></td>
-								<td data-title="'性别'" ng-bind="user.sex" sortable="'sex'"></td>
+								<td data-title="'职位'" ng-bind="user.duty" sortable="'duty'"></td>
 							</tr>
 						</tbody>
 					</table>
@@ -94,7 +71,13 @@
 				</div>
 				<div class="panel-body">
 					<ol>
-						<li>使用前先引入<code>'/conow-arppub/src/main/webapp/vendor/modules/ng-table/ng-table.js'</code>和<code>'/conow-arppub/src/main/webapp/vendor/modules/ng-table/ng-table.css'</code></li>
+						<li>使用前先引入
+							<code>'vendor/modules/ng-table/ng-table.js'</code> 和 
+							<code>'vendor/modules/ng-table/ng-table.css'</code>
+						</li>
+						<li>
+							controller 中 注入 <code>ngTableParams</code>
+						</li>
 						<li><code>table</code>元素添加<code>ng-table</code>属性，属性值是对应的配置参数</li>
 						<li>controller中添加配置属性：<code>$scope.tableParams = new ngTableParams(parameters, settings)</code></li>
 						<li>配置参数说明：
@@ -105,7 +88,7 @@
 									<th>说明</th>
 								</tr>
 								<tr>
-									<td rowspan="5" class="v-middle">parameters</td>
+									<td rowspan="4" class="v-middle">parameters</td>
 									<td>page</td>
 									<td>当前显示的页码</td>
 								</tr>
@@ -122,10 +105,6 @@
 									<td>定义排序</td>
 								</tr>
 								<tr>
-									<td></td>
-									<td></td>
-								</tr>
-								<tr>
 									<td rowspan="6" class="v-middle">settings</td>
 									<td>total</td>
 									<td>表格显示的总数据条数</td>
@@ -136,10 +115,6 @@
 								</tr>
 								<tr>
 									<td>defaultSort</td>
-									<td></td>
-								</tr>
-								<tr>
-									<td>groupBy</td>
 									<td></td>
 								</tr>
 								<tr>

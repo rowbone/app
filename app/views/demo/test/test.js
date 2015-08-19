@@ -230,3 +230,19 @@ app.directive('conowDot', [
 		}
 	}
 ]);
+
+app.controller('dotdotdotDemoCtrl', ['$scope', 
+	function($scope) {
+
+		$scope.keyDownFn = function(e) {
+			if(e.keyCode === 32 || e.keyCode === 39) {
+
+        e.preventDefault();
+				// return false;
+			}
+
+			// return true;
+		};
+
+	}
+]);
