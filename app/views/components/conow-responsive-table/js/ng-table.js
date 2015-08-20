@@ -650,7 +650,7 @@ function($scope, NgTableParams, $timeout, $parse, $compile, $attrs, $element, ng
         // $watch for value equivalence. This is because ngTableParams references the current page of data as
         // a field and it's important not to watch this
         var tableParamsGetter = $parse(tableParamsExpr);
-        $scope.$watch(tableParamsGetter, (function (params) {
+        $scope.$watch(tableParamsGetter, (function (params, oldParams) {
             if (angular.isUndefined(params)) {
                 return;
             }
