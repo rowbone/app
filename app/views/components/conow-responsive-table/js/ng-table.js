@@ -565,6 +565,11 @@ function($scope, NgTableParams, $timeout, $parse, $compile, $attrs, $element, ng
 
     }, true);
 
+    /**
+     * 编译指令模板
+     * annotation by wlj
+     * @return {[type]} [description]
+     */
     this.compileDirectiveTemplates = function () {
         if (!$element.hasClass('ng-table')) {
             $scope.templates = {
@@ -589,6 +594,11 @@ function($scope, NgTableParams, $timeout, $parse, $compile, $attrs, $element, ng
         }
     };
 
+    /**
+     * 加载数据
+     * @annotation by wlj
+     * @return {[type]}          [description]
+     */
     this.loadFilterData = function ($columns) {
         angular.forEach($columns, function ($column) {
             var def;
@@ -642,6 +652,11 @@ function($scope, NgTableParams, $timeout, $parse, $compile, $attrs, $element, ng
         }
     };
 
+    /**
+     * [setupBindingsToInternalScope description]
+     * @param  {[type]} tableParamsExpr [description]
+     * @return {[type]}                 [description]
+     */
     this.setupBindingsToInternalScope = function(tableParamsExpr){
 
         // note: this we're setting up watches to simulate angular's isolated scope bindings
