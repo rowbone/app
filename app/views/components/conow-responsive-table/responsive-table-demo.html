@@ -58,14 +58,16 @@
 								<td data-title="'序号'">{{ (tableParams.page() - 1) * tableParams.count() + $index + 1}}</td>
 								<td data-title="'姓名'" ng-bind="user.name" sortable="'name'"></td>
 								<td data-title="'年龄'" ng-bind="user.age" sortable="'age'" header-class="'hidden-sm hidden-xs'" class="hidden-sm hidden-xs"></td>
-								<td data-title="'性别'" ng-bind="user.sex" sortable="'sex'"></td>
+								<td data-title="'性别'" ng-bind="user.sex" sortable="'sex'">
+									<button ng-click="click(user)">按钮</button>
+								</td>
 								<td data-title="'职位'" ng-bind="user.duty" sortable="'duty'"></td>
 							</tr>
-							<tr ng-if="$data.length == 0" colspan="6">没有对应的数据</tr>
 						</tbody>
 					</table>
 					
 					<div class="m-t form-group">
+						<!-- 
 						<table ng-table="tableParams2" class="table table-hover">
 							<tbody>
 								<tr ng-repeat="user in tableParams2.data track by $index">
@@ -75,6 +77,7 @@
 								</tr>
 							</tbody>
 						</table>
+						 -->
 					</div>
 				</div>
 

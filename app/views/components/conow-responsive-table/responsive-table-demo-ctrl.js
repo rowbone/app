@@ -12,39 +12,24 @@ app.controller('responsiveTableDemoCtrl', ['$scope', 'ngTableParams', '$filter',
       'selected': []
     };
 
-    // parse function demo
-    $scope.parseFn = function() {
-      // var 
-    };
-
     $scope.filterFn = function(filterObj, searchKey) {
 
       return (filterObj.name.indexOf(vm.searchKey) > -1) || (filterObj.sex.indexOf(vm.searchKey) > -1)
     };
-
-    // var init = function() {
-    //   var url = 'views/components/conow-responsive-table/data/users.json';
-    //   // var url = '/dataGenerate/users';
-    //   DataService.getData(url)
-    //     .then(function(data) {
-    //       data = data;
-
-    //       $scope.tableData = data;
-    //     }, function(msg) {
-    //       console.error(msg);
-    //     });
-    // };
-
-    // init();
     
+    // 处理 table 数据
     var tableDataDeal = function(dataSrc, params) {
       var orderedData = angular.copy(dataSrc);
 
       orderedData = params.sorting() ? $filter('orderBy')(orderedData, params.orderBy()) : orderedData;
       orderedData = params.filter() ? $filter('filter')(orderedData, params.filter()) : orderedData;
 
+      orderedData = $filter('filter')(orderedData, vm.searchKey);
+
       return orderedData;
     };
+
+    // $scope.tableData = [];
 
     $scope.tableParams = new ngTableParams({
         page: 1,            // show first page
@@ -61,7 +46,7 @@ app.controller('responsiveTableDemoCtrl', ['$scope', 'ngTableParams', '$filter',
           if($scope.tableData) {
             var orderedData = $scope.tableData;
 
-            orderedData =  tableDataDeal(orderedData, params);
+            orderedData = tableDataDeal(orderedData, params);
 
             params.total(orderedData.length);
 
@@ -75,11 +60,11 @@ app.controller('responsiveTableDemoCtrl', ['$scope', 'ngTableParams', '$filter',
             DataService.getData(url)
               .then(function(data) {
 
-                $scope.tableData = [];
+                $scope.tableData = data;
 
                 var orderedData = $scope.tableData;
 
-                orderedData =  tableDataDeal(orderedData, params);
+                orderedData = tableDataDeal(orderedData, params);
 
                 params.total(orderedData.length);
 
@@ -178,9 +163,9 @@ app.controller('responsiveTableDemoCtrl', ['$scope', 'ngTableParams', '$filter',
         console.log(params.page());
           
         var pageParams = {
-        page: params.page(),      // params.page() 方法获取当前点击的页码
-        pagesize: 10,
-        ORG_UNIT_ID: '1421924106089631410343354'
+          page: params.page(),      // params.page() 方法获取当前点击的页码
+          pagesize: 10,
+          ORG_UNIT_ID: '1421924106089631410343354'
         };
 
         DataService.getData(url)

@@ -154,3 +154,12 @@
 .ng-table.table-condensed > thead > tr > th, .ng-table.table-condensed > tbody > tr > td {
   padding: 5px 9px; 
 }
+
+.ng-table .ng-table-no-data-tip {
+  font-size: 16px; 
+  color: #0BD5F3;
+}
+
+.ng-table .ng-table-no-data-tip td {
+  padding: 5px 12px;
+}
