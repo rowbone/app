@@ -163,3 +163,10 @@
 .ng-table .ng-table-no-data-tip td {
   padding: 5px 12px;
 }
+
+.ng-table-cell-ellipsis {
+  white-space: nowrap; 
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 300px;
+}

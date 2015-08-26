@@ -48,7 +48,7 @@
 								<th>职位</th>
 							</tr>
 						</thead> -->
-						<tbody>
+						<tbody expand-row="$data">
 							<tr ng-repeat="user in $data track by $index" ng-click="changeSelection(user, $event)">
 								<td width="50">
 	                <label class="i-checks">
@@ -62,6 +62,14 @@
 									<button ng-click="click(user)">按钮</button>
 								</td>
 								<td data-title="'职位'" ng-bind="user.duty" sortable="'duty'"></td>
+							</tr>
+							<tr>
+								<td>111</td>
+								<td>222</td>
+								<td>333</td>
+								<td>444</td>
+								<td>555</td>
+								<td>666</td>
 							</tr>
 						</tbody>
 					</table>

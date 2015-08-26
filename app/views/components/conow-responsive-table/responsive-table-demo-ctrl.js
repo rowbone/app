@@ -37,11 +37,16 @@ app.controller('responsiveTableDemoCtrl', ['$scope', 'ngTableParams', '$filter',
         sorting: {
           name: 'asc'
         },
-        isMultiSel: false
+        isMultiSel: false,
+        isShowSearch: true,
+
+        // noDataTip: '没有数据时，我要显示这个！'
     }, {
         total: 0, // length of data
         // filterDelay: 0,   // filter delay time
         getData: function($defer, params) {
+
+          params.settings.counts = [];
 
           if($scope.tableData) {
             var orderedData = $scope.tableData;

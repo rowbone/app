@@ -220,11 +220,21 @@ console.log('pinyin-->', pinyin);
 	}
 ]);
 
-app.directive('conowDot', [
-	function() {
+app.directive('conowDot', ['$parse', 
+	function($parse) {
 		return {
 			restrict: 'AE',
 			link: function(scope, elem, attrs) {
+				console.log('in linking...');
+				console.log(attrs.clickFn);
+				console.log($parse(attrs.clickFn));
+
+				var fn = $parse(attrs.clickFn);
+
+				// scope.apply(function() {
+				// 	fn();
+				// });
+
 				elem.dotdotdot();
 			}
 		}
@@ -242,6 +252,10 @@ app.controller('dotdotdotDemoCtrl', ['$scope',
 			}
 
 			// return true;
+		};
+
+		$scope.clickFn = function(e) {
+			console.log('111111111111');
 		};
 
 	}

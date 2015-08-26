@@ -1104,6 +1104,14 @@
             $scope.$filterRow = {};
             $scope.$loading = false;
 
+            // controlParams to store some parameters for ng-table control, show etc.
+            // @20150826
+            $scope.controlParams = {
+                'isShowSearch': false,
+                'noDataTip': '没有对应的数据！'
+            };
+            angular.extend($scope.controlParams, $scope.$eval($attrs.ngTable).parameters());
+
             // until such times as the directive uses an isolated scope, we need to ensure that the check for
             // the params field only consults the "own properties" of the $scope. This is to avoid seeing the params
             // field on a $scope higher up in the prototype chain
@@ -1156,16 +1164,32 @@
                 newParams.reload();
             }, false);
 
+            var vm = $scope.vm = {};
+            // trig search function
+            $scope.searchTrigger = function(e) {
+                console.log($scope);
+            };
+
             $scope.$watch('params.isDataReloadRequired()', onDataReloadStatusChange);
 
             this.compileDirectiveTemplates = function () {
                 if (!$element.hasClass('ng-table')) {
                     $scope.templates = {
+                        search: 'ng-table/search.html',
                         header: ($attrs.templateHeader ? $attrs.templateHeader : 'ng-table/header.html'),
                         pagination: ($attrs.templatePagination ? $attrs.templatePagination : 'ng-table/pager.html'),
                         noDataTip: 'ng-table/noDataTip.html'
                     };
                     $element.addClass('ng-table');
+
+                    // shows search row starts
+                    if($scope.controlParams.isShowSearch) {
+                      var searchTemplate = angular.element(document.createElement('div')).attr('ng-include', 'templates.search').addClass('ng-table-search');
+                      $element.parent().prepend(searchTemplate);
+                      $compile(searchTemplate)($scope);
+                    }
+                    // shows search row ends
+
                     var headerTemplate = null;
 
                     // $element.find('> thead').length === 0 doesn't work on jqlite
@@ -1189,10 +1213,11 @@
                     }
                     $compile(paginationTemplate)($scope);
 
-                    // shows message when there is no data                    
-                    var noDataTip = angular.element(document.createElement('tr')).attr('ng-include', 'templates.noDataTip').addClass('ng-table-no-data-tip');
-                    $element.find('tbody').append(noDataTip);
-                    $compile(noDataTip)($scope);
+                    // shows message when there is no data starts                   
+                    var noDataTipTemplate = angular.element(document.createElement('tr')).attr('ng-include', 'templates.noDataTip').addClass('ng-table-no-data-tip');
+                    $element.find('tbody').append(noDataTipTemplate);
+                    $compile(noDataTipTemplate)($scope);
+                    // shows message when there is no data ends
                 }
             };
 
@@ -1328,7 +1353,7 @@
                 priority: 1001,
                 scope: true,
                 controller: 'ngTableController',
-                compile: function(element) {
+                compile: function(element, attrs) {
                     var columns = [],
                         i = 0,
                         row = null;
@@ -1735,6 +1760,22 @@
     }
 })();
 
+(function() {
+  angular.module('ngTable')
+    .directive('expandRow', [function() {
+      return {
+        restrict: 'AE',
+        compile: function(elem, attrs) {
+          console.log('in expandRow compile');
+
+          return function(scope, elem, attrs) {
+            console.log('in expandRow link');
+          };
+        }
+      }
+    }]);
+})()
+
 angular.module('ngTable').run(['$templateCache', function ($templateCache) {
 	$templateCache.put('ng-table/filterRow.html', '<tr ng-show="show_filter" class="ng-table-filters"> <th data-title-text="{{$column.titleAlt(this) || $column.title(this)}}" ng-repeat="$column in $columns" ng-if="$column.show(this)" class="filter" ng-class="params.settings().filterLayout===\'horizontal\' ? \'filter-horizontal\' : \'\'"> <div ng-repeat="(name, filter) in $column.filter(this)" ng-include="config.getTemplateUrl(filter)" class="filter-cell" ng-class="[getFilterCellCss($column.filter(this), params.settings().filterLayout), $last ? \'last\' : \'\']"> </div> </th> </tr> ');
 	$templateCache.put('ng-table/filters/number.html', '<input type="number" name="{{name}}" ng-disabled="$filterRow.disabled" ng-model="params.filter()[name]" class="input-filter form-control" placeholder="{{getFilterPlaceholderValue(filter, name)}}"/> ');
@@ -1744,7 +1785,8 @@ angular.module('ngTable').run(['$templateCache', function ($templateCache) {
 	$templateCache.put('ng-table/header.html', '<ng-table-sorter-row></ng-table-sorter-row> <ng-table-filter-row></ng-table-filter-row> ');
 	$templateCache.put('ng-table/pager.html', '<div class="ng-cloak ng-table-pager" ng-if="params.data.length"> <div ng-if="params.settings().counts.length" class="ng-table-counts btn-group pull-right"> <button ng-repeat="count in params.settings().counts" type="button" ng-class="{\'active\':params.count()==count}" ng-click="params.count(count)" class="btn btn-default"> <span ng-bind="count"></span> </button> </div> <ul ng-if="pages.length" class="pagination ng-table-pagination"> <li ng-class="{\'disabled\': !page.active && !page.current, \'active\': page.current}" ng-repeat="page in pages" ng-switch="page.type"> <a ng-switch-when="prev" ng-click="params.page(page.number)" href="">&laquo;</a> <a ng-switch-when="first" ng-click="params.page(page.number)" href=""><span ng-bind="page.number"></span></a> <a ng-switch-when="page" ng-click="params.page(page.number)" href=""><span ng-bind="page.number"></span></a> <a ng-switch-when="more" ng-click="params.page(page.number)" href="">&#8230;</a> <a ng-switch-when="last" ng-click="params.page(page.number)" href=""><span ng-bind="page.number"></span></a> <a ng-switch-when="next" ng-click="params.page(page.number)" href="">&raquo;</a> </li> </ul> </div> ');
 	$templateCache.put('ng-table/sorterRow.html', '<tr> <th title="{{$column.headerTitle(this)}}" ng-repeat="$column in $columns" ng-class="{ \'sortable\': $column.sortable(this), \'sort-asc\': params.sorting()[$column.sortable(this)]==\'asc\', \'sort-desc\': params.sorting()[$column.sortable(this)]==\'desc\' }" ng-click="sortBy($column, $event)" ng-if="$column.show(this)" ng-init="template=$column.headerTemplateURL(this)" class="header {{$column.class(this)}}"> <div ng-if="!template" class="ng-table-header" ng-class="{\'sort-indicator\': params.settings().sortingIndicator==\'div\'}"> <span ng-bind="$column.title(this)" ng-class="{\'sort-indicator\': params.settings().sortingIndicator==\'span\'}"></span> </div> <div ng-if="template" ng-include="template"></div> </th> </tr> ');
-    $templateCache.put('ng-table/noDataTip.html', '<td ng-if="params.data.length == 0" colspan="{{ :: $columns.length }}">没有对应的数据！</td>');
+  $templateCache.put('ng-table/noDataTip.html', '<td>{{params.data.length}}</td><td ng-if="params.data.length == 0" colspan="{{ :: $columns.length }}" ng-bind="controlParams.noDataTip"></td>');
+  $templateCache.put('ng-table/search.html', '<input type="text" class="form-control" ng-bind="vm.searchKey" placeholder="请输入关键字进行搜索" ng-keyup="searchTrigger($event)">');
 }]);
     return angular.module('ngTable');
 }));
