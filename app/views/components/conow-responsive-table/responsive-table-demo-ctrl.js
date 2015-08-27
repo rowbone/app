@@ -89,9 +89,9 @@ app.controller('responsiveTableDemoCtrl', ['$scope', 'ngTableParams', '$filter',
     /**
      * 单个搜索
      */
-    $scope.$watch('vm.searchKey', function() {
-      $scope.tableParams.reload();
-    });
+    // $scope.$watch('vm.searchKey', function() {
+    //   $scope.tableParams.reload();
+    // });
 
     // $scope.userEditClick = function(user, e) {
     //   e.preventDefault();

@@ -1170,6 +1170,40 @@
                 console.log($scope);
             };
 
+
+            var generateRow = function(columns, value) {
+              console.log(columns);
+              // all columns titles
+              vm.columnsTitle = [];
+              for(var i=0; i<$scope.$columns.length; i++) {
+                vm.columnsTitle.push($scope.$columns[i].title());
+              }
+              console.log(value);
+
+              return '';
+            };
+
+            var getHiddenCols = function() {
+              var $tds = $element.find('tbody > tr:first').find('td');
+              vm.columns = $tds;
+            };
+
+            $scope.$on('ngTableNgRepeatFinished', function(event, data) {
+              var $trs = $element.find('tbody > tr');
+
+              getHiddenCols();
+
+              for(var i=0; i<$trs.length; i++) {
+                var $this = angular.element($trs[i]);
+                var value = $scope.$data[i];
+                var $tr = angular.element(generateRow($this, value));
+                $tr.insertAfter($this);
+
+                $compile($tr)($scope);
+              }
+
+            });
+
             $scope.$watch('params.isDataReloadRequired()', onDataReloadStatusChange);
 
             this.compileDirectiveTemplates = function () {
@@ -1344,8 +1378,8 @@
      * @description
      * Directive that instantiates {@link ngTableController ngTableController}.
      */
-    angular.module('ngTable').directive('ngTable', ['$q', '$parse',
-        function($q, $parse) {
+    angular.module('ngTable').directive('ngTable', ['$q', '$parse', '$timeout', 
+        function($q, $parse, $timeout) {
             'use strict';
 
             return {
@@ -1417,6 +1451,7 @@
                         controller.setupBindingsToInternalScope(attrs.ngTable);
                         controller.loadFilterData(columns);
                         controller.compileDirectiveTemplates();
+
                     };
                 }
             }
@@ -1762,19 +1797,21 @@
 
 (function() {
   angular.module('ngTable')
-    .directive('expandRow', [function() {
+    .directive('expandRow', ['$timeout', function($timeout) {
       return {
         restrict: 'AE',
         compile: function(elem, attrs) {
-          console.log('in expandRow compile');
 
           return function(scope, elem, attrs) {
-            console.log('in expandRow link');
+            if(scope.$last === true) {
+              scope.$emit('ngTableNgRepeatFinished', {'from': 'expandRow link'});
+            }
+
           };
         }
       }
     }]);
-})()
+})();
 
 angular.module('ngTable').run(['$templateCache', function ($templateCache) {
 	$templateCache.put('ng-table/filterRow.html', '<tr ng-show="show_filter" class="ng-table-filters"> <th data-title-text="{{$column.titleAlt(this) || $column.title(this)}}" ng-repeat="$column in $columns" ng-if="$column.show(this)" class="filter" ng-class="params.settings().filterLayout===\'horizontal\' ? \'filter-horizontal\' : \'\'"> <div ng-repeat="(name, filter) in $column.filter(this)" ng-include="config.getTemplateUrl(filter)" class="filter-cell" ng-class="[getFilterCellCss($column.filter(this), params.settings().filterLayout), $last ? \'last\' : \'\']"> </div> </th> </tr> ');
