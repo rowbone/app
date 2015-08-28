@@ -34,20 +34,7 @@
 					</div> -->
 
 					<table ng-table="tableParams" class="table table-hover table-striped bg-white">
-<!-- 						<thead>
-							<tr>
-								<th>
-									<label class="i-checks">
-										<input type="checkbox" class="icheckbox_square" ng-checked="indexInSelectedArr(user) >= 0"><i></i>
-									</label>
-								</th>
-								<th>序号</th>
-								<th>姓名</th>
-								<th class="hidden-sm">年龄</th>
-								<th>性别</th>
-								<th>职位</th>
-							</tr>
-						</thead> -->
+
 						<tbody>
 
 							<tr ng-repeat="user in $data track by $index" ng-click="changeSelection(user, $event)" expand-row>
@@ -57,11 +44,11 @@
 	                </label>
 		            </td>
 								<td data-title="'序号'">{{ (tableParams.page() - 1) * tableParams.count() + $index + 1}}</td>
-								<td data-title="'姓名'" ng-bind="user.name" sortable="'name'"></td>
-								<td data-title="'年龄'" ng-bind="user.age" sortable="'age'" header-class="'hidden-sm hidden-xs'" class="hidden-sm hidden-xs"></td>
-								<td data-title="'性别'" ng-bind="user.sex" sortable="'sex'" class="collapsed-sm">
+								<td data-title="'姓名'" ng-bind="user.name" col-bind="name" sortable="'name'"></td>
+								<td data-title="'年龄'" ng-bind="user.age" col-bind="age" sortable="'age'" header-class="'hidden-sm hidden-xs'" class="hidden-sm hidden-xs"></td>
+								<td data-title="'性别'" ng-bind="user.sex" col-bind="sex" sortable="'sex'" class="collapsed-xs">
 								</td>
-								<td data-title="'职位'" ng-bind="user.duty" sortable="'duty'" class="collapsed-sm"></td>
+								<td data-title="'职位'" ng-bind="user.duty" col-bind="duty" sortable="'duty'" class="collapsed-sm"></td>
 							</tr>
 
 						</tbody>

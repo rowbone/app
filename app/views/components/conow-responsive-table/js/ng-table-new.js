@@ -1172,31 +1172,50 @@
 
 
             var generateRow = function(columns, value) {
-              console.log(columns);
+              var iLen = vm.columns.length; 
+              var arr = [];
+              for(var i=0; i<iLen; i++) {
+                var $td = angular.element(vm.columns[i]);
+                if($td.hasClass('collapsed-sm')) {
+                  arr.push('<div class="collapse-info"><span class="collapse-name">' + vm.columnsTitle[i] + 
+                    '</span><span class="collapse-value" ng-bind="user.duty">' + (vm.columns[i].duty || '') + '</span></div>');
+                }
+              }
+
+              return '<td colspan="6">' + arr.join('') + '</td>';
+            };
+
+            var getCols = function() {
               // all columns titles
               vm.columnsTitle = [];
               for(var i=0; i<$scope.$columns.length; i++) {
                 vm.columnsTitle.push($scope.$columns[i].title());
               }
-              console.log(value);
-
-              return '';
-            };
-
-            var getHiddenCols = function() {
+              // all columns info
               var $tds = $element.find('tbody > tr:first').find('td');
               vm.columns = $tds;
             };
 
+            var clickRow = function(row) {
+              console.log(row);
+            }
+
             $scope.$on('ngTableNgRepeatFinished', function(event, data) {
               var $trs = $element.find('tbody > tr');
 
-              getHiddenCols();
+              getCols();
 
               for(var i=0; i<$trs.length; i++) {
                 var $this = angular.element($trs[i]);
                 var value = $scope.$data[i];
-                var $tr = angular.element(generateRow($this, value));
+
+                $this.addClass('parent');
+
+                var $tr = angular.element(document.createElement('tr')).addClass('child');
+                var str = generateRow($this, value);
+                $tr.html(str);
+                 
+                // var $tr = $this.clone();
                 $tr.insertAfter($this);
 
                 $compile($tr)($scope);
@@ -1216,13 +1235,13 @@
                     };
                     $element.addClass('ng-table');
 
-                    // shows search row starts
+                    // shows search row: starts
                     if($scope.controlParams.isShowSearch) {
                       var searchTemplate = angular.element(document.createElement('div')).attr('ng-include', 'templates.search').addClass('ng-table-search');
                       $element.parent().prepend(searchTemplate);
                       $compile(searchTemplate)($scope);
                     }
-                    // shows search row ends
+                    // shows search row: ends
 
                     var headerTemplate = null;
 
@@ -1247,11 +1266,11 @@
                     }
                     $compile(paginationTemplate)($scope);
 
-                    // shows message when there is no data starts                   
+                    // shows message when there is no data: starts                   
                     var noDataTipTemplate = angular.element(document.createElement('tr')).attr('ng-include', 'templates.noDataTip').addClass('ng-table-no-data-tip');
                     $element.find('tbody').append(noDataTipTemplate);
                     $compile(noDataTipTemplate)($scope);
-                    // shows message when there is no data ends
+                    // shows message when there is no data: ends
                 }
             };
 

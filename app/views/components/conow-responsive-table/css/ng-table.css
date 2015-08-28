@@ -170,3 +170,18 @@
   text-overflow: ellipsis;
   max-width: 300px;
 }
+
+.ng-table-search {
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
+.ng-table tr.child {
+  /*display: none;*/
+}
+
+.ng-table tr.child .collapse-name {
+  font-size: 12px; 
+  padding-right: 10px; 
+  color: #808080;
+}
