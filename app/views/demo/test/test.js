@@ -260,3 +260,29 @@ app.controller('dotdotdotDemoCtrl', ['$scope',
 
 	}
 ]);
+
+app.filter('asyncFilter', ['$filter', 'DataService', '$q', 
+	function($filter, DataService, $q) {
+		var deferred = $q.defer();
+
+		var filterPromise = deferred.promise;
+
+
+		var filterFn = function(input) {
+			var url = 'views/demo/test/data/group-users.json';
+
+			DataService.getData(url)
+				.then(function(data) {
+					console.log('data-->', data);
+					filterPromise.resolve(data);
+				}, function(msg) {
+					console.log('msg-->', msg);
+					filterPromise.reject(msg);
+				})
+		};
+
+		return filterFn;
+	}
+]);
+
+

@@ -27,28 +27,32 @@
 					</div> -->
 					已选项：<pre>{{ vm.selected }}</pre>
 				</div>
+<!-- <td width="50">
+  <label class="i-checks">
+  	<input type="checkbox" class="icheckbox_square" ng-checked="indexInSelectedArr(user) >= 0" header="'ng-table/headers/checkbox.html'"><i></i>
+  </label>
+</td> -->
 				<div class="m-t-sm">
 					<!-- <div class="form-group">
 						<label for="table-search" class="control-label">过滤</label>
 						<input type="text" id="table-search" class="form-control" ng-model="vm.searchKey">
 					</div> -->
 
+					<!-- ng-click="changeSelection(user, $event)" -->
+					<!-- ng-repeat="user in $data track by $index" -->
+					
 					<table ng-table="tableParams" class="table table-hover table-striped bg-white">
 
 						<tbody>
-
-							<tr ng-repeat="user in $data track by $index" ng-click="changeSelection(user, $event)" expand-row>
-								<td width="50">
-	                <label class="i-checks">
-	                	<input type="checkbox" class="icheckbox_square" ng-checked="indexInSelectedArr(user) >= 0" header="'ng-table/headers/checkbox.html'"><i></i>
-	                </label>
-		            </td>
+							<tr  expand-row>
 								<td data-title="'序号'">{{ (tableParams.page() - 1) * tableParams.count() + $index + 1}}</td>
 								<td data-title="'姓名'" ng-bind="user.name" col-bind="name" sortable="'name'"></td>
 								<td data-title="'年龄'" ng-bind="user.age" col-bind="age" sortable="'age'" header-class="'hidden-sm hidden-xs'" class="hidden-sm hidden-xs"></td>
 								<td data-title="'性别'" ng-bind="user.sex" col-bind="sex" sortable="'sex'" class="collapsed-xs">
 								</td>
-								<td data-title="'职位'" ng-bind="user.duty" col-bind="duty" sortable="'duty'" class="collapsed-sm"></td>
+								<td data-title="'职位'" ng-bind="user.duty" col-bind="duty" sortable="'duty'" class="collapsed-sm">
+									<!-- <button type="button" class="btn btn-primary">选择按钮</button> -->
+								</td>
 							</tr>
 
 						</tbody>
@@ -165,4 +169,11 @@
 		
 	</div>
 
+</div>
+
+<div class="m-t-md">
+	<ul>Tips:
+		<li>不显示分页数量控制：<code>counts:[]</code>(扩展：根据数量判断显示哪些数字)</li>
+		<li>不显示分页：<code>params.count(orderedData.length)</code>(即设置数据条数为数据总数)</li>
+	</ul>
 </div>

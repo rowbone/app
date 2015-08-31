@@ -135,7 +135,7 @@
   }
 }
 
-.ng-table > tbody > tr > td {
+.ng-table > thead > tr > th, .ng-table > tbody > tr > td {
   vertical-align: middle !important;
 }
 

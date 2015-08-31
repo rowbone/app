@@ -33,6 +33,7 @@ app.controller('responsiveTableDemoCtrl', ['$scope', 'ngTableParams', '$filter',
 
     $scope.tableParams = new ngTableParams({
         page: 1,            // show first page
+        total: 1,
         count: 10,           // count per page
         sorting: {
           name: 'asc'
@@ -44,9 +45,8 @@ app.controller('responsiveTableDemoCtrl', ['$scope', 'ngTableParams', '$filter',
     }, {
         total: 0, // length of data
         // filterDelay: 0,   // filter delay time
+        counts: [],
         getData: function($defer, params) {
-
-          params.settings.counts = [];
 
           if($scope.tableData) {
             var orderedData = $scope.tableData;
@@ -73,10 +73,13 @@ app.controller('responsiveTableDemoCtrl', ['$scope', 'ngTableParams', '$filter',
 
                 params.total(orderedData.length);
 
+                // params.count(orderedData.length);
+
                 var page = params.page();
                 var count = params.count();
 
                 $defer.resolve(orderedData.slice((page - 1) * count, page * count));
+                // $defer.resolve(orderedData);
               }, function(msg) {
                 console.error('msg-->', msg);
               });
