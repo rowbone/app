@@ -274,10 +274,10 @@ app.filter('asyncFilter', ['$filter', 'DataService', '$q',
 			DataService.getData(url)
 				.then(function(data) {
 					console.log('data-->', data);
-					filterPromise.resolve(data);
+					deferred.resolve(data);
 				}, function(msg) {
 					console.log('msg-->', msg);
-					filterPromise.reject(msg);
+					deferred.reject(msg);
 				})
 		};
 

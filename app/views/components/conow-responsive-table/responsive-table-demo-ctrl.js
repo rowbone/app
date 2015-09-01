@@ -16,6 +16,10 @@ app.controller('responsiveTableDemoCtrl', ['$scope', 'ngTableParams', '$filter',
 
       return (filterObj.name.indexOf(vm.searchKey) > -1) || (filterObj.sex.indexOf(vm.searchKey) > -1)
     };
+
+    $scope.getSelectedData = function() {
+      vm.selectedData = $scope.tableParams.getSelectedData();
+    };
     
     // 处理 table 数据
     var tableDataDeal = function(dataSrc, params) {
@@ -33,7 +37,6 @@ app.controller('responsiveTableDemoCtrl', ['$scope', 'ngTableParams', '$filter',
 
     $scope.tableParams = new ngTableParams({
         page: 1,            // show first page
-        total: 1,
         count: 10,           // count per page
         sorting: {
           name: 'asc'
@@ -41,11 +44,11 @@ app.controller('responsiveTableDemoCtrl', ['$scope', 'ngTableParams', '$filter',
         isMultiSel: false,
         isShowSearch: true,
 
-        // noDataTip: '没有数据时，我要显示这个！'
+        noDataTip: '没有数据时，我要显示这个！'
     }, {
         total: 0, // length of data
         // filterDelay: 0,   // filter delay time
-        counts: [],
+        // counts: [10, 25, 50, 100],
         getData: function($defer, params) {
 
           if($scope.tableData) {
@@ -72,7 +75,7 @@ app.controller('responsiveTableDemoCtrl', ['$scope', 'ngTableParams', '$filter',
                 orderedData = tableDataDeal(orderedData, params);
 
                 params.total(orderedData.length);
-
+                // set count to all data's length to void pagination
                 // params.count(orderedData.length);
 
                 var page = params.page();

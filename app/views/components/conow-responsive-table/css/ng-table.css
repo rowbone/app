@@ -185,3 +185,7 @@
   padding-right: 10px; 
   color: #808080;
 }
+
+.ng-table .th-select {
+  text-align: left; 
+}

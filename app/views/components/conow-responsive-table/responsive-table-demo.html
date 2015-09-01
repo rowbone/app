@@ -33,6 +33,10 @@
   </label>
 </td> -->
 				<div class="m-t-sm">
+					<div class="form-group padder-v-sm">
+						<button type="button" class="btn btn-primary" ng-click="getSelectedData()">获取数据</button>
+						{{ vm.selectedData }}
+					</div>
 					<!-- <div class="form-group">
 						<label for="table-search" class="control-label">过滤</label>
 						<input type="text" id="table-search" class="form-control" ng-model="vm.searchKey">
@@ -41,16 +45,16 @@
 					<!-- ng-click="changeSelection(user, $event)" -->
 					<!-- ng-repeat="user in $data track by $index" -->
 					
-					<table ng-table="tableParams" class="table table-hover table-striped bg-white">
+					<table ng-table="tableParams" class="table table-hover table-striped bg-white" is-multi-select="false">
 
 						<tbody>
-							<tr  expand-row>
+							<tr expand-row>
 								<td data-title="'序号'">{{ (tableParams.page() - 1) * tableParams.count() + $index + 1}}</td>
-								<td data-title="'姓名'" ng-bind="user.name" col-bind="name" sortable="'name'"></td>
-								<td data-title="'年龄'" ng-bind="user.age" col-bind="age" sortable="'age'" header-class="'hidden-sm hidden-xs'" class="hidden-sm hidden-xs"></td>
-								<td data-title="'性别'" ng-bind="user.sex" col-bind="sex" sortable="'sex'" class="collapsed-xs">
+								<td data-title="'姓名'" ng-bind="item.name" col-bind="name" sortable="'name'"></td>
+								<td data-title="'年龄'" ng-bind="item.age" col-bind="age" sortable="'age'" header-class="'hidden-sm hidden-xs'" class="hidden-sm hidden-xs"></td>
+								<td data-title="'性别'" ng-bind="item.sex" col-bind="sex" sortable="'sex'" class="collapsed-xs">
 								</td>
-								<td data-title="'职位'" ng-bind="user.duty" col-bind="duty" sortable="'duty'" class="collapsed-sm">
+								<td data-title="'职位'" ng-bind="item.duty" col-bind="duty" sortable="'duty'" class="collapsed-sm">
 									<!-- <button type="button" class="btn btn-primary">选择按钮</button> -->
 								</td>
 							</tr>
@@ -129,7 +133,7 @@
 								</tr>
 								<tr>
 									<td>counts</td>
-									<td></td>
+									<td>控制每页显示的数据条数</td>
 								</tr>
 								<tr>
 									<td>defaultSort</td>
