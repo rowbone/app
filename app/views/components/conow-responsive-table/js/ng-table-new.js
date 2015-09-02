@@ -1249,12 +1249,15 @@
               vm.columns = $tds;
             };
 
-            var clickRow = function(row) {
+            $scope.clickRow = function(row, index) {
+              row.$collapsed = !row.$collapsed;
               console.log(row);
             }
 
             // operation after ng-repeat finished:starts
             $scope.$on('ngTableNgRepeatFinished', function(event, data) {
+              console.info('In ngTableNgRepeatFinished: abandoned!');
+              /*
               var $trs = $element.find('tbody > tr:not(.ng-table-no-data-tip)');
 
               // child trs exists, remove and rebuild child trs
@@ -1281,16 +1284,69 @@
 
                 $compile($tr)($scope);
               }
-
+              */
             });
             // operation after ng-repeat finished:ends
 
             $scope.$watch('params.isDataReloadRequired()', onDataReloadStatusChange);
 
-            this.compileDirectiveTemplates = function () {
+            var getCorrespondClass = function(collapseType) {
+              var correspondClass = '';
+              switch(collapseType) {
+                case 'collapsed':
+                  correspondClass = '';
+                  break;
+                case 'collapsed-md':
+                  correspondClass = '';
+                  break;
+                case 'collapsed-sm': 
+                  correspondClass = 'hidden-md hidden-lg';
+                  break;
+                case 'collapsed-xs': 
+                  correspondClass = 'hidden-sm hidden-md hidden-lg';
+                  break;
+              }
 
-              // var $tr = $element.find('tbody > tr');
-              
+              return correspondClass;
+            };
+
+            var colManage = function($td) {
+              if($td.hasClass('collapsed-md')) {
+                $td.addClass(getCorrespondClass('collapsed-md'));
+              } else if($td.hasClass('collapsed-sm')) {
+                $td.addClass(getCorrespondClass('collapsed-sm'));
+              } else if($td.hasClass('collapsed-xs')) {
+                $td.addClass(getCorrespondClass('collapsed-xs'));
+              }
+
+              return $td;
+            };
+
+            var generateExpandHtml = function($tds) {
+              var iLen = $tds.length;
+              var $td = null;
+              var arr = [];
+              var str = '';
+
+              for(var i=0; i<iLen; i++) {
+                $td = angular.element($tds[i]);
+                if($td.attr('class').indexOf('collapsed') > -1) {
+                  arr.push({
+                    'name': $td.attr('data-title'),
+                    'value': $td.attr('ng-bind')
+                  });
+                }
+              }
+
+              for(var i=0; i<arr.length; i++) {
+                str += '<div><span class="collapse-name">' + arr[i]['name'] + '</span>' 
+                  + '<span class="collapse-value" ng-bind="' + arr[i]['value'] + '"></span></div>';
+              }
+
+              return str;
+            };
+
+            this.compileDirectiveTemplates = function () {
 
                 if (!$element.hasClass('ng-table')) {
                     $scope.templates = {
@@ -1299,13 +1355,26 @@
                         pagination: ($attrs.templatePagination ? $attrs.templatePagination : 'ng-table/pager.html'),
                         noDataTip: 'ng-table/noDataTip.html'
                     };
-
                     $element.addClass('ng-table');
 
-                    var $tr = $element.find('tbody > tr')
+                    var $tr = $element.find('tbody > tr'); 
+                    var $tds = $tr.find('td');
+                    var html = generateExpandHtml($tds);         
 
-                    $tr.attr('ng-repeat', 'item in $data track by $index').attr('ng-click', 'clickRow(item)');
+                    // compile tr-parent and tr-child for expanding: starts
+                    var $trChild = angular.element(document.createElement('tr')).addClass('child');
+                    $tr.after($trChild);
+
+                    $tr.addClass('parent')
+                      .attr('ng-repeat-start', 'item in $data track by $index')
+                      .attr('ng-click', 'clickRow(item, $index)');
+                    $trChild.attr('ng-repeat-end', '')
+                      .attr('ng-class', '{"row-collapsed": !item.$collapsed}')
+                      .html('<td colspan="' + $tds.length + '">' + html + '</td>');
+
                     $compile($tr)($scope);
+                    $compile($trChild)($scope);
+                    // compile tr-parent and tr-child for expanding: ends
 
                     // shows search row: starts
                     if($scope.controlParams.isShowSearch) {
@@ -1496,6 +1565,65 @@
                         return;
                     }
 
+                    // manage td for hidden,collapse: starts
+                    // 
+                    // get corresponding class according to collapseType
+                    var getCorrespondClass = function(collapseType) {
+                      var correspondClass = '';
+                      switch(collapseType) {
+                        case 'collapsed':
+                          correspondClass = 'hidden hidden-md hidden-sm hidden-xs';
+                          break;
+                        case 'collapsed-md':
+                          correspondClass = 'hidden-md hidden-sm hidden-xs';
+                          break;
+                        case 'collapsed-sm': 
+                          correspondClass = 'hidden-sm hidden-xs';
+                          break;
+                        case 'collapsed-xs': 
+                          correspondClass = 'hidden-xs';
+                          break;
+                      }
+
+                      return correspondClass;
+                    };
+
+                    var colManage = function(col) {
+                      var className = '';
+
+                      if(col.hasClass('collapsed')) {
+                        className = getCorrespondClass('collapsed')
+
+                        col.addClass(className);
+                        col.attr('header-class', "'" + className + "'");
+                      } else if(col.hasClass('collapsed-md')) {
+                        className = getCorrespondClass('collapsed-md');
+
+                        col.addClass(className);
+                        col.attr('header-class', "'" + className + "'");
+                      } else if(col.hasClass('collapsed-sm')) {
+                        className = getCorrespondClass('collapsed-sm');
+
+                        col.addClass(className);
+                        col.attr('header-class', "'" + className + "'");
+                      } else if(col.hasClass('collapsed-xs')) {
+                        className = getCorrespondClass('collapsed-xs');
+
+                        col.addClass(className);
+                        col.attr('header-class', "'" + className + "'");
+                      }
+
+                      return col;
+                    };
+
+                    var $tds = row.find('td');
+                    var $td = null;
+                    for(var i=0; i<$tds.length; i++) {
+                      $tds[i] = colManage(angular.element($tds[i]));
+                    }
+                    //
+                    // manage td for hidden,collapse: ends
+
                     // generate select checkbox:starts
                     var $tdSelCheckboxs = angular.element(document.createElement('td'))
                       .attr('ng-show', 'controlParams.isShowCheckbox')
@@ -1503,6 +1631,7 @@
                       .attr('header-class', "'th-select'")
                       .attr('header', "'ng-table/headerCheckbox.html'")
                       .attr('ng-click', 'rowCheckboxClick($event, item)')
+                      .addClass('td-select')
                       .html('<label class="i-checks"><input type="checkbox" class="row-checkbox" ng-checked="item.$checked"/><i></i></label>');
 
                     row.prepend($tdSelCheckboxs);

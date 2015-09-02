@@ -176,8 +176,8 @@
   padding-bottom: 5px;
 }
 
-.ng-table tr.child {
-  /*display: none;*/
+.ng-table tr.row-collapsed {
+  display: none;
 }
 
 .ng-table tr.child .collapse-name {
