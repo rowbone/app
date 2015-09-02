@@ -1327,19 +1327,22 @@
               var $td = null;
               var arr = [];
               var str = '';
+              var className = '';
 
               for(var i=0; i<iLen; i++) {
                 $td = angular.element($tds[i]);
                 if($td.attr('class').indexOf('collapsed') > -1) {
+                  className = 'hidden-md';
                   arr.push({
                     'name': $td.attr('data-title'),
-                    'value': $td.attr('ng-bind')
+                    'value': $td.attr('ng-bind'),
+                    'className': className
                   });
                 }
               }
 
               for(var i=0; i<arr.length; i++) {
-                str += '<div><span class="collapse-name">' + arr[i]['name'] + '</span>' 
+                str += '<div class="' + arr[i]['className'] + '"><span class="collapse-name">' + arr[i]['name'] + '</span>' 
                   + '<span class="collapse-value" ng-bind="' + arr[i]['value'] + '"></span></div>';
               }
 
