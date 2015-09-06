@@ -46,6 +46,17 @@
 					<!-- ng-repeat="user in $data track by $index" -->
 					
 					<table ng-table="tableParams" class="table table-hover table-striped bg-white">
+						<div class="advanced-search-wrapper">
+							<conow-advanced-search url="filterOptions.url" search="filterOptions.adSearch">
+							  <conow-search-row label="报销类别" >
+									<conow-picker ng-model="filterOptions.adSearch.params.EXPENSE_TYPE" is-diy="true" modal-title="报销类别" size="sm" picker-options="pickerOptions" placeholder="这是就是提示文字">
+										<modal-trigger>
+											<span class="inline m-r" ng-bind="filterOptions.adSearch.params.EXPENSE_TYPE.OPTION_NAME"></span>
+										</modal-trigger>
+									</conow-picker>
+								</conow-search-row>
+							</conow-advanced-search>
+						</div>
 
 						<tbody>
 							<tr expand-row>

@@ -41,7 +41,7 @@ app.controller('responsiveTableDemoCtrl', ['$scope', 'ngTableParams', '$filter',
         sorting: {
           name: 'asc'
         },
-        // isMultiSel: false,
+        isMultiSel: false,
         isShowSearch: true,
 
         noDataTip: '没有数据时，我要显示这个！'
