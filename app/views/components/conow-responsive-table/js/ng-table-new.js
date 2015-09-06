@@ -1120,6 +1120,7 @@
             // trig search function
             $scope.searchTrigger = function(e) {
                 console.log($scope);
+                $scope.params.reload();
             };
 
             // controlParams to store some parameters for ng-table control, show etc.
