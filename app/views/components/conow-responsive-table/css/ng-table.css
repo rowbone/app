@@ -189,3 +189,23 @@
 .ng-table .th-select {
   text-align: left; 
 }
+
+.first-column:before {
+  content: '+'; 
+  height: 16px;
+  width: 16px;
+  line-height: 14px;
+  padding-left: 3px;
+  position: absolute;
+  border-radius: 16px;
+  background-color: #FE0202;
+  color: #fff;
+  display: inline-block;
+  left: -3px;
+  top: 11px;
+}
+
+.ng-table tbody tr td {
+  position: relative;
+}
+
