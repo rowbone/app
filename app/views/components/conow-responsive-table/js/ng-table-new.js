@@ -1235,7 +1235,7 @@
                 newParams.reload();
             }, false);
 
-            /*var generateRow = function(columns, value) {
+            var generateRow = function(columns, value) {
               var iLen = vm.columns.length; 
               var arr = [];
               for(var i=0; i<iLen; i++) {
@@ -1261,12 +1261,12 @@
                 $tds.shift(0);
               }
               vm.columns = $tds;
-            };*/
+            };
 
-            // tr parent click function
             $scope.clickRow = function(row, index) {
               row.$collapsed = !row.$collapsed;
-            };
+              console.log(row);
+            }
 
             // operation after ng-repeat finished:starts
             $scope.$on('ngTableNgRepeatFinished', function(event, data) {
@@ -1341,11 +1341,13 @@
                   $td = null,
                   arr = [],
                   str = '',
-                  className = '';
+                  className = '',
+                  $tdClass = '',
+                  index = 0;
 
               for(var i=0; i<iLen; i++) {
                 $td = angular.element($tds[i]);
-                var $tdClass = $td.attr('class');
+                $tdClass = $td.attr('class');
                 if(angular.isUndefined($tdClass)) {
                   continue;
                 }
@@ -1363,16 +1365,26 @@
                   continue;
                 }
 
+                if(i == 0 && $td.hasClass('td-select')) {
+                  index = 1;
+                }
+
                 arr.push({
-                  'name': $scope.$columns[i].title(),
-                  'value': $td.attr('ng-bind') || $td.attr('ng-model'),
+                  // 'name': $td.attr('data-title'),
+                  'name': $scope.$columns[i - index].title(),
+                  'value': $td.attr('ng-bind'),
                   'className': className
                 });
               }
 
               for(var i=0; i<arr.length; i++) {
-                str += '<div class="' + arr[i]['className'] + '"><span class="collapse-name">' + arr[i]['name'] + '</span>' 
-                  + '<span class="collapse-value" ng-bind="' + arr[i]['value'] + '"></span></div>';
+                if(i == 0) {
+                  str += '<div class="padder-v-table"><div class="hbox ' + arr[i]['className'] + '"><div class="col col-bar collapse-name">' + arr[i]['name'] + '</div>' 
+                      + '<div class="col collapse-value" ng-bind="' + arr[i]['value'] + '"></div></div></div>';
+                } else {
+                  str += '<div class="padder-v-table ng-table-b-t"><div class="hbox  ' + arr[i]['className'] + '"><div class="col col-bar collapse-name">' + arr[i]['name'] + '</div>' 
+                      + '<div class="col collapse-value" ng-bind="' + arr[i]['value'] + '"></div></div></div>';
+                }
               }
 
               return str;
@@ -1389,21 +1401,12 @@
                     };
                     $element.addClass('ng-table');
 
-                    var $tr = $element.find('tbody > tr.row-repeat'); 
+                    var $tr = $element.find('tbody > tr:not(".no-repeat")'); 
                     var $tds = $tr.find('td');
-                    var $td0 = angular.element($tds[0]);
-                    var $td1 = angular.element($tds[1]);
-
-                    if($td0.hasClass('td-select')) {
-                      $td1.addClass('first-column');
-                    } else {
-                      $td0.addClass('first-column');
-                    }
-
                     var html = generateExpandHtml($tds);         
 
                     // compile tr-parent and tr-child for expanding: starts
-                    var $trChild = angular.element(document.createElement('tr')).addClass('child');
+                    var $trChild = angular.element(document.createElement('tr')).addClass('child ng-table-childHidden');
                     $tr.after($trChild);
 
                     $tr.addClass('parent')
@@ -1456,6 +1459,8 @@
                     $element.find('tbody').append(noDataTipTemplate);
                     $compile(noDataTipTemplate)($scope);
                     // shows message when there is no data: ends
+
+                    $compile($element.wrap('<div class="ng-table-container></div>'))($scope) ;
                 }
             };
 
@@ -1671,7 +1676,7 @@
                     // generate select checkbox:starts
                     var $tdSelCheckboxs = angular.element(document.createElement('td'))
                       .attr('ng-show', 'controlParams.isShowCheckbox')
-                      .attr('width', '50')
+                      .attr('width', '30')
                       .attr('header-class', "'th-select'")
                       .attr('header', "'ng-table/headerCheckbox.html'")
                       .attr('ng-click', 'rowCheckboxClick($event, item)')
@@ -2180,8 +2185,8 @@ angular.module('ngTable').run(['$templateCache', function ($templateCache) {
   $templateCache.put('ng-table/filters/select.html', '<select ng-options="data.id as data.title for data in $selectData" ng-table-select-filter-ds="$column" ng-disabled="$filterRow.disabled" ng-model="params.filter()[name]" class="filter filter-select form-control" name="{{name}}"> <option style="display:none" value=""></option> </select> ');
   $templateCache.put('ng-table/filters/text.html', '<input type="text" name="{{name}}" ng-disabled="$filterRow.disabled" ng-model="params.filter()[name]" class="input-filter form-control" placeholder="{{getFilterPlaceholderValue(filter, name)}}"/> ');
   $templateCache.put('ng-table/header.html', '<ng-table-sorter-row></ng-table-sorter-row> <ng-table-filter-row></ng-table-filter-row> ');
-  $templateCache.put('ng-table/pager.html', '<div class="ng-cloak ng-table-pager" ng-if="params.data.length"> <div ng-if="params.settings().counts.length" class="ng-table-counts btn-group pull-right"> <button ng-repeat="count in params.settings().counts track by $index" type="button" ng-class="{\'active\':params.count()==count}" ng-click="params.count(count)" class="btn btn-default"> <span ng-bind="count"></span> </button> </div> <ul ng-if="pages.length" class="pagination ng-table-pagination"> <li ng-class="{\'disabled\': !page.active && !page.current, \'active\': page.current}" ng-repeat="page in pages" ng-switch="page.type"> <a ng-switch-when="prev" ng-click="params.page(page.number)" href="">&laquo;</a> <a ng-switch-when="first" ng-click="params.page(page.number)" href=""><span ng-bind="page.number"></span></a> <a ng-switch-when="page" ng-click="params.page(page.number)" href=""><span ng-bind="page.number"></span></a> <a ng-switch-when="more" ng-click="params.page(page.number)" href="">&#8230;</a> <a ng-switch-when="last" ng-click="params.page(page.number)" href=""><span ng-bind="page.number"></span></a> <a ng-switch-when="next" ng-click="params.page(page.number)" href="">&raquo;</a> </li> </ul> </div> ');
-  $templateCache.put('ng-table/sorterRow.html', '<tr> <th title="{{$column.headerTitle(this)}}" ng-repeat="$column in $columns" ng-class="{ \'sortable\': $column.sortable(this), \'sort-asc\': params.sorting()[$column.sortable(this)]==\'asc\', \'sort-desc\': params.sorting()[$column.sortable(this)]==\'desc\' }" ng-click="sortBy($column, $event)" ng-if="$column.show(this)" ng-init="template=$column.headerTemplateURL(this)" class="header {{$column.class(this)}}"> <div ng-if="!template" class="ng-table-header" ng-class="{\'sort-indicator\': params.settings().sortingIndicator==\'div\'}"> <span ng-bind="$column.title(this)" ng-class="{\'sort-indicator\': params.settings().sortingIndicator==\'span\'}"></span> </div> <div ng-if="template" ng-include="template"></div> </th> </tr> ');
+  $templateCache.put('ng-table/pager.html', '<div class="ng-cloak ng-table-pager text-center" ng-if="params.data.length"> <div ng-if="params.settings().counts.length" class="ng-table-counts btn-group pull-right"> <button ng-repeat="count in params.settings().counts" type="button" ng-class="{\'active\':params.count()==count}" ng-click="params.count(count)" class="btn btn-default"> <span ng-bind="count"></span> </button> </div> <ul ng-if="pages.length" class="pagination ng-table-pagination"> <li ng-class="{\'disabled\': !page.active && !page.current, \'active\': page.current}" ng-repeat="page in pages" ng-switch="page.type"> <a ng-switch-when="prev" ng-click="params.page(page.number)" href=""><i class="fa fa-fw fa-angle-left text-dark"></i>上一页</a> <a ng-switch-when="first" ng-click="params.page(page.number)" href="" class="m-r-xs"><span ng-bind="page.number"></span></a> <a ng-switch-when="page" ng-click="params.page(page.number)" href="" class="m-r-xs"><span ng-bind="page.number"></span></a> <a ng-switch-when="more" ng-click="params.page(page.number)" href="" class="m-r-xs">&#8230;</a> <a ng-switch-when="last" ng-click="params.page(page.number)" href="" class="m-r-xs"><span ng-bind="page.number"></span></a> <a ng-switch-when="next" ng-click="params.page(page.number)" href="">下一页<i class="fa fa-fw fa-angle-right text-dark"></i></a> </li> </ul> </div> ');
+  $templateCache.put('ng-table/sorterRow.html', '<tr> <th title="{{$column.headerTitle(this)}}" ng-repeat="$column in $columns" ng-class="{ \'sortable\': $column.sortable(this), \'sort-asc\': params.sorting()[$column.sortable(this)]==\'asc\', \'sort-desc\': params.sorting()[$column.sortable(this)]==\'desc\' }" ng-click="sortBy($column, $event)" ng-if="$column.show(this)" ng-init="template=$column.headerTemplateURL(this)" class="header {{$column.class(this)}}"> <div ng-if="!template" class="ng-table-header" ng-class="{\'sort-indicator\': params.settings().sortingIndicator==\'div\'}"> <span ng-bind="$column.title(this)" ng-class="{\'sort-indicator\': params.settings().sortingIndicator==\'span\'}" class="font-normal"></span> </div> <div ng-if="template" ng-include="template"></div> </th> </tr> ');
   $templateCache.put('ng-table/noDataTip.html', '<td ng-if="params.settings().$loading === false && params.settings().total == 0 && params.data.length == 0" colspan="{{ :: $columns.length }}" ng-bind="controlParams.noDataTip"></td>' + 
               '<td ng-if="params.settings().$loading === true" colspan="{{ :: $columns.length }}"><i class="fa fa-spin fa-spinner"></i>加载中...</td>');
   $templateCache.put('ng-table/search.html', '<input type="text" class="form-control" placeholder="请输入关键字进行搜索" ng-table-search="vm" ng-model="vm.searchKey" ng-keyup="searchTrigger($event)">');

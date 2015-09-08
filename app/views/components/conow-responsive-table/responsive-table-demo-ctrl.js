@@ -34,6 +34,9 @@ app.controller('responsiveTableDemoCtrl', ['$scope', 'ngTableParams', '$filter',
     };
 
     // $scope.tableData = [];
+    vm.sum = {
+      'name': 'abc'
+    };
 
     $scope.tableParams = new ngTableParams({
         page: 1,            // show first page

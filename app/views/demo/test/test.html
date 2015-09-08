@@ -2,240 +2,64 @@
 <div class="bg-light dk b-b header-md h">
   <h1 class="m-n text-center font-thin h3">一些测试问题和知识点</h1>
 </div>
+<style>
+	.form-group {
+		border: 1px solid #000;
+	}
+</style>
 <div class="wrapper-md">
+	
 	<div class="row">
-		<div class="col-sm-12 col-md-6">
-			<div class="panel panel-info">
-				<div class="panel-heading">
-					<div class="panel-title">服务中调用controller的方法，是否会有上下文的问题</div>
-				</div>
-				<div class="panel-body">
-					<form class="form" name="form" ng-controller="ExecFuncInServiceCtrl">
-						<pre>{{ entity.isMulti }}</pre>
-						<pre>{{ entity.results.length }}</pre>
-						<pre>{{ entity.isMulti && entity.results.length }}</pre>
-						<div class="form-group">
-							<label for="">调用方法</label>
-							<button type="button" class="btn btn-primary" ng-click="execFuncInService()">调用方法</button>
-						</div>
-						<div class="form-group">
-							<pre>{{ entity | json }}</pre>
-						</div>
-						<div class="form-group">
-							<label for="">decorator</label>
-							<button type="button" class="btn btn-primary" ng-click="execDecorator()">decorator 方法</button>
-						</div>
-						<div class="form-group">
-							<div ng-repeat="chkbox in chkboxes">
-								<input type="checkbox" name="chkbox" ng-model="entity.abc[$index]" ng-true-value="{{chkbox.age}}">{{ chkbox.name }}
-							</div>
-						</div>
-						<pre>{{ entity.abc }}</pre>
-					</form>
-				</div>
-				<div class="panel-footer">
-					<small class="text-info">点击调用方法，改变 entity 的值</small>
-				</div>
-			</div>
-		</div>
 
-		<div class="col-sm-12 col-md-6">
-			<div class="panel panel-info">
+		<div class="col-md-6 col-sm-12">
+			<div class="panel panel-info" ng-controller="ngBindCtrl">
 				<div class="panel-heading">
-					<div class="panel-title">装饰器 decorator </div>
-				</div>
-				<div class="panel-body">
-					
-				</div>
-				<div class="panel-footer"></div>
-			</div>
-		</div>
-
-		<div class="col-sm-12 col-md-6">
-			<div class="panel panel-info">
-				<div class="panel-heading">
-					<div class="panel-title">$q defer promise</div>
-				</div>
-				<div class="panel-body" ng-controller="DeferAndPromiseCtrl">
-					<form action="" name="form" >
-						<div class="form-group">
-							<label for="" class="control-label">defer和promise的比较</label>
-							<button class="btn btn-primary" ng-click="test()">测试</button>
-						</div>
-					</form>
-				</div>
-			</div>
-		</div>
-
-		<div class="col-sm-12 col-md-6" ng-controller="DataGenerateCtrl">
-			<div class="panel panel-info">
-				<div class="panel-heading">
-					<div class="panel-title">数据生成</div>
+					<div class="panel-title">ngBind</div>
 				</div>
 				<div class="panel-body">
 					<div class="form-group">
-						<label for="control-label">生成scroll数据</label>
-						<div class="col-sm-8">
-							<button type="button" class="btn btn-primary" ng-click="generateData()">generate</button>
-						</div>
+						<label for="">ng-bind</label>
+						<div ng-bind="vm.info"></div>
 					</div>
+
 					<div class="form-group">
-						<label class="control-label">placeholder 和 有值时的不同样式</label>
-						<div class="col-sm-8">
-							<input type="text" class="form-control" placeholder="请输入" ng-model="entity.sex" ng-class="{'font-bold': entity.sex.length > 0}">
-						</div>
+						<label for="">ng-bind 多个</label>
+						<div ng-bind="{{ vm.name }} {{ vm.age }}"></div>
+					</div>
+
+					<div class="form-group">
+						<label for="">ng-bind-template</label>
+						<div ng-bind-template="{{ vm.name }} {{ vm.age }}"></div>
+					</div>
+
+					<div class="form-group">
+						<label for="">ng-bind-html(unsafe)</label>
+						<div ng-bind-html="vm.html"></div>
+					</div>
+
+					<div class="form-group">
+						<label for="">ng-bind-html(safe)</label>
+						<div ng-bind-html="safeHtml"></div>
+					</div>
+
+					<div class="form-group">
+						<label for="">compile-bind-html</label>
+						<div compile-bind-html="vm.html"></div>
+					</div>
+
+					<div class="form-group">
+						<label for="">ng-include</label>
+						<div ng-include="'template1'"></div>
 					</div>
 				</div>
 			</div>
-		</div>
-		<style>
-		.w-auto-important { width: auto !important; }
-		.w-200 { width: 200px;}
-		</style>
-		<div class="col-sm-12 col-md-6">
-			<div class="div breadcrumb swiper-container contact-list w-200 pull-left">
-				<ul class="swiper-wrapper p-l-sm m-xs list-unstyled">
-					<li class="swiper-slide w-auto-important">11111</li>
-					<li class="swiper-slide w-auto-important">22222</li>
-					<li class="swiper-slide w-auto-important">33333</li>
-					<li class="swiper-slide w-auto-important">44444</li>
-					<li class="swiper-slide w-auto-important">55555</li>
-					<li class="swiper-slide w-auto-important">55555</li>
-					<li class="swiper-slide w-auto-important">55555</li>
-					<li class="swiper-slide w-auto-important">55555</li>
-					<li class="swiper-slide w-auto-important">55555</li>
-					<li class="swiper-slide w-auto-important">55555</li>
-					<li class="swiper-slide w-auto-important">55555</li>
-				</ul>
-			</div>
 
-			<div class="text-ellipsis pull-left">
-				11111111111
-			</div>
-
-			<script>
-			var swiper = new Swiper('.swiper-container', {
-				pagination: '.swiper-pagination',
-				slidesPerView: 4,
-				centeredSlides: false,
-				paginationClickable: true,
-				spaceBetween: 10,
-				grabCursor: true,
-				watchSlidesProgress: true
-			});
+			<script type="text/ng-template" id="template1">
+				<div class="container">
+					<div class="title">{{ vm.info }}</div>
+					<div class="content">content</div>
+				</div>
 			</script>
-		</div>
-	</div>
-
-	<style>
-		.w-p-5 { width: 18%; background: #5115CF; }
-		.area-item-content > a { background: #EB0C0C; }
-	</style>
-	<div class="row">
-		<div class="col-md-6 col-sm-12" ng-controller="listItemCtrl">
-			<div class="panel panel-info">
-				<div class="panel-heading">
-					<div class="panel-title">list-group</div>
-				</div>
-				<div class="panel-body">
-
-				</div>
-			</div>
-		</div>
-		<div class="col-md-6 col-sm-12" ng-controller="nameCtrl">
-			<div class="panel panel-info">
-				<div class="panel-heading">
-					<div class="panel-title">指令的绑定策略</div>
-				</div>
-				<div class="panel-body">
-					<div class="form-group">
-						<span direct-param for-name="{{name}}"></span>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-
-	<style>
-	.group-container .group-label:hover { cursor: pointer; }
-	.group-container .child-item:hover { cursor: pointer; background-color: #A89F9F; }
-	</style>
-	<div class="row">
-		<div class="col-md-6 col-sm-12" ng-controller="pinyinCtrl">
-			<div class="panel panel-info">
-				<div class="panel-heading">
-					<div class="panel-title">拼音转换filter示例</div>
-				</div>
-				<div class="panel-body">
-					<div class="form-group">
-						<input type="text" class="form-control" ng-model="vm.chinese">
-					</div>
-					<div class="form-group">
-						拼音首字母：
-						<span ng-bind="vm.chinese | getGroupLabel"></span>
-					</div>
-					<div class="form-group">
-						<button class="btn btn-primary" ng-click="pinyinConvert()">拼音转换</button>
-					</div>
-					<div class="form-group">
-						拼音全部：
-						<span ng-bind="vm.pinyinAll"></span>
-
-						<a ui-sref="app.components.countrySel">app.components.countrySel</a>
-					</div>
-					
-					<div class="group-container">
-						<div ng-repeat="group in vm.pinyin" class="m-t-xs m-b-xs" ng-if="group.children.length > 0">
-							<div class="bg-dark dker p-xs m-b-xs group-label" ng-click="groupItemClick(group, $event)">
-								<div class="inline" ng-bind="group.groupLabel"></div>
-								<div class="inline pull-right" ng-bind="group.children.length"></div>
-							</div>
-							<div ng-repeat="child in group.children" class="padder-v-xs padder-sm child-item" ng-click="childItemClick(child, $event)" ng-show="group.expanded">
-								<div ng-bind="child.FROM_USER_ID_HR_STAFF_INFO"></div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-		
-		<div class="col-md-6 col-sm-12">
-			<div class="panel panel-info">
-				<div class="panel-heading">
-					<div class="panel-title">
-						使用说明
-					</div>
-				</div>
-				<div class="panel-body">
-					<ol>
-						<li>引入文件：<code>'js/filters/pinyin-convert.js'</code></li>
-						<li>获取拼音首字母：filter - <code>getGroupLabel</code></li>
-						<li>获取拼音：<code>chinese2Pinyin.getPinyin('中国')</code></li>
-						<li>分组：<code>$filter('groupBy')($filter('getGroupLabel')(data, 'FROM_USER_ID_HR_STAFF_INFO'), 'groupLabel');</code>。其中data是所有数据，'FROM_USER_ID_HR_STAFF_INFO'是用于分组的字段。</li>
-					</ol>
-				</div>
-			</div>
-		</div>
-	</div>
-
-	<div class="row">
-		<div class="col-md-6 col-sm-12">
-			<div class="panel panel-info" ng-controller="dotdotdotDemoCtrl">
-				<div class="panel-heading">
-					<div class="panel-title">dotdotdot</div>
-				</div>
-				<div class="panel-body">
-					<div class="form-group">
-						<label for=""></label>
-						<input type="text" conow-dot click-fn="clickFn($event)" ng-keydown="keyDownFn($event)">
-					</div>
-
-					<div class="form-group">
-						<label for="" class="control-label">异步操作的过滤器</label>
-						<input type="text" ng-model="vm.filterVal | asyncFilter" class="form-control">
-					</div>
-				</div>
-			</div>
 		</div>
 	</div>
 

@@ -1,288 +1,34 @@
 'use strict';
 
-app.controller('ExecFuncInServiceCtrl', ['$scope', 'ExecFuncService', 'foo', '$log', 'DataService', 
-	function($scope, ExecFuncService, foo, $log, DataService) {
-
-		var str = '中华人民共和国';
-		console.log('before convert-->', str);
-		console.log('after convert-->', chinese2Pinyin.getPinyin(str));
-
-		$scope.entity = {
-			'email': 'abc111@email.com',
-			'sex': 'female',
-			'isMulti': false,
-			'results': [{}, {}, {}]
-		};
-		// service 调用 controller 提供的参数方法
-		$scope.execFuncInService = function() {
-			ExecFuncService.submit({'name': 'abc', 'age': 12}, function() {
-				$scope.entity = {
-					'email': 'abc@email.com',
-					'sex': 'male'
-				};
-			});
-		};
-		// service decorator
-		$scope.execDecorator = function() {
-			// 
-			console.log('foo.variable-->', foo.variable);
-			console.log('foo.getPrivate()-->', foo.getPrivate());
-			console.log('foo.greet()-->', foo.greet());
-
-			$log.log('This is from Angular $log...');
-		};
-
-		$scope.chkboxes = [
-			{
-				'name': 'name1',
-				'age': 3
-			}, {
-				'name': 'name2',
-				'age': 8
-			}
-		];
-
-		$scope.abc = [];
-
-	}
-]);
-
-app.service('ExecFuncService', ['$timeout', 
-	function($timeout) {
-		var ExecFuncService = {
-			submit: function(params, fn) {
-				console.log('params-->', params);
-
-				if(fn) {
-					console.log('fn-->', fn);
-					fn();
-				}
-			}
-		};
-
-		return ExecFuncService;
-	}
-]);
-
-app.factory('foo', ['$timeout', function($timeout) {
-	var thisIsPrivate = 'Private';
-
-	function getPrivate() {
-		return thisIsPrivate;
-	}
-
-	return {
-		variable: 'This is public',
-		getPrivate: getPrivate
-	};
-}]);
-
-app.config(function($provide) {
-	$provide.decorator('foo', function($delegate) {
-		$delegate.greet = function() {
-			return 'Hello, I am a new function of "foo"';
-		};
-
-		return $delegate;
-	});
-
-	$provide.decorator('$log', function($delegate) {
-		angular.forEach(['log', 'debug', 'info', 'warn', 'error'], function(o) {
-			$delegate[o] = decoratorLogger($delegate[o]);
-		});
-
-		function decoratorLogger(originalFn) {
-			return function() {
-				var args = Array.prototype.slice(arguments);
-				args.unshift(new Date().toISPString());
-				originalFn.apply(null, args);
-			}
-		}
-	});
-	
-});
-
-app.service('PromiseDataService', ['DataService', 
-	function(DataService) {
-		var self = this,
-				data = [];
-
-		var data = DataService.getData('');
-
-		this.setData = function(data) {
-			self.data = data;
-		}
-
-		this.getData = function() {
-			return self.data;
-		};
-	}
-]);
-
-// $q defer promise 
-app.controller('DeferAndPromiseCtrl', ['$scope', 'DataService', 
-	function($scope, DataService) {
-		// 
-
-		// $scope.$watch(function() {
-		// 	return DateService.getData('')
-		// });
-	}
-]);
-
-app.controller('DataGenerateCtrl', ['$scope', 'DataService', 
-	function($scope, DataService) {
-		//
-		$scope.entity = {
-			// 'sex': 'male'
-		};
-
-		$scope.generateData = function() {console.log(DataService);
-			DataService.getData('/dataGenerate/scroll?name=123')
-				.then(function(data) {
-					console.log(data);
-				}, function(msg) {
-					console.log('msg-->', msg);
-				});
-		};
-
-	}
-]);
-
-app.controller('listItemCtrl', ['$scope', 
-	function ($scope) {
-		// 
+app.controller('ngBindCtrl', ['$scope', '$sce', 
+	function($scope, $sce) {
 		var vm = $scope.vm = {
-			countries: ['中国', '英国', '美国', '法国', '俄罗斯', '印度', '德国', '西班牙', '南非', '中非', '埃及', '墨西哥']
+			'info': 'abc',
+			'name': 'name-string',
+			'age': 4,
+			'html': '<div class="container">' 
+				+ '<div class="title">{{ vm.info }}' 
+				+ '<div class="content">content</div></div>'
 		};
+
+		$scope.safeHtml = $sce.trustAsHtml(vm.html);
 	}
 ]);
 
-// directive bind strategy
-app.directive('directParam', function() {
-		return {
-			restrict: 'ECMA',
-			template: '<div>指令中:{{ name }}</div>',
-			scope: {
-				name: '@forName'
-			}
-		}
-	})
-	.controller('nameCtrl', ['$scope', 
-		function($scope){
-			$scope.name = '张三';
-		}
-	])
-
-// pinyin filter ctrl
-app.controller('pinyinCtrl', ['$scope', 'DataService', '$filter', 
-	function($scope, DataService, $filter) {
-		var vm = $scope.vm = {
-			chinese: '中国'
-		};
-
-		var url = 'views/demo/test/data/group-users.json';
-		DataService.getData(url)
-			.then(function(data) {
-				if(data.success) {
-					data = data.obj;
-					var pinyin = $filter('getGroupLabel')(data, 'FROM_USER_ID_HR_STAFF_INFO');
-console.log('pinyin-->', pinyin);
-					pinyin = $filter('groupBy')(pinyin, 'groupLabel');
-
-					// vm.pinyin = $filter('groupBy')($filter('getGroupLabel')(data, 'FROM_USER_ID_HR_STAFF_INFO'), 'groupLabel');
-					vm.pinyin = pinyin;
-				} else {
-					console.log('Get ', url , ' wrong...-->', data.message);
-				}
-			}, function(msg) {
-				console.error('msg-->', msg);
-			});
-
-		$scope.pinyinConvert = function() {
-			vm.pinyinAll = chinese2Pinyin.getPinyin(vm.chinese);
-		};
-
-		$scope.groupItemClick = function(group, e) {
-			e.preventDefault();
-			group.expanded = !group.expanded;
-
-			e.stopPropagation();
-		};
-
-		$scope.childItemClick = function(group, e) {
-			e.preventDefault();
-			group.expanded = !group.expanded;
-
-			e.stopPropagation();
-		};
-
-	}
-]);
-
-app.directive('conowDot', ['$parse', 
-	function($parse) {
+app.directive('compileBindHtml', ['$compile', 
+	function($compile) {
 		return {
 			restrict: 'AE',
 			link: function(scope, elem, attrs) {
-				console.log('in linking...');
-				console.log(attrs.clickFn);
-				console.log($parse(attrs.clickFn));
+				var fn = function() {
+					return scope.$eval(attrs.compileBindHtml);
+				};
 
-				var fn = $parse(attrs.clickFn);
-
-				// scope.apply(function() {
-				// 	fn();
-				// });
-
-				elem.dotdotdot();
+				scope.$watch(fn, function(newVal) {
+					elem.html(newVal);
+					$compile(elem.contents())(scope);
+				});
 			}
 		}
 	}
 ]);
-
-app.controller('dotdotdotDemoCtrl', ['$scope', 
-	function($scope) {
-
-		$scope.keyDownFn = function(e) {
-			if(e.keyCode === 32 || e.keyCode === 39) {
-
-        e.preventDefault();
-				// return false;
-			}
-
-			// return true;
-		};
-
-		$scope.clickFn = function(e) {
-			console.log('111111111111');
-		};
-
-	}
-]);
-
-app.filter('asyncFilter', ['$filter', 'DataService', '$q', 
-	function($filter, DataService, $q) {
-		var deferred = $q.defer();
-
-		var filterPromise = deferred.promise;
-
-
-		var filterFn = function(input) {
-			var url = 'views/demo/test/data/group-users.json';
-
-			DataService.getData(url)
-				.then(function(data) {
-					console.log('data-->', data);
-					deferred.resolve(data);
-				}, function(msg) {
-					console.log('msg-->', msg);
-					deferred.reject(msg);
-				})
-		};
-
-		return filterFn;
-	}
-]);
-
-
