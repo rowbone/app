@@ -8,7 +8,7 @@
 				<div class="panel-title">组件演示</div>
 			</div>
 			<div class="panel-body">
-				<div class="form-group">
+				<!-- <div class="form-group">
 					<div class="radio inline">
 						<label class="i-checks">
 							<input type="radio" name="multiSelect" ng-model="options.multiSelect" value=true><i></i>多选
@@ -19,14 +19,14 @@
 							<input type="radio" name="multiSelect" ng-model="options.multiSelect" value=false><i></i>单选
 						</label>
 					</div>
-				</div>
-				<div class="form-group m-t-sm">
+				</div> -->
+				<!-- <div class="form-group m-t-sm">
 					<pre>{{ options | json }}</pre>
-					<!-- <div class="form-group">
+					<div class="form-group">
 						<input type="text" ng-model="options.">
-					</div> -->
+					</div>
 					已选项：<pre>{{ vm.selected }}</pre>
-				</div>
+				</div> -->
 <!-- <td width="50">
   <label class="i-checks">
   	<input type="checkbox" class="icheckbox_square" ng-checked="indexInSelectedArr(user) >= 0" header="'ng-table/headers/checkbox.html'"><i></i>
@@ -44,19 +44,8 @@
 
 					<!-- ng-click="changeSelection(user, $event)" -->
 					<!-- ng-repeat="user in $data track by $index" -->
-					
-						<table ng-table="tableParams" class="table table-hover table-striped bg-white text-center horizontal-scroll" style="width:500px;">
-							<div class="advanced-search-wrapper">
-								<conow-advanced-search url="filterOptions.url" search="filterOptions.adSearch">
-								  <conow-search-row label="报销类别" >
-										<conow-picker ng-model="filterOptions.adSearch.params.EXPENSE_TYPE" is-diy="true" modal-title="报销类别" size="sm" picker-options="pickerOptions" placeholder="这是就是提示文字">
-											<modal-trigger>
-												<span class="inline m-r" ng-bind="filterOptions.adSearch.params.EXPENSE_TYPE.OPTION_NAME"></span>
-											</modal-trigger>
-										</conow-picker>
-									</conow-search-row>
-								</conow-advanced-search>
-							</div>
+					<div class="ng-table-wrapper" style="width:500px;max-width:100%;overflow-x:auto;">
+						<table ng-table="tableParams" class="table table-hover table-striped bg-white text-center horizontal-scroll" >
 
 							<tbody>
 
@@ -67,16 +56,17 @@
 									<td data-title="'性别'" ng-bind="item.sex" col-bind="sex" header-class="'abc'" sortable="'sex'" class="collapsed-11xs">
 									</td>
 									<td data-title="'职位'" ng-bind="item.duty" col-bind="duty" sortable="'duty'" class="collapsed-11sm"></td>
-									<td data-title="'职位'" ng-bind="item.duty" col-bind="duty" sortable="'duty'" class="collapsed-11sm"></td>
-									<td data-title="'职位'" ng-bind="item.duty" col-bind="duty" sortable="'duty'" class="collapsed-11sm"></td>
-									<td data-title="'职位'" ng-bind="item.duty" col-bind="duty" sortable="'duty'" class="collapsed-11sm"></td>
-									<td data-title="'职位'" ng-bind="item.duty" col-bind="duty" sortable="'duty'" class="collapsed-11sm"></td>
-									<td data-title="'职位'" ng-bind="item.duty" col-bind="duty" sortable="'duty'" class="collapsed-11sm"></td>
+									<td data-title="'职位'" ng-bind="item.duty" col-bind="duty" class="collapsed-11sm"></td>
+									<td data-title="'职位'" ng-bind="item.duty" col-bind="duty" class="collapsed-11sm"></td>
+									<td data-title="'职位'" ng-bind="item.duty" col-bind="duty" class="collapsed-11sm"></td>
+									<td data-title="'职位'" ng-bind="item.duty" col-bind="duty" class="collapsed-11sm"></td>
+									<td data-title="'职位'" ng-bind="item.duty" col-bind="duty" class="collapsed-11sm"></td>
 								</tr>
 
 							</tbody>
 						</table>
-					
+					</div>
+
 					<div class="m-t form-group">
 						<!-- 
 						<table ng-table="tableParams2" class="table table-hover">
