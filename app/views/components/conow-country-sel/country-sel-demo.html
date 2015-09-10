@@ -49,12 +49,12 @@
 						<input type="text" class="form-control" conow-country-select ng-model="vm.sel">
 					</div> -->
 					<div class="form-group">
-						<input type="text" class="form-control" conow-alphabet-group-sel="{{options}}" ng-model="vm.sel">
+						<!-- <input type="text" class="form-control" conow-alphabet-group-sel="{{options}}" ng-model="vm.sel"> -->
 					</div>
 					<div class="form-group">
 						<label for="" class="control-label">过滤器显示国家名称</label>
 						<!-- <input type="text" class="form-control" conow-country-select ng-model="vm.sel"> -->
-						<span>{{ vm.sel | countryCodeToName }}</span>
+						<span ng-bind="vm.sel | countryCodeToName"></span>
 					</div>
 
 					<pre>{{ vm | json }}</pre>

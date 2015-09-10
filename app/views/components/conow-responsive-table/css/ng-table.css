@@ -349,9 +349,7 @@
 }
 
 .ng-table-container {
-  width: 100%;
   overflow: auto;
-  max-width: 500px;
 }
 
 .ng-table.horizontal-scroll th {

@@ -11,8 +11,8 @@ app.controller('countryCascadeSelDemoCtrl', ['$scope', '$stateParams',
 	}
 ]);
 
-app.controller('countrySelDemoCtrl', ['$scope', 
-	function($scope) {
+app.controller('countrySelDemoCtrl', ['$scope', 'peerCountriesService', 
+	function($scope, peerCountriesService) {
 		// 
 		var vm = $scope.vm = {
 			sel: '446'
@@ -33,6 +33,10 @@ app.controller('countrySelDemoCtrl', ['$scope',
 			selectValue: 'VALUE',
 			colsPerRow: 2
 		};
+
+		peerCountriesService.peerCountriesPromise.then(function(data) {
+			vm.selName = peerCountriesService.getSelectedCountryName(vm.sel);
+		})
 	}
 ]);
 

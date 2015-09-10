@@ -1401,6 +1401,8 @@
                     };
                     $element.addClass('ng-table');
 
+                    // $element.wrap('<div class="ng-table-container" width="500"></div>');
+
                     var $tr = $element.find('tbody > tr:not(".no-repeat")'); 
                     var $tds = $tr.find('td');
                     var html = generateExpandHtml($tds);         
@@ -1460,7 +1462,7 @@
                     $compile(noDataTipTemplate)($scope);
                     // shows message when there is no data: ends
 
-                    $compile($element.wrap('<div class="ng-table-container></div>'))($scope) ;
+                    $element.wrap('<div class="ng-table-container"></div>') ;
                 }
             };
 

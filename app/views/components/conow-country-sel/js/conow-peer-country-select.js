@@ -99,16 +99,14 @@ app.service('peerCountriesService', ['$q', 'DataService',
  */
 app.filter('countryCodeToName', ['peerCountriesService', '$q', 
 	function(peerCountriesService, $q) {
-		return function(input) {
+		var filterFn = function(input) {
 
-			peerCountriesService.peerCountriesPromise
-				.then(function() {
-					return peerCountriesService.getSelectedCountryName(input);
-				})
-
+			return peerCountriesService.getSelectedCountryName(input);
 		};
 
-		return filterFunc;
+		filterFn.$stateful = true;
+
+		return filterFn;
 	}
 ]);
 
