@@ -9,7 +9,14 @@ app.controller('responsiveTableDemoCtrl', ['$scope', 'ngTableParams', '$filter',
 
     var vm = $scope.vm = {
       'searchKey': '',
-      'selected': []
+      'selected': [],
+      'tds': [
+        {
+          'title': "'工资1'"
+        }, {
+          'title': "'工资2'"
+        }
+      ]
     };
 
     $scope.filterFn = function(filterObj, searchKey) {
@@ -38,62 +45,68 @@ app.controller('responsiveTableDemoCtrl', ['$scope', 'ngTableParams', '$filter',
       'name': 'abc'
     };
 
-    $scope.tableParams = new ngTableParams({
-        page: 1,            // show first page
-        count: 10,          // count per page
-        sorting: {
-          name: 'asc'
-        },
-        isMultiSel: false,
-        isShowSearch: true,
+    $scope.tableParams = {
+      headers: 'Full Name, Money, Age',
+      fields: 'name, money, age',
+      dataSrcUrl: 'views/components/conow-responsive-table/data/users.json'
+    }
 
-        noDataTip: '没有数据时，我要显示这个！'
-    }, {
-        total: 0, // length of data
-        // filterDelay: 0,   // filter delay time
-        // counts: [10, 25, 50, 100],
-        getData: function($defer, params) {
+    // $scope.tableParams = new ngTableParams({
+    //     page: 1,            // show first page
+    //     count: 10,          // count per page
+    //     sorting: {
+    //       name: 'asc'
+    //     },
+    //     isMultiSel: false,
+    //     isShowSearch: true,
+    //     searchCol: 'name;duty',
+    //     noDataTip: '没有数据时，我要显示这个！'
+    // }, {
+    //     total: 0, // length of data
+    //     // filterDelay: 0,   // filter delay time
+    //     // counts: [10, 25, 50, 100],
+    //     getData: function($defer, params) {
 
-          if($scope.tableData) {
-            var orderedData = $scope.tableData;
+    //       if($scope.tableData) {
+    //         var orderedData = $scope.tableData;
 
-            orderedData = tableDataDeal(orderedData, params);
+    //         orderedData = tableDataDeal(orderedData, params);
 
-            params.total(orderedData.length);
+    //         params.total(orderedData.length);
 
-            var page = params.page();
-            var count = params.count();
+    //         var page = params.page();
+    //         var count = params.count();
 
-            $defer.resolve(orderedData.slice((page - 1) * count, page * count));
-          } else {
-            var url = 'views/components/conow-responsive-table/data/users.json';
-            // var url = '/dataGenerate/users';
-            DataService.getData(url)
-              .then(function(data) {
+    //         $defer.resolve(orderedData.slice((page - 1) * count, page * count));
+    //       } else {
+    //         var url = 'views/components/conow-responsive-table/data/users.json';
+    //         // var url = '/dataGenerate/users';
+    //         DataService.getData(url)
+    //           .then(function(data) {
 
-                $scope.tableData = data;
+    //             $scope.tableData = data;
 
-                var orderedData = $scope.tableData;
+    //             var orderedData = $scope.tableData;
 
-                orderedData = tableDataDeal(orderedData, params);
+    //             orderedData = tableDataDeal(orderedData, params);
 
-                params.total(orderedData.length);
-                // set count to all data's length to void pagination
-                // params.count(orderedData.length);
+    //             params.total(orderedData.length);
+    //             // set count to all data's length to void pagination
+    //             // params.count(orderedData.length);
 
-                var page = params.page();
-                var count = params.count();
+    //             var page = params.page();
+    //             var count = params.count();
 
-                $defer.resolve(orderedData.slice((page - 1) * count, page * count));
-                // $defer.resolve(orderedData);
-              }, function(msg) {
-                console.error('msg-->', msg);
-              });
-          }
+    //             $defer.resolve(orderedData.slice((page - 1) * count, page * count));
+    //             // $defer.resolve(orderedData);
+    //           }, function(msg) {
+    //             console.error('msg-->', msg);
+    //           });
+    //       }
           
 
-        }
-    });
+    //     }
+    // });
 
     /**
      * 单个搜索
@@ -168,34 +181,34 @@ app.controller('responsiveTableDemoCtrl', ['$scope', 'ngTableParams', '$filter',
       e.stopPropagation();
     };
 
-    $scope.tableParams2 = new ngTableParams({
-      page: 1,
-      count: 10
-    }, {
-      getData: function($defer, params) {
-        var url = 'views/components/conow-responsive-table/data/pagination1.json';
-        console.log(params.page());
+    // $scope.tableParams2 = new ngTableParams({
+    //   page: 1,
+    //   count: 10
+    // }, {
+    //   getData: function($defer, params) {
+    //     var url = 'views/components/conow-responsive-table/data/pagination1.json';
+    //     console.log(params.page());
           
-        var pageParams = {
-          page: params.page(),      // params.page() 方法获取当前点击的页码
-          pagesize: 10,
-          ORG_UNIT_ID: '1421924106089631410343354'
-        };
+    //     var pageParams = {
+    //       page: params.page(),      // params.page() 方法获取当前点击的页码
+    //       pagesize: 10,
+    //       ORG_UNIT_ID: '1421924106089631410343354'
+    //     };
 
-        DataService.getData(url)
-          .then(function(data) {
-            console.log(data);
+    //     DataService.getData(url)
+    //       .then(function(data) {
+    //         console.log(data);
 
-            // params.settings.counts([]);
+    //         // params.settings.counts([]);
 
-            params.total(data.pageInfo.count);
+    //         params.total(data.pageInfo.count);
 
-            $defer.resolve(data.obj);
-          }, function(msg) {
-            console.error(msg);
-          });
-      }
-    });
+    //         $defer.resolve(data.obj);
+    //       }, function(msg) {
+    //         console.error(msg);
+    //       });
+    //   }
+    // });
 
         
 	}

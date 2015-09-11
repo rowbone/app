@@ -1115,20 +1115,18 @@
             var isFirstTimeLoad = true;
             $scope.$filterRow = {};
             $scope.$loading = false;
-            
-//            $scope.$watch('filterOptions', function(newVal, oldVal) {
-//              console.log('in watch111-->', newVal);
-//            }, true);
 
-            var vm = $scope.vm = {};
-            // trig search function
-            // $scope.searchTrigger = function(e) {
-            //     console.log($scope);
-            //     $scope.params.reload();
-            // };
+            var vm = $scope.vm = {
+                searchOptions: {
+                    'searchKey': '',
+                    'searchCols': [],
+                }
+            };
 
-            $scope.$watch('vm.searchKey', function(newVal, oldVal) {
+            $scope.$watch('vm.searchOptions.searchKey', function(newVal, oldVal) {
               console.log('111111111111111');
+
+              $scope.params.searchOptions = vm.searchOptions;
               $scope.params.reload();
             })
 
@@ -2102,27 +2100,36 @@
     }]);
 })();
 
-// (function() {
-//   angular.module('ngTable')
-//     .directive('ngTableSearch', [function() {
-//       return {
-//         restrict: 'AE',
-//         scope: {
-//           vm: '=ngTableSearch',
-//         },
-//         link: function(scope, elem, attrs) {
-//           vm.searchKey = 'abc';
+/**
+ * ngTableSearch
+ * @ directive to get search key
+ */
+(function() {
+  angular.module('ngTable')
+    .directive('ngTableSearch', [function() {
+      return {
+        restrict: 'AE',
+        scope: {
+          vm: '=ngTableSearch',
+        },
+        replace: true,
+        template: '<input type="text" class="form-control" placeholder="请输入关键字进行搜索" ng-model="vm.searchKey" ng-keyup="searchTrigger($event)">',
+        link: function(scope, elem, attrs) {
+            var vm = scope.vm;
+            if(angular.isUndefined(vm)) {
+                vm = {};
+            }
 
-//           // search trigger function
-//           scope.searchTrigger = function(e) {
-//             e.preventDefault();
+            // search trigger function
+            scope.searchTrigger = function(e) {
+                e.preventDefault();
 
-//             e.stopPropagation();
-//           }
-//         }
-//       }
-//     }]);
-// })();
+                e.stopPropagation();
+            }
+        }
+      }
+    }]);
+})();
 
 /**
  * array util service:array operations
@@ -2191,7 +2198,7 @@ angular.module('ngTable').run(['$templateCache', function ($templateCache) {
   $templateCache.put('ng-table/sorterRow.html', '<tr> <th title="{{$column.headerTitle(this)}}" ng-repeat="$column in $columns" ng-class="{ \'sortable\': $column.sortable(this), \'sort-asc\': params.sorting()[$column.sortable(this)]==\'asc\', \'sort-desc\': params.sorting()[$column.sortable(this)]==\'desc\' }" ng-click="sortBy($column, $event)" ng-if="$column.show(this)" ng-init="template=$column.headerTemplateURL(this)" class="header {{$column.class(this)}}"> <div ng-if="!template" class="ng-table-header" ng-class="{\'sort-indicator\': params.settings().sortingIndicator==\'div\'}"> <span ng-bind="$column.title(this)" ng-class="{\'sort-indicator\': params.settings().sortingIndicator==\'span\'}" class="font-normal"></span> </div> <div ng-if="template" ng-include="template"></div> </th> </tr> ');
   $templateCache.put('ng-table/noDataTip.html', '<td ng-if="params.settings().$loading === false && params.settings().total == 0 && params.data.length == 0" colspan="{{ :: $columns.length }}" ng-bind="controlParams.noDataTip"></td>' + 
               '<td ng-if="params.settings().$loading === true" colspan="{{ :: $columns.length }}"><i class="fa fa-spin fa-spinner"></i>加载中...</td>');
-  $templateCache.put('ng-table/search.html', '<input type="text" class="form-control" placeholder="请输入关键字进行搜索" ng-table-search="vm" ng-model="vm.searchKey" ng-keyup="searchTrigger($event)">');
+  $templateCache.put('ng-table/search.html', '<div ng-table-search="vm.searchOptions"></div>');
   $templateCache.put('ng-table/headerCheckbox.html', '<label class="i-checks" ng-if="controlParams.isShowCheckbox"><input type="checkbox" ng-checked="vm.isAllSelected" ng-click="thCheckboxClick($event, $data)" class="header-checkbox"><i></i></label>');
 }]);
     return angular.module('ngTable');

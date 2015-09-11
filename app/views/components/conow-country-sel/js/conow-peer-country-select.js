@@ -94,11 +94,12 @@ app.service('peerCountriesService', ['$q', 'DataService',
 ]);
 
 /**
- * @param  {input}
- * @return {[type]}
+ * description: convert country code to country name
+ * @param  countryCode
+ * @return countryName
  */
-app.filter('countryCodeToName', ['peerCountriesService', '$q', 
-	function(peerCountriesService, $q) {
+app.filter('countryCodeToName', ['peerCountriesService', 
+	function(peerCountriesService) {
 		var filterFn = function(input) {
 
 			return peerCountriesService.getSelectedCountryName(input);
