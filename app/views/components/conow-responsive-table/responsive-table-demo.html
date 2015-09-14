@@ -33,41 +33,45 @@
   </label>
 </td> -->
 				<div class="m-t-sm">
-						<table ng-table="tableParams" class="table table-hover table-striped bg-white text-center horizontal-scroll" >
+					<table object-table
+						from-url="views/components/conow-responsive-table/data/users.json" 
+						data="dataFromUrl"
+						display="10"
+						headers="Name, Age, Sex, duty, sex-2, duty-2, sex-3, duty-3, 操作"
+						fields="name,age,sex,duty"
+						sorting="simple"
+						search="true" 
+						class="horizontal-scroll"
+						select="multiply"
+						selected-model="vm.selected">
 
+							<tfoot>
+								<tr>
+									<td colspan="4">Total:{{ ::$filtered.length }}</td>
+									<td colspan="5">Total</td>
+								</tr>
+							</tfoot>
 							<tbody>
-
-								<tr expand-row>
-									<td data-title="'序号'">{{ (tableParams.page() - 1) * tableParams.count() + $index + 1}}</td>
-									<td data-title="'姓名'" ng-bind="item.name" col-bind="name" sortable="'name'"></td>
-									<td data-title="'年龄'" ng-bind="item.age" col-bind="age" sortable="'age'"></td>
-									<td data-title="'性别'" ng-bind="item.sex" col-bind="sex" header-class="'abc'" sortable="'sex'" class="collapsed-11xs">
+								<tr>
+									<td ng-click="$owner.rowClick(item, e)">{{ ::item.name }}</td>
+									<td>{{ ::item.age }}</td>
+									<td class="hidden-sm">{{ ::item.sex }}</td>
+									<td>{{ ::item.duty }}</td>
+									<td>{{ ::item.sex }}</td>
+									<td>{{ ::item.duty }}</td>
+									<td>{{ ::item.sex }}</td>
+									<td>{{ ::item.duty }}</td>
+									<td class="width-200">
+										<button class="btn btn-sm btn-primary" ng-click="$owner.add(item, $event)">新增</button>
+										<button class="btn btn-sm btn-primary" ng-click="$owner.edit(item, $event)">编辑</button>
+										<button class="btn btn-sm btn-danger" ng-click="$owner.del(item, $event)">删除</button>
 									</td>
-									<td data-title="'职位'" ng-bind="item.duty" col-bind="duty" sortable="'duty'" class="collapsed-11sm"></td>
-									<td data-title="'职位'" ng-bind="item.duty" col-bind="duty" class="collapsed-11sm"></td>
-									<td data-title="'职位'" ng-bind="item.duty" col-bind="duty" class="collapsed-11sm"></td>
-									<td data-title="'职位'" ng-bind="item.duty" col-bind="duty" class="collapsed-11sm"></td>
-									<td data-title="'职位'" ng-bind="item.duty" col-bind="duty" class="collapsed-11sm"></td>
-									<!-- <td data-title="'职位'" ng-bind="item.duty" col-bind="duty" class="collapsed-11sm"></td> -->
-									<!-- <td ng-repeat="td in vm.tds track by $index" data-title="{{td.title}}"></td> -->
-								</tr>
-
-							</tbody>
-						</table>
-
-					<div class="m-t form-group">
-						<!-- 
-						<table ng-table="tableParams2" class="table table-hover">
-							<tbody>
-								<tr ng-repeat="user in tableParams2.data track by $index">
-									<td data-title="'职位名称'" ng-bind="user.JOBS_NAME"></td>
-									<td data-title="'职位描述'" ng-bind="user.JOBS_DESC"></td>
-									<td data-title="'备注'" ng-bind="user.MEMO"></td>
 								</tr>
 							</tbody>
 						</table>
-						 -->
-					</div>
+
+						<p>selected:</p>
+						<pre>{{vm.selected}}</pre>
 				</div>
 
 			</div>

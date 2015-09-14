@@ -209,6 +209,45 @@ app.controller('responsiveTableDemoCtrl', ['$scope', 'ngTableParams', '$filter',
     //       });
     //   }
     // });
+    // 
+    $scope.data = [
+      { name: 'Moroni', age: 50, money: -10 },
+      { name: 'Tiancum', age: 43, money: 120 },
+      { name: 'Moroni', age: 50, money: -10 },
+      { name: 'Moroni', age: 50, money: -10 },
+      { name: 'Moroni', age: 50, money: -10 },
+      { name: 'Moroni', age: 50, money: -10 },
+      { name: 'Moroni', age: 50, money: -10 },
+      { name: 'Moroni', age: 50, money: -10 },
+      { name: 'Moroni', age: 50, money: -10 },
+      { name: 'Moroni', age: 50, money: -10 },
+      { name: 'Moroni', age: 50, money: -10 },
+    ];
+
+
+    $scope.dataFromUrl = [];
+
+    $scope.add = function(item, e) {
+      alert('adding');
+
+      e.stopPropagation();
+    };
+
+    $scope.edit = function(item, e) {
+      alert('editing');
+
+      e.stopPropagation();
+    };
+
+    $scope.del = function(item, e) {
+      alert('deling');
+
+      e.stopPropagation();
+    };
+
+    $scope.rowClick = function(item) {
+      alert(JSON.stringify(item));
+    };
 
         
 	}

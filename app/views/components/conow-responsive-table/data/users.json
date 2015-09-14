@@ -63,36 +63,43 @@
       "name": "22",
       "age": 7,
       "sex": "male",
+      "duty": "",
       "id": 11
   }, {
       "name": "赵六",
       "age": 29,
       "sex": "male",
+      "duty": "",
       "id": 12
   }, {
       "name": "张三",
       "age": 34,
       "sex": "female",
+      "duty": "",
       "id": 13
   }, {
       "name": "李四",
       "age": 43,
       "sex": "male",
+      "duty": "",
       "id": 14
   }, {
       "name": "王五",
       "age": 27,
       "sex": "male",
+      "duty": "",
       "id": 15
   }, {
       "name": "赵六",
       "age": 29,
       "sex": "male",
+      "duty": "",
     "id": 16
   }, {
     "name": "张三",
     "age": 34,
     "sex": "male",
+      "duty": "",
     "id": 17
   }
 ]
