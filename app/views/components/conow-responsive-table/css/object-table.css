@@ -396,3 +396,36 @@ p{
   width: 200px;
   min-width: 200px;
 }
+
+.object-table td {
+  position: relative;
+}
+
+.collapse-name {}
+.collapse-name:after {
+  content: ':';
+}
+
+.collapse-value {
+  margin-left: 10px;
+}
+
+.first-column:before {
+  content: '+'; 
+  height: 16px;
+  width: 16px;
+  line-height: 14px;
+  padding-left: 3px;
+  position: absolute;
+  border-radius: 16px;
+  background-color: #FE0202;
+  color: #fff;
+  display: inline-block;
+  left: -3px;
+  top: 11px;
+}
+.first-column.collapsed:before {
+  content: '-';
+  background-color: #10E82F;
+}
+

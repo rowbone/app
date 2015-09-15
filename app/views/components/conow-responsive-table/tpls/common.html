@@ -25,16 +25,16 @@
 		<table class="table object-table" ng-mousedown="resizeStart($event)" ng-mouseup="resizeEnd($event)">
 			<thead ng-if="!customHeader">
 				<tr>
-					<th ng-if="isShowCheckbox">
+					<th ng-if="options.isShowCheckbox">
 						<label class="i-checks">
-							<input type="checkbox" ng-checked="isAllSelected()" ng-click="headerCheckboxClick()">
+							<input type="checkbox" class="header-checkbox col-header" ng-checked="isAllSelected()" ng-click="headerCheckboxClick()">
 							<i></i>
 						</label>
 					</th>
 					<th ng-repeat="head in headers track by $index" 
 						ng-click="sortBy(fields[$index])" 
 						ng-class="headerIsSortedClass(head)" 
-						class="sortable">{{head}} 
+						class="sortable col-header" header-generate>{{head}} 
 						<div ng-if="resize" class="resize"></div>
 					</th>
 				</tr>
@@ -50,8 +50,9 @@
 			</thead>	
 
 			<tbody ng-if="!findBody">
-
-				<tr id="rowTr" ng-click="setSelected(item)" ng-class="{'selected-row':ifSelected(item)}"> 
+				<!-- remove select-row class -->
+				<!-- <tr id="rowTr" ng-click="setSelected(item)" ng-class="{'selected-row':ifSelected(item)}">  -->
+				<tr id="rowTr" ng-click="setSelected(item)"> 
 				<!-- <= will inject ng-repeat -->
 					<!-- params: headers and fields -->
 					<td ng-if="!editable" ng-repeat="field in fields">{{item[field]}}</td>
