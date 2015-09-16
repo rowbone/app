@@ -230,7 +230,9 @@ angular.module('objectTable')
 				e.stopPropagation();
 
 				item.$collapsed = !item.$collapsed;
-			}
+
+				expandFn();
+			};
 
 			$controller('objectTableSortingCtrl', {$scope: $scope});
 			var ctrl = this;
@@ -326,7 +328,8 @@ angular.module('objectTable')
 
 				var $firstCol = tr.find('td:first');
 				var $icon = angular.element(document.createElement('i'));
-				$icon.attr('ng-class', '{"fa-angle-right": true, "fa-angle-down": false}[item.$collapsed]')
+				$icon.attr('ng-class', '{ true: "fa-angle-right", false: "fa-angle-down" }[!item.$collapsed]')
+					.addClass('fa');
 				$firstCol.prepend($icon);
 				$firstCol.addClass('first-column')
 					.attr('ng-click', 'rowExpand(item, $event)')
@@ -720,7 +723,6 @@ angular.module('objectTable').controller('pagingTableCtrl', ['$scope', '$element
 
 		$scope.currentPage = 0;
 
-
 		$scope.prevPage = function () {
 			if ($scope.currentPage > 0) {
 				$scope.currentPage--;
@@ -744,7 +746,7 @@ angular.module('objectTable').controller('pagingTableCtrl', ['$scope', '$element
 		};
 
 		$scope.pageCount = function () {
-			return $scope.count>0 ?Math.ceil($scope.count/$scope.display)-1: 0;
+			return $scope.count >0 ? Math.ceil($scope.count / $scope.display) - 1 : 0;
 		};
 
 		$scope.nextPageDisabled = function () {
@@ -755,16 +757,15 @@ angular.module('objectTable').controller('pagingTableCtrl', ['$scope', '$element
 			$scope.currentPage = n;
 			$scope.setCurrentPageToTable();
 		};
-
 		
 		$scope.range = function () {
-			var rangeSize = $scope.pageCount()+1 <5 ?$scope.pageCount()+1 :5;
+			var rangeSize = $scope.pageCount() + 1 < 5 ? $scope.pageCount() + 1 : 5;
 			
 			var ret = [];
 			var start = $scope.currentPage;
 
-			if ( start > $scope.pageCount()-rangeSize ) {
-				start = $scope.pageCount()-rangeSize+1;
+			if ( start > $scope.pageCount() - rangeSize ) {
+				start = $scope.pageCount()- rangeSize + 1;
 			}
 
 			for (var i=start; i<start+rangeSize; i++) {

@@ -1,61 +1,81 @@
 [
   {
     "name": "张三",
-    "age": 50,
+    "age": {
+      "age": 50
+    },
     "sex": "male",
     "duty": "front-end",
     "id": 1
   }, {
       "name": "李四",
-      "age": 43,
+      "age": {
+        "age": 42
+      },
       "sex": "female",
       "duty": "front-end",
       "id": 2
   }, {
       "name": "王五",
-      "age": 27,
+      "age": {
+        "age": 27
+      },
       "sex": "male",
       "duty": "front-end",
       "id": 3
   }, {
       "name": "赵六",
-      "age": 29,
+      "age": {
+        "age": 29
+      },
       "sex": "female",
       "duty": "front-end",
       "id": 4
   }, {
       "name": "张三",
-      "age": 34,
+      "age": {
+        "age": 34
+      },
       "sex": "female",
       "duty": "front-end",
       "id": 5
   }, {
       "name": "李四",
-      "age": 43,
+      "age": {
+        "age": 43
+      },
       "sex": "male",
       "duty": "back-end",
       "id": 6
   }, {
       "name": "王五",
-      "age": 27,
+      "age": {
+        "age": 27
+      },
       "sex": "female",
       "duty": "back-end",
       "id": 7
   }, {
       "name": "赵六",
-      "age": 29,
+      "age": {
+        "age": 29
+      },
       "sex": "female",
       "duty": "front-end",
       "id": 8
   }, {
       "name": "张三",
-      "age": 34,
+      "age": {
+        "age": 34
+      },
       "sex": "male",
       "duty": "front-end",
       "id": 9
   }, {
       "name": "李四",
-      "age": 43,
+      "age": {
+        "age": 43
+      },
       "sex": "female",
       "duty": "front-end",
       "id": 10

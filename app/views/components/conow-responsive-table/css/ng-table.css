@@ -329,7 +329,7 @@
   position: relative;
 }
 
-.first-column:before {
+/*.first-column:before {
   content: '+'; 
   height: 16px;
   width: 16px;
@@ -343,7 +343,7 @@
   left: -3px;
   top: 11px;
 }
-
+*/
 .ng-table.text-center th {
   text-align: center;
 }

@@ -410,6 +410,7 @@ p{
   margin-left: 10px;
 }
 
+/*
 .first-column:before {
   content: '+'; 
   height: 16px;
@@ -424,8 +425,9 @@ p{
   left: -3px;
   top: 11px;
 }
+
 .first-column.collapsed:before {
   content: '-';
   background-color: #10E82F;
 }
-
+*/
