@@ -12,7 +12,7 @@ angular.module('objectTable')
 				controllerAs: "ctrl",
 				transclude: true,
 				scope: {
-					data: "=",
+					data: "=?jsonData",
 					display: "=?",
 					resize: "=?",
 					paging: "=?",
@@ -24,7 +24,8 @@ angular.module('objectTable')
 					editable: "=?",
 					select: "@?",
 					selectedModel: "=?",
-					dragColumns: "=?"
+					dragColumns: "=?",
+					tableInstance: '=?'
 				},
 				compile: function( tElement, tAttributes) {
 
@@ -118,11 +119,12 @@ angular.module('objectTable').service('objectTableUtilService', [function () {
 		return {
 			getArrayFromParams : function (string,attrName){
 				if(!string) throw "Required '" + attrName + "' attribute is not found!";
-				var tempArray=[];
+				var tempArray = [];
 				var preArray = string.split(',');
-				for (var i = 0,length=preArray.length; i <length; i++) {
-					tempArray.push( preArray[i].trim() );
+				for (var i = 0, length = preArray.length; i <length; i++) {
+					tempArray.push(preArray[i].trim());
 				}
+
 				return tempArray;
 			}
 		};
@@ -131,12 +133,35 @@ angular.module('objectTable').service('objectTableUtilService', [function () {
 ]);
 
 angular.module('objectTable')
-	.controller('objectTableCtrl', ['$scope', '$timeout','$element', '$attrs','$http', '$compile', '$controller', 'objectTableUtilService', 'arrayUtilService', 
-		function angTableCtrl($scope, $timeout, $element, $attrs, $http, $compile, $controller, Util, arrayUtilService) {
+	.controller('objectTableCtrl', ['$scope', '$timeout','$element', '$attrs','$http', '$compile', '$controller', 'objectTableUtilService', 'arrayUtilService', 'tableClass', 
+		function angTableCtrl($scope, $timeout, $element, $attrs, $http, $compile, $controller, Util, arrayUtilService, tableClass) {
+
+			$controller('objectTableSortingCtrl', {$scope: $scope});
+			var ctrl = this;
+
+			$scope.tableInstance = new tableClass();
 
 			var vm = $scope.vm = {};
 			var options = $scope.options = {
-				'noDataTip': '没有符合条件的数据！'
+				'noDataTip': '没有符合条件的数据！',
+				'searchParams': {
+					'globalSearch': '',
+					'advancedSearch': {}
+				}
+			};
+
+			// watch searchParams to reload table
+			$scope.$watch('options.searchParams', 
+				function(newVal, oldVal) {
+					// ctrl._reload();
+				}, true);
+
+			/**
+			 * paging directive options
+			 * isShowRecordsCount: 是否显示记录条数(** 条记录)
+			 */
+			var pagingOptions = $scope.pagingOptions = {
+				isShowRecordsCount: true								
 			};
 
 			var expandFn = function() {
@@ -202,6 +227,10 @@ angular.module('objectTable')
 				var page = $scope.currentPage;
 				var count = $scope.display;
 
+				if(angular.isUndefined($scope.$filtered)) {
+					return false;
+				}
+
 				var pageData = $scope.$filtered.slice(page * count, (page + 1) * count);
 
 				return arrayUtilService.isAllSelected(pageData, '$checked');
@@ -224,18 +253,39 @@ angular.module('objectTable')
 			// click row-checkbox
 			$scope.rowCheckboxClick = function(item) {
 				item.$checked = !item.$checked;
+
+				if ($scope.select === "multiply") {
+					if (!ctrl._containsInSelectArray(item)) {
+						$scope.selectedModel.push(item);
+					} else {
+						$scope.selectedModel.splice($scope.selectedModel.indexOf(item), 1);
+					}
+				} else {
+					$scope.selectedModel = item;
+				}
 			};
 
 			$scope.rowExpand = function(item, e) {
 				e.stopPropagation();
+					
+				item.$expanded = !item.$expanded;
 
-				item.$collapsed = !item.$collapsed;
-
-				expandFn();
+				// expandFn();
 			};
 
-			$controller('objectTableSortingCtrl', {$scope: $scope});
-			var ctrl = this;
+			$scope.isShowChild = function(item) {
+				if(angular.isUndefined(item.$expanded) || !item.$expanded) {
+					return false;
+				} else {
+					return true;
+				}
+
+				// if(angular.isDefined(item.$expanded) && !item.$expanded)
+			};
+
+			this._reload = function() {
+				this._init();
+			};
 
 			this._init = function() {
 				$scope.headers = [];
@@ -277,10 +327,15 @@ angular.module('objectTable')
 			};
 
 			this._loadExternalData = function(url) {
-				$scope.dataIsLoading = true;
+				options.dataIsLoading = true;
 				$http.get(url).then(function(response) {
 					$scope.data = response.data;
-					$scope.dataIsLoading = false;
+					options.dataIsLoading = false;
+				}, function(msg) {
+					$scope.$filtered = [];
+
+					options.noDataTip = '加载数据失败，请检查！';
+					options.dataIsLoading = false;
 				});
 
 			};
@@ -311,13 +366,29 @@ angular.module('objectTable')
 					.append('<tr class="no-data-tip" ng-if="$filtered.length === 0"><td ng-bind="options.noDataTip" colspan="{{headers.length}}"></td></tr>');
 					// generate no-data-tip @20150914 - ends
 				
-				var $tds = angular.element(angular.element($element.find('tbody')[0]).find('tr')[0]).find('td');
-				var iLen = $tds.length;
-				options.tdsClass = [];
-				for(var i=0; i<$tds.length; i++) {
-					options.tdsClass.push(angular.element($tds[i]).attr('class'));
-					options.$tds = $tds;
-				}					
+				// add hidden class for td according to collapse-xx classes - starts
+				var $tds = angular.element(angular.element($element.find('tbody')[0]).find('tr')[0]).find('td'),
+						$colRow = null,
+						className = '';
+
+				options.$tds = $tds;
+				for(var i=0, iLen = $tds.length; i<iLen; i++) {
+					$colRow = angular.element($tds[i]);
+					if($colRow.hasClass('collapse-lg')) {
+						className = 'hidden-lg hidden-md hidden-sm hidden-xs';
+						$colRow.addClass(className);
+					} else if($colRow.hasClass('collapse-md')) {
+						className = 'hidden-md hidden-sm hidden-xs';
+						$colRow.addClass(className);
+					} else if($colRow.hasClass('collapse-sm')) {
+						className = 'hidden-sm hidden-xs';
+						$colRow.addClass(className);
+					} else if($colRow.hasClass('collapse-xs')) {
+						className = 'hidden-xs';
+						$colRow.addClass(className);
+					}
+				}
+				// add hidden class for td according to collapse-xx classes - ends
 
 				this.bodyTemplate = node.innerHTML;
 				$compile($element.find("tbody"))($scope);
@@ -328,12 +399,12 @@ angular.module('objectTable')
 
 				var $firstCol = tr.find('td:first');
 				var $icon = angular.element(document.createElement('i'));
-				$icon.attr('ng-class', '{ true: "fa-angle-right", false: "fa-angle-down" }[!item.$collapsed]')
-					.addClass('fa');
+				$icon.attr('ng-class', '{ true: "fa-angle-right", false: "fa-angle-down" }[!item.$expanded]')
+					.addClass('fa expand-icon');
 				$firstCol.prepend($icon);
 				$firstCol.addClass('first-column')
 					.attr('ng-click', 'rowExpand(item, $event)')
-					// .attr('ng-class', '{"collapsed": item.$collapsed}');
+					// .attr('ng-class', '{"collapsed": item.$expanded}');
 
 				// generate checkbox @20150914 - starts
 				if(angular.isDefined($attrs.select)) {
@@ -373,7 +444,7 @@ angular.module('objectTable')
 				var arrHtml = [];
 				var headers = angular.copy($scope.headers);
 				headers.unshift('');
-				for(var i=0; i<$tds.length; i++) {
+				for(var i=0, iLen=$tds.length; i<iLen; i++) {
 					$td = angular.element($tds[i]);
 					if($td.hasClass('collapse-lg')) {
 						arrHtml.push('<div class=""><span class="collapse-name">' + headers[i] + '</span><span class="collapse-value">' + $td.html() + '</span></div>');
@@ -387,7 +458,7 @@ angular.module('objectTable')
 				}
 				$trChild
 					.attr('ng-repeat-end', '')
-					.attr('ng-show', 'item.$collapsed')
+					.attr('ng-show', 'isShowChild(item)')
 					.addClass('child')
 					.html('<td colspan="' + ($scope.headers.length + 1) + '">' + arrHtml.join('') + '</td>');
 
@@ -402,13 +473,13 @@ angular.module('objectTable')
 				});
 			};
 
-			this.setCurrentPage = function(_currentPage){
+			this.setCurrentPage = function(_currentPage) {
 				$scope.currentPage = _currentPage;
 			};
 
 			$scope.setSelected = function(item) {
 				item.$checked = !item.$checked;
-				// item.$collapsed = !item.$collapsed;
+				// item.$expanded = !item.$expanded;
 
 				if ($scope.select === "multiply") {
 					if (!ctrl._containsInSelectArray(item)) {
@@ -428,36 +499,36 @@ angular.module('objectTable')
 					}).length > 0;
 			};
 
-			$scope.ifSelected = function(item){
+			$scope.ifSelected = function(item) {
 
-				if( !!$scope.selectedModel && $scope.select==="multiply" ){
+				if( !!$scope.selectedModel && $scope.select === "multiply" ) {
 					return ctrl._containsInSelectArray(item);
-				}else{
-					return item.$$hashKey==$scope.selectedModel.$$hashKey;
+				} else {
+					return item.$$hashKey == $scope.selectedModel.$$hashKey;
 				}
 			};
 
 			/* Drag-n-Drop columns exchange*/
-			this.changeColumnsOrder = function(from,to){
+			this.changeColumnsOrder = function(from, to) {
 				$scope.$apply(function() {
-					$scope.fields.swap(from,to);
-					$scope.headers.swap(from,to);
-					if(!!$scope.columnSearch){
-						$scope.columnSearch.swap(from,to);
+					$scope.fields.swap(from, to);
+					$scope.headers.swap(from, to);
+					if(!!$scope.columnSearch) {
+						$scope.columnSearch.swap(from, to);
 					}
-					if(!!ctrl.bodyTemplate){
+					if(!!ctrl.bodyTemplate) {
 						var tds = angular.element(ctrl.bodyTemplate).children(),
 						html="",
-						tr  = document.createElement('tr'),
-						tbody  = document.createElement('tbody'),
+						tr = document.createElement('tr'),
+						tbody = document.createElement('tbody'),
 						attributes = $element.find("tbody").find('tr')[0].attributes;
-						Array.prototype.swap.apply(tds,[from,to]);
+						Array.prototype.swap.apply(tds, [from, to]);
 
-						[].forEach.call(attributes, function(attr,index) {
+						[].forEach.call(attributes, function(attr, index) {
 							tr.setAttribute(attr.name, attr.value);
 						});
 
-						for (var i = 0,length=tds.length; i <length; i++) {
+						for (var i = 0, length=tds.length; i <length; i++) {
 							tr.appendChild(tds[i]);
 						}
 
@@ -498,14 +569,13 @@ angular.module('objectTable')
 
 			$scope.$on('headerGenerateDone', function(event, data) {
 				console.log('in event-->', data);
-
+console.log(options.$tds)
 				var $colHeaders = $element.find('.col-header');
 				var $tds = options.$tds;
 				var $colRow = null;
 				var $colHeader = null;
-				var iLen = $colHeaders.length;
 				var className = '';
-				for(var i=0; i<iLen; i++) {
+				for(var i=0, iLen=$colHeaders.length; i<iLen; i++) {
 					$colHeader = angular.element($colHeaders[i]);
 					$colRow = angular.element($tds[i]);
 
@@ -518,7 +588,6 @@ angular.module('objectTable')
 					} else if($colRow.hasClass('hidden-lg')) {
 						$colHeader.addClass('hidden-lg');
 					}
-
 
 					if($colRow.hasClass('collapse-lg')) {
 						className = 'hidden-lg hidden-md hidden-sm hidden-xs';
@@ -538,10 +607,14 @@ angular.module('objectTable')
 						$colHeader.addClass(className);
 					}
 				}
+
+				console.log(options.$tds)
 			});
 
 			$scope.$on('rowGenerateDone', function(event, data) {
 				console.log('rowGenerateDone-->', data);
+
+				expandFn();
 			});
 
 	}
@@ -585,7 +658,8 @@ angular.module('objectTable')
 			require: "^objectTable",
 			scope: {
 				count: "=",
-				display: "="
+				display: "=",
+				options: '='
 			},
 			link: function(scope, element, attrs, objectTableCtrl) {
 				scope.objectTableCtrl = objectTableCtrl;
@@ -831,4 +905,19 @@ angular.module('objectTable').controller('pagingTableCtrl', ['$scope', '$element
         return arrayUtil;
       }
     ])
+})();
+
+(function() {
+	angular.module('objectTable')
+		.factory('tableClass', ['DataService', 
+			function(DataService) {
+				function tableClass() {
+					this.reload = function() {
+						console.log('in reload');
+					}
+				}
+
+				return tableClass;
+			}
+		])
 })();

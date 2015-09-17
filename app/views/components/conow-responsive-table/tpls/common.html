@@ -20,13 +20,13 @@
 	</div>
 
 	<div class="clearfix"></div>
-
+	
 	<div class="back-cover">
 		<table class="table object-table" ng-mousedown="resizeStart($event)" ng-mouseup="resizeEnd($event)">
 			<thead ng-if="!customHeader">
 				<tr>
-					<th ng-if="options.isShowCheckbox">
-						<label class="i-checks">
+					<th>
+						<label class="i-checks" ng-if="options.isShowCheckbox" ng-show="select == 'multiply'">
 							<input type="checkbox" class="header-checkbox col-header" ng-checked="isAllSelected()" ng-click="headerCheckboxClick()">
 							<i></i>
 						</label>
@@ -67,11 +67,11 @@
 
 	</div>
 
-	<div class="loading" ng-show="dataIsLoading">
+	<div class="loading" ng-show="options.dataIsLoading">
 		<span class="glyphicon glyphicon-refresh glyphicon-refresh-animate"></span> Loading Data...
 	</div>
 
-	<paging ng-if="paging" data-display="display" count="$filtered.length" class="object-table-paging" ng-hide="dataIsLoading"></paging>
+	<paging ng-if="paging" data-display="display" count="$filtered.length" options="pagingOptions" class="object-table-paging" ng-hide="options.dataIsLoading"></paging>
 
 	<div class="clearfix"></div>
 

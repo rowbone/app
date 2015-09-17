@@ -32,18 +32,21 @@
   	<input type="checkbox" class="icheckbox_square" ng-checked="indexInSelectedArr(user) >= 0" header="'ng-table/headers/checkbox.html'"><i></i>
   </label>
 </td> -->
+						<!-- json-data="data" -->
+						<!-- from-url="views/components/conow-responsive-table/data/users.json"  -->
 				<div class="m-t-sm">
+					<button type="button" class="btn btn-primary" ng-click="tableReload()">reload</button>
 					<table object-table
-						from-url="views/components/conow-responsive-table/data/users.json" 
-						data="dataFromUrl"
+						from-url="views/components/conow-responsive-table/data/users.json"
 						display="10"
 						headers="Name, Age, Sex, duty, sex-2, duty-2, sex-3, duty-3, 操作"
 						fields="name,age,sex,duty"
 						sorting="simple"
 						search="true" 
 						class="horizontal-scroll"
-						select="multiply"
-						selected-model="vm.selected">
+						select=""
+						selected-model="vm.selected"
+						table-instance="vm.instance">
 
 							<tfoot>
 								<tr>
@@ -52,8 +55,8 @@
 								</tr>
 							</tfoot>
 							<tbody>
-								<tr>
-									<td ng-click="$owner.rowClick(item, e)">{{ ::item.name }}</td>
+								<tr ng-click="$owner.rowClick(item)">
+									<td ng-click="$owner.rowClick(item, e)">{{ item }}</td>
 									<td>{{ ::item.age.age }}</td>
 									<td class="hidden-sm">{{ ::item.sex }}</td>
 									<td>{{ ::item.duty }}</td>
@@ -80,101 +83,72 @@
 				<a href="https://github.com/esvit/ng-table" target="_blank" class="text-primary" title="ng-table">Github地址</a>
 			</div>
 		</div>
-				</div>
+	</div>
 
 	<div class="row">
-		<div class="col-md-6 col-sm-12">
 			<div class="panel panel-info">
 				<div class="panel-heading">
 					<div class="panel-title">使用说明</div>
 				</div>
 				<div class="panel-body">
 					<ol>
-						<li>使用前先引入
-							<code>'vendor/modules/ng-table/ng-table.js'</code> 和 
-							<code>'vendor/modules/ng-table/ng-table.css'</code>
-						</li>
-						<li>
-							controller 中 注入 <code>ngTableParams</code>
-						</li>
-						<li><code>table</code>元素添加<code>ng-table</code>属性，属性值是对应的配置参数</li>
-						<li>controller中添加配置属性：<code>$scope.tableParams = new ngTableParams(parameters, settings)</code></li>
-						<li>配置参数说明：
-							<table class="table table-bordered table-hover">
-								<tr>
-									<th>参数对象</th>
-									<th>参数名称</th>
-									<th>说明</th>
-								</tr>
-								<tr>
-									<td rowspan="4" class="v-middle">parameters</td>
-									<td>page</td>
-									<td>当前显示的页码</td>
-								</tr>
-								<tr>
-									<td>count</td>
-									<td>每页显示的数据行数</td>
-								</tr>
-								<tr>
-									<td>filter</td>
-									<td>定义过滤器</td>
-								</tr>
-								<tr>
-									<td>sorting</td>
-									<td>定义排序</td>
-								</tr>
-								<tr>
-									<td rowspan="6" class="v-middle">settings</td>
-									<td>total</td>
-									<td>表格显示的总数据条数</td>
-								</tr>
-								<tr>
-									<td>counts</td>
-									<td>控制每页显示的数据条数</td>
-								</tr>
-								<tr>
-									<td>defaultSort</td>
-									<td></td>
-								</tr>
-								<tr>
-									<td>getData</td>
-									<td></td>
-								</tr>
-								<tr>
-									<td>groupBy</td>
-									<td>待补充</td>
-								</tr>
-							</table>
-						</li>
-						<li>getData:setting中获取表格数据的方法，<span class="text-danger">可对数据进行过滤处理[filter，sorting等]</span>，可传入两个参数$defer 和 params。
-							<ul class="list-unstyled">
-								<li>$defer:调用$defer.resolve(data)方法，确保ng-table可以获取到数据
-									
-								</li>
-								<li>params:可以引用parameters配置的参数。比如filter和sorting。
-<pre>
-	getData: function($defer, params) {
-		var filer = params.filter();
-		var sorting = params.sorting();
+						<li>引入文件 <code>object-table.js</code> & <code>object-table.css</code></li>
+						<li>调用指令 <code>object-table</code></li>
+						<li>参数列表
+							<table class="table table-hover">
+								<thead>
+									<tr>
+										<th>参数名称</th>
+										<th>是否必填</th>
+										<th>默认值</th>
+										<th>说明</th>
+									</tr>
+								</thead>
 
-		$defer.resolve(data);
-	}
-</pre>
-								</li>
-							</ul>
+								<tbody>
+									<tr>
+										<td>from-url</td>
+										<td>是</td>
+										<td>-</td>
+										<td>后台数据接口</td>
+									</tr>
+									<tr>
+										<td>data</td>
+										<td>是</td>
+										<td>-</td>
+										<td>json数据</td>
+									</tr>
+									<tr>
+										<td>display</td>
+										<td>是</td>
+										<td>-</td>
+										<td>单页显示记录数</td>
+									</tr>
+									<tr>
+										<td>headers</td>
+										<td>是</td>
+										<td>-</td>
+										<td>表头显示内容，用<code>,</code>分隔</td>
+									</tr>
+									<tr>
+										<td>search</td>
+										<td>否</td>
+										<td>true</td>
+										<td>是否显示搜索</td>
+									</tr>
+									<tr>
+										<td>select</td>
+										<td>否</td>
+										<td>null</td>
+										<td>是否可选/单选/多选</td>
+									</tr>
+								</tbody>
+							</table>
 						</li>
 					</ol>
 				</div>
 			</div>
-		</div>
 		
 	</div>
 
-</div>
-
-<div class="m-t-md">
-	<ul>Tips:
-		<li>不显示分页数量控制：<code>counts:[]</code>(扩展：根据数量判断显示哪些数字)</li>
-		<li>不显示分页：<code>params.count(orderedData.length)</code>(即设置数据条数为数据总数)</li>
-	</ul>
 </div>
