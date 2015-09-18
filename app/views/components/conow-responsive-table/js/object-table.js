@@ -912,8 +912,12 @@ angular.module('objectTable').controller('pagingTableCtrl', ['$scope', '$element
 		.factory('tableClass', ['DataService', 
 			function(DataService) {
 				function tableClass() {
+					this.reloadTrigger = false;
+					var self = this;
+
 					this.reload = function() {
 						console.log('in reload');
+						
 					}
 				}
 

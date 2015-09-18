@@ -65,7 +65,8 @@ app.controller('schoolSelDemoCtrl', ['$scope', '$state',
 			isMultiSelect: false,
 			selectKey: 'CODE',
 			selectValue: 'VALUE',
-			colsPerRow: 3
+			colsPerRow: 3,
+			titleName: '请选择对应的学校'
 		};
 
 		var vm = $scope.vm = {

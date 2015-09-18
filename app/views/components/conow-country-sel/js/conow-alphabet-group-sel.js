@@ -241,7 +241,7 @@ app.directive('conowAlphabetGroupSel', ['$filter', 'DataService', 'conowModals',
 						// templateUrl: 'js/directives/conow-alphabet-group/tpls/alphabet-group-sel-tpl.html',
 						templateUrl: 'views/components/conow-country-sel/tpls/alphabet-group-sel-tpl.html',
 						size: 'lg',
-						title: '选择',
+						title: options.titleName || '',
 						controller: 'alphabetGroupSelCtrl',
 						resolve: {
 							modalParams: function() {
