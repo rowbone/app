@@ -141,6 +141,17 @@ angular.module('objectTable')
 
 			$scope.tableInstance = new tableClass();
 
+			// reloadTrigger to trigger table reload function.
+			// Which is initialized with undefined to avoid double _init 
+			$scope.$watch('tableInstance.reloadTrigger', 
+				function(newVal, oldVal) {
+					if(angular.isUndefined(newVal)) {
+						return;
+					}
+
+					ctrl._reload();
+				}, true);
+
 			var vm = $scope.vm = {};
 			var options = $scope.options = {
 				'noDataTip': '没有符合条件的数据！',
@@ -283,11 +294,50 @@ angular.module('objectTable')
 				// if(angular.isDefined(item.$expanded) && !item.$expanded)
 			};
 
-			this._reload = function() {
-				this._init();
+			/**
+			 * Get global-search or separate-search params
+			 * @searchParams
+			 */
+			this._getSearchParams = function() {
+				var searchParams = {
+					'searchKey': $scope.globalSearch
+				};
+
+				return searchParams; 
 			};
 
-			this._init = function() {
+			/**
+			 * Get advanced-search params
+			 * @ advanced-search params
+			 */
+			this._getAdSearchParams = function() {
+				var adSearchParams = {};
+
+				return adSearchParams;
+			};
+
+			/**
+			 * Get orderby-params(click thead)
+			 * @ orderBy params
+			 */
+			this._getOrderByParams = function() {
+				var orderByParams = {};
+
+				return orderByParams;
+			};
+
+			/**
+			 * Reload table with params(front-end or back-end)
+			 * @
+			 */
+			this._reload = function() {
+				var allParams = angular.extend({}, 
+					this._getSearchParams(), this._getAdSearchParams(), this._getOrderByParams());
+
+				this._init(allParams);
+			};
+
+			this._init = function(params) {
 				$scope.headers = [];
 				$scope.fields = [];
 				$scope.display = $scope.display || 5;
@@ -912,12 +962,13 @@ angular.module('objectTable').controller('pagingTableCtrl', ['$scope', '$element
 		.factory('tableClass', ['DataService', 
 			function(DataService) {
 				function tableClass() {
-					this.reloadTrigger = false;
+					this.reloadTrigger = undefined;
 					var self = this;
 
 					this.reload = function() {
 						console.log('in reload');
 						
+						self.reloadTrigger = !self.reloadTrigger;
 					}
 				}
 
