@@ -24,5 +24,5 @@ var app = angular.module('demoApp', [
 	'app.hr'
 	// 'angularBootstrapNavTree'
 	, 'ngTable'
-	, 'objectTable'
+	, 'conowDatatable'
 	]);

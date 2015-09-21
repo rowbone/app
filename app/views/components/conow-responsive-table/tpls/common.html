@@ -1,4 +1,4 @@
-<div class="object-table-module">
+<div class="conow-datatable-module">
 	<!-- show sorting params and clear sorting -->
 	<!-- <div class="col-xs-12 col-sm-6 col-md-8 sorting-container">
 		<div ng-if="sortingType && sort.fields.length">
@@ -20,12 +20,12 @@
 	</div>
 
 	<div class="clearfix"></div>
-	
+	<div>select:{{ select }}</div>
 	<div class="back-cover">
-		<table class="table object-table" ng-mousedown="resizeStart($event)" ng-mouseup="resizeEnd($event)">
+		<table class="table conow-datatable" ng-mousedown="resizeStart($event)" ng-mouseup="resizeEnd($event)">
 			<thead ng-if="!customHeader">
 				<tr>
-					<th>
+					<th ng-if="select == '' || select == 'multiply'">
 						<label class="i-checks" ng-if="options.isShowCheckbox" ng-show="select == 'multiply'">
 							<input type="checkbox" class="header-checkbox col-header" ng-checked="isAllSelected()" ng-click="headerCheckboxClick()">
 							<i></i>
@@ -71,7 +71,17 @@
 		<span class="glyphicon glyphicon-refresh glyphicon-refresh-animate"></span> Loading Data...
 	</div>
 
-	<paging ng-if="paging" data-display="display" count="$filtered.length" options="pagingOptions" class="object-table-paging" ng-hide="options.dataIsLoading"></paging>
+	<!-- <paging ng-if="paging" page-size="pageSize" count="$filtered.length" options="pagingOptions" class="conow-datatable-paging" ng-hide="options.dataIsLoading"></paging> -->
+	<pagination 
+		ng-if="pagingOptions.paging" 
+		total-items="$filtered.length" 
+		items-per-page="pagingOptions.pageSize" 
+		ng-model="pagingOptions.currentPage" 
+		boundary-links="true"
+		max-size="pagingOptions.maxSize">
+	</pagination>
+
+	<div>{{options.currentPage}}</div>
 
 	<div class="clearfix"></div>
 

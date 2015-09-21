@@ -1,19 +1,20 @@
-"use strict"
-angular.module('objectTable', []);
+"use strict";
 
-angular.module('objectTable')
-	.directive('objectTable', ['$compile','$interpolate', 
-		function ($compile,$interpolate) {
+angular.module('conowDatatable', []);
+
+angular.module('conowDatatable')
+	.directive('conowDatatable', ['$compile', '$interpolate',  
+		function ($compile, $interpolate) {
 			return {
 				restrict: 'A',
 				replace: true,
 				templateUrl: 'views/components/conow-responsive-table/tpls/common.html',
-				controller: 'objectTableCtrl',
-				controllerAs: "ctrl",
+				controller: 'conowDatatableCtrl',
+				controllerAs: 'ctrl',
 				transclude: true,
 				scope: {
-					data: "=?jsonData",
-					display: "=?",
+					data: '=?jsonData',
+					pageSize: "=?",
 					resize: "=?",
 					paging: "=?",
 					fromUrl: "@",
@@ -60,7 +61,7 @@ angular.module('objectTable')
 					};
 
 					// pagingFilter = rowFilter;
-					pagingFilter += " | offset: currentPage:display |limitTo: display";
+					pagingFilter += " | offset : pagingOptions.currentPage : pagingOptions.pageSize | limitTo: pagingOptions.pageSize";
 
 					// tElement[0].querySelector("#rowTr")
 					// 	.setAttribute("ng-repeat","item in $filtered = (data" + rowFilter +")"+ pagingFilter);
@@ -72,7 +73,7 @@ angular.module('objectTable')
 
 					return function preLink(scope, element, attrs, ctrl, transclude) {
 						ctrl._init();
-						var ii=0;
+
 						transclude(scope, function(clone, innerScope) {
 							scope.$owner = innerScope.$parent;
 							for(var key in clone){
@@ -102,7 +103,7 @@ angular.module('objectTable')
 	}
 ]);
 
-angular.module('objectTable').service('objectTableUtilService', [function () {
+angular.module('conowDatatable').service('conowDatatableUtilService', [function () {
 		//extend Array [+swap]
 		Array.prototype.swap = function (new_index, old_index) {
 			
@@ -132,11 +133,11 @@ angular.module('objectTable').service('objectTableUtilService', [function () {
 	}
 ]);
 
-angular.module('objectTable')
-	.controller('objectTableCtrl', ['$scope', '$timeout','$element', '$attrs','$http', '$compile', '$controller', 'objectTableUtilService', 'arrayUtilService', 'tableClass', 
+angular.module('conowDatatable')
+	.controller('conowDatatableCtrl', ['$scope', '$timeout','$element', '$attrs','$http', '$compile', '$controller', 'conowDatatableUtilService', 'arrayUtilService', 'tableClass', 
 		function angTableCtrl($scope, $timeout, $element, $attrs, $http, $compile, $controller, Util, arrayUtilService, tableClass) {
 
-			$controller('objectTableSortingCtrl', {$scope: $scope});
+			$controller('conowDatatableSortingCtrl', {$scope: $scope});
 			var ctrl = this;
 
 			$scope.tableInstance = new tableClass();
@@ -155,25 +156,25 @@ angular.module('objectTable')
 			var vm = $scope.vm = {};
 			var options = $scope.options = {
 				'noDataTip': '没有符合条件的数据！',
-				'searchParams': {
-					'globalSearch': '',
-					'advancedSearch': {}
-				}
 			};
-
-			// watch searchParams to reload table
-			$scope.$watch('options.searchParams', 
-				function(newVal, oldVal) {
-					// ctrl._reload();
-				}, true);
-
 			/**
 			 * paging directive options
 			 * isShowRecordsCount: 是否显示记录条数(** 条记录)
 			 */
 			var pagingOptions = $scope.pagingOptions = {
-				isShowRecordsCount: true								
+				isShowRecordsCount: true,
+				'currentPage': 1,
+				'maxSize': 5				
 			};
+
+			/**
+			 * change page
+			 */
+			$scope.$watch('pagingOptions.currentPage', 
+				function(newVal, oldVal) {
+					console.log('currentPage-->', newVal);
+				});
+
 
 			var expandFn = function() {
 				var $tables = angular.element('.object-table');
@@ -236,7 +237,7 @@ angular.module('objectTable')
 			// isAllSelected to set header-checkbox selected or not
 			$scope.isAllSelected = function() {
 				var page = $scope.currentPage;
-				var count = $scope.display;
+				var count = $scope.pageSize;
 
 				if(angular.isUndefined($scope.$filtered)) {
 					return false;
@@ -250,7 +251,7 @@ angular.module('objectTable')
 			// click header-checkbox
 			$scope.headerCheckboxClick = function() {
 				var page = $scope.currentPage;
-				var count = $scope.display;
+				var count = $scope.pageSize;
 
 				var pageData = $scope.$filtered.slice(page * count, (page + 1) * count);
 
@@ -321,7 +322,18 @@ angular.module('objectTable')
 			 * @ orderBy params
 			 */
 			this._getOrderByParams = function() {
-				var orderByParams = {};
+				var orderByParams = $scope.sort;
+
+				// todo:确定前后台的交互方式。排序字段，升降序，多个排序条件。
+				// if(angular.isUndefined(sort) || angular.isUndefined(sort.fields) 
+				// 	|| angular.isUndefined(sort.reverse) || sort.fields.length !== sort.reverse.length) {
+
+				// 	return orderByParams;
+				// } else {
+				// 	for(var i=0, iLen=sort.fields.length; i<iLen; i++) {
+				// 		// 
+				// 	}
+				// }
 
 				return orderByParams;
 			};
@@ -340,10 +352,9 @@ angular.module('objectTable')
 			this._init = function(params) {
 				$scope.headers = [];
 				$scope.fields = [];
-				$scope.display = $scope.display || 5;
-				$scope.paging = angular.isDefined($scope.paging) ? $scope.paging : true;
+				pagingOptions.paging = angular.isDefined($scope.paging) ? $scope.paging : true;
+				pagingOptions.pageSize = $scope.pageSize || 5;
 				$scope.sortingType = $scope.sortingType || "simple";
-				$scope.currentPage = 0;
 				$scope.customHeader = false;
 
 				if($attrs.search == "separate") {
@@ -357,7 +368,7 @@ angular.module('objectTable')
 					}, true);
 				} else {
 					/* 'separate' or 'true' or 'false '*/
-					$scope.search = typeof($attrs.search)==='undefined' || $attrs.search==="true";
+					$scope.search = typeof($attrs.search)==='undefined' || $attrs.search === "true";
 				}
 
 				/* GET HEADERS */
@@ -373,7 +384,6 @@ angular.module('objectTable')
 
 				// reinitialize selected model
 				$scope.selectedModel = $scope.select === "multiply" ? [] : {};
-
 			};
 
 			this._loadExternalData = function(url) {
@@ -408,6 +418,20 @@ angular.module('objectTable')
 				this._checkEditableContent(node);
 				this._addRepeatToRow(node,rowFilter,paggingFilter);
 				node.removeAttribute('ng-non-bindable');
+
+				// table class for horizontal-scroll
+				if(angular.isDefined($attrs.class)) {
+					var $tableContainer = $element.find('.back-cover'),
+							$table = $tableContainer.find('table');
+
+					$table.addClass($attrs.class);
+
+					if($attrs.class.indexOf('horizontal-scroll') > -1) {
+						$element.removeClass('horizontal-scroll');
+						$tableContainer.addClass('conow-datatable-container');
+					}
+				}
+
 				// compile TBODY
 				$element.find("table")
 					// .append(node.outerHTML)
@@ -609,17 +633,20 @@ angular.module('objectTable')
 
 			/* ## after changing search model - clear currentPage ##*/
 			$scope.$watch('globalSearch',function(){
-				if(!!ctrl.pageCtrl)
-					ctrl.pageCtrl.setPage(0);
+				// if(!!ctrl.pageCtrl)
+				// 	ctrl.pageCtrl.setPage(0);
+				pagingOptions.currentPage = 1;
 			});
 
 			this.afterTransclude = function() {
 				console.log($element);
 			};
 
+			/**
+			 * add header-classes after header generate has done
+			 * hidden or collapse classes
+			 */
 			$scope.$on('headerGenerateDone', function(event, data) {
-				console.log('in event-->', data);
-console.log(options.$tds)
 				var $colHeaders = $element.find('.col-header');
 				var $tds = options.$tds;
 				var $colRow = null;
@@ -657,8 +684,6 @@ console.log(options.$tds)
 						$colHeader.addClass(className);
 					}
 				}
-
-				console.log(options.$tds)
 			});
 
 			$scope.$on('rowGenerateDone', function(event, data) {
@@ -670,22 +695,25 @@ console.log(options.$tds)
 	}
 ]);
 
-angular.module('objectTable')
-	.directive('headerGenerate', [
-		function() {
-			return {
-				restrict: 'AE',
-				link: function(scope, elem, attrs) {
-					if(scope.$last) {
-						scope.$emit('headerGenerateDone', { 'from': 'headerGenerateLink' });
+(function() {
+	angular.module('conowDatatable')
+		.directive('headerGenerate', [
+			function() {
+				return {
+					restrict: 'AE',
+					link: function(scope, elem, attrs) {
+						if(scope.$last) {
+							scope.$emit('headerGenerateDone', { 'from': 'headerGenerateLink' });
+						}
 					}
 				}
 			}
-		}
-	]);
+		]);
+})();
 
-angular.module('objectTable')
-	.directive('rowGenerate', [
+(function() {
+	angular.module('conowDatatable')
+		.directive('rowGenerate', [
 			function() {
 				return {
 					restrict: 'AE',
@@ -697,28 +725,33 @@ angular.module('objectTable')
 				}
 			}
 		]);
+})();
 
-angular.module('objectTable')
-	.directive('paging', ['$compile', '$interpolate', function($compile, $interpolate) {
-		return {
-			restrict: 'E',
-			replace: true,
-			templateUrl: 'views/components/conow-responsive-table/tpls/paging.html',
-			controller: 'pagingTableCtrl',
-			require: "^objectTable",
-			scope: {
-				count: "=",
-				display: "=",
-				options: '='
-			},
-			link: function(scope, element, attrs, objectTableCtrl) {
-				scope.objectTableCtrl = objectTableCtrl;
-				scope.objectTableCtrl.pageCtrl = scope;
+(function() {
+	angular.module('conowDatatable')
+		.directive('paging', ['$compile', '$interpolate', 
+			function($compile, $interpolate) {
+				return {
+					restrict: 'E',
+					replace: true,
+					templateUrl: 'views/components/conow-responsive-table/tpls/paging.html',
+					controller: 'pagingTableCtrl',
+					require: "^conowDatatable",
+					scope: {
+						count: "=",
+						pageSize: "=",
+						options: '='
+					},
+					link: function(scope, element, attrs, conowDatatableCtrl) {
+						scope.conowDatatableCtrl = conowDatatableCtrl;
+						scope.conowDatatableCtrl.pageCtrl = scope;
+					}
+				};
 			}
-		};
-	}]);
+		]);
+})();
 
-angular.module('objectTable').controller('objectTableSortingCtrl', ['$scope',
+angular.module('conowDatatable').controller('conowDatatableSortingCtrl', ['$scope',
     function angTableCtrl($scope) {
 
         /* sorting [START]*/
@@ -729,30 +762,32 @@ angular.module('objectTable').controller('objectTableSortingCtrl', ['$scope',
 
         $scope.sortingArray = [];
 
-        $scope.sortBy = function(field) {
-             if (resizePressedEnd) {
-                resizePressedEnd= false;
-                return;
-             };
-            if ($scope.data.length) {
-                var sortedHeader = $scope.headers[$scope.fields.indexOf(field)];
-                if ($scope.sortingType == 'compound') {
+				$scope.sortBy = function(field) {
+					if (resizePressedEnd) {
+						resizePressedEnd = false;
+						return;
+					};
+					if ($scope.data.length) {
+						var sortedHeader = $scope.headers[$scope.fields.indexOf(field)];
+						if ($scope.sortingType == 'compound') {
 
-                    if ($scope.sort.fields.indexOf(sortedHeader) == -1) {
-                        $scope.sort.fields.push(sortedHeader);
-                        $scope.sortingArray.push(field);
-                        $scope.sort.reverse.push(false);
-                    } else {
-                        $scope.changeReversing(field, $scope.sort.fields.indexOf(sortedHeader));
-                    }
+							if ($scope.sort.fields.indexOf(sortedHeader) == -1) {
+								$scope.sort.fields.push(sortedHeader);
+								$scope.sortingArray.push(field);
+								$scope.sort.reverse.push(false);
+							} else {
+								$scope.changeReversing(field, $scope.sort.fields.indexOf(sortedHeader));
+							}
 
-                } else if ($scope.sortingType == 'simple') {
-                    $scope.sort.fields = [sortedHeader];
-                    $scope.changeReversing(field);
-                }
-            }
+						} else if ($scope.sortingType == 'simple') {
+							$scope.sort.fields = [sortedHeader];
+							$scope.changeReversing(field);
+						}
 
-        };
+						$scope.ctrl._reload();
+					}
+
+				};
 
         $scope.changeReversing = function(sortProperty, indexOfHeader) {
             if ($scope.sortingType == 'compound') {
@@ -830,83 +865,96 @@ angular.module('objectTable').controller('objectTableSortingCtrl', ['$scope',
     }
 ]);
 
-angular.module('objectTable').filter('offset', function() {
-		return function(input, start, display) {
+angular.module('conowDatatable')
+	.filter('offset', function() {
+		return function(input, start, pageSize) {
 			if (!input) return;
 			start = parseInt(start, 10);
-            //if (start == 1) return input.slice(0, display);
-            display = parseInt(display, 10);
-            var offset = start* display;
-            return input.slice(offset, offset + display);
-        };
-    });
+
+      //if (start == 1) return input.slice(0, pageSize);
+      pageSize = parseInt(pageSize, 10);
+      var offset = (start - 1) * pageSize;
+      return input.slice(offset, offset + pageSize);
+    };
+  });
 
 
-angular.module('objectTable').controller('pagingTableCtrl', ['$scope', '$element', '$attrs',
-	function ($scope, $element, $attrs) {
+angular.module('conowDatatable')
+	.controller('pagingTableCtrl', ['$scope', '$element', '$attrs',
+		function ($scope, $element, $attrs) {
 
-		$scope.currentPage = 0;
+			var options = null,
+					defaultOptions = {
+						isShowRecordsCount: false,
+						prevPageText: '上一页',
+						nextPageText: '下一页'
+					};
 
-		$scope.prevPage = function () {
-			if ($scope.currentPage > 0) {
-				$scope.currentPage--;
-			}
-			$scope.setCurrentPageToTable();
-		};
+			$scope.options = angular.extend({}, defaultOptions, $scope.options);
+			options = $scope.options;
 
-		$scope.nextPage = function () {
-			if ($scope.currentPage < $scope.pageCount()) {
-				$scope.currentPage++;
-			}
-			$scope.setCurrentPageToTable();
-		};
+			$scope.currentPage = 0;
 
-		$scope.setCurrentPageToTable = function (){
-			$scope.objectTableCtrl.setCurrentPage($scope.currentPage);
-		};
+			$scope.prevPage = function () {
+				if ($scope.currentPage > 0) {
+					$scope.currentPage--;
+				}
+				$scope.setCurrentPageToTable();
+			};
 
-		$scope.prevPageDisabled = function () {
-			return $scope.currentPage === 0 ? "disabled" : "";
-		};
+			$scope.nextPage = function () {
+				if ($scope.currentPage < $scope.pageCount()) {
+					$scope.currentPage++;
+				}
+				$scope.setCurrentPageToTable();
+			};
 
-		$scope.pageCount = function () {
-			return $scope.count >0 ? Math.ceil($scope.count / $scope.display) - 1 : 0;
-		};
+			$scope.setCurrentPageToTable = function (){
+				$scope.conowDatatableCtrl.setCurrentPage($scope.currentPage);
+			};
 
-		$scope.nextPageDisabled = function () {
-			return $scope.currentPage === $scope.pageCount() ? "disabled" : "";
-		};
+			$scope.prevPageDisabled = function () {
+				return $scope.currentPage === 0 ? "disabled" : "";
+			};
 
-		$scope.setPage = function(n) {
-			$scope.currentPage = n;
-			$scope.setCurrentPageToTable();
-		};
-		
-		$scope.range = function () {
-			var rangeSize = $scope.pageCount() + 1 < 5 ? $scope.pageCount() + 1 : 5;
+			$scope.pageCount = function () {
+				return $scope.count > 0 ? Math.ceil($scope.count / $scope.pageSize) - 1 : 0;
+			};
+
+			$scope.nextPageDisabled = function () {
+				return $scope.currentPage === $scope.pageCount() ? "disabled" : "";
+			};
+
+			$scope.setPage = function(n) {
+				$scope.currentPage = n;
+				$scope.setCurrentPageToTable();
+			};
 			
-			var ret = [];
-			var start = $scope.currentPage;
+			$scope.range = function () {
+				var rangeSize = $scope.pageCount() + 1 < 5 ? $scope.pageCount() + 1 : 5;
+				
+				var ret = [];
+				var start = $scope.currentPage;
 
-			if ( start > $scope.pageCount() - rangeSize ) {
-				start = $scope.pageCount()- rangeSize + 1;
-			}
+				if ( start > $scope.pageCount() - rangeSize ) {
+					start = $scope.pageCount()- rangeSize + 1;
+				}
 
-			for (var i=start; i<start+rangeSize; i++) {
-				ret.push(i);
-			}
-			return ret;
-		};
+				for (var i=start; i<start+rangeSize; i++) {
+					ret.push(i);
+				}
+				return ret;
+			};
 
-
-	}]);
+		}
+	]);
 
 /**
  * array util service:array operations
  * @return {[type]} [description]
  */
 (function() {
-  angular.module('objectTable')
+  angular.module('conowDatatable')
     .service('arrayUtilService', [
       function(){
         var arrayUtil = {
@@ -957,8 +1005,12 @@ angular.module('objectTable').controller('pagingTableCtrl', ['$scope', '$element
     ])
 })();
 
+/**
+ * Instance of tableClass to hold table instance(tableClass 的实例用于持有表格实例，包含一些对外的接口方法)
+ * @return {[type]} [description]
+ */
 (function() {
-	angular.module('objectTable')
+	angular.module('conowDatatable')
 		.factory('tableClass', ['DataService', 
 			function(DataService) {
 				function tableClass() {
@@ -966,10 +1018,9 @@ angular.module('objectTable').controller('pagingTableCtrl', ['$scope', '$element
 					var self = this;
 
 					this.reload = function() {
-						console.log('in reload');
 						
 						self.reloadTrigger = !self.reloadTrigger;
-					}
+					};
 				}
 
 				return tableClass;

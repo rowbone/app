@@ -106,11 +106,11 @@ p{
   margin-right: 10px;
 }
 
-.object-table-module .back-cover {
+.conow-datatable-module .back-cover {
     background-color: #fff
 }
 
-.object-table-module .count {
+.conow-datatable-module .count {
     font-size: 15px;
     float: right;
     margin-top: 20px;
@@ -118,32 +118,32 @@ p{
     background-color: rgba(188,188,188,.35)
 }
 
-.object-table-module .count .records {
+.conow-datatable-module .count .records {
     color: #888;
     font-weight: 400
 }
 
-.object-table-module .search.separate {
+.conow-datatable-module .search.separate {
     width: 100%;
     max-width: 100%;
     padding-left: 22px
 }
 
-.object-table-module .search_icon {
+.conow-datatable-module .search_icon {
     position: absolute;
     right: 8px;
     top: 10px;
     color: gray
 }
 
-.object-table-module .search_icon.separate {
+.conow-datatable-module .search_icon.separate {
     left: 15px;
     top: 20px;
     font-size: 10px;
     width: 10px
 }
 
-.object-table-module .sorting-badge {
+.conow-datatable-module .sorting-badge {
     background-color: #fff;
     position: relative;
     font-weight: 600;
@@ -157,23 +157,23 @@ p{
     margin-bottom: 3px
 }
 
-.object-table-module .sorting-container {
+.conow-datatable-module .sorting-container {
     margin: 10px 0
 }
 
-.object-table-module .sorting-container .sorting-badge:hover {
+.conow-datatable-module .sorting-container .sorting-badge:hover {
     background-color: #337ab7;
     color: #fff
 }
 
-.object-table-module .sorting-container .sorting-badge:hover .close {
+.conow-datatable-module .sorting-container .sorting-badge:hover .close {
     opacity: 1;
     cursor: pointer;
     color: #002655;
     text-shadow: none
 }
 
-.object-table-module .sorting-container .sorting-badge .close {
+.conow-datatable-module .sorting-container .sorting-badge .close {
     margin-left: 5px;
     float: right;
     font-size: 12px;
@@ -183,12 +183,12 @@ p{
     opacity: .2
 }
 
-.object-table-module .object-table {
+.conow-datatable-module .conow-datatable {
     margin-bottom: 0;
     color: gray
 }
 
-.object-table-module .object-table tfoot tr,.object-table-module .object-table thead>tr {
+.conow-datatable-module .conow-datatable tfoot tr,.conow-datatable-module .conow-datatable thead>tr {
     background-color: #e6f1f6;
     color: #2165a3;
     cursor: pointer;
@@ -200,7 +200,7 @@ p{
     user-select: none
 }
 
-.object-table-module .object-table thead>tr th {
+.conow-datatable-module .conow-datatable thead>tr th {
     border-bottom: 0;
     padding-right: 25px;
     position: relative;
@@ -213,30 +213,30 @@ p{
     user-select: none
 }
 
-.object-table-module .object-table thead>tr th[draggable] a {
+.conow-datatable-module .conow-datatable thead>tr th[draggable] a {
     width: 100%;
     display: block
 }
 
-.object-table-module .object-table thead>tr th.dragged div.resize,.object-table-module .object-table thead>tr th.draggedOver div.resize {
+.conow-datatable-module .conow-datatable thead>tr th.dragged div.resize,.conow-datatable-module .conow-datatable thead>tr th.draggedOver div.resize {
     display: none
 }
 
-.object-table-module .object-table thead>tr th.dragged {
+.conow-datatable-module .conow-datatable thead>tr th.dragged {
     background-color: rgba(255,255,255,.64);
     border: 2px dashed #427998
 }
 
-.object-table-module .object-table thead>tr th.draggedOver {
+.conow-datatable-module .conow-datatable thead>tr th.draggedOver {
     background-color: rgba(128,128,128,.16);
     border: 1px solid #93999c
 }
 
-.object-table-module .object-table thead>tr th.sortable {
+.conow-datatable-module .conow-datatable thead>tr th.sortable {
     position: relative
 }
 
-.object-table-module .object-table thead>tr th.sortable:after,.object-table-module .object-table thead>tr th.sortable:before {
+.conow-datatable-module .conow-datatable thead>tr th.sortable:after,.conow-datatable-module .conow-datatable thead>tr th.sortable:before {
     content: "\e113";
     font-size: 9px;
     font-family: 'Glyphicons Halflings';
@@ -248,27 +248,27 @@ p{
     margin-top: -4px
 }
 
-.object-table-module .object-table thead>tr th.sortable:after {
+.conow-datatable-module .conow-datatable thead>tr th.sortable:after {
     content: "\e114";
     margin-top: 5px
 }
 
-.object-table-module .object-table thead>tr th.sortable.table-sort-down:after,.object-table-module .object-table thead>tr th.sortable.table-sort-up:before,.object-table-module .object-table thead>tr th.sortable:hover:not(.table-sort-up):not(.table-sort-down):after,.object-table-module .object-table thead>tr th.sortable:hover:not(.table-sort-up):not(.table-sort-down):before {
+.conow-datatable-module .conow-datatable thead>tr th.sortable.table-sort-down:after,.conow-datatable-module .conow-datatable thead>tr th.sortable.table-sort-up:before,.conow-datatable-module .conow-datatable thead>tr th.sortable:hover:not(.table-sort-up):not(.table-sort-down):after,.conow-datatable-module .conow-datatable thead>tr th.sortable:hover:not(.table-sort-up):not(.table-sort-down):before {
     opacity: 1
 }
 
-.object-table-module .object-table thead>tr th.separate {
+.conow-datatable-module .conow-datatable thead>tr th.separate {
     position: relative;
     padding-right: 7px;
     text-shadow: none!important;
     outline: 0
 }
 
-.object-table-module .object-table thead>tr th.separate:focus {
+.conow-datatable-module .conow-datatable thead>tr th.separate:focus {
     outline: 0
 }
 
-.object-table-module .object-table thead>tr th div.resize {
+.conow-datatable-module .conow-datatable thead>tr th div.resize {
     width: 5px;
     border-right: 2px dotted #949494;
     position: absolute;
@@ -280,28 +280,28 @@ p{
     cursor: ew-resize
 }
 
-.object-table-module .object-table thead>tr th:hover div.resize {
+.conow-datatable-module .conow-datatable thead>tr th:hover div.resize {
     visibility: visible
 }
 
-.object-table-module .object-table tfoot tr {
+.conow-datatable-module .conow-datatable tfoot tr {
     cursor: auto
 }
 
-.object-table-module .object-table tbody tr.selected-row td {
+.conow-datatable-module .conow-datatable tbody tr.selected-row td {
     background-color: #d7f1a0
 }
 
-.object-table-module .object-table tbody tr:hover {
+.conow-datatable-module .conow-datatable tbody tr:hover {
     background-color: rgba(103,103,103,.08);
     color: #000
 }
 
-.object-table-module .object-table tbody td:hover {
+.conow-datatable-module .conow-datatable tbody td:hover {
     cursor: pointer
 }
 
-.object-table-module .object-table tbody td[editable] span:focus {
+.conow-datatable-module .conow-datatable tbody td[editable] span:focus {
     padding: 3px;
     margin: -3px;
     border: 2px dotted #738395;
@@ -312,26 +312,26 @@ p{
     outline: 0
 }
 
-.object-table-module.hover-column table {
+.conow-datatable-module.hover-column table {
     overflow: hidden!important
 }
 
-.object-table-module.hover-column table thead tr th {
+.conow-datatable-module.hover-column table thead tr th {
     z-index: 3;
     position: relative
 }
 
-.object-table-module.hover-column table tbody tr td {
+.conow-datatable-module.hover-column table tbody tr td {
     position: relative;
     outline: 0;
     z-index: 2
 }
 
-.object-table-module.hover-column table tbody tr td:hover {
+.conow-datatable-module.hover-column table tbody tr td:hover {
     z-index: 1
 }
 
-.object-table-module.hover-column table tbody tr td:hover::before {
+.conow-datatable-module.hover-column table tbody tr td:hover::before {
     content: '';
     height: 10000px;
     left: 0;
@@ -377,27 +377,27 @@ p{
 /**
  * add by wlj @20150914
  */
-.object-table-container {
+.conow-datatable-container {
   overflow: auto;
 }
 
-.object-table-module .search-container {
+.conow-datatable-module .search-container {
   margin-bottom: 10px;
 }
 
-/*.object-table.horizontal-scroll th, .object-table.horizontal-scroll td {
+.conow-datatable.horizontal-scroll th, .conow-datatable.horizontal-scroll td {
   text-align: left;
   vertical-align: middle;
   width: 100px;
   min-width: 100px;
-}*/
+}
 
-.object-table td.width-200 {
+.conow-datatable td.width-200 {
   width: 200px;
   min-width: 200px;
 }
 
-.object-table td {
+.conow-datatable td {
   position: relative;
 }
 
@@ -435,4 +435,8 @@ p{
 .expand-icon {
   padding-right: 5px;
   font-size: 1.2em;
+}
+
+.w-500 {
+  width: 500px;
 }

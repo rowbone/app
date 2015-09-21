@@ -213,31 +213,24 @@ app.controller('responsiveTableDemoCtrl', ['$scope', 'ngTableParams', '$filter',
     $scope.data = [
       {
         "name": "张三",
-        "age": {
-          "age": 50
-        },
+        "age": 50,
         "sex": "male",
         "duty": "front-end",
         "id": 1
       }, {
-          "name": "李四",
-          "age": {
-            "age": 42
-          },
+          "name": "李四",          
+          "age": 42,
           "sex": "female",
           "duty": "front-end",
           "id": 2
       }, {
           "name": "王五",
-          "age": {
-            "age": 27
-          },
+          "age": 27,
           "sex": "male",
           "duty": "front-end",
           "id": 3
       }
     ];
-
 
     $scope.dataFromUrl = [];
 
@@ -265,7 +258,11 @@ app.controller('responsiveTableDemoCtrl', ['$scope', 'ngTableParams', '$filter',
 
     $scope.tableReload = function() {
       vm.instance.reload();
-    }
+    };
+
+    $scope.tableReload2 = function() {
+      vm.instance2.reload();
+    };
 
         
 	}

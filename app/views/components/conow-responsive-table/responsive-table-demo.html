@@ -34,17 +34,17 @@
 </td> -->
 						<!-- json-data="data" -->
 						<!-- from-url="views/components/conow-responsive-table/data/users.json"  -->
+						<!-- sorting:simple/compound -->
 				<div class="m-t-sm">
-					<button type="button" class="btn btn-primary" ng-click="tableReload()">reload</button>
-					<table object-table
+					<table conow-datatable
 						from-url="views/components/conow-responsive-table/data/users.json"
-						display="10"
+						page-size="2"
 						headers="Name, Age, Sex, duty, sex-2, duty-2, sex-3, duty-3, 操作"
 						fields="name,age,sex,duty"
 						sorting="simple"
 						search="true" 
 						class="horizontal-scroll"
-						select=""
+						select="multiply"
 						selected-model="vm.selected"
 						table-instance="vm.instance">
 
@@ -56,7 +56,7 @@
 							</tfoot>
 							<tbody>
 								<tr ng-click="$owner.rowClick(item)">
-									<td ng-click="$owner.rowClick(item, e)">{{ item }}</td>
+									<td ng-click="$owner.rowClick(item, e)">{{ ::item.name }}</td>
 									<td>{{ ::item.age.age }}</td>
 									<td class="hidden-sm">{{ ::item.sex }}</td>
 									<td>{{ ::item.duty }}</td>
@@ -75,12 +75,47 @@
 
 						<p>selected:</p>
 						<pre>{{vm.selected}}</pre>
+
+
+					<button type="button" class="btn btn-primary" ng-click="tableReload()">重新加载表格数据</button>
 				</div>
+
+				<!-- <div class="m-t-sm">
+					<button type="button" class="btn btn-primary" ng-click="tableReload2()">reload</button>
+					<table conow-datatable
+						json-data="data"
+						display="10"
+						headers="Name, Age, Sex, duty, sex-2, duty-2, sex-3, duty-3, 操作"
+						fields="name,age,sex,duty"
+						sorting="simple"
+						search="true" 
+						class="horizontal-scroll"
+						selected-model="vm.selected"
+						table-instance="vm.instance2">
+						<tbody>
+							<tr>
+								<td>{{ ::item.name }}</td>
+								<td>{{ ::item.age.age }}</td>
+								<td class="hidden-sm">{{ ::item.sex }}</td>
+								<td>{{ ::item.duty }}</td>
+								<td class="collapse-md">{{ ::item.sex }}</td>
+								<td>{{ ::item.duty }}</td>
+								<td class="collapse-sm">{{ ::item.sex }}</td>
+								<td>{{ ::item.duty }}</td>
+								<td class="width-200">
+									<button class="btn btn-sm btn-primary" ng-click="$owner.add(item, $event)">新增</button>
+									<button class="btn btn-sm btn-primary" ng-click="$owner.edit(item, $event)">编辑</button>
+									<button class="btn btn-sm btn-danger" ng-click="$owner.del(item, $event)">删除</button>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div> -->
 
 			</div>
 			<div class="panel-footer">
-				@ng-table:
-				<a href="https://github.com/esvit/ng-table" target="_blank" class="text-primary" title="ng-table">Github地址</a>
+				@object-table:
+				<a href="https://github.com/ekokotov/object-table" target="_blank" class="text-primary" title="object-table">Github地址</a>
 			</div>
 		</div>
 	</div>
@@ -92,8 +127,8 @@
 				</div>
 				<div class="panel-body">
 					<ol>
-						<li>引入文件 <code>object-table.js</code> & <code>object-table.css</code></li>
-						<li>调用指令 <code>object-table</code></li>
+						<li>引入文件 <code>conow-datatable.js</code> & <code>conow-datatable.css</code></li>
+						<li>调用指令 <code>conow-datatable</code></li>
 						<li>参数列表
 							<table class="table table-hover">
 								<thead>
@@ -113,7 +148,7 @@
 										<td>后台数据接口</td>
 									</tr>
 									<tr>
-										<td>data</td>
+										<td>json-data</td>
 										<td>是</td>
 										<td>-</td>
 										<td>json数据</td>
@@ -142,8 +177,40 @@
 										<td>null</td>
 										<td>是否可选/单选/多选</td>
 									</tr>
+									<tr>
+										<td>tableInstance</td>
+										<td>否</td>
+										<td></td>
+										<td>对应的table的实例，提供一些操作方法</td>
+									</tr>
+									<tr>
+										<td>class</td>
+										<td>否</td>
+										<td></td>
+										<td>作用于 conow-datatable 的class。例如 <code>horizontal-scroll</code> 可用于生成水平滚动的表格</td>
+									</tr>
 								</tbody>
 							</table>
+						</li>
+						<li>
+							tableInstance 说明:table的实例，用于在controller中对table进行操作
+							<table class="table table-hover">
+								<thead>
+									<tr>
+										<th>方法名</th>
+										<th>说明</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td>reload</td>
+										<td>重新加载</td>
+									</tr>
+								</tbody>
+							</table>
+						</li>
+						<li>
+							table 实例中可以访问业务 controller 中的属性和方法。<code>$owner</code> 即为业务controller的引用。
 						</li>
 					</ol>
 				</div>

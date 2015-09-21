@@ -3,14 +3,14 @@
 			<nav ng-hide="pageCount()==0">
 				<ul class="pagination">
 					<li ng-class="prevPageDisabled()">
-						<a href ng-click="prevPage()">« Prev</a>
+						<a href ng-click="prevPage()">{{ ::options.prevPageText }}</a>
 					</li>
 					<li ng-repeat="n in range()"
 					ng-class="{active: n == currentPage}" ng-click="setPage(n)">
 					<a href="javascript:void(0)">{{::n+1}}</a>
 				</li>
 				<li ng-class="nextPageDisabled()">
-					<a href ng-click="nextPage()">Next »</a>
+					<a href ng-click="nextPage()">{{ ::options.nextPageText }}</a>
 				</li>
 			</ul>
 		</nav>
