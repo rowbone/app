@@ -15,8 +15,19 @@
 		</div>
 	</div> -->
 
-	<div class="search-container" ng-if="search && 'separate'!=search">
+	<!-- <div class="search-container" ng-if="search && 'separate'!=search">
 		<input type="text" placeholder="Search" ng-model="$parent.globalSearch" class="search form-control">
+	</div> -->
+
+	<!-- search & filter -->
+	<div class="conowFilter-search-box" ng-if="search && 'separate'!=search">
+    <div class="input-group col-md-12 col-sm-12">
+        <input type="text" class="form-control" ng-keydown="searchList()" ng-keyup="searchListKeyUp()" placeholder="自定义搜索提示..." ng-model="$parent.globalSearch">
+        <span class="input-group-btn">
+	        <a class="p-l-sm text-md fa fa-search hidden-sm hidden-xs"></a>
+	        <a class="p-l-sm text-md text-field hidden-md hidden-lg" ng-click="openShowSearch()">筛选</a>
+        </span>
+    </div>
 	</div>
 
 	<div class="clearfix"></div>
