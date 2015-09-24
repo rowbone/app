@@ -18,27 +18,27 @@
 	<!-- <div class="search-container" ng-if="search && 'separate'!=search">
 		<input type="text" placeholder="Search" ng-model="$parent.globalSearch" class="search form-control">
 	</div> -->
-
-	<!-- search & filter -->
+	
 	<div class="conowFilter-search-box" ng-if="search && 'separate'!=search">
-    <div class="input-group col-md-12 col-sm-12">
-        <input type="text" class="form-control" ng-keydown="searchList()" ng-keyup="searchListKeyUp()" placeholder="自定义搜索提示..." ng-model="$parent.globalSearch">
-        <span class="input-group-btn">
-	        <a class="p-l-sm text-md fa fa-search hidden-sm hidden-xs"></a>
-	        <a class="p-l-sm text-md text-field hidden-md hidden-lg" ng-click="openShowSearch()">筛选</a>
-        </span>
-    </div>
+		<div class="input-group col-md-12 col-sm-12">
+			<input type="text" class="search-input" ng-model="$parent.globalSearch" placeholder="Search">
+			<span class="input-group-btn">
+				<a class="p-sm text-md fa fa-search"></a>
+			</span>
+		</div>
+		
+		<a class="p-l-sm text-md text-field" ng-click="openShowSearch($event)" style="line-height:36px;">筛选</a>
 	</div>
 
 	<div class="clearfix"></div>
-	<div>select:{{ select }}</div>
+	
 	<div class="back-cover">
 		<table class="table conow-datatable" ng-mousedown="resizeStart($event)" ng-mouseup="resizeEnd($event)">
 			<thead ng-if="!customHeader">
 				<tr>
 					<th ng-if="select == '' || select == 'multiply'">
 						<label class="i-checks" ng-if="options.isShowCheckbox" ng-show="select == 'multiply'">
-							<input type="checkbox" class="header-checkbox col-header" ng-checked="isAllSelected()" ng-click="headerCheckboxClick()">
+							<input type="checkbox" class="header-checkbox col-header" ng-checked="options.isPageAllSelected" ng-click="headerCheckboxClick()">
 							<i></i>
 						</label>
 					</th>
@@ -83,14 +83,17 @@
 	</div>
 
 	<!-- <paging ng-if="paging" page-size="pageSize" count="$filtered.length" options="pagingOptions" class="conow-datatable-paging" ng-hide="options.dataIsLoading"></paging> -->
-	<pagination 
-		ng-if="pagingOptions.paging" 
-		total-items="$filtered.length" 
-		items-per-page="pagingOptions.pageSize" 
-		ng-model="pagingOptions.currentPage" 
-		boundary-links="true"
-		max-size="pagingOptions.maxSize">
-	</pagination>
+	<div class="pagination-container" ng-if="pagingOptions.isPaging">
+		<pagination 
+			total-items="pagingOptions.totalItems" 
+			items-per-page="pagingOptions.pageSize" 
+			ng-model="pagingOptions.currentPage" 
+			boundary-links="true"
+			max-size="pagingOptions.maxSize" 
+			previous-text="< 上一页"
+			next-text="下一页 >">
+		</pagination>
+	</div>
 
 	<div>{{options.currentPage}}</div>
 

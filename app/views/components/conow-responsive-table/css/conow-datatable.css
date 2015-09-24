@@ -1,31 +1,31 @@
 ._personal_inf{
-	background-color: rgb(212, 255, 227);
-	color: green;
-  text-align: center;
+  background-color: rgb(212, 255, 227);
+  color: green;
+    text-align: center;
 }
 .additional_inf{
-	background-color: rgb(230, 241, 246);
-  text-align: center;
+  background-color: rgb(230, 241, 246);
+    text-align: center;
 }
 .eye{
-	width: 30px;
-	height: 10px;
-	border-radius: 5px;
-	float: left;
-	margin: 5px;
-	box-shadow: 0px 0px 3px gray;
-	border: 1px solid gray;
+  width: 30px;
+  height: 10px;
+  border-radius: 5px;
+  float: left;
+  margin: 5px;
+  box-shadow: 0px 0px 3px gray;
+  border: 1px solid gray;
 }
 
 .eye.green{
-	background-color: rgb(92, 197, 23);
+  background-color: rgb(92, 197, 23);
 }
 .eye.brown{
-	background-color: rgb(208, 92, 92);
+  background-color: rgb(208, 92, 92);
 }
 
 .eye.blue{
-	background-color: rgb(49, 191, 255);
+  background-color: rgb(49, 191, 255);
 }
 .CodeMirror{
   height: auto !important;
@@ -189,8 +189,8 @@ p{
 }
 
 .conow-datatable-module .conow-datatable tfoot tr,.conow-datatable-module .conow-datatable thead>tr {
-    background-color: #e6f1f6;
-    color: #2165a3;
+    /* background-color: #e6f1f6;
+    color: #2165a3; */
     cursor: pointer;
     -webkit-touch-callout: none;
     -webkit-user-select: none;
@@ -202,7 +202,7 @@ p{
 
 .conow-datatable-module .conow-datatable thead>tr th {
     border-bottom: 0;
-    padding-right: 25px;
+    padding-right: 15px;
     position: relative;
     will-change: width;
     -webkit-touch-callout: none;
@@ -236,21 +236,26 @@ p{
     position: relative
 }
 
-.conow-datatable-module .conow-datatable thead>tr th.sortable:after,.conow-datatable-module .conow-datatable thead>tr th.sortable:before {
-    content: "\e113";
-    font-size: 9px;
-    font-family: 'Glyphicons Halflings';
+.conow-datatable-module .conow-datatable thead>tr th.sortable:after,
+.conow-datatable-module .conow-datatable thead>tr th.sortable:before {
+    content: "";
+    border-width: 0 4px 4px;
+    border-style: solid;
+    border-color: #fff transparent;
     visibility: visible;
-    right: 8px;
-    top: 40%;
+    right: 5px;
+    top: 50%;
     position: absolute;
-    opacity: .25;
-    margin-top: -4px
+    opacity: .3;
+    margin-top: -4px;
 }
 
-.conow-datatable-module .conow-datatable thead>tr th.sortable:after {
-    content: "\e114";
-    margin-top: 5px
+.conow-datatable-module .conow-datatable thead>tr th.sortable:before {
+    margin-top: 2px;
+  border-bottom: none;
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-top: 4px solid #fff;
 }
 
 .conow-datatable-module .conow-datatable thead>tr th.sortable.table-sort-down:after,.conow-datatable-module .conow-datatable thead>tr th.sortable.table-sort-up:before,.conow-datatable-module .conow-datatable thead>tr th.sortable:hover:not(.table-sort-up):not(.table-sort-down):after,.conow-datatable-module .conow-datatable thead>tr th.sortable:hover:not(.table-sort-up):not(.table-sort-down):before {
@@ -385,6 +390,10 @@ p{
   margin-bottom: 10px;
 }
 
+.conow-datatable .row-checkbox-td {
+  width: 50px;
+}
+
 .conow-datatable.horizontal-scroll th, .conow-datatable.horizontal-scroll td {
   text-align: left;
   vertical-align: middle;
@@ -439,4 +448,94 @@ p{
 
 .w-500 {
   width: 500px;
+}
+
+/**
+ * pagination
+ */
+.pagination-container {
+  text-align: center;
+}
+.pagination-container .pagination > li > a {
+    margin-right: 6px;
+    border-top-left-radius: 0px;
+    border-bottom-left-radius: 0px;
+}
+.pagination-container .pagination>li:last-child>a, .pagination-container .pagination>li:last-child>span {
+    border-top-right-radius: 0px;
+    border-bottom-right-radius: 0px;
+}
+.pagination-container .pagination>li>a {
+    position: relative;
+    float: left;
+    margin-left: -1px;
+    line-height: 1.42857143;
+    color: #23b7e5;
+    text-decoration: none;
+    background-color: #fff;
+    border: 1px solid #ddd;
+}
+.pagination-container .pagination>.disabled a
+.pagination-container .pagination>.disabled>span, 
+.pagination-container .pagination>.disabled>span:hover, 
+.pagination-container .pagination>.disabled>span:focus, 
+.pagination-container .pagination>.disabled a, 
+.pagination-container .pagination>.disabled>a:hover, 
+.pagination-container .pagination>.disabled>a:focus {
+    color: #808080!important;
+    cursor: not-allowed;
+    background-color: #fff;
+    border-color: #ddd;
+}
+.pagination-container .pagination>.active>a, 
+.pagination-container .pagination>.active>span, 
+.pagination-container .pagination>.active>a:hover, 
+.pagination-container .pagination>.active>span:hover, 
+.pagination-container .pagination>.active>a:focus, 
+.pagination-container .pagination>.active>span:focus {
+    z-index: 2;
+    color: #000000;
+    cursor: default;
+    background-color: transparent;
+    border-color: transparent;
+}
+.pagination-container .fa-fw {
+    width: 0.8em;
+    text-align: center;
+    font-size: 17px;
+}
+.pagination-container .pagination {
+    display: inline-block;
+    padding-left: 0;
+    margin: 50px 0;
+    border-radius: 4px;
+}
+
+@media(min-width: 768px){
+  .conow-datatable > thead {
+    background-color: #6A6C7A;
+    color: #fff;
+    font-size:18px;
+  }
+}
+
+@media(max-width: 767px){
+  .conow-datatable > thead {
+    background-color: #f2f6fa;
+    color: #808080;
+    font-size:14px;
+  }
+  .conow-datatable > tbody > tr{
+    padding-left:10px;
+    padding-right:10px;
+  }
+  .conow-datatable > tbody > tr.ng-table-childHidden > td{
+      padding: 0px 19px;
+      border-top: 1px solid #e7e7e7;
+      font-size: 16px;
+  }
+}
+
+.pagination .page-repeat a {
+  width: 42px;
 }

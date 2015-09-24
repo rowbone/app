@@ -1,0 +1,11 @@
+
+后台分页：
+
+interface:
+/service/jobsInfo!queryJobsListByOrgUintId
+
+params:
+
+page:4
+pagesize:10
+ORG_UNIT_ID:1421924106089631410343354

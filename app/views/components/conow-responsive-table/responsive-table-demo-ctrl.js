@@ -232,8 +232,6 @@ app.controller('responsiveTableDemoCtrl', ['$scope', 'ngTableParams', '$filter',
       }
     ];
 
-    $scope.dataFromUrl = [];
-
     $scope.add = function(item, e) {
       alert('adding');
 

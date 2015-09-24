@@ -37,7 +37,7 @@ angular.module('conowDatatable')
 			return {
 				restrict: 'A',
 				replace: true,
-				templateUrl: 'views/components/conow-responsive-table/tpls/common.html',
+				templateUrl: 'js/directives/conow-datatable/tpls/common.html',
 				controller: 'conowDatatableCtrl',
 				controllerAs: 'ctrl',
 				transclude: true,
@@ -519,16 +519,16 @@ angular.module('conowDatatable')
 					return;
 				}
 				options.dataIsLoading = true;
-				$http.get(url, angular.extend({}, params, $scope.$eval($scope.urlParams)))
+				$http.post(url, angular.extend({}, params, $scope.$eval($scope.urlParams)))
 					.then(function(response) {
 						$scope.data = response.data.obj;
 						options.dataIsLoading = false;
 						
-						// if(pagingOptions.pageServer) {
-						// 	pagingOptions.totalItems = response.data.pageInfo.count;
-						// } else {
-						// 	pagingOptions.totalItems = $scope.$filtered.length;
-						// }
+						if(pagingOptions.pageServer) {
+							pagingOptions.totalItems = response.data.pageInfo.count;
+						} else {
+							pagingOptions.totalItems = $scope.$filtered.length;
+						}
 					}, function(msg) {
 						$scope.$filtered = [];
 	
