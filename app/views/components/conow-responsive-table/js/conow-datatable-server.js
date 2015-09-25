@@ -1,10 +1,23 @@
 "use strict";
 
+/**
+ * todo:
+ * 1.确定后台排序的参数：字段、升/降序，多个字段排序
+ * 2.指令调用增加 sort-col 参数，用于生成可排序字段(现在是所有列都有排序标识)，修改排序图标的样式
+ * 3.把前台排序的 sortBy 和 searchKey 的过滤放到 JS 代码中，以提高性能(表格 repeat 时不需要考虑过滤和排序过滤器)。
+ * 4.表格中包含 checkbox 时有报错：TypeError: Cannot set property 'nodeValue' of undefined
+ * 5.表格列没有 collapse 相关类时，不需要有展开/折叠的图标(需要在页面 resize、表格初始化、点击图标时进行判断)
+ * 6.全选只能第一页选中的问题
+ * 
+ * 7.列中包含 ng-repeat 的处理
+ * 8.
+ * */
+
 angular.module('conowDatatable', []);
 
 angular.module('conowDatatable')
 	.controller('conowDatatableFilterCtrl', ['$scope', 'modalParams', '$conowModalInstance', 
-    function($scope, modalParams, $conowModalInstance) {
+        function($scope, modalParams, $conowModalInstance) {
 			var filterOptions = $scope.filterOptions = {
 				'url': '',
 				'adSearch': {}
@@ -429,7 +442,7 @@ angular.module('conowDatatable')
 				var adSearchParams = {};
 				
 				if($scope.adSearchParams && $scope.adSearchParams.adSearch) {
-					adSearchParams = $scope.adSearchParams.adSearch.paramsToDB();
+					adSearchParams = $scope.adSearchParams.adSearch.paramsToDB;
 				}				
 
 				return adSearchParams;
@@ -521,13 +534,14 @@ angular.module('conowDatatable')
 				options.dataIsLoading = true;
 				$http.post(url, angular.extend({}, params, $scope.$eval($scope.urlParams)))
 					.then(function(response) {
-						$scope.data = response.data.obj;
+						var data = response.data;
+						$scope.data = data.obj;
 						options.dataIsLoading = false;
 						
 						if(pagingOptions.pageServer) {
-							pagingOptions.totalItems = response.data.pageInfo.count;
+							pagingOptions.totalItems = data.pageInfo.count;
 						} else {
-							pagingOptions.totalItems = $scope.$filtered.length;
+							pagingOptions.totalItems = data.length;
 						}
 					}, function(msg) {
 						$scope.$filtered = [];
@@ -824,7 +838,7 @@ angular.module('conowDatatable')
 			});
 
 			$scope.$on('rowGenerateDone', function(event, data) {
-				// console.log('rowGenerateDone-->', data);
+//				console.log('rowGenerateDone-->', data);
 
 				expandFn();
 			});
@@ -921,7 +935,7 @@ angular.module('conowDatatable').controller('conowDatatableSortingCtrl', ['$scop
 							$scope.changeReversing(field);
 						}
 
-						$scope.ctrl._reload();
+//						$scope.ctrl._reload();
 					}
 
 				};
