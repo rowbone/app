@@ -4,13 +4,21 @@
  * todo:
  * 1.确定后台排序的参数：字段、升/降序，多个字段排序
  * 2.指令调用增加 sort-col 参数，用于生成可排序字段(现在是所有列都有排序标识)，修改排序图标的样式
- * 3.把前台排序的 sortBy 和 searchKey 的过滤放到 JS 代码中，以提高性能(表格 repeat 时不需要考虑过滤和排序过滤器)。
+ * 3.把前台排序的 sortBy 和 searchKey 的过滤放到 JS 代码中，以提高性能(表格 repeat 时不需要考虑过滤和排序过滤器)。[20151008，searchKey放在JS代码中逻辑太复杂，暂时不考虑此项方案]
  * 4.表格中包含 checkbox 时有报错：TypeError: Cannot set property 'nodeValue' of undefined
- * 5.表格列没有 collapse 相关类时，不需要有展开/折叠的图标(需要在页面 resize、表格初始化、点击图标时进行判断)
+ * 5.表格列没有 collapse 相关类时，不需要有展开/折叠的图标(需要在页面 resize、表格初始化、点击图标时进行判断)[20151008]
  * 6.全选只能第一页选中的问题
  * 
+ * 内容超长时处理
+ * 列的百分比设置宽度
+ * 调用参数改为对象参数
+ * 筛选和表格指令分开初始化
+ * page-server 处理后台数据
+ * 
+ * 
  * 7.列中包含 ng-repeat 的处理
- * 8.
+ * 8.获取已选项和设置已选项采用统一的接口方式，废弃指令绑定的方式[20151008]
+ * 9.修改选择 checkbox 一列的宽度[20151008]
  * */
 
 angular.module('conowDatatable', []);
@@ -45,8 +53,8 @@ angular.module('conowDatatable')
 	]);
 
 angular.module('conowDatatable')
-	.directive('conowDatatable', ['$compile', '$interpolate',  
-		function ($compile, $interpolate) {
+	.directive('conowDatatable', ['$compile', '$interpolate',  '$rootScope', 
+		function ($compile, $interpolate, $rootScope) {
 			return {
 				restrict: 'A',
 				replace: true,
@@ -66,14 +74,14 @@ angular.module('conowDatatable')
 					sortingType: "@?sorting",
 					editable: "=?",
 					select: "@?",
-					selectedModel: "=?",
+//					selectedModel: "=?",
 					dragColumns: "=?",
 					tableInstance: '=?',
 					urlParams: '@?'
 				},
 				compile: function( tElement, tAttributes) {
 
-					//collect filters
+					// collect filters
 					var rowFilter = "",
 					pagingFilter = "";
 
@@ -104,7 +112,7 @@ angular.module('conowDatatable')
 					};
 
 					// pagingFilter = rowFilter;
-//					pagingFilter += " | offset : pagingOptions.currentPage : pagingOptions.pageSize | limitTo: pagingOptions.pageSize";
+					pagingFilter += " | offset : pagingOptions.currentPage : pagingOptions.pageSize | limitTo: pagingOptions.pageSize";
 
 					// tElement[0].querySelector("#rowTr")
 					// 	.setAttribute("ng-repeat","item in $filtered = (data" + rowFilter +")"+ pagingFilter);
@@ -126,7 +134,7 @@ angular.module('conowDatatable')
 											ctrl._addHeaderPattern(clone[key]);
 											break;
 										case 'TBODY':
-											scope.findBody = true;
+											scope.options.findBody = true;
 											ctrl._addRowPattern(clone[key],rowFilter,pagingFilter);
 											break;
 										case 'TFOOT':
@@ -200,6 +208,7 @@ angular.module('conowDatatable')
 			var vm = $scope.vm = {};
 			var options = $scope.options = {
 				'noDataTip': '没有符合条件的数据！',
+				'isNeedCollapse': true
 			};
 			/**
 			 * paging directive options
@@ -211,6 +220,7 @@ angular.module('conowDatatable')
 				'maxSize': 5,
 				isPaging: (angular.isUndefined($attrs.page) || $attrs.page == 'false') ? false : true,
 				pageServer: (angular.isUndefined($attrs.pageServer) || $attrs.pageServer == 'false') ? false : true,
+//				totalItems
 			};
 
 			/**
@@ -218,11 +228,17 @@ angular.module('conowDatatable')
 			 */
 			$scope.$watch('pagingOptions.currentPage', 
 				function(newVal, oldVal) {
-					console.log('currentPage-->', newVal);
+					var currentPage = newVal,
+						pageCount = pagingOptions.count;
 					
 					$scope.isPageAllSelected();
+					
 					if(pagingOptions.pageServer) {
 						ctrl._reload();
+					} else {
+//						if(angular.isDefined($scope.data)) {
+//							$scope.$filtered = $scope.data.slice((currentPage - 1) * pageCount, currentPage * pageCount);
+//						}
 					}
 				});
 			
@@ -290,12 +306,13 @@ angular.module('conowDatatable')
 			// angular.element not work
 			// var $window = angular.element('window');
 			$(window).bind('resize', function() {
-				var $tables = angular.element('.object-table');
-				var $childRows = $tables.find('.child');
-				var $childRow = $tables.find('.child:first');
-				var $divs = null;
-				var $div = null;
-				var isAllDivHidden = true;
+				var $tables = angular.element('.conow-datatable'),
+					$childRows = $tables.find('.child'),
+					$childRow = $tables.find('.child:first'),
+					$divs = null,
+					$div = null,
+					isAllDivHidden = true;
+				
 				// remove parent class:hidden to show parent
 				$childRows.removeClass('hidden');
 
@@ -347,65 +364,73 @@ angular.module('conowDatatable')
 
 			// click header-checkbox
 			$scope.headerCheckboxClick = function() {
-				var page = pagingOptions.currentPage;
-				var count = pagingOptions.pageSize;
+				var page = pagingOptions.currentPage,
+					count = pagingOptions.pageSize,
+					pageData = $scope.$filtered.slice((page - 1) * count, page * count),
+					dataSelected = $scope.tableInstance.getSelected();
+				
+				if(angular.equals(dataSelected, null)) {
+					dataSelected = [];
+				}
 
-				var pageData = $scope.$filtered.slice((page - 1) * count, page * count);
-
-				if(arrayUtilService.isAllSelected(pageData, '$checked')) {					
-//					for(var i=0,iLen=pageData.length; i<iLen; i++) {
-//						if(arrayUtilService.isInArr(pageData[i], $scope.selectedModel)) {
-//							$scope.selectedModel.splice(i, 1);
-//						}
-//					}			
-					arrayUtilService.removeItems($scope.selectedModel, pageData);
+				if(arrayUtilService.isAllSelected(pageData, '$checked')) {
+					// 先移除已选择列表中的数据，再设置选中标志 '$checked' 为 false
+					dataSelected = arrayUtilService.removeItems(dataSelected, pageData);
 					arrayUtilService.unSelectedPageAll($scope.$filtered, page - 1, count, '$checked');
 					
 					options.isPageAllSelected = false;
 				} else {
-//					arrayUtilService.selectedAll(pageData, '$checked');
-					
+					// 先设置选中标志 '$checked' 为 true，再添加到已选择列表
 					$scope.$filtered = arrayUtilService.selectedPageAll($scope.$filtered, page - 1, count, '$checked');
-//					for(var i=0, iLen=pageData.length; i<iLen; i++) {
-//						if(!arrayUtilService.isInArr(pageData[i], $scope.selectedModel)) {
-//							$scope.selectedModel.push(pageData[i]);
-//						}
-//					}
-					arrayUtilService.addItems($scope.selectedModel, pageData);
+					dataSelected = arrayUtilService.addItems(dataSelected, pageData);
 					
 					options.isPageAllSelected = true;
 				}
+				
+				$scope.tableInstance.setSelected(dataSelected);
 			};
 
 			// click row-checkbox
 			$scope.rowCheckboxClick = function(item) {
 				item.$checked = !item.$checked;
-				var page = pagingOptions.currentPage;
-				var count = pagingOptions.pageSize;
-
-				var pageData = $scope.$filtered.slice((page - 1) * count, page * count);
+				
+				var page = pagingOptions.currentPage,
+					count = pagingOptions.pageSize,
+					pageData = $scope.$filtered.slice((page - 1) * count, page * count),
+					dataSelected = $scope.tableInstance.getSelected();
 
 				if ($scope.select === "multiply") {
-					if (!ctrl._containsInSelectArray(item)) {
-						$scope.selectedModel.push(item);
+					if(angular.equals(dataSelected, null)) {
+						dataSelected = [];
+					}
+					
+//					if(!arrayUtilService.isInArr(item, dataSelected)) {	
+					if(item.$checked) {
+						dataSelected.push(item);
 						
 						if(arrayUtilService.isAllSelected(pageData, '$checked')) {
 							options.isPageAllSelected = true;
 						}
-					} else {
-						$scope.selectedModel.splice($scope.selectedModel.indexOf(item), 1);
+					} else {						
+						dataSelected.splice(dataSelected.indexOf(item), 1);
 						
 						if(options.isPageAllSelected = true) {
 							options.isPageAllSelected = false;
 						}
 					}
-				} else {
-					$scope.selectedModel = item;
+				} else {					
+					dataSelected = item;
 				}
+				
+				$scope.tableInstance.setSelected(dataSelected);
 			};
 
 			$scope.rowExpand = function(item, e) {
 				e.stopPropagation();
+				
+				if(!options.isNeedCollapse) {
+					return;
+				}
 					
 				item.$expanded = !item.$expanded;
 
@@ -541,7 +566,7 @@ angular.module('conowDatatable')
 						if(pagingOptions.pageServer) {
 							pagingOptions.totalItems = data.pageInfo.count;
 						} else {
-							pagingOptions.totalItems = data.length;
+							pagingOptions.totalItems = data.obj.length;
 						}
 					}, function(msg) {
 						$scope.$filtered = [];
@@ -624,12 +649,14 @@ angular.module('conowDatatable')
 				var tr = angular.element(node).find("tr");
 
 				var $firstCol = tr.find('td:first');
-				var $icon = angular.element(document.createElement('i'));
-				$icon.attr('ng-class', '{ true: "fa-angle-right", false: "fa-angle-down" }[!item.$expanded]')
-					.addClass('fa expand-icon');
-				$firstCol.prepend($icon);
-				$firstCol.addClass('first-column')
-					.attr('ng-click', 'rowExpand(item, $event)')
+				if(options.isNeedCollapse) {
+					var $icon = angular.element(document.createElement('i'));
+					$icon.attr('ng-class', '{ "fa-angle-right": !item.$expanded, "fa-angle-down": item.$expanded, "hidden": !options.isNeedCollapse }')
+						 .addClass('fa expand-icon');
+					$firstCol.prepend($icon);
+					$firstCol.addClass('first-column')
+						.attr('ng-click', 'rowExpand(item, $event)');
+				}				
 
 				// generate checkbox @20150914 - starts
 				if(angular.isDefined($attrs.select)) {
@@ -669,18 +696,26 @@ angular.module('conowDatatable')
 				var arrHtml = [];
 				var headers = angular.copy($scope.headers);
 				headers.unshift('');
+				
+				var isNeedCollapse = false;
 				for(var i=0, iLen=$tds.length; i<iLen; i++) {
 					$td = angular.element($tds[i]);
 					if($td.hasClass('collapse-lg')) {
 						arrHtml.push('<div class=""><span class="collapse-name">' + headers[i] + '</span><span class="collapse-value">' + $td.html() + '</span></div>');
+						isNeedCollapse = true;
 					} else if($td.hasClass('collapse-md')) {
 						arrHtml.push('<div class="hidden-lg"><span class="collapse-name">' + headers[i] + '</span><span class="collapse-value">' + $td.html() + '</span></div>');
+						isNeedCollapse = true;
 					} else if($td.hasClass('collapse-sm')) {
 						arrHtml.push('<div class="hidden-lg hidden-md"><span class="collapse-name">' + headers[i] + '</span><span class="collapse-value">' + $td.html() + '</span></div>');
+						isNeedCollapse = true;
 					} else if($td.hasClass('collapse-xs')) {
 						arrHtml.push('<div class="hidden-lg hidden-md hidden-sm"><span class="collapse-name">' + headers[i] + '</span><span class="collapse-value">' + $td.html() + '</span></div>');
+						isNeedCollapse = true;
 					}
 				}
+				
+				options.isNeedCollapse = isNeedCollapse;
 				$trChild
 					.attr('ng-repeat-end', '')
 					.attr('ng-show', 'isShowChild(item)')
@@ -707,22 +742,29 @@ angular.module('conowDatatable')
 				// item.$expanded = !item.$expanded;
 
 				if ($scope.select === "multiply") {
+					var dataSelected = $scope.tableInstance.getSelected();
 					if (!ctrl._containsInSelectArray(item)) {
-						$scope.selectedModel.push(item);
+//						$scope.selectedModel.push(item);
+						
+						dataSelected.push(item);
 					} else {
-						$scope.selectedModel.splice($scope.selectedModel.indexOf(item), 1);
+//						$scope.selectedModel.splice($scope.selectedModel.indexOf(item), 1);
+						
+						dataSelected.splice(dataSelected.indexOf(item), 1);
 					}
 				} else {
 					$scope.selectedModel = item;
+					
+					$scope.tableInstance.setSelected(item);
 				}
 			};
 
-			this._containsInSelectArray = function(obj) {
-				if ($scope.selectedModel.length)
-					return $scope.selectedModel.filter(function(listItem) {
-						return angular.equals(listItem, obj);
-					}).length > 0;
-			};
+//			this._containsInSelectArray = function(obj) {
+//				if ($scope.selectedModel.length)
+//					return $scope.selectedModel.filter(function(listItem) {
+//						return angular.equals(listItem, obj);
+//					}).length > 0;
+//			};
 
 			$scope.ifSelected = function(item) {
 
@@ -786,6 +828,7 @@ angular.module('conowDatatable')
 			$scope.$watch('globalSearch',function(){
 				// if(!!ctrl.pageCtrl)
 				// 	ctrl.pageCtrl.setPage(0);
+				
 				pagingOptions.currentPage = 1;
 			});
 
@@ -1121,6 +1164,8 @@ angular.module('conowDatatable')
         		  }
         		  
         		  return false;
+        		  
+//        		  return arr.indexOf(item) > -1;
         	  }
           },
           indexInArr: function(item, arr) {
@@ -1237,10 +1282,23 @@ angular.module('conowDatatable')
 				function tableClass() {
 					this.reloadTrigger = undefined;
 					var self = this;
+					
+					var dataSelected = null;
 
+					// reload
 					this.reload = function() {
 						
 						self.reloadTrigger = !self.reloadTrigger;
+					};
+					
+					// get selected row
+					this.getSelected = function() {
+						return dataSelected;
+					};
+					
+					// set selected row when initialization
+					this.setSelected = function(selected) {
+						dataSelected = selected;
 					};
 				}
 

@@ -236,29 +236,38 @@ p{
     position: relative
 }
 
-.conow-datatable-module .conow-datatable thead>tr th.sortable:after,
-.conow-datatable-module .conow-datatable thead>tr th.sortable:before {
+.conow-datatable-module .conow-datatable thead>tr th.sortable span {
+  display: inline-block;
+  position: relative;
+  padding-right: 20px;
+}
+
+.conow-datatable-module .conow-datatable thead>tr th.sortable span:after,
+.conow-datatable-module .conow-datatable thead>tr th.sortable span:before {
     content: "";
-    border-width: 0 4px 4px;
-    border-style: solid;
-    border-color: #fff transparent;
-    visibility: visible;
-    right: 5px;
-    top: 50%;
-    position: absolute;
-    opacity: .3;
-    margin-top: -4px;
+  border-width: 0 4px 4px;
+  border-style: solid;
+  border-color: #fff transparent;
+  visibility: visible;
+  right: 5px;
+  top: 50%;
+  position: absolute;
+  opacity: .3;
+  margin-top: -4px;
 }
 
-.conow-datatable-module .conow-datatable thead>tr th.sortable:before {
+.conow-datatable-module .conow-datatable thead>tr th.sortable span:before {
     margin-top: 2px;
-  border-bottom: none;
-  border-left: 4px solid transparent;
-  border-right: 4px solid transparent;
-  border-top: 4px solid #fff;
+    border-bottom: none;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-top: 4px solid #fff;
 }
 
-.conow-datatable-module .conow-datatable thead>tr th.sortable.table-sort-down:after,.conow-datatable-module .conow-datatable thead>tr th.sortable.table-sort-up:before,.conow-datatable-module .conow-datatable thead>tr th.sortable:hover:not(.table-sort-up):not(.table-sort-down):after,.conow-datatable-module .conow-datatable thead>tr th.sortable:hover:not(.table-sort-up):not(.table-sort-down):before {
+.conow-datatable-module .conow-datatable thead>tr th.sortable.table-sort-down:after,
+.conow-datatable-module .conow-datatable thead>tr th.sortable.table-sort-up:before,
+.conow-datatable-module .conow-datatable thead>tr th.sortable:hover:not(.table-sort-up):not(.table-sort-down):after,
+.conow-datatable-module .conow-datatable thead>tr th.sortable:hover:not(.table-sort-up):not(.table-sort-down):before {
     opacity: 1
 }
 
@@ -390,15 +399,25 @@ p{
   margin-bottom: 10px;
 }
 
-.conow-datatable .row-checkbox-td {
-  width: 50px;
-}
-
-.conow-datatable.horizontal-scroll th, .conow-datatable.horizontal-scroll td {
+.conow-datatable th, 
+.conow-datatable td,
+.conow-datatable.horizontal-scroll th, 
+.conow-datatable.horizontal-scroll td {
   text-align: left;
   vertical-align: middle;
+}
+
+.conow-datatable.horizontal-scroll tr th:not(.header-checkbox-th), 
+.conow-datatable.horizontal-scroll tr td:not(.row-checkbox-td) {
   width: 100px;
   min-width: 100px;
+}
+
+.conow-datatable.horizontal-scroll tr th.header-checkbox-th, 
+.conow-datatable。horizontal-scroll tr td.row-checkbox-td {
+  width: 50px;
+  min-width: 50px;
+  max-width: 50px;
 }
 
 .conow-datatable td.width-200 {

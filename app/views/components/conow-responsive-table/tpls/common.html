@@ -36,7 +36,7 @@
 		<table class="table conow-datatable" ng-mousedown="resizeStart($event)" ng-mouseup="resizeEnd($event)">
 			<thead ng-if="!customHeader">
 				<tr>
-					<th ng-if="select == '' || select == 'multiply'">
+					<th ng-if="select == '' || select == 'multiply'" class="header-checkbox-th">
 						<label class="i-checks" ng-if="options.isShowCheckbox" ng-show="select == 'multiply'">
 							<input type="checkbox" class="header-checkbox col-header" ng-checked="options.isPageAllSelected" ng-click="headerCheckboxClick()">
 							<i></i>
@@ -45,7 +45,10 @@
 					<th ng-repeat="head in headers track by $index" 
 						ng-click="sortBy(fields[$index])" 
 						ng-class="headerIsSortedClass(head)" 
-						class="sortable col-header" header-generate>{{head}} 
+						class="sortable col-header" header-generate>
+						<div>
+							<span ng-bind="head"></span>
+						</div>
 						<div ng-if="resize" class="resize"></div>
 					</th>
 				</tr>
@@ -58,9 +61,9 @@
 						<input type="text" ng-model="columnSearch[head]" placeholder="{{head}}..." class="form-control search separate">
 					</th>
 				</tr>
-			</thead>	
-
-			<tbody ng-if="!findBody">
+			</thead>
+			
+			<tbody ng-if="!options.findBody">
 				<!-- remove select-row class -->
 				<!-- <tr id="rowTr" ng-click="setSelected(item)" ng-class="{'selected-row':ifSelected(item)}">  -->
 				<tr id="rowTr" ng-click="setSelected(item)"> 
