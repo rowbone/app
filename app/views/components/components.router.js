@@ -87,5 +87,9 @@ angular.module('app.components', ['ui.router'])
 					url: '/responsiveTable',
 					templateUrl: 'views/components/conow-responsive-table/responsive-table-demo.html'
 				})
+				.state('app.components.conowGrid', {
+					url: '/conowGrid',
+					templateUrl: 'views/components/conow-responsive-table/conow-grid-demo.html'
+				})
 
 	}]);

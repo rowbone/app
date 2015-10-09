@@ -25,4 +25,5 @@ var app = angular.module('demoApp', [
 	// 'angularBootstrapNavTree'
 	, 'ngTable'
 	, 'conowDatatable'
+	, 'ui.grid'
 	]);
