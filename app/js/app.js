@@ -26,4 +26,5 @@ var app = angular.module('demoApp', [
 	, 'ngTable'
 	, 'conowDatatable'
 	, 'ui.grid'
+	, 'ui.grid.pagination'
 	]);

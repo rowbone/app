@@ -1,6 +1,7 @@
 
-<div class="conow-grid-search">
-	<input type="text" ng-model="filterOptions.filterText">
+<div>{{ options | json}}</div>
+<div class="conow-grid-search" ng-if="options.isSingleFilter">
+	<input type="text" class="form-control" ng-model="filterOptions.filterText">
 </div>
 
-<div id="grid1" ui-grid="vm.gridOptions" class="grid"></div>
+<div id="grid1" ui-grid="vm.gridOptions" ui-grid-pagination class="grid"></div>

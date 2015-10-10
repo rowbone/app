@@ -8,6 +8,9 @@ angular.module('demoApp')
 				templateUrl: 'views/components/conow-responsive-table/tpls/conow-grid-tpl.html',
 				link: function(scope, elem, attrs) {
 					var vm = scope.vm = {};
+					var options = scope.options = {
+						isSingleFilter: true
+					};
 
 					var conowGridService = new conowGridClass();
 
@@ -17,6 +20,8 @@ angular.module('demoApp')
 					var userOptions = scope.$eval(attrs.conowGrid);
 					if(userOptions.singleFilter) {
 						initOptions.filterOptions = scope.filterOptions;
+					} else {
+						options.isSingleFilter = false;
 					}
 
 					vm.gridOptions = angular.extend({}, 
@@ -45,6 +50,8 @@ app.factory('conowGridClass', [
 		function conowGridClass() {
 			var defaultOptions = {
 				selectionRowHeaderWidth: 35, 
+				paginationPageSizes: [25, 50, 75],
+				paginationPageSize: 25
 			};
 
 			this.getDefaultOptions = function() {
