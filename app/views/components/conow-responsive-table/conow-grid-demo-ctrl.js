@@ -1,7 +1,7 @@
 'use strict';
 
-app.controller('conowGridDemoCtrl', ['$scope', 'i18nService', 
-	function($scope, i18nService) {
+app.controller('conowGridDemoCtrl', ['$scope', 'i18nService', '$filter', 'DataService', 
+	function($scope, i18nService, $filter, DataService) {
 
 		// i18nService.setCurrentLang('zh-cn');
 
@@ -33,10 +33,24 @@ app.controller('conowGridDemoCtrl', ['$scope', 'i18nService',
 			}
 		];
 
+		$scope.filteredData = $scope.myData;
+
+		$scope.filterOptions = {
+			filterText: ''
+		};
+
 		$scope.gridOptions = {
-			enableFiltering: true,
-			enableGridMenu: true,
-			data: $scope.myData,
+			// enableFiltering: false,
+			// enableGridMenu: true,
+			// enableRowSelection: true,
+			// enableSelectAll: true,
+			// onRegisterApi: function(gridApi) {
+			// 	$scope.gridApi = gridApi;
+			// 	$scope.gridApi.grid.registerRowsProcessor($scope.singleFilter, 200);
+			// },
+			data: 'filteredData',
+			// filterOptions: $scope.filterOptions,
+			singleFilter: true,
 			columnDefs: [
 				{ name: 'firstName', field: 'firstName' }, 
 				{ name: 'firstFriend', field: 'friends[0]' }, 
@@ -46,7 +60,7 @@ app.controller('conowGridDemoCtrl', ['$scope', 'i18nService',
 		};
 
 		$scope.filter = function() {
-			$scope.gridApi.grid.refresh();
+			$scope.filteredData = $filter('filter')($scope.myData, $scope.filterOptions.filterText);
 		};
 
 	}
