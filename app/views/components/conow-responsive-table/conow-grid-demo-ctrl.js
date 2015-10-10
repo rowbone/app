@@ -48,7 +48,7 @@ app.controller('conowGridDemoCtrl', ['$scope', 'i18nService', '$filter', 'DataSe
 			// 	$scope.gridApi = gridApi;
 			// 	$scope.gridApi.grid.registerRowsProcessor($scope.singleFilter, 200);
 			// },
-			data: 'filteredData',
+			data: $scope.myData,
 			// filterOptions: $scope.filterOptions,
 			singleFilter: true,
 			columnDefs: [

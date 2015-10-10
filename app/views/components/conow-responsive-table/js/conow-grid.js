@@ -1,7 +1,7 @@
 
 angular.module('demoApp')
-	.directive('conowGrid', ['conowGridClass', 
-		function(conowGridClass) {
+	.directive('conowGrid', ['conowGridClass', '$filter', 
+		function(conowGridClass, $filter) {
 			return {
 				restrict: 'A',
 				// template: '<div id="grid1" ui-grid="vm.gridOptions" class="grid"></div>',
@@ -11,7 +11,9 @@ angular.module('demoApp')
 
 					var conowGridService = new conowGridClass();
 
-					var initOptions = {};
+					var initOptions = {
+						filteredData: null
+					};
 					var userOptions = scope.$eval(attrs.conowGrid);
 					if(userOptions.singleFilter) {
 						initOptions.filterOptions = scope.filterOptions;
@@ -23,6 +25,15 @@ angular.module('demoApp')
 					scope.filterOptions = {
 						filterText: ''
 					};
+
+					// watch for single-filter
+					scope.$watch('filterOptions.filterText', 
+						function(newVal) {
+							initOptions.data = $filter('filter')(userOptions.data, scope.filterOptions.filterText);
+
+							vm.gridOptions = angular.extend({}, 
+								conowGridService.getDefaultOptions(), userOptions, initOptions);
+						});
 
 				}
 			}
