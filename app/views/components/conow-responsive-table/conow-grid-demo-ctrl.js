@@ -3,6 +3,8 @@
 app.controller('conowGridDemoCtrl', ['$scope', 'i18nService', '$filter', 'DataService', 
 	function($scope, i18nService, $filter, DataService) {
 
+		var vm = $scope.vm = {};
+
 		// i18nService.setCurrentLang('zh-cn');
 
 		$scope.myData = [
@@ -33,35 +35,49 @@ app.controller('conowGridDemoCtrl', ['$scope', 'i18nService', '$filter', 'DataSe
 			}
 		];
 
-		$scope.filteredData = $scope.myData;
+		// DataService.getData('views/components/conow-responsive-table/data/conow-grid-data.json')
+		// 	.then(function(data) {
+		// 		$scope.gridOptions.data = data;
 
-		$scope.filterOptions = {
-			filterText: ''
-		};
+		// 		// var friends = data[0].friends;
+		// 		// var friend = {};
+
+		// 		// for(var i=0, iLen=friends.length; i<iLen; i++) {
+		// 		// 	friend = friends[i];
+		// 		// 	$scope.gridOptions.columnDefs.push({ name: friend["name"], field: });
+		// 		// }
+		// 	}, function(msg) {
+		// 		console.error(msg);
+		// 	});
 
 		$scope.gridOptions = {
 			// enableFiltering: false,
 			// enableGridMenu: true,
-			// enableRowSelection: true,
-			// enableSelectAll: true,
+			enableRowSelection: true,
+			enableSelectAll: false,
+			multiSelect: true,
+			enableRowHeaderSelection: false,
 			// onRegisterApi: function(gridApi) {
 			// 	$scope.gridApi = gridApi;
 			// 	$scope.gridApi.grid.registerRowsProcessor($scope.singleFilter, 200);
 			// },
-			data: $scope.myData,
+			// data: $scope.myData,
 			// filterOptions: $scope.filterOptions,
-			singleFilter: true,
+			singleFilter: false,
+			select: 'multiply',
+			url: 'views/components/conow-responsive-table/data/conow-grid-data.json',
+			// url: 'views/components/conow-responsive-table/data/pagination1.json',
 			columnDefs: [
 				{ name: 'firstName', field: 'firstName' }, 
+				{ name: 'lastName', field: 'lastName' }, 
+				{ name: 'lastName2', field: 'lastName' }, 
+				{ name: 'company', field: 'company' }, 
 				{ name: 'firstFriend', field: 'friends[0]' }, 
-				{ name: 'city', field: 'address.city' }, 
-				{ name: 'getZip', field: 'getZip()' }
+				{ name: 'secondFriend', field: 'friends[1]' }, 
+				{ name: 'thirdFriend', field: 'friends[2]' }
 			]
 		};
 
-		$scope.filter = function() {
-			$scope.filteredData = $filter('filter')($scope.myData, $scope.filterOptions.filterText);
-		};
 
 	}
 ])

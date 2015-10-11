@@ -1,7 +1,7 @@
 
 angular.module('demoApp')
-	.directive('conowGrid', ['conowGridClass', '$filter', 
-		function(conowGridClass, $filter) {
+	.directive('conowGrid', ['conowGridClass', '$filter', 'DataService', 
+		function(conowGridClass, $filter, DataService) {
 			return {
 				restrict: 'A',
 				// template: '<div id="grid1" ui-grid="vm.gridOptions" class="grid"></div>',
@@ -18,26 +18,42 @@ angular.module('demoApp')
 						filteredData: null
 					};
 					var userOptions = scope.$eval(attrs.conowGrid);
+
 					if(userOptions.singleFilter) {
 						initOptions.filterOptions = scope.filterOptions;
-					} else {
-						options.isSingleFilter = false;
 					}
 
 					vm.gridOptions = angular.extend({}, 
 						conowGridService.getDefaultOptions(), userOptions, initOptions);
 
+					if(angular.isDefined(vm.gridOptions.paginationPageSizes) 
+						|| angular.isDefined(vm.gridOptions.paginationPageSize)) {
+						options.pagination = true;
+					}
+
 					scope.filterOptions = {
 						filterText: ''
 					};
 
+					var _init = function() {
+						if(angular.isDefined(userOptions.url)) {
+							DataService.getData(userOptions.url)
+								.then(function(data) {
+									vm.allData = data;
+									vm.gridOptions.data = data;
+								}, function(msg) {
+									console.error(msg);
+								});
+						}
+					};
+
+					// params or data initiation
+					_init();
+
 					// watch for single-filter
 					scope.$watch('filterOptions.filterText', 
 						function(newVal) {
-							initOptions.data = $filter('filter')(userOptions.data, scope.filterOptions.filterText);
-
-							vm.gridOptions = angular.extend({}, 
-								conowGridService.getDefaultOptions(), userOptions, initOptions);
+							vm.gridOptions.data = $filter('filter')(vm.allData, scope.filterOptions.filterText);
 						});
 
 				}
@@ -50,8 +66,8 @@ app.factory('conowGridClass', [
 		function conowGridClass() {
 			var defaultOptions = {
 				selectionRowHeaderWidth: 35, 
-				paginationPageSizes: [25, 50, 75],
-				paginationPageSize: 25
+				paginationPageSizes: [10, 25, 50, 75],
+				paginationPageSize: 10
 			};
 
 			this.getDefaultOptions = function() {
