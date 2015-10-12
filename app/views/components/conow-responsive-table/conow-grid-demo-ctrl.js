@@ -1,7 +1,7 @@
 'use strict';
 
-app.controller('conowGridDemoCtrl', ['$scope', 'i18nService', '$filter', 'DataService', 
-	function($scope, i18nService, $filter, DataService) {
+app.controller('conowGridDemoCtrl', ['$scope', 'i18nService', '$filter', 'DataService', 'uiGridConstants', 
+	function($scope, i18nService, $filter, DataService, uiGridConstants) {
 
 		var vm = $scope.vm = {};
 
@@ -35,46 +35,48 @@ app.controller('conowGridDemoCtrl', ['$scope', 'i18nService', '$filter', 'DataSe
 			}
 		];
 
-		// DataService.getData('views/components/conow-responsive-table/data/conow-grid-data.json')
-		// 	.then(function(data) {
-		// 		$scope.gridOptions.data = data;
-
-		// 		// var friends = data[0].friends;
-		// 		// var friend = {};
-
-		// 		// for(var i=0, iLen=friends.length; i<iLen; i++) {
-		// 		// 	friend = friends[i];
-		// 		// 	$scope.gridOptions.columnDefs.push({ name: friend["name"], field: });
-		// 		// }
-		// 	}, function(msg) {
-		// 		console.error(msg);
-		// 	});
-
-		$scope.gridOptions = {
-			// enableFiltering: false,
-			// enableGridMenu: true,
-			enableRowSelection: true,
-			enableSelectAll: false,
-			multiSelect: true,
-			enableRowHeaderSelection: false,
-			// onRegisterApi: function(gridApi) {
-			// 	$scope.gridApi = gridApi;
-			// 	$scope.gridApi.grid.registerRowsProcessor($scope.singleFilter, 200);
-			// },
-			// data: $scope.myData,
-			// filterOptions: $scope.filterOptions,
-			singleFilter: false,
-			select: 'multiply',
+		$scope.gridOptions1 = {
+			singleFilter: true,	// true/false
+			pagination: true,	// true/false
+			select: 'single',	// single/multiply/undefined
 			url: 'views/components/conow-responsive-table/data/conow-grid-data.json',
 			// url: 'views/components/conow-responsive-table/data/pagination1.json',
+			showColumnFooter: true,
+			selected: [
+				{
+					"firstName": "Cox11111111111111111111111111111",
+					"lastName": "Carney",
+					"company": "Enormo",
+					"friends": ["friend0", "friend1", "friend2"]
+				}, {
+					"firstName": "Lorraine",
+					"lastName": "Wise",
+					"company": "Comveyer",
+					"friends": ["friend10", "friend11", "friend12"]
+				}
+			],
 			columnDefs: [
-				{ name: 'firstName', field: 'firstName' }, 
-				{ name: 'lastName', field: 'lastName' }, 
-				{ name: 'lastName2', field: 'lastName' }, 
-				{ name: 'company', field: 'company' }, 
-				{ name: 'firstFriend', field: 'friends[0]' }, 
-				{ name: 'secondFriend', field: 'friends[1]' }, 
-				{ name: 'thirdFriend', field: 'friends[2]' }
+				{ name: 'firstName', field: 'firstName', width: 100}, 
+				{ name: 'lastName', field: 'lastName', width: 300 }, 
+				{ name: 'lastName2', field: 'lastName', width: 200 }, 
+				{ name: 'Age', field: 'age', width: 50 }, 
+				{ name: 'Min Age', field: 'age', width: 100, aggregationType: uiGridConstants.aggregationTypes.min }, 
+				{ name: 'Max Age', field: 'age', width: 100, aggregationType: uiGridConstants.aggregationTypes.max }, 
+				{ name: 'Sum Age', field: 'age', width: 100, aggregationType: uiGridConstants.aggregationTypes.sum }, 
+				{ name: 'Average Age', field: 'age', width: 100, aggregationType: uiGridConstants.aggregationTypes.avg }, 
+				{ name: 'company', field: 'company', width: 300 }, 
+				{ name: 'firstFriend', field: 'friends[0]', width: 200 }, 
+				{ name: 'secondFriend', field: 'friends[1]', width: 100 }, 
+				{ name: 'thirdFriend', field: 'friends[2]', width: 100 }
+			]
+		};
+
+		$scope.gridOptions2 = {
+			singleFilter: true,	// true/false
+			pagination: true,	// true/false
+			select: 'single',	// single/multiply/undefined
+			url: 'views/components/conow-responsive-table/data/pagination.json',
+			columnDefs: [
 			]
 		};
 

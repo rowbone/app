@@ -3,9 +3,16 @@
 
 <style>
 	.grid {
-		width: 800px;
-		height: 250px;
+		/*width: 800px;*/
+		height: 385px;
 	}
+	.grid-options-pre {
+		height: 150px;
+	}
+	.panel-body {
+		overflow-y: auto;
+	}
+
 </style>
 
 <div class="wrapper-md pos-rlt h-auto" ng-controller="conowGridDemoCtrl">
@@ -15,10 +22,10 @@
 				<div class="panel-title">示例</div>
 			</div>
 			<div class="panel-body">
-				<!-- <input type="text" ng-model="filterOptions.filterText">
-				<button ng-click="filter()">Single Filter</button> -->
+				<pre class="grid-options-pre">{{ gridOptions | json}}</pre>
 
-				<div id="grid1" conow-grid="gridOptions" class="grid"></div>
+				<div>conow-grid</div>
+				<div conow-grid="gridOptions1" class="grid"></div>
 			</div>
 		</div>
 	</div>
