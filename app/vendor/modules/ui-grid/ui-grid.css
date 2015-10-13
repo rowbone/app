@@ -1964,8 +1964,23 @@ select[multiple].ui-grid-pager-row-count-picker select {
 }
 /* 'î©¡' */
 
+.grid {
+  /* height: 385px; */
+}
 
+.grid-with-footer {
+  height: 420px;
+}
 
-.conow-grid-search {
-  margin-bottom: 5px;
+.conow-grid-operation-cell {
+  padding: 5px;
+}
+
+.conow-grid-operation-cell i {
+  cursor: pointer;
+  padding: 5px 10px;
+}
+
+.conow-grid-operation-cell .ui-grid-cell-focus {
+  /* background-color: #fff; */
 }

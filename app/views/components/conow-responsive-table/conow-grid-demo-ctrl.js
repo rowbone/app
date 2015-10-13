@@ -36,8 +36,8 @@ app.controller('conowGridDemoCtrl', ['$scope', 'i18nService', '$filter', 'DataSe
 		];
 
 		$scope.gridOptions1 = {
-			singleFilter: true,	// true/false
-			pagination: true,	// true/false
+			// singleFilter: false,	// true/false
+			// pagination: false,	// true/false
 			select: 'single',	// single/multiply/undefined
 			url: 'views/components/conow-responsive-table/data/conow-grid-data.json',
 			// url: 'views/components/conow-responsive-table/data/pagination1.json',
