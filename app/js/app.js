@@ -28,4 +28,5 @@ var app = angular.module('demoApp', [
 	, 'ui.grid'
 	, 'ui.grid.pagination',
 	, 'ui.grid.selection'
+	, 'ui.grid.cellNav'
 	]);

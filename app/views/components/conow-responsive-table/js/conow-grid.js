@@ -1,42 +1,85 @@
 'use strict';
 
 angular.module('app')
-	.directive('conowGrid', ['conowGridClass', '$filter', 'DataService', '$compile', '$rootScope', 
-		function(conowGridClass, $filter, DataService, $compile, $rootScope) {
+	.directive('conowGrid', ['conowGridClass', '$filter', 'DataService', '$compile', '$rootScope', 'i18nService', 
+		function(conowGridClass, $filter, DataService, $compile, $rootScope, i18nService) {
 			return {
 				restrict: 'A',
 				// template: '<div id="grid1" ui-grid="vm.gridOptions" class="grid"></div>',
 //				templateUrl: 'views/components/conow-responsive-table/tpls/conow-grid-tpl.html',
 				 templateUrl: 'js/directives/conow-grid/tpls/conow-grid-tpl.html',
+				 scope: {
+					 getGridUserOptions: '&conowGrid'
+				 },
 				compile: function(tElem, tAttrs) {
 					return this.link;
 				}, 
 				controller: function($scope, $element, $attrs, $transclude) {
-					var vm = $scope.vm = {}, 
+					var self = this,
+						vm = $scope.vm = {}, 
 						options = $scope.options = {
 							isSingleFilter: true,
 							isServerPage: true,
 							isPagination: true, 
 							isShowOperationBtns: true,
-							isAllowSelection: true
+							isAllowSelection: true,
+							dataLoadParams: {
+								page: 1, 
+								pagesize: 10
+							}
 						};
 
 					// get pagination data
-					var getPageData = function(newPage, pageSize) {
-						var params = {};
-						var sortColumns = options.gridPaginationOptions.sortColumns;
+					this._getPageData = function(dataLoadParams) {
+						var params = {},
+							sortColumns = null,
+							singleFilterText = null,
+							adSearch = null,
+							page = null,
+							pagesize = null;
+						
+						dataLoadParams = angular.isUndefined(dataLoadParams) ? {} : dataLoadParams;
+						
 						if(options.isServerPage) {
-							params.page = (angular.isDefined(newPage) ? newPage : 1);
-							params.pagesize = (angular.isDefined(pageSize) ? pageSize : 10);
-							if(angular.isDefined(sortColumns) && sortColumns !== null && sortColumns.length > 0) {
+							
+							// advanced search
+							adSearch = dataLoadParams.adSearch;
+							if(angular.isDefined(adSearch)) {
+								// todo:add adSearch toDB params to options.dataLoadParams
+							}
+							
+							// singleFilter
+							singleFilterText = dataLoadParams.singleFilterText;
+							if(angular.isDefined(singleFilterText)) {
+								options.dataLoadParams.keyword = singleFilterText;
+							}
+							
+							// sortColumns
+							sortColumns = dataLoadParams.sortColumns;
+							if(angular.isDefined(sortColumns)) {								
 								if(sortColumns.length == 1) {
-									params.sortBy = sortColumns[0]['field'] + ',' + sortColumns[0]['sort']['direction'];
+									options.dataLoadParams.sortBy = sortColumns[0]['field'] + ',' + sortColumns[0]['sort']['direction'];
 								} else {
 									// todo:multiply columns for sorting
-									// keys: field sort direction priority
+									// keywords: field sort direction priority
 								}
 							}
+							
+							// pagination
+							page = dataLoadParams.page;
+							pagesize = dataLoadParams.pagesize;
+							if(angular.isDefined(page)) {
+								options.dataLoadParams.page = dataLoadParams.page;
+							}
+							if(angular.isDefined(pagesize)) {
+								options.dataLoadParams.pagesize = dataLoadParams.pagesize;
+							}
+							
+							// others
 						}
+						
+						// Don't use dataLoadParams for extending because of irrelevent params
+						params = angular.extend({}, options.dataLoadParams);
 
 						DataService.postData(options.gridUserOptions.url, params)
 							.then(function(data) {
@@ -57,10 +100,13 @@ angular.module('app')
 							});
 					};
 					
-					var cellOperation = function() {};
+					// todo:列操作方法
+					this._cellOperation = function() {};
 
 					// ui-grid-pagination ui-grid-selection
-					var _init = function() {
+					this._init = function() {
+						i18nService.setCurrentLang('zh-cn');
+						
 						var $grid = $element.find('.grid-instance'),
 							options = $scope.options,
 //								= {
@@ -74,7 +120,7 @@ angular.module('app')
 						options.allData = [];
 
 						// gridUserOptions for 'user config options'
-						options.gridUserOptions = $scope.$eval($attrs.conowGrid);
+						options.gridUserOptions = $scope.getGridUserOptions();
 						// conowGridClass instance to hold default class and some public methods
 						options.conowGridInstance = new conowGridClass();
 						options.gridDefaultOptions = options.conowGridInstance.getDefaultOptions();
@@ -93,15 +139,17 @@ angular.module('app')
 						angular.extend(options.gridInitOptions, {
 						    useExternalPagination: true,
 						    useExternalSorting: true,
+//						    enablePaginationControls: false
 						});
 						
 						// cell operation
-						var columnDefs = options.gridUserOptions.columnDefs;
-						var columnDef = null;
+						var columnDefs = options.gridUserOptions.columnDefs,
+							columnDef = null;
 						for(var i=0, iLen=columnDefs.length;  i<iLen; i++) {
 							columnDef = columnDefs[i];
-							if(angular.isDefined(columnDef.cellType) && columnDef.cellType === 'operation') {
-								columnDef.cellClass = 'conow-grid-operation-cell';
+							if(angular.isDefined(columnDef.cellType) && columnDef.cellType === 'operation') {								
+								columnDef.cellClass = angular.isUndefined(columnDef.cellClass) ? 'conow-grid-operation-cell' : columnDef.cellClass + ' conow-grid-operation-cell';
+								columnDef.enableSorting = false;
 							}
 						}
 
@@ -169,14 +217,16 @@ angular.module('app')
 									options.gridPaginationOptions.sortColumns = sortColumns;
 								}
 								
-								getPageData();
+								options.gridApi.pagination.seek(1);
+								
+								self._getPageData({ 'sortColumns': options.gridPaginationOptions.sortColumns, page: 1 });
 							});
 							// 切换页码触发事件
 							gridApi.pagination.on.paginationChanged($scope, function(newPage, pageSize) {
 								options.gridPaginationOptions.pageNumber = newPage;
 								options.gridPaginationOptions.pageSize = pageSize;
 								
-								getPageData(newPage, pageSize);
+								self._getPageData({ page: newPage, pagesize: pageSize});
 							});
 							// cellNav navigate 触发事件
 //							gridApi.cellNav.on.navigate($scope, function(newRowCol, oldRowCol) {
@@ -187,13 +237,18 @@ angular.module('app')
 						};
 
 						if(angular.isDefined(options.gridUserOptions.url)) {
-							getPageData();
+							self._getPageData();
 						}
 
 					};
 
 					this.init = function() {
-						_init();
+						self._init();
+					};
+					
+					// reload function binding on $scope for using in link function
+					$scope.reload = function(dataLoadParams) {
+						self._getPageData(dataLoadParams);
 					};
 
 				}, 
@@ -209,21 +264,41 @@ angular.module('app')
 					if(options.isSingleFilter) {
 						scope.$watch('vm.singleFilterText', 
 							function(newVal) {
-								var firstRow = (options.gridPaginationOptions.pageNumber - 1) * options.gridPaginationOptions.pageSize;
-								options.gridOptions.data = options.allData.slice(firstRow, firstRow + options.gridPaginationOptions.pageSize);
-								options.gridOptions.data = $filter('filter')(options.allData, vm.singleFilterText).slice(firstRow, firstRow + options.gridPaginationOptions.pageSize);
+								if(!options.isServerPage) {
+									var firstRow = (options.gridPaginationOptions.pageNumber - 1) * options.gridPaginationOptions.pageSize;
+									options.gridOptions.data = options.allData.slice(firstRow, firstRow + options.gridPaginationOptions.pageSize);
+									options.gridOptions.data = $filter('filter')(options.allData, vm.singleFilterText).slice(firstRow, firstRow + options.gridPaginationOptions.pageSize);
+								} else {
+									options.gridApi.pagination.seek(1);
+									
+									scope.reload({ singleFilterText: vm.singleFilterText, page: 1 });
+								}								
 							});
 					}
-
+					
+					// watch for advanced search
+					if(options.gridUserOptions && options.gridUserOptions.filterOptions) {
+						scope.$watch('options.gridUserOptions.filterOptions.adSearch', 
+							function(newVal, oldVal) {
+								options.gridApi.pagination.seek(1);
+								
+								scope.reload({ adSearch: options.gridUserOptions.filterOptions, page: 1 });
+							}, true);	
+					}					
+					
+					//
 					scope.getSelectedRows = function() {
 						var selectedRows = options.gridApi.selection.getSelectedRows();
 						// alert(JSON.stringify(selectedRows));
 						alert(selectedRows.length)
 					};
 					
-					scope.view = function() {
-						console.log(options.gridApi.cellNav.getFocusedCell());
-					}
+					// bind userOptions functions on grid 
+					angular.forEach(options.gridUserOptions, function(value, key) {
+						if(angular.isFunction(value)) {
+							scope[key] = value;
+						}
+					});
 					
 					scope.getCurrentCell = function() {
 						var rowCol = options.gridApi.cellNav.getFocusedCell();
@@ -238,13 +313,17 @@ angular.module('app')
 		}
 	]);
 
+/**
+ * conowGridClass:hold public functions for conowGrid operations
+ * */
 app.factory('conowGridClass', [
 	function() {
 		function conowGridClass() {
 			var defaultOptions = {
 				selectionRowHeaderWidth: 35, 
 				// pagination
-				paginationPageSizes: [10, 25, 50, 75],
+//				paginationPageSizes: [10, 25, 50, 75],
+				paginationPageSizes: [],
 				paginationPageSize: 10,
 				// selection
 				// enableRowSelection: true,
@@ -252,9 +331,16 @@ app.factory('conowGridClass', [
 				// multiSelect: true,
 				// enableRowHeaderSelection: true,
 			};
-
+			
+			/**
+			 * default options setting goes here
+			 * */
 			this.getDefaultOptions = function() {
 				return defaultOptions;
+			};
+			
+			this.reload = function() {
+				// 
 			};
 		};
 
