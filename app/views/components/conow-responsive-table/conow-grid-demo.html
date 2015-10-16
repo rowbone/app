@@ -19,9 +19,53 @@
 			</div>
 			<div class="panel-body">
 				<!-- <pre class="grid-options-pre">{{ gridOptions1 | json}}</pre> -->
+				<div class="hbox">
+					<div>conow-grid</div>
+					<div conow-grid="gridOptions1"></div>
+				</div>
 
-				<div>conow-grid</div>
-				<div conow-grid="gridOptions1"></div>
+				<div class="hbox" ng-controller="conowGridDemoInsCtrl">
+					<ol>
+						<li>指令调用：<code>&lt;div conow-grid="gridOptions1" class="grid"&gt;&lt;/div&gt;</code></li>
+						
+						<li>参数列表
+							<table class="table">
+								<thead>
+									<tr>
+										<th ng-repeat="th in vm.paramsList.thead.tr.th track by $index" ng-bind="::th"></th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr ng-repeat="tr in vm.paramsList.tbody.tr track by $index">
+										<td ng-repeat="td in tr.td track by $index" ng-bind="::td"></td>
+									</tr>
+								</tbody>
+							</table>
+						</li>
+						<li>columnsDefs说明
+							<table class="table">
+								<thead>
+									<tr>
+										<th ng-repeat="th in vm.columnsDefs.thead.tr.th track by $index" ng-bind="::th"></th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr ng-repeat="tr in vm.columnsDefs.tbody.tr track by $index">
+										<td ng-repeat="td in tr.td track by $index" ng-bind="::td"></td>
+									</tr>
+								</tbody>
+							</table>
+						</li>
+						<li>绑定列表内事件(grid.appScope)。							
+							<ul>
+								<li>绑定示例：&lt;a class="" ng-click="grid.appScope.setting(row)"&gt;&lt;i class="ci-set"&gt;&lt;/i&gt;&lt;/a&gt;</li>
+								<li>grid.appScope是指令内部对业务controller的引用</li>
+								<li>setting时业务controller中的方法</li>
+								<li>方法内部可传入对应行的引用 row</li>
+							</ul>
+						</li>
+					</ol>
+				</div>
 			</div>
 		</div>
 	</div>

@@ -1,30 +1,31 @@
 
 <div class="conow-grid-search m-b-xs" ng-if="options.isSingleFilter">
-	<input type="text" class="form-control" ng-model="vm.singleFilterText">
+	<input type="text" class="form-control" ng-model="vm.singleFilterText" ng-model-options="{ debounce: 2000 }">
 </div>
 
 <div class="conow-grid-operation m-b-xs" ng-if="options.isShowOperationBtns">
 	<button class="btn btn-primary" ng-click="getSelectedRows()">获取已选项</button>
+	<button class="btn btn-primary" ng-click="getCurrentCell()">获取当前列</button>
 </div>
 
 <div 
 	ui-grid="options.gridOptions" 
 	class="grid grid-instance" 
-	ng-if="!options.pagination && !options.isAllowSelection">
+	ng-if="!options.isPagination && !options.isAllowSelection">
 </div>
 
 <div 
 	ui-grid="options.gridOptions" 
 	class="grid grid-instance" 
 	ui-grid-pagination  
-	ng-if="options.pagination && !options.isAllowSelection">
+	ng-if="options.isPagination && !options.isAllowSelection">
 </div>
 
 <div 
 	ui-grid="options.gridOptions" 
 	ui-grid-selection 
 	class="grid grid-instance" 
-	ng-if="!options.pagination && options.isAllowSelection">
+	ng-if="!options.isPagination && options.isAllowSelection">
 </div>
 
 <div 
@@ -33,5 +34,5 @@
 	ui-grid-selection 
 	ui-grid-cellNav
 	class="grid grid-instance" 
-	ng-if="options.pagination && options.isAllowSelection">
+	ng-if="options.isPagination && options.isAllowSelection">
 </div>

@@ -233,7 +233,11 @@ angular.module('app')
 //								console.log('in cellNav navigation...')
 //								console.log(newRowCol);
 //								console.log(oldRowCol);
-//							})
+//							});
+							// row selection 触发事件
+							gridApi.selection.on.rowSelectionChanged($scope, function(row) {
+								console.log('selected row', row);
+							});
 						};
 
 						if(angular.isDefined(options.gridUserOptions.url)) {
