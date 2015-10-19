@@ -9,7 +9,8 @@ angular.module('app')
 //				templateUrl: 'views/components/conow-responsive-table/tpls/conow-grid-tpl.html',
 				 templateUrl: 'js/directives/conow-grid/tpls/conow-grid-tpl.html',
 				 scope: {
-					 getGridUserOptions: '&conowGrid'
+					 getGridUserOptions: '&conowGrid',
+					 conowGridInstance: '=?'
 				 },
 				compile: function(tElem, tAttrs) {
 					return this.link;
@@ -23,15 +24,19 @@ angular.module('app')
 							isPagination: true, 
 							isShowOperationBtns: true,
 							isAllowSelection: true,
-							dataLoadParams: {
+							isShowAdvancedSearch: true, 
+							dataLoadDefaultParams: {
 								page: 1, 
 								pagesize: 10
-							}
+							},
+							// 保存加载时的所有参数[转换成提交到后台的参数对象之前的参数]
+							dataLoadParams: {}
 						};
 
 					// get pagination data
 					this._getPageData = function(dataLoadParams) {
 						var params = {},
+							tmpParams = {},
 							sortColumns = null,
 							singleFilterText = null,
 							adSearch = null,
@@ -46,40 +51,62 @@ angular.module('app')
 							adSearch = dataLoadParams.adSearch;
 							if(angular.isDefined(adSearch)) {
 								// todo:add adSearch toDB params to options.dataLoadParams
+								options.dataLoadParams.adSearch = adSearch;
+								angular.extend(tmpParams, adSearch);
+							} else if(options.dataLoadParams.adSearch) {
+								adSearch = options.dataLoadParams.adSearch;		
+								angular.extend(tmpParams, adSearch);						
 							}
 							
 							// singleFilter
 							singleFilterText = dataLoadParams.singleFilterText;
-							if(angular.isDefined(singleFilterText)) {
-								options.dataLoadParams.keyword = singleFilterText;
+							if(angular.isDefined(singleFilterText)) {								
+								options.dataLoadParams.singleFilterText = singleFilterText;
+								tmpParams.keyword = singleFilterText;
+							} else if(options.dataLoadParams.singleFilterText) {
+								singleFilterText = options.dataLoadParams.singleFilterText;	
+								tmpParams.keyword = singleFilterText;							
 							}
 							
 							// sortColumns
 							sortColumns = dataLoadParams.sortColumns;
 							if(angular.isDefined(sortColumns)) {								
 								if(sortColumns.length == 1) {
-									options.dataLoadParams.sortBy = sortColumns[0]['field'] + ',' + sortColumns[0]['sort']['direction'];
+									options.dataLoadParams.sortColumns = sortColumns;
+									tmpParams.sortBy = sortColumns[0]['field'] + ',' + sortColumns[0]['sort']['direction'];	
 								} else {
 									// todo:multiply columns for sorting
 									// keywords: field sort direction priority
 								}
+							} else if(options.dataLoadParams.sortColumns) {
+								sortColumns = options.dataLoadParams.sortColumns;	
+								tmpParams.sortBy = sortColumns[0]['field'] + ',' + sortColumns[0]['sort']['direction'];							
 							}
 							
 							// pagination
 							page = dataLoadParams.page;
 							pagesize = dataLoadParams.pagesize;
 							if(angular.isDefined(page)) {
-								options.dataLoadParams.page = dataLoadParams.page;
+								options.dataLoadParams.page = page;
+								tmpParams.page = page;
+							} else if(options.dataLoadParams.page) {
+								page = options.dataLoadParams.page;
+								tmpParams.page = page;
 							}
 							if(angular.isDefined(pagesize)) {
-								options.dataLoadParams.pagesize = dataLoadParams.pagesize;
+								tmpParams.pagesize = pagesize;
+								options.dataLoadParams.pagesize = pagesize;
+								tmpParams.pagesize = pagesize;
+							} else if(options.dataLoadParams.pagesize) {
+								pagesize = options.dataLoadParams.pagesize;
+								tmpParams.pagesize = pagesize;
 							}
 							
 							// others
 						}
 						
 						// Don't use dataLoadParams for extending because of irrelevent params
-						params = angular.extend({}, options.dataLoadParams);
+						params = angular.extend({}, options.dataLoadDefaultParams, tmpParams);
 
 						DataService.postData(options.gridUserOptions.url, params)
 							.then(function(data) {
@@ -105,6 +132,7 @@ angular.module('app')
 
 					// ui-grid-pagination ui-grid-selection
 					this._init = function() {
+						// 设置语言类型，分页功能的文字有影响。
 						i18nService.setCurrentLang('zh-cn');
 						
 						var $grid = $element.find('.grid-instance'),
@@ -121,9 +149,12 @@ angular.module('app')
 
 						// gridUserOptions for 'user config options'
 						options.gridUserOptions = $scope.getGridUserOptions();
+						
 						// conowGridClass instance to hold default class and some public methods
 						options.conowGridInstance = new conowGridClass();
+						$scope.conowGridInstance = options.conowGridInstance;						
 						options.gridDefaultOptions = options.conowGridInstance.getDefaultOptions();
+						
 						// gridInitOptions for 'get config options in initialization'
 						options.gridInitOptions = {
 							filteredData: null,
@@ -141,6 +172,21 @@ angular.module('app')
 						    useExternalSorting: true,
 //						    enablePaginationControls: false
 						});
+						
+						// advanced search
+						var advancedSearchOptions = options.gridUserOptions.filterOptions;
+						if(angular.isUndefined(advancedSearchOptions) || angular.equals(advancedSearchOptions, null)) {
+							options.isShowAdvancedSearch = false;
+						} else {							
+							$scope.filterOptions = advancedSearchOptions;
+
+							$scope.filterOptions.onConfirm = function(queryToDB){
+//				            	console.log(queryToDB);
+				            	options.gridApi.pagination.seek(1);
+								
+				            	self._getPageData({ adSearch: queryToDB, page: 1 });
+				            };
+						}
 						
 						// cell operation
 						var columnDefs = options.gridUserOptions.columnDefs,
@@ -237,6 +283,8 @@ angular.module('app')
 							// row selection 触发事件
 							gridApi.selection.on.rowSelectionChanged($scope, function(row) {
 								console.log('selected row', row);
+								
+								options.conowGridInstance.setSelectedItems(options.gridApi.selection.getSelectedRows());
 							});
 						};
 
@@ -281,14 +329,14 @@ angular.module('app')
 					}
 					
 					// watch for advanced search
-					if(options.gridUserOptions && options.gridUserOptions.filterOptions) {
-						scope.$watch('options.gridUserOptions.filterOptions.adSearch', 
-							function(newVal, oldVal) {
-								options.gridApi.pagination.seek(1);
-								
-								scope.reload({ adSearch: options.gridUserOptions.filterOptions, page: 1 });
-							}, true);	
-					}					
+//					if(options.gridUserOptions && options.gridUserOptions.filterOptions) {
+//						scope.$watch('options.gridUserOptions.filterOptions.adSearch', 
+//							function(newVal, oldVal) {
+//								options.gridApi.pagination.seek(1);
+//								
+//								scope.reload({ adSearch: options.gridUserOptions.filterOptions, page: 1 });
+//							}, true);	
+//					}					
 					
 					//
 					scope.getSelectedRows = function() {
@@ -324,17 +372,19 @@ app.factory('conowGridClass', [
 	function() {
 		function conowGridClass() {
 			var defaultOptions = {
-				selectionRowHeaderWidth: 35, 
-				// pagination
-//				paginationPageSizes: [10, 25, 50, 75],
-				paginationPageSizes: [],
-				paginationPageSize: 10,
-				// selection
-				// enableRowSelection: true,
-				// enableSelectAll: true,
-				// multiSelect: true,
-				// enableRowHeaderSelection: true,
-			};
+					selectionRowHeaderWidth: 35, 
+					// pagination
+	//				paginationPageSizes: [10, 25, 50, 75],
+					paginationPageSizes: [],
+					paginationPageSize: 10,
+					// selection
+					// enableRowSelection: true,
+					// enableSelectAll: true,
+					// multiSelect: true,
+					// enableRowHeaderSelection: true,
+				},
+				selectedRows = null,
+				self = this;
 			
 			/**
 			 * default options setting goes here
@@ -346,6 +396,15 @@ app.factory('conowGridClass', [
 			this.reload = function() {
 				// 
 			};
+			
+			this.setSelectedItems = function(selectedRows) {
+				self.selectedRows = selectedRows;
+			};
+			
+			this.getSelectedItems = function() {
+				return self.selectedRows;
+			};
+			
 		};
 
 		return conowGridClass;

@@ -13006,11 +13006,11 @@ module.filter('px', function() {
           min: 'мин: ',
           max: 'макс: '
         },
-				pinning: {
-					pinLeft: 'Закрепить слева',
-					pinRight: 'Закрепить справа',
-					unpin: 'Открепить'
-				},
+        pinning: {
+          pinLeft: 'Закрепить слева',
+          pinRight: 'Закрепить справа',
+          unpin: 'Открепить'
+        },
         gridMenu: {
           columns: 'Столбцы:',
           importerTitle: 'Import file',
@@ -13225,22 +13225,22 @@ module.filter('px', function() {
         importer: {
           noHeaders: 'பத்தியின் தலைப்புகளை பெற இயலவில்லை, கோப்பிற்கு தலைப்பு உள்ளதா?',
           noObjects: 'இலக்குகளை உருவாக்க முடியவில்லை, கோப்பில் தலைப்புகளை தவிர தரவு ஏதேனும் உள்ளதா? ',
-          invalidCsv:	'சரிவர நடைமுறை படுத்த இயலவில்லை, கோப்பு சரிதானா? - csv',
+          invalidCsv: 'சரிவர நடைமுறை படுத்த இயலவில்லை, கோப்பு சரிதானா? - csv',
           invalidJson: 'சரிவர நடைமுறை படுத்த இயலவில்லை, கோப்பு சரிதானா? - json',
           jsonNotArray: 'படித்த கோப்பில் வரிசைகள் உள்ளது, நடைமுறை ரத்து செய் : json'
         },
         pagination: {
-          sizes		: 'உருப்படிகள் / பக்கம்',
-          totalItems	: 'உருப்படிகள் '
+          sizes   : 'உருப்படிகள் / பக்கம்',
+          totalItems  : 'உருப்படிகள் '
         },
         grouping: {
-          group	: 'குழு',
+          group : 'குழு',
           ungroup : 'பிரி',
-          aggregate_count	: 'மதிப்பீட்டு : எண்ணு',
+          aggregate_count : 'மதிப்பீட்டு : எண்ணு',
           aggregate_sum : 'மதிப்பீட்டு : கூட்டல்',
-          aggregate_max	: 'மதிப்பீட்டு : அதிகபட்சம்',
-          aggregate_min	: 'மதிப்பீட்டு : குறைந்தபட்சம்',
-          aggregate_avg	: 'மதிப்பீட்டு : சராசரி',
+          aggregate_max : 'மதிப்பீட்டு : அதிகபட்சம்',
+          aggregate_min : 'மதிப்பீட்டு : குறைந்தபட்சம்',
+          aggregate_avg : 'மதிப்பீட்டு : சராசரி',
           aggregate_remove : 'மதிப்பீட்டு : நீக்கு'
         }
       });
@@ -26624,7 +26624,7 @@ angular.module('ui.grid').run(['$templateCache', function($templateCache) {
 
 
   $templateCache.put('ui-grid/uiGridViewport',
-    "<div role=\"rowgroup\" class=\"ui-grid-viewport\" ng-style=\"colContainer.getViewportStyle()\"><!-- tbody --><div class=\"ui-grid-canvas\"><div ng-repeat=\"(rowRenderIndex, row) in rowContainer.renderedRows track by $index\" class=\"ui-grid-row\" ng-style=\"Viewport.rowStyle(rowRenderIndex)\"><div role=\"row\" ui-grid-row=\"row\" row-render-index=\"rowRenderIndex\"></div></div></div></div>"
+    "<div role=\"rowgroup\" class=\"ui-grid-viewport\" ng-style=\"colContainer.getViewportStyle()\"><!-- tbody --><div class=\"ui-grid-canvas\"><div class=\"ui-grid-no-data-tip\" ng-if=\"rowContainer.renderedRows.length==0\">没有获取到对应的数据！</div><div ng-repeat=\"(rowRenderIndex, row) in rowContainer.renderedRows track by $index\" class=\"ui-grid-row\" ng-style=\"Viewport.rowStyle(rowRenderIndex)\"><div role=\"row\" ui-grid-row=\"row\" row-render-index=\"rowRenderIndex\"></div></div></div></div>"
   );
 
 

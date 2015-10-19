@@ -1,4 +1,8 @@
 
+<div class="conow-grid-advanced-search" ng-if="options.isShowAdvancedSearch">
+	<advsearch-wrapper config="filterOptions"></advsearch-wrapper>
+</div>
+
 <div class="conow-grid-search m-b-xs" ng-if="options.isSingleFilter">
 	<input type="text" class="form-control" ng-model="vm.singleFilterText" ng-model-options="{ debounce: 2000 }">
 </div>
