@@ -91,5 +91,9 @@ angular.module('app.components', ['ui.router'])
 					url: '/conowGrid',
 					templateUrl: 'views/components/conow-responsive-table/conow-grid-demo.html'
 				})
+				.state('app.components.conowPagination', {
+					url: '/conowPagination',
+					templateUrl: 'views/components/conow-pagination/conow-pagination-demo.html'
+				})
 
 	}]);

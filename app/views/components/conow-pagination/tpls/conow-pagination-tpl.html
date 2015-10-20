@@ -1,0 +1,15 @@
+
+<pre>{{ options | json }}</pre>
+
+<pagination 
+	total-items="options.totalItems" 
+	items-per-page="options.pageSize" 
+	ng-model="options.currentPage" 
+	ng-change="options.onChangeFn()"
+	direct-links="options.directionLinks" 
+	boundary-links="options.boundaryLinks"
+	max-size="options.maxSize" 
+	previous-text="{{::options.previousText}}"
+	next-text="{{::options.nextText}}" 
+	template-url="'views/components/conow-pagination/tpls/conow-pagination.html'">
+</pagination>

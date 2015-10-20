@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('app')
+angular.module('demoApp')
 	.directive('conowGrid', ['conowGridClass', '$filter', 'DataService', '$compile', '$rootScope', 'i18nService', 
 		function(conowGridClass, $filter, DataService, $compile, $rootScope, i18nService) {
 			return {
