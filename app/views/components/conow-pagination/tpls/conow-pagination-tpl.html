@@ -5,11 +5,13 @@
 	total-items="options.totalItems" 
 	items-per-page="options.pageSize" 
 	ng-model="options.currentPage" 
-	ng-change="options.onChangeFn()"
+	ng-change="options.onChangeFn({ 'page': options.currentPage, 'pagesize': options.pageSize })"
 	direct-links="options.directionLinks" 
 	boundary-links="options.boundaryLinks"
 	max-size="options.maxSize" 
 	previous-text="{{::options.previousText}}"
 	next-text="{{::options.nextText}}" 
-	template-url="'views/components/conow-pagination/tpls/conow-pagination.html'">
+	template-url="'views/components/conow-pagination/tpls/conow-pagination.html'" 
+	num-pages="5" 
+	rotate="false">
 </pagination>

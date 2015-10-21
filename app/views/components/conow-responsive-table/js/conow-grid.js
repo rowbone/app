@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('demoApp')
+angular.module('conowGrid', [])
 	.directive('conowGrid', ['conowGridClass', '$filter', 'DataService', '$compile', '$rootScope', 'i18nService', 
 		function(conowGridClass, $filter, DataService, $compile, $rootScope, i18nService) {
 			return {
@@ -22,7 +22,7 @@ angular.module('demoApp')
 							isSingleFilter: true,
 							isServerPage: true,
 							isPagination: true, 
-							isShowOperationBtns: true,
+							isShowOperationBtns: false,
 							isAllowSelection: true,
 							isShowAdvancedSearch: true, 
 							dataLoadDefaultParams: {
@@ -30,7 +30,13 @@ angular.module('demoApp')
 								pagesize: 10
 							},
 							// 保存加载时的所有参数[转换成提交到后台的参数对象之前的参数]
-							dataLoadParams: {}
+							dataLoadParams: {},
+							paginationOptions: {
+								totalItems: 0,
+								onChangeFn: function(pageInfo) {
+									self._getPageData(pageInfo);
+								}
+							}
 						};
 
 					// get pagination data
@@ -110,18 +116,21 @@ angular.module('demoApp')
 
 						DataService.postData(options.gridUserOptions.url, params)
 							.then(function(data) {
-								var pageInfo = {
-									count: 34,
-									page: 1, 
-									pagesize: 10
-								};
-								data.pageInfo = angular.isDefined(data.pageInfo) ? data.pageInfo : pageInfo;
-								var gridData = angular.isDefined(data.obj) ? data.obj : data;
+								if(data) {
+									var pageInfo = {
+										count: 0,
+										page: 1, 
+										pagesize: 10
+									};
+									data.pageInfo = angular.isDefined(data.pageInfo) ? data.pageInfo : pageInfo;
+									var gridData = angular.isDefined(data.obj) ? data.obj : data;
 
-								options.gridOptions.totalItems = data.pageInfo.count;
+//									options.gridOptions.totalItems = data.pageInfo.count;
+									options.paginationOptions.totalItems = data.pageInfo.count;
 
-								options.allData = gridData;
-								options.gridOptions.data = gridData;
+									options.allData = gridData;
+									options.gridOptions.data = gridData;
+								}
 							}, function(msg) {
 								console.error(msg);
 							});
@@ -129,8 +138,8 @@ angular.module('demoApp')
 					
 					// todo:列操作方法
 					this._cellOperation = function() {};
-
-					// ui-grid-pagination ui-grid-selection
+					
+					// 初始化方法
 					this._init = function() {
 						// 设置语言类型，分页功能的文字有影响。
 						i18nService.setCurrentLang('zh-cn');
@@ -182,7 +191,7 @@ angular.module('demoApp')
 
 							$scope.filterOptions.onConfirm = function(queryToDB){
 //				            	console.log(queryToDB);
-				            	options.gridApi.pagination.seek(1);
+//				            	options.gridApi.pagination.seek(1);
 								
 				            	self._getPageData({ adSearch: queryToDB, page: 1 });
 				            };
@@ -263,17 +272,17 @@ angular.module('demoApp')
 									options.gridPaginationOptions.sortColumns = sortColumns;
 								}
 								
-								options.gridApi.pagination.seek(1);
+//								options.gridApi.pagination.seek(1);
 								
 								self._getPageData({ 'sortColumns': options.gridPaginationOptions.sortColumns, page: 1 });
 							});
 							// 切换页码触发事件
-							gridApi.pagination.on.paginationChanged($scope, function(newPage, pageSize) {
-								options.gridPaginationOptions.pageNumber = newPage;
-								options.gridPaginationOptions.pageSize = pageSize;
-								
-								self._getPageData({ page: newPage, pagesize: pageSize});
-							});
+//							gridApi.pagination.on.paginationChanged($scope, function(newPage, pageSize) {
+//								options.gridPaginationOptions.pageNumber = newPage;
+//								options.gridPaginationOptions.pageSize = pageSize;
+//								
+//								self._getPageData({ page: newPage, pagesize: pageSize});
+//							});
 							// cellNav navigate 触发事件
 //							gridApi.cellNav.on.navigate($scope, function(newRowCol, oldRowCol) {
 //								console.log('in cellNav navigation...')
@@ -321,7 +330,7 @@ angular.module('demoApp')
 									options.gridOptions.data = options.allData.slice(firstRow, firstRow + options.gridPaginationOptions.pageSize);
 									options.gridOptions.data = $filter('filter')(options.allData, vm.singleFilterText).slice(firstRow, firstRow + options.gridPaginationOptions.pageSize);
 								} else {
-									options.gridApi.pagination.seek(1);
+//									options.gridApi.pagination.seek(1);
 									
 									scope.reload({ singleFilterText: vm.singleFilterText, page: 1 });
 								}								

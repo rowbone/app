@@ -1,17 +1,46 @@
-<ul class="pagination">
-	<li ng-if="boundaryLinks" ng-class="{disabled: noPrevious()}">
-		<a href ng-click="selectPage(1)">{{getText('first')}}</a>
-	</li>
-  <li ng-if="directionLinks" ng-class="{disabled: noPrevious()}">
-  	<a href ng-click="selectPage(page - 1)">{{getText('previous')}}</a>
-  </li>
-  <li ng-repeat="page in pages track by $index" class="page-repeat" ng-class="{active: page.active}">
-  	<a href ng-click="selectPage(page.number)">{{page.text + 1}}</a>
-  </li>
-  <li ng-if="directionLinks" ng-class="{disabled: noNext()}">
-  	<a href ng-click="selectPage(page + 1)">{{getText('next')}}</a>
-  </li>
-  <li ng-if="boundaryLinks" ng-class="{disabled: noNext()}">
-  	<a href ng-click="selectPage(totalPages)">{{getText('last')}}</a>
-  </li>
-</ul>
+
+<div class="pagination-container">
+		<style type="text/css">
+		.pagination-container > .pagination {
+			text-align: center;
+		}
+		.pagination > li > a, 
+		.pagination > li > span {
+			padding-top: 8px;
+		}
+		.pagination > .active > a.conow-pagination {
+			border: none;
+			background-color: #EFEFF4;
+			color: #000;
+		}
+		.pagination li a.conow-pagination {
+			height: 38px;
+			margin-left: 6px;
+		}
+		.pagination li a.conow-pagination-boundary-links {
+			width: 85px;
+		}
+		.pagination li a.conow-pagination-pages {
+			width: 42px;
+			text-align: center;
+		}
+	</style>	
+					
+	<ul class="pagination">
+		<li ng-if="boundaryLinks" ng-class="{disabled: noPrevious()}">
+			<a class="conow-pagination conow-pagination-boundary-links" href ng-click="selectPage(1)">{{getText('first')}}</a>
+		</li>
+	  <li ng-if="directionLinks" ng-class="{disabled: noPrevious()}">
+	  	<a class="conow-pagination conow-pagination-direction-links" href ng-click="selectPage(page - 1)">{{getText('previous')}}</a>
+	  </li>
+	  <li ng-repeat="page in pages track by $index" class="page-repeat" ng-class="{active: page.active}">
+	  	<a class="conow-pagination conow-pagination-pages" href ng-click="selectPage(page.number)">{{page.text}}</a>
+	  </li>
+	  <li ng-if="directionLinks" ng-class="{disabled: noNext()}">
+	  	<a class="conow-pagination conow-pagination-direction-links" href ng-click="selectPage(page + 1)">{{getText('next')}}</a>
+	  </li>
+	  <li ng-if="boundaryLinks" ng-class="{disabled: noNext()}">
+	  	<a class="conow-pagination conow-pagination-boundary-links" href ng-click="selectPage(totalPages)">{{getText('last')}}</a>
+	  </li>
+	</ul>
+</div>

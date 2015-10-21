@@ -21,7 +21,8 @@
 						previousText: '< 上一页',
 						nextText: '下一页 >',
 						// templateUrl: 'template/pagination/conow-pagination.html'
-						templateUrl: 'views/components/conow-pagination/tpls/conow-pagination.html'
+						templateUrl: 'views/components/conow-pagination/tpls/conow-pagination.html',
+						maxSize: 7
 					}
 
 					var conowPaginationOptions = scope.$eval(attrs.conowPagination);

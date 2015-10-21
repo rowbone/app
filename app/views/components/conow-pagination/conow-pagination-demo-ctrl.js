@@ -5,8 +5,9 @@
 		function($scope) {
 			var options = $scope.options = { 
 				totalItems: 192,
-				onChangeFn: function() {
+				onChangeFn: function(pageInfo) {
 					console.log('in onChangeFn')
+					console.log('currentPage-->', pageInfo);
 				}
 			};
 
