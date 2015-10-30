@@ -12,6 +12,31 @@ app.controller('ngBindCtrl', ['$scope', '$sce',
 		};
 
 		$scope.safeHtml = $sce.trustAsHtml(vm.html);
+
+		$scope.items = [
+			{
+				name: '111',
+				age: 2,
+				children: [
+					{
+						name: '222',
+						age: 5
+					}
+				]
+			}, {
+				name: '123',
+				age: 2
+			}, {
+				name: '111',
+				age: 2
+			}, {
+				name: '111',
+				age: 2
+			}, {
+				name: '111',
+				age: 2
+			}
+		];
 	}
 ]);
 
