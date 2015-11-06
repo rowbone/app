@@ -1,17 +1,17 @@
 'use strict';
 
 angular.module('conowGrid', [])
-	.directive('conowGrid', ['conowGridClass', '$filter', 'DataService', '$compile', '$rootScope', 'i18nService', 
-		function(conowGridClass, $filter, DataService, $compile, $rootScope, i18nService) {
+	.directive('conowGrid', ['conowGridClass', '$filter', 'DataService', '$http', '$compile', '$rootScope', 'i18nService', 
+		function(conowGridClass, $filter, DataService, $http, $compile, $rootScope, i18nService) {
 			return {
 				restrict: 'A',
 				// template: '<div id="grid1" ui-grid="vm.gridOptions" class="grid"></div>',
-//				templateUrl: 'views/components/conow-responsive-table/tpls/conow-grid-tpl.html',
-				 templateUrl: 'js/directives/conow-grid/tpls/conow-grid-tpl.html',
-				 scope: {
-					 getGridUserOptions: '&conowGrid',
-					 conowGridInstance: '=?'
-				 },
+				templateUrl: 'views/components/conow-responsive-table/tpls/conow-grid-tpl.html',
+				 // templateUrl: 'js/directives/conow-grid/tpls/conow-grid-tpl.html',
+				scope: {
+					getGridUserOptions: '&conowGrid',
+					conowGridInstance: '=?'
+				},
 				compile: function(tElem, tAttrs) {
 					return this.link;
 				}, 
@@ -63,7 +63,7 @@ angular.module('conowGrid', [])
 								adSearch = options.dataLoadParams.adSearch;		
 								angular.extend(tmpParams, adSearch);						
 							}
-							
+							/*
 							// singleFilter
 							singleFilterText = dataLoadParams.singleFilterText;
 							if(angular.isDefined(singleFilterText)) {								
@@ -73,7 +73,7 @@ angular.module('conowGrid', [])
 								singleFilterText = options.dataLoadParams.singleFilterText;	
 								tmpParams.keyword = singleFilterText;							
 							}
-							
+							*/
 							// sortColumns
 							sortColumns = dataLoadParams.sortColumns;
 							if(angular.isDefined(sortColumns)) {								
@@ -110,11 +110,40 @@ angular.module('conowGrid', [])
 							
 							// others
 						}
-						
+						if(options.gridUserOptions.searchKey){
+							$scope.searchKey = options.gridUserOptions.searchKey;
+						}else{
+							$scope.searchKey = "keyword";
+						}
+						if(options.gridUserOptions.searchTip){
+							$scope.searchTip = options.gridUserOptions.searchTip;
+						}else{
+							$scope.searchTip = "请搜索文档标题";
+						}
 						// Don't use dataLoadParams for extending because of irrelevent params
 						params = angular.extend({}, options.dataLoadDefaultParams, tmpParams);
 
-						DataService.postData(options.gridUserOptions.url, params)
+						
+						$http.post(options.gridUserOptions.url, { 'type': 'advSearch', 'params': params }).
+						    success(function(data, status, headers, config) {
+						    	var pageInfo = {
+									count: 34,
+									page: 1, 
+									pagesize: 10
+								};
+								data.pageInfo = angular.isDefined(data.pageInfo) ? data.pageInfo : pageInfo;
+								var gridData = angular.isDefined(data.obj) ? data.obj : data;
+
+								options.paginationOptions.totalItems = data.pageInfo.count;
+
+								options.allData = gridData;
+								options.gridOptions.data = gridData;
+						    }).
+						    error(function(data, status, headers, config) {
+						        console.log('error occured when searching data...');
+						    });
+						
+						/*DataService.postData(options.gridUserOptions.url, {type: 'advSearch',params:params})
 							.then(function(data) {
 								if(data) {
 									var pageInfo = {
@@ -133,7 +162,7 @@ angular.module('conowGrid', [])
 								}
 							}, function(msg) {
 								console.error(msg);
-							});
+							});*/
 					};
 					
 					// todo:列操作方法

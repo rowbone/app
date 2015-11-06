@@ -1,46 +1,50 @@
-
-<div class="pagination-container">
-		<style type="text/css">
-		.pagination-container > .pagination {
-			text-align: center;
-		}
-		.pagination > li > a, 
-		.pagination > li > span {
-			padding-top: 8px;
-		}
-		.pagination > .active > a.conow-pagination {
-			border: none;
-			background-color: #EFEFF4;
-			color: #000;
-		}
-		.pagination li a.conow-pagination {
-			height: 38px;
-			margin-left: 6px;
-		}
-		.pagination li a.conow-pagination-boundary-links {
-			width: 85px;
-		}
-		.pagination li a.conow-pagination-pages {
-			width: 42px;
-			text-align: center;
-		}
-	</style>	
-					
-	<ul class="pagination">
-		<li ng-if="boundaryLinks" ng-class="{disabled: noPrevious()}">
-			<a class="conow-pagination conow-pagination-boundary-links" href ng-click="selectPage(1)">{{getText('first')}}</a>
-		</li>
-	  <li ng-if="directionLinks" ng-class="{disabled: noPrevious()}">
-	  	<a class="conow-pagination conow-pagination-direction-links" href ng-click="selectPage(page - 1)">{{getText('previous')}}</a>
-	  </li>
-	  <li ng-repeat="page in pages track by $index" class="page-repeat" ng-class="{active: page.active}">
-	  	<a class="conow-pagination conow-pagination-pages" href ng-click="selectPage(page.number)">{{page.text}}</a>
-	  </li>
-	  <li ng-if="directionLinks" ng-class="{disabled: noNext()}">
-	  	<a class="conow-pagination conow-pagination-direction-links" href ng-click="selectPage(page + 1)">{{getText('next')}}</a>
-	  </li>
-	  <li ng-if="boundaryLinks" ng-class="{disabled: noNext()}">
-	  	<a class="conow-pagination conow-pagination-boundary-links" href ng-click="selectPage(totalPages)">{{getText('last')}}</a>
-	  </li>
-	</ul>
+<div class="text-center">
+	<div class="direct-page-container direct-page-container-sm hidden-sm hidden-md hidden-lg" ng-show="showSelectPageModal">
+		到第<input type="text" class="direct-page" ng-model="directPage">页
+		<button type="button" class="btn btn-default" ng-click="selectPageModalConfirm(directPage)">确定</button>
+	</div>
+	<div class="pagination-container">
+		<ul class="pagination">
+		  <li  ng-class="{disabled: noPrevious(), 'hidden-lg hidden-md hidden-sm': !boundaryLinks}">
+			<a class="conow-pagination conow-pagination-boundary-links" href ng-click="selectPage(1)">
+				<span class="hidden-xs">{{getText('first')}}</span>
+				<i class ="hidden-lg hidden-md hidden-sm ci-firstpage"></i>
+			</a>
+		  </li>
+		  <li ng-class="{disabled: noPrevious()}" ng-if="directionLinks">
+		  	<a class="conow-pagination conow-pagination-direction-links" href ng-click="selectPage(page - 1)">
+		  		<span class="hidden-xs">{{getText('previous')}}</span>
+		  		<i class="hidden-lg hidden-md hidden-sm ci-previouspage"></i>
+	  		</a>
+		  </li>
+		  <li ng-repeat="page in pages track by $index" class="hidden-xs page-repeat" ng-class="{active: page.active}">
+		  	<a class="conow-pagination conow-pagination-pages" href ng-click="selectPage(page.number)">
+		  		{{page.text}}
+	  		</a>
+		  </li>
+		  <li class="hidden-lg hidden-md hidden-sm">
+		  	<a class="conow-pagination conow-pagination-input hidden-lg hidden-md" ng-click="openSelectPageModal()">
+		  		<span class="input-page direct-page" type="text" ng-bind="page"/></span>
+		  		<i class="modal-xs-icon fa fa-chevron-down"></i>
+		  	</a>
+		  </li>
+		  <li  ng-class="{disabled: noNext()}" ng-if="directionLinks">
+		  	<a class="conow-pagination conow-pagination-direction-links" href ng-click="selectPage(page + 1)">
+		  		<span class="hidden-xs">{{getText('next')}}</span>
+		  		<i class="hidden-lg hidden-md hidden-sm ci-nextpage"></i>
+	  		</a>
+		  </li>
+		  <li ng-class="{disabled: noNext(), 'hidden-lg hidden-md hidden-sm': !boundaryLinks}">
+		  	<a class="conow-pagination conow-pagination-boundary-links" href ng-click="selectPage(totalPages)">
+		  		<span class="hidden-xs">{{getText('last')}}</span>
+		  		<i class="hidden-lg hidden-md hidden-sm ci-lastpage"></i>
+	  		</a>
+		  </li>
+		</ul>
+		
+		<div class="direct-page-container hidden-xs hidden-sm">
+			到第<input type="text" class="direct-page" ng-model="directPage">页
+			<button type="button" class="btn btn-default" ng-click="selectPage(directPage)">确定</button>
+		</div>
+	</div>
 </div>
