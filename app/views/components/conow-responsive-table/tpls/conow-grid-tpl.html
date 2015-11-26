@@ -1,16 +1,24 @@
 
-<div class="conow-grid-advanced-search" ng-if="options.isShowAdvancedSearch">
-	<advsearch-wrapper config="filterOptions"></advsearch-wrapper>
+<style>
+	.conow-grid-button-group {
+		margin-bottom: 10px;
+		margin-left: 10px;
+	}
+</style>
+
+<div class="conow-grid-advanced-search">	
+	<advsearch-wrapper ng-if="options.isShowQuickSearch"
+		config="filterOptions" 
+		quick-search-key="{{options.quickSearchKey}}" 
+		quick-search-tip="{{options.quickSearchTip}}">
+	</advsearch-wrapper>
+
+	<advsearch-wrapper ng-if="!options.isShowQuickSearch"
+		config="filterOptions">
+	</advsearch-wrapper>
 </div>
 
-<div class="conow-grid-search m-b-xs" ng-if="options.isSingleFilter">
-	<input type="text" class="form-control" ng-model="vm.singleFilterText" ng-model-options="{ debounce: 2000 }">
-</div>
-
-<div class="conow-grid-operation m-b-xs" ng-if="options.isShowOperationBtns">
-	<button class="btn btn-primary" ng-click="getSelectedRows()">获取已选项</button>
-	<button class="btn btn-primary" ng-click="getCurrentCell()">获取当前列</button>
-</div>
+<div class="conow-grid-operation" ng-transclude></div>
 
 <div 
 	ui-grid="options.gridOptions" 
@@ -34,11 +42,15 @@
 
 <div 
 	ui-grid="options.gridOptions" 
-	ui-grid-pagination 
 	ui-grid-selection 
 	ui-grid-cellNav
 	class="grid grid-instance" 
+	autoResize 
 	ng-if="options.isPagination && options.isAllowSelection">
 </div>
 
-<div conow-pagination="options.paginationOptions" current-page="options.paginationOptions.currentPage"></div>
+<div 
+	conow-pagination="options.paginationOptions" 
+	current-page="options.paginationOptions.currentPage"
+	ng-if="options.isPagination">
+</div>

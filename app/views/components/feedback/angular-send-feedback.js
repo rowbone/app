@@ -151,16 +151,17 @@ angular.module('angular-send-feedback').directive('angularFeedback', [ '$locatio
                         
                         if (supportedBrowser) {
                             if(isFeedbackButtonNative) {
-                                $('body').append('<style>.feedback-btn {width: 42xp; height: 51px;}</style><button class="feedback-btn btn btn-default" title="ARP3.0用户反馈">' + '<i class="ci-feedback text-primary text-xlg"></i>' + '</button>');
+                                $('body').append('<style>.feedback-btn{width:42px;height:51px;}.feedback-draggable,.feedback-highlighter-title:hover,.feedback-overview-title:hover{cursor:move;}</style><button class="feedback-btn btn btn-default" title="ARP3.0用户反馈">' + '<i class="ci-feedback text-primary text-xlg"></i>' + '</button>');
                             }
 
                             $(document).on('mousedown', settings.feedbackButton, function(e) {
                                 flagDown = true;
-                                var $d = $(this).addClass('feedback-btn-draggable'),
+                                var $d = $(this).addClass('feedback-draggable'),
                                     drag_h  = $d.outerHeight(),
                                     drag_w  = $d.outerWidth(),
                                     pos_y   = $d.offset().top + drag_h - e.pageY,
                                     pos_x   = $d.offset().left + drag_w - e.pageX;
+
                                 $d.css('z-index', 40000).parents().on('mousemove', function(e) {
                                     if(flagDown) {
                                         flagMove = true;
@@ -181,29 +182,27 @@ angular.module('angular-send-feedback').directive('angularFeedback', [ '$locatio
                                     if (_top > $(document).height() - drag_h)
                                         _top = $(document).height() - drag_h;
 
-                                    $('.feedback-btn-draggable').offset({
+                                    $('.feedback-draggable').offset({
                                         top:    _top,
                                         left:   _left
                                     })
-                                    // .on("mouseup", function() {
-                                    //     $(this).removeClass('feedback-btn-draggable');
-                                    // });
-                                });
-                                e.preventDefault();
                             })
-                            .on('mousemove', function() {
-                                $(this).removeClass('feedback-btn-draggable');
+                            .on('mousemove', settings.feedbackButton, function(e) {
+                                // 
                             })
-                            .on('mouseup', function(){
-                                $(this).removeClass('feedback-btn-draggable');
+                            .on('mouseup', settings.feedbackButton, function(e) {
+                                $(this).removeClass('feedback-draggable');
                                 if(flagDown && !flagMove) {
+
+                                    $(this).css('display', 'none');
                                     feedbackBtnClickFn();
                                     // $(document).on('click', settings.feedbackButton, feedbackBtnClickFn);
                                 }
                                 flagMove = false;
                                 flagDown = false;
                             });
-
+                        });
+                            
                             // $(document).on('click', settings.feedbackButton, function(){
                             function feedbackBtnClickFn() {
                                 if(isFeedbackButtonNative) {
@@ -230,8 +229,8 @@ angular.module('angular-send-feedback').directive('angularFeedback', [ '$locatio
                                     'position': 'absolute',
                                     'left':     '0px',
                                     'top':      '0px',
-                                    'right':     '0px',
-                                    'bottom':      '0px',
+                                    'right':    '0px',
+                                    'bottom':   '0px',
                                 };
                                 var ctx = $('#feedback-canvas')[0].getContext('2d');
                                 $(window).on('resize.feedback', resizeCanvas);
@@ -241,8 +240,8 @@ angular.module('angular-send-feedback').directive('angularFeedback', [ '$locatio
                                     w = $(window).get(0).innerWidth;
                                     $('#feedback-canvas').attr("width", w);
                                     $('#feedback-canvas').attr("height", h);
-                                     ctx.fillStyle = 'rgba(102,102,102,0.5)';
-                                     ctx.fillRect(0, 0, $('#feedback-canvas').width(), $('#feedback-canvas').height());
+                                    ctx.fillStyle = 'rgba(102,102,102,0.5)';
+                                    ctx.fillRect(0, 0, $('#feedback-canvas').width(), $('#feedback-canvas').height());
                                 };
                                   
                                 resizeCanvas();
@@ -251,8 +250,8 @@ angular.module('angular-send-feedback').directive('angularFeedback', [ '$locatio
                                     'width': w,
                                     'height': h
                                 };
-                                */                                
-
+                                */
+                               
                                 $('#feedback-module').css(moduleStyle);
                                 $('#feedback-canvas').resize(resizeCanvas).css('z-index', '30000');
 
@@ -266,9 +265,10 @@ angular.module('angular-send-feedback').directive('angularFeedback', [ '$locatio
                                     $('#feedback-overview').show();
                                 }
 
+                                var $destHighlighter = $('#feedback-highlighter');
                                 if(settings.isDraggable) {
-                                    $('#feedback-highlighter').on('mousedown', function(e) {
-                                        var $d = $(this).addClass('feedback-draggable'),
+                                    $('#feedback-highlighter .feedback-highlighter-title').on('mousedown', function(e) {
+                                        var $d = $destHighlighter.addClass('feedback-draggable'),
                                             drag_h  = $d.outerHeight(),
                                             drag_w  = $d.outerWidth(),
                                             pos_y   = $d.offset().top + drag_h - e.pageY,
@@ -294,13 +294,50 @@ angular.module('angular-send-feedback').directive('angularFeedback', [ '$locatio
                                                 top:    _top,
                                                 left:   _left
                                             }).on("mouseup", function() {
-                                                $(this).removeClass('feedback-draggable');
+                                                $destHighlighter.removeClass('feedback-draggable');
                                             });
                                         });
                                         e.preventDefault();
                                     }).on('mouseup', function(){
-                                        $(this).removeClass('feedback-draggable');
-                                        $(this).parents().off('mousemove mousedown');
+                                        $destHighlighter.removeClass('feedback-draggable');
+                                        $destHighlighter.parents().off('mousemove mousedown');
+                                    });
+
+                                    var $dest = $('#feedback-overview');
+                                    $('#feedback-overview .feedback-overview-title').on('mousedown', function(e) {
+                                        var $d = $dest.addClass('feedback-draggable'),
+                                            drag_h  = $d.outerHeight(),
+                                            drag_w  = $d.outerWidth(),
+                                            pos_y   = $d.offset().top + drag_h - e.pageY,
+                                            pos_x   = $d.offset().left + drag_w - e.pageX;
+                                        $d.css('z-index', 40000).parents().on('mousemove', function(e) {
+                                            _top    = e.pageY + pos_y - drag_h;
+                                            _left   = e.pageX + pos_x - drag_w;
+                                            _bottom = drag_h - e.pageY;
+                                            _right  = drag_w - e.pageX;
+
+                                            if (_left < 0) _left = 0;
+                                            if (_top < 0) _top = 0;
+                                            if (_right > $(window).width())
+                                                _left = $(window).width() - drag_w;
+                                            if (_left > $(window).width() - drag_w)
+                                                _left = $(window).width() - drag_w;
+                                            if (_bottom > $(document).height())
+                                                _top = $(document).height() - drag_h;
+                                            if (_top > $(document).height() - drag_h)
+                                                _top = $(document).height() - drag_h;
+
+                                            $('.feedback-draggable').offset({
+                                                top:    _top,
+                                                left:   _left
+                                            }).on("mouseup", function() {
+                                                $dest.removeClass('feedback-draggable');
+                                            });
+                                        });
+                                        e.preventDefault();
+                                    }).on('mouseup', function(){
+                                        $dest.removeClass('feedback-draggable');
+                                        $dest.parents().off('mousemove mousedown');
                                     });
                                 }
 
@@ -508,8 +545,7 @@ angular.module('angular-send-feedback').directive('angularFeedback', [ '$locatio
                                         $('#feedback-helpers').show();
                                         $('#feedback-welcome').hide();
                                         $('#feedback-highlighter').show();
-                                    }
-                                    else {
+                                    } else {
                                         $('#feedback-welcome-error').show();
                                     }
                                 });
@@ -694,14 +730,11 @@ angular.module('angular-send-feedback').directive('angularFeedback', [ '$locatio
                                     if (!settings.screenshotStroke) {
                                         redraw(ctx, false);
                                     }
-                                    
                                                                         
                                     if ($('#feedback-note').val().length > 0) {
                                         $('#feedback-submit-success,#feedback-submit-error').remove();
                                         $('#feedback-overview').hide();
                                         $('#feedback-highlighter').hide();
-                                        
-                                        
                                         
                                         html2canvas($('body'), {
                                             onrendered: function(canvas) {
@@ -730,7 +763,6 @@ angular.module('angular-send-feedback').directive('angularFeedback', [ '$locatio
                                                         $('#feedback-module').append(settings.tpl.submitError);
                                                     }
                                                 });
-                                                
                                                 
                                             },
                                             proxy: settings.proxy,
