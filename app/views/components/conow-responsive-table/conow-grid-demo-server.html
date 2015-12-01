@@ -1,0 +1,144 @@
+
+<div>
+<title-bar name="conow-grid"></title-bar>
+
+<style>
+.grid {
+	heiht: 370px;
+}
+</style>
+
+<div-wrapper>
+	<conow-block-form>
+		<conow-block-group title="组件演示" is-pulldown="true" is-open="true">
+		
+			<conow-block class="padder-md">
+				<div ng-controller="conowGridDemoCtrl">
+				
+    				<!-- <div class="conow-grid-button-group">
+    					<button type="button" class="btn add" ng-click="">添加</button>
+    					<button type="button" class="btn" ng-click="">导入</button>
+    					<button type="button" class="btn" ng-click="">导出</button>
+    				</div> -->
+    				
+    				
+					<!-- <div class="hbox m-t-xs m-b-xs">
+						<button class="btn btn-primary" ng-click="toggleAdSearchShow()">toggle AdSearch Show</button>
+					</div> -->
+					
+					<!-- <div class="hbox" ng-if="options.isShowAdvancedFilter">
+						<div ng-include="'other/demo/conow-responsive-table/conow-grid-filter-demo.html'"></div>
+						
+						<div class="text-center">
+							<button class="btn btn-primary" ng-click="advancedSearchClick()">搜索</button>
+							<button class="btn btn-default" ng-click="clearAdvancedSearchClick()">清空</button>
+						</div>
+					</div> -->
+					
+					<div class="hbox" class="m-t-xs">					
+						<div conow-grid="gridOptions1">							
+							<div class="conow-grid-button-group">
+		    					<button type="button" class="btn add" ng-click="operAdd()">添加</button>
+		    					<button type="button" class="btn" ng-click="operImport()">导入</button>
+		    					<button type="button" class="btn" ng-click="operExport()">导出</button>
+								<button type="button" class="btn" ng-click="operGetSelected()">获取已选项</button>
+		    				</div>							
+						</div>					
+					</div>
+				</div>
+			</conow-block>
+		</conow-block-group>
+		
+		<conow-block-group title="组件演示-不用分页" is-pulldown="true" is-open="true">
+
+			<conow-block class="padder-md">
+				<div ng-controller="conowGridDemoCtrl2">
+					
+					<div class="hbox" class="m-t-xs">					
+						<div conow-grid="gridOptions" class="">
+							<div class="conow-grid-button-group">
+								<button type="button" class="btn" ng-click="operGetSelected()">获取已选项</button>
+							</div>
+						</div>					
+					</div>
+				</div>
+			</conow-block>
+		</conow-block-group>
+		
+		<conow-block-group title="使用说明" is-pulldown="true" is-open="false">
+
+			<conow-block class="padder-md">
+				<div class="hbox" ng-controller="conowGridDemoInsCtrl">
+					<ol>
+						<li>指令调用：<code>&lt;div conow-grid="gridOptions1" class="grid"&gt;&lt;/div&gt;</code></li>
+						
+						<li>参数列表
+							<table class="table">
+								<thead>
+									<tr>
+										<th ng-repeat="th in vm.paramsList.thead.tr.th track by $index" ng-bind="::th"></th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr ng-repeat="tr in vm.paramsList.tbody.tr track by $index">
+										<td ng-repeat="td in tr.td track by $index" ng-bind="::td"></td>
+									</tr>
+								</tbody>
+							</table>
+						</li>
+						<li>columnsDefs说明
+							<table class="table">
+								<thead>
+									<tr>
+										<th ng-repeat="th in vm.columnsDefs.thead.tr.th track by $index" ng-bind="::th"></th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr ng-repeat="tr in vm.columnsDefs.tbody.tr track by $index">
+										<td ng-repeat="td in tr.td track by $index" ng-bind="::td"></td>
+									</tr>
+								</tbody>
+							</table>
+						</li>
+						<li>
+							列类型定义:(cellType)
+							<table class="table">
+								<thead>
+									<tr>
+										<th ng-repeat="th in vm.cellTypes.thead.tr.th track by $index" ng-bind="::th"></th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr ng-repeat="tr in vm.cellTypes.tbody.tr track by $index">
+										<td ng-repeat="td in tr.td track by $index" ng-bind="::td"></td>
+									</tr>
+								</tbody>
+							</table>
+						</li>
+						<li>绑定列表内事件(grid.appScope)。							
+							<ul>
+								<li>绑定示例：<code>&lt;a class="" ng-click="grid.appScope.setting(row)"&gt;&lt;i class="ci-set"&gt;&lt;/i&gt;&lt;/a&gt;</code></li>
+								<li>grid.appScope 是指令内部对业务 controller的引用</li>
+								<li>setting 是业务controller中的方法</li>
+								<li>方法内部可传入对应行的引用 row</li>
+							</ul>
+						</li>
+						<li>数据重载(表格数据刷新)
+							<code>$scope.gridOptions1.conowGridInstance.reload();</code>
+						</li>
+						<li>操作按钮：(按钮绑定的事件由业务controller提供，没有操作功能不用提供，请不需要grid.appScope绑定)
+<pre>
+&lt;div conow-grid="gridOptions1" class="grid"&gt;
+	&lt;div class="conow-grid-button-group"&gt;
+		&lt;button type="button" class="btn add" ng-click="operAdd()"&gt;添加&lt;/button&gt;
+		&lt;button type="button" class="btn" ng-click="operImport()"&gt;导入<&lt;/button&gt;
+		&lt;button type="button" class="btn" ng-click="operExport()"&gt;导出&lt;/button&gt;
+	&lt;/div&gt;	
+&lt;/div&gt;
+</pre>
+						</li>
+					</ol>
+				</div>
+			</conow-block>
+	</conow-block-form>
+</div-wrapper>
