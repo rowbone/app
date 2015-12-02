@@ -41,6 +41,8 @@
 							paginationOptions: {
 								totalItems: 0,
 								onChangeFn: function(pageInfo) {
+									options.gridApi.selection.clearSelectedRows();
+									
 									self._getPageData(pageInfo);
 								}
 							},
@@ -350,6 +352,7 @@
 						// 业务controller的配置参数中也持有当前 conowGridInstance，以提供操作的方法	@20151110
 						options.gridUserOptions.conowGridInstance = options.conowGridInstance;
 						$scope.conowGridInstance = options.conowGridInstance;
+						// conowGrid Service 实例中持有当前 $scope
 						options.conowGridInstance.setScope($scope);
 
 						options.gridDefaultOptions = options.conowGridInstance.getDefaultOptions();
@@ -487,15 +490,17 @@
 
 						// selection
 						var tmpOptions = {},
-							select = options.gridUserOptions.select;
+							selectMode = options.gridUserOptions.selectMode;
 
-						if (angular.isUndefined(select)) {
+						options.selectMode = selectMode;
+
+						if (angular.isUndefined(selectMode)) {
 							tmpOptions = {
 								enableRowSelection: false,
 								enableRowHeaderSelection: false
 							};
 							options.isAllowSelection = false;
-						} else if (select === 'single') {
+						} else if (selectMode === 'single') {
 							options.isAllowSelection = true;
 							tmpOptions = {
 								enableRowSelection: true,
@@ -506,7 +511,8 @@
 						} else {
 							options.isAllowSelection = true;
 							tmpOptions = {
-								enableFullRowSelection: true,
+								enableFullRowSelection: false,
+								enableRowHeaderSelection: true,
 								enableRowSelection: true,
 								multiSelect: true,
 								enableSelectAll: true
@@ -560,10 +566,32 @@
 							//							});
 							// row selection 触发事件
 							if(gridApi.selection) {
-								gridApi.selection.on.rowSelectionChanged($scope, function(row) {
-									console.log('selected row', row);
+								// row select 触发方法
+								var gridInstance = options.conowGridInstance,
+									selectMode = options.selectMode,
+									selectedRows = [];
 
-									options.conowGridInstance.setSelectedItems(options.gridApi.selection.getSelectedRows());
+								gridApi.selection.on.rowSelectionChanged($scope, function(row) {
+									selectedRows = options.gridApi.selection.getSelectedRows();
+
+									if(angular.equals(selectMode, 'single')) {
+										gridInstance.setSelectedItems(selectedRows);
+									} else if(angular.equals(selectMode, 'multiply')) {
+										gridInstance.addSelectedItems(selectedRows);
+									} else {
+										// other mode 
+									}
+								});
+
+								// all select 触发方法
+								gridApi.selection.on.rowSelectionChangedBatch($scope, function(gridRows) {
+									angular.forEach(gridRows, function(value, index) {
+										if(value.entity) {
+											selectedRows.push(value.entity);
+										}
+									});
+
+									gridInstance.addSelectedItems(selectedRows);
 								});
 							}
 						};
@@ -625,19 +653,19 @@
 			function conowGridClass() {
 				var defaultOptions = {
 						selectionRowHeaderWidth: 50,
-//						rowHeight: 50,
+						// rowHeight: 50,
 						// pagination
 						// paginationPageSizes: [10, 25, 50, 75],
 						paginationPageSizes: [],
 						paginationPageSize: 10,
 						// selection
-						// enableRowSelection: true,
-						// enableSelectAll: true,
-						// multiSelect: true,
-						// enableRowHeaderSelection: false,
-						enableFullRowSelection: true
+						enableFullRowSelection: true,
+						enableRowHeaderSelection: true,
+						enableRowSelection: true,
+						enableSelectAll: true,
+						multiSelect: true
 					},
-					selectedRows = null,
+					selectedRows = [],
 					self = this,
 					scope = null;
 
@@ -648,20 +676,41 @@
 					return defaultOptions;
 				};
 
+				/**
+				 * hold $scope
+				 */
 				this.setScope = function(_scope) {
 					self.scope = _scope;
 				};
 
-				this.reload = function() {
-					self.scope.reload({ forceReload: true });
+				/**
+				 * reload table page data
+				 */
+				this.reload = function(reloadParams) {
+					var params = angular.extend({ 'forceReload': true }, reloadParams);
+
+					self.scope.reload(params);
 				};
 
-				this.setSelectedItems = function(selectedRows) {
-					self.selectedRows = selectedRows;
+				/**
+				 * set table selected items
+				 */
+				this.setSelectedItems = function(_selectedRows) {
+					selectedRows = _selectedRows;
 				};
 
+				/**
+				 * add table selected items
+				 */
+				this.addSelectedItems = function(_selectedRows) {
+					selectedRows = selectedRows.concat(_selectedRows);
+				};
+
+				/**
+				 * get table selected items
+				 */
 				this.getSelectedItems = function() {
-					return self.selectedRows;
+					return selectedRows;
 				};
 
 			};

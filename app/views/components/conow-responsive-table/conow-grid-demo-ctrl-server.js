@@ -96,7 +96,7 @@ app.controller('conowGridDemoCtrl2', ['$scope', 'conowModals',
 			url: '/service/jobsOrg!queryJobsOrgAndStaffCountByOrgId?ORG_UNIT_ID=1421924106089631410343354',
 			isPagination: false,
 //			isServerPage: false,
-			// select: 'single',
+			// selectMode: 'single',
 			columnDefs: [
 			    { name: '序号', cellType: 'sequence' }, 
 				{ name: '岗位名称', field: 'JOBS_INFO_ID_HR_JOBS_INFO' }, 
@@ -225,8 +225,8 @@ app.controller('conowGridDemoCtrl', ['$scope', 'DataService', 'conowModals',
 		};
 		
 		$scope.gridOptions1 = {
-			select: 'single',	// single/multiply/undefined
-//			select: 'single',	// single/multiply/undefined///queryJobsListByOrgUintId?ORG_UNIT_ID=1421924106089631410343354
+			selectMode: 'single',	// single/multiply/undefined
+//			selectMode: 'single',	// single/multiply/undefined///queryJobsListByOrgUintId?ORG_UNIT_ID=1421924106089631410343354
 			url: '/service/jobsInfo!queryJobsListByParams',
 			quickSearchKey: 'JOBS_NAME',
 			quickSearchTip: '请输入岗位名称',
