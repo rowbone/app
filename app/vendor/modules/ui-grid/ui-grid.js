@@ -2931,10 +2931,15 @@ function ($compile, $timeout, $window, $document, gridUtil, uiGridConstants, i18
           var uiGridCtrl = controllers[0];
           var containerCtrl = controllers[1];
 
-          $scope.containerCtrl = containerCtrl;
+          $scope.containerCtrl = containerCtrl;$scope.uiGridCtrl = uiGridCtrl;
 
           var rowContainer = containerCtrl.rowContainer;
           var colContainer = containerCtrl.colContainer;
+          /* temporary
+          $scope.$watch('uiGridCtrl.uiGrid.data', function(newVal, oldVal) {
+            console.log(newVal);
+          });
+          */
 
           var grid = uiGridCtrl.grid;
 
@@ -3409,6 +3414,11 @@ function uiGridDirective($compile, $templateCache, $timeout, $window, gridUtil, 
 
             grid.refreshCanvas(true);
           }
+          /* temporary
+          $scope.$watch('uiGrid.data', function(newVal, oldVal) {
+            console.log(newVal);
+          });
+          */
         }
       };
     }

@@ -96,7 +96,7 @@ app.controller('conowGridDemoCtrl2', ['$scope', 'conowModals',
 			url: '/service/jobsOrg!queryJobsOrgAndStaffCountByOrgId?ORG_UNIT_ID=1421924106089631410343354',
 			isPagination: false,
 //			isServerPage: false,
-			// selectMode: 'single',
+			 selectMode: 'single',
 			columnDefs: [
 			    { name: '序号', cellType: 'sequence' }, 
 				{ name: '岗位名称', field: 'JOBS_INFO_ID_HR_JOBS_INFO' }, 
@@ -121,10 +121,49 @@ app.controller('conowGridDemoCtrl2', ['$scope', 'conowModals',
 app.controller('conowGridDemoCtrl', ['$scope', 'DataService', 'conowModals', 
 	function($scope, DataService, conowModals) {
 
-		var vm = $scope.vm = {};
-		var options = $scope.options = {
-			isShowAdvancedFilter: false
-		};
+		var vm = $scope.vm = {},
+			options = $scope.options = {
+				isShowAdvancedFilter: false
+			},
+			selectedItems = [
+				{
+					CREATER: "115111_2256",
+					CREATE_TIME: "2005-10-30 23:42:49",
+					DATA_ENABLE: "ACT",
+					DATA_ENABLE_SYSTEM_DATA_ENABLE: "启用",
+					END_DATE: "",
+					ID: "115111_100",
+					JOBS_CODE: "100",
+					JOBS_DESC: null,
+					JOBS_NAME: "DES土力学组_副研究员(自然科学)",
+					JOBS_REQ: null,
+					JOBS_TYPE: "11",
+					JOBS_TYPE_HR_JOBS_TYPE: "",
+					MEMO: null,
+					ORG_UNIT_ID: "115111_133",
+					SEQ_NO: null,
+					START_DATE: "2015-12-02 00:00:00",
+					staffCount: "0",
+				}, {
+					CREATER: "115111_2256",
+					CREATE_TIME: "2005-10-30 23:42:49",
+					DATA_ENABLE: "ACT",
+					DATA_ENABLE_SYSTEM_DATA_ENABLE: "启用",
+					END_DATE: "",
+					ID: "115111_101",
+					JOBS_CODE: "101",
+					JOBS_DESC: null,
+					JOBS_NAME: "DES土力学组_高级工程师",
+					JOBS_REQ: null,
+					JOBS_TYPE: "11",
+					JOBS_TYPE_HR_JOBS_TYPE: "",
+					MEMO: null,
+					ORG_UNIT_ID: "115111_133",
+					SEQ_NO: null,
+					START_DATE: "2015-12-02 00:00:00",
+					staffCount: "0"
+				}
+			];
 		
 		$scope.filterOptions = {
             contentUrl: 'other/demo/conow-responsive-table/conow-grid-filter-demo.html',
@@ -138,27 +177,7 @@ app.controller('conowGridDemoCtrl', ['$scope', 'DataService', 'conowModals',
             		  'label': '封存/停用',
             		  'value': 'NA'
             	  }
-            	]/*,
-		        'expenseStatus': [ {
-		            label: '审批中',
-		            value: 'INAPPROVAL'
-		        }, {
-		            label: '已报销',
-		            value: 'APPROVED'
-		        }, {
-		            label: '四个字儿',
-		            value: 'APPROVED1'
-		        }, {
-		            label: '五五个字儿',
-		            value: 'APPROVED2'
-		        }, {
-		            label: '六六六个字儿',
-		            value: 'APPROVED3'
-		        }, {
-		            label: '超过六个字儿好多好多',
-		            value: 'APPROVED4'
-		        } 
-		    ],*/
+            	]
             }
 		};
 		
@@ -197,6 +216,8 @@ app.controller('conowGridDemoCtrl', ['$scope', 'DataService', 'conowModals',
 			modalInstance.result.then(function(data) {
 				console.log(data);
 				
+				$scope.gridOptions1.selectedItems = data;
+				
 				$scope.gridOptions1.conowGridInstance.reload();
 			}, function(msg) {
 				console.log(msg);
@@ -225,12 +246,12 @@ app.controller('conowGridDemoCtrl', ['$scope', 'DataService', 'conowModals',
 		};
 		
 		$scope.gridOptions1 = {
-			selectMode: 'single',	// single/multiply/undefined
-//			selectMode: 'single',	// single/multiply/undefined///queryJobsListByOrgUintId?ORG_UNIT_ID=1421924106089631410343354
+			selectMode: 'multiply',	// single/multiply/undefined///queryJobsListByOrgUintId?ORG_UNIT_ID=1421924106089631410343354
 			url: '/service/jobsInfo!queryJobsListByParams',
 			quickSearchKey: 'JOBS_NAME',
 			quickSearchTip: '请输入岗位名称',
 			filterOptions: $scope.filterOptions,
+			selectedItems: selectedItems,
 			columnDefs: [
 			    { name: '序号', cellType: 'sequence' }, 
 				{ name: '排序号', field: '', width: 100, type: 'number', cellTemplate: '<div>' + 
@@ -247,7 +268,7 @@ app.controller('conowGridDemoCtrl', ['$scope', 'DataService', 'conowModals',
 				{ name: '岗位描述', field: 'MEMO', width: 300 }, 
 				/*{ name: '是否启用1', field: 'DATA_ENABLE', width: 150, cellFilter: 'filterInCell' }, */
 				{ name: '岗位状态', field: 'DATA_ENABLE_SYSTEM_DATA_ENABLE', width: 150 }, 
-				{ name: '操作', field: '', width: 90, enableSorting: false, enableSorting: false, cellType: 'operation', 
+				{ name: '操作', field: '', width: 90, enableSorting: false, cellType: 'operation', 
 					cellTemplate: '<div>' + 
 						'<a ng-disabled="true" ng-class="grid.appScope.getClass(row)" ng-click="grid.appScope.view(row)"><i class="ci-seen"></i></a>' + 
 						'<a class="" ng-click="grid.appScope.setting(row)"><i class="ci-set"></i></a>' + 
@@ -285,12 +306,14 @@ app.controller('conowGridDemoInsCtrl', ['$scope',
 			},
 			tbody: {
 				tr: [
-				    {td: ['url', '后台数据接口', '-', '-']},
-		      		{td: ['columnDefs', '列定义', '-', '-']},
-		      		{td: ['quickSearchKey', '搜索框请求参数', '自定义', 'keyword']},
-		      		{td: ['quickSearchTip', '搜索框提示文字', '自定义', '请输入关键字']},
-		      		{td: ['isPagination', '是否包含分页', 'true/false/-', 'true']},
-		      		{td: ['filterOptions', '筛选配置项', '-', '-']},
+				    { td: ['url', '后台数据接口', '-', '-'] },
+		      		{ td: ['columnDefs', '列定义', '-', '-'] },
+		      		{ td: ['quickSearchKey', '搜索框请求参数', '自定义', 'keyword'] },
+		      		{ td: ['quickSearchTip', '搜索框提示文字', '自定义', '请输入关键字'] },
+		      		{ td: ['isPagination', '是否包含分页', 'true/false/-', 'true'] },
+		      		{ td: ['filterOptions', '筛选配置项', '-', '-'] },
+		      		{ td: ['selectMode', '选择模式', 'single/multiply/-', '-'] },
+		      		{ td: ['selectedItems', '初始化时的选中值', '自定义(对象数组)', '-'] },
 				]
 			}
 			

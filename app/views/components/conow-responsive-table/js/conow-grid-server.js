@@ -9,8 +9,8 @@
 	 * */
 	var app = angular.module('conowGrid', []);
 
-	app.directive('conowGrid', ['conowGridClass', '$filter', 'DataService', '$http', '$compile', '$rootScope', 'i18nService',
-		function(conowGridClass, $filter, DataService, $http, $compile, $rootScope, i18nService) {
+	app.directive('conowGrid', ['conowGridClass', '$filter', 'DataService', '$http', '$compile', '$rootScope', 'i18nService', '$timeout', 
+		function(conowGridClass, $filter, DataService, $http, $compile, $rootScope, i18nService, $timeout) {
 			return {
 				restrict: 'A',
 				// template: '<div id="grid1" ui-grid="vm.gridOptions" class="grid"></div>',
@@ -41,11 +41,22 @@
 							paginationOptions: {
 								totalItems: 0,
 								onChangeFn: function(pageInfo) {
-									options.gridApi.selection.clearSelectedRows();
+									if(angular.isDefined(options.gridApi.selection)) {
+
+										// 清除初始化时的已选项
+										options.gridUserOptions.selectedItems = [];
+
+										// 清除 grid 的选中项
+										options.gridApi.selection.clearSelectedRows();
+
+										// 清除 conowGridInstance 保存的已选项
+										options.conowGridInstance.clearSelectedItems();
+									}
 									
 									self._getPageData(pageInfo);
 								}
 							},
+							// 用于保存各个参数加载数据的 loadFlag，格式为 { 'advancedSearch', true/false }
 							loadFlags: {}
 						};
 
@@ -171,9 +182,43 @@
 						// others params
 
 						// Don't use dataLoadParams for extending because of irrelevent params
-						params = angular.extend({}, options.dataLoadDefaultParams, tmpParams);
+						if(options.isPagination && options.isServerPage) {
+							params = angular.extend({}, options.dataLoadDefaultParams, tmpParams);
+						}
 
 						return params;
+					};
+
+					// 因为当前页的数据会在加载后添加 'sequence'等属性，所以这里通过 'compareKey' 字段进行比较，相同则返回对应项用于选中
+					var getSelectedItem = function(item, pageData) {
+						var i = 0,
+							iLen = pageData.length,
+							compareKey = 'ID';
+
+						for(; i<iLen; i++) {
+							if(angular.equals(item[compareKey], pageData[i][compareKey])) {
+								return pageData[i];
+							}
+						}
+
+						return null;
+					};
+
+					// 用于在加载数据之后进行一些处理：选中/取消选中/设置不能选择/设置可选中项 .etc.
+					var fnAfterGetPageData = function(pageData) {
+						var gridApi = options.gridApi,
+							selectedItems = options.gridUserOptions.selectedItems,
+							selectedItem = null;
+						if(angular.isDefined(gridApi.selection) && angular.isDefined(selectedItems)) {
+							$timeout(function() {
+								for(var i=0,iLen=selectedItems.length; i<iLen; i++) {
+									selectedItem = getSelectedItem(selectedItems[i], pageData);
+									if(!angular.equals(selectedItem, null)) {
+										gridApi.selection.selectRow(selectedItem);
+									}
+								}
+							})
+						}
 					};
 
 					this._getPageDataByParams = function(params) {
@@ -207,6 +252,8 @@
 											});
 
 											options.gridOptions.data = options.pageData;
+
+											fnAfterGetPageData(options.pageData);
 										}
 									}, function(msg) {
 										console.error(msg);
@@ -245,6 +292,8 @@
 												options.paginationOptions.totalItems = gridData.length;
 
 												options.gridOptions.data = options.pageData;
+
+												fnAfterGetPageData(options.pageData);
 											}
 										}, function(msg) {
 											console.error(msg);
@@ -269,6 +318,8 @@
 
 									options.paginationOptions.currentPage = page;
 									options.paginationOptions.totalItems = options.allData.length;
+
+									fnAfterGetPageData(options.pageData);
 								}
 							}
 
@@ -290,6 +341,8 @@
 											});
 
 											options.gridOptions.data = options.pageData;
+
+											fnAfterGetPageData(options.pageData);
 										}
 									}, function(msg) {
 										console.error(msg);
@@ -304,6 +357,8 @@
 								});
 
 								options.gridOptions.data = options.pageData;
+
+								fnAfterGetPageData(options.pageData);
 							}
 						}		
 					}
@@ -569,15 +624,53 @@
 								// row select 触发方法
 								var gridInstance = options.conowGridInstance,
 									selectMode = options.selectMode,
-									selectedRows = [];
+									selectedGridRows = [],
+									selectedRows = [],
+									unSelectedGridRows = [],
+									unSelectedRows = [];
 
-								gridApi.selection.on.rowSelectionChanged($scope, function(row) {
-									selectedRows = options.gridApi.selection.getSelectedRows();
+								gridApi.selection.on.rowSelectionChanged($scope, function(gridRows) {
+									selectedRows = [];
+									unSelectedRows = [];
+									// selectedRows = options.gridApi.selection.getSelectedRows();
+									 
+									// selectedGridRows = gridRows.filter(function(item) {
+									// 	return item.isSelected === true;
+									// });
+									// selectedRow = [];
+									// unSelectedGridRows = gridRows.filter(function(item) {
+									// 	return item.isSelected === false;
+									// });
+									// unSelectedRows = [];
+
+									// angular.forEach(unSelectedGridRows, function(value, index) {
+									// 	if(value.entity) {
+									// 		unSelectedRows.push(value.entity);
+									// 	}
+									// });
+
+									// selectedRows = angular.forEach(selectedGridRows, function(value, index) {
+									// 	if(value.entity) {
+									// 		selectedRows.push(value.entity);
+									// 	}
+									// });
+									
+									if(gridRows.isSelected) {
+										selectedRows.push(gridRows.entity);
+									} else {
+										unSelectedRows.push(gridRows.entity);
+									}
 
 									if(angular.equals(selectMode, 'single')) {
 										gridInstance.setSelectedItems(selectedRows);
 									} else if(angular.equals(selectMode, 'multiply')) {
-										gridInstance.addSelectedItems(selectedRows);
+										// gridInstance.addSelectedItems(selectedRows);
+										if(selectedRows.length > 0) {
+											gridInstance.addSelectedItems(selectedRows);
+										}
+										if(unSelectedRows.length > 0) {
+											gridInstance.removeSelectedItems(unSelectedRows);
+										}
 									} else {
 										// other mode 
 									}
@@ -585,13 +678,39 @@
 
 								// all select 触发方法
 								gridApi.selection.on.rowSelectionChangedBatch($scope, function(gridRows) {
-									angular.forEach(gridRows, function(value, index) {
+									// angular.forEach(gridRows, function(value, index) {
+									// 	if(value.entity) {
+									// 		selectedRows.push(value.entity);
+									// 	}
+									// });
+									selectedGridRows = gridRows.filter(function(item) {
+										return item.isSelected === true;
+									});
+									selectedRows = [];
+									unSelectedGridRows = gridRows.filter(function(item) {
+										return item.isSelected === false;
+									});
+									unSelectedRows = [];
+
+									angular.forEach(unSelectedGridRows, function(value, index) {
+										if(value.entity) {
+											unSelectedRows.push(value.entity);
+										}
+									});
+
+									// selectedRows = options.gridApi.selection.getSelectedRows();
+									angular.forEach(selectedGridRows, function(value, index) {
 										if(value.entity) {
 											selectedRows.push(value.entity);
 										}
 									});
 
-									gridInstance.addSelectedItems(selectedRows);
+									if(selectedRows.length > 0) {
+										gridInstance.addSelectedItems(selectedRows);
+									}
+									if(unSelectedRows.length > 0) {
+										gridInstance.removeSelectedItems(unSelectedRows);
+									}
 								});
 							}
 						};
@@ -669,6 +788,21 @@
 					self = this,
 					scope = null;
 
+				var indexInArr = function(obj, arr) {
+					var i = 0,
+						iLen = arr.length,
+						index = -1;
+
+					for(; i<iLen; i++) {
+						if(angular.equals(obj, arr[i])) {
+							index = i;
+							break;
+						}
+					}
+
+					return index;
+				};
+
 				/**
 				 * default options setting goes here
 				 * */
@@ -703,7 +837,35 @@
 				 * add table selected items
 				 */
 				this.addSelectedItems = function(_selectedRows) {
-					selectedRows = selectedRows.concat(_selectedRows);
+					var index = -1;
+					for(var i=0, iLen=_selectedRows.length; i<iLen; i++) {
+						index = indexInArr(_selectedRows[i], selectedRows);
+
+						if(indexInArr(_selectedRows[i], selectedRows) === -1) {
+							selectedRows.push(_selectedRows[i]);
+						}
+					}
+				};
+
+				/**
+				 * remove selected items from table
+				 */
+				this.removeSelectedItems = function(_unSelectedRows) {
+					var index = -1;
+					for(var i=0, iLen=_unSelectedRows.length; i<iLen; i++) {
+						index = indexInArr(_unSelectedRows[i], selectedRows);
+
+						if(index > -1) {
+							selectedRows.splice(index, 1);
+						}
+					}
+				};
+
+				/**
+				 * clear table selected items
+				 */
+				this.clearSelectedItems = function() {
+					selectedRows = [];
 				};
 
 				/**

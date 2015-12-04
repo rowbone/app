@@ -12,7 +12,7 @@
 	<conow-block-form>
 		<conow-block-group title="组件演示" is-pulldown="true" is-open="true">
 		
-			<conow-block class="padder-md">
+			<conow-block class="">
 				<div ng-controller="conowGridDemoCtrl">
 				
     				<!-- <div class="conow-grid-button-group">
@@ -51,7 +51,7 @@
 		
 		<conow-block-group title="组件演示-不用分页" is-pulldown="true" is-open="true">
 
-			<conow-block class="padder-md">
+			<conow-block class="">
 				<div ng-controller="conowGridDemoCtrl2">
 					
 					<div class="hbox" class="m-t-xs">					
@@ -120,7 +120,7 @@
 								<li>绑定示例：<code>&lt;a class="" ng-click="grid.appScope.setting(row)"&gt;&lt;i class="ci-set"&gt;&lt;/i&gt;&lt;/a&gt;</code></li>
 								<li>grid.appScope 是指令内部对业务 controller的引用</li>
 								<li>setting 是业务controller中的方法</li>
-								<li>方法内部可传入对应行的引用 row</li>
+								<li>方法内部可传入对应行的引用 row(要获取对应行的数据，必须使用 row.entity)</li>
 							</ul>
 						</li>
 						<li>数据重载(表格数据刷新)
@@ -136,6 +136,9 @@
 	&lt;/div&gt;	
 &lt;/div&gt;
 </pre>
+						</li>
+						<li>获取选中值
+							<code>$scope.gridOptions1.conowGridInstance.getSelectedItems()</code>
 						</li>
 					</ol>
 				</div>
