@@ -115,7 +115,8 @@
 							adSearch = null,
 							page = null,
 							pagesize = null,
-							forceReload = false;
+							forceReload = false,
+							urlParams = null;
 
 						dataLoadParams = angular.isUndefined(dataLoadParams) ? {} : dataLoadParams;
 
@@ -175,6 +176,12 @@
 							tmpParams.pagesize = pagesize;
 						}
 
+						// urlParams
+						urlParams = options.gridUserOptions.urlParams;
+						if(angular.isDefined(urlParams)) {
+							angular.extend(tmpParams, urlParams);
+						}
+
 						// forceReload
 						forceReload = dataLoadParams.forceReload;
 						tmpParams.forceReload = angular.isDefined(forceReload) ? forceReload : false;
@@ -182,18 +189,34 @@
 						// others params
 
 						// Don't use dataLoadParams for extending because of irrelevent params
-						if(options.isPagination && options.isServerPage) {
-							params = angular.extend({}, options.dataLoadDefaultParams, tmpParams);
-						}
+						params = angular.extend({}, options.dataLoadDefaultParams, tmpParams);
 
 						return params;
+					};
+
+					// 发送后台请求前，去掉多余的参数
+					var removeNeedlessParams = function() {
+						var params = Array.prototype.slice.call(arguments),
+							backendParams = params[0],
+							needlessParams = params.slice(1),
+							defaultNeedlessParams = ['forceReload'];
+
+						needlessParams = defaultNeedlessParams.concat(needlessParams);
+
+						angular.forEach(needlessParams, function(value) {
+							if(angular.isDefined(backendParams[value])) {
+								delete backendParams[value];
+							}
+						});
+
+						return backendParams;
 					};
 
 					// 因为当前页的数据会在加载后添加 'sequence'等属性，所以这里通过 'compareKey' 字段进行比较，相同则返回对应项用于选中
 					var getSelectedItem = function(item, pageData) {
 						var i = 0,
 							iLen = pageData.length,
-							compareKey = 'ID';
+							compareKey = options.gridUserOptions.compareKey || 'ID';
 
 						for(; i<iLen; i++) {
 							if(angular.equals(item[compareKey], pageData[i][compareKey])) {
@@ -211,7 +234,7 @@
 							selectedItem = null;
 						if(angular.isDefined(gridApi.selection) && angular.isDefined(selectedItems)) {
 							$timeout(function() {
-								for(var i=0,iLen=selectedItems.length; i<iLen; i++) {
+								for(var i=0, iLen=selectedItems.length; i<iLen; i++) {
 									selectedItem = getSelectedItem(selectedItems[i], pageData);
 									if(!angular.equals(selectedItem, null)) {
 										gridApi.selection.selectRow(selectedItem);
@@ -229,7 +252,9 @@
 						if (options.isPagination) {
 
 							// options.isServerPage === true
-							if(options.isServerPage) {															
+							if(options.isServerPage) {
+								params = removeNeedlessParams(params);							
+
 								DataService.postData(options.gridUserOptions.url, { 'type': 'advSearch', 'params': params })
 									.then(function(data) {
 										if(data) {
@@ -264,6 +289,8 @@
 								// options.isServerPage === false
 								var spliceStart = 0;
 								if(params.forceReload || options.allData.length === 0) {
+									params = removeNeedlessParams(params, 'page', 'pagesize');
+
 									DataService.postData(options.gridUserOptions.url, { 'type': 'advSearch', 'params': params })
 										.then(function(data) {
 											if(data) {
@@ -326,6 +353,8 @@
 						} else {
 							// options.isPagination === false
 							if(params.forceReload || options.allData.length === 0) {
+								params = removeNeedlessParams(params, 'page', 'pagesize');
+
 								DataService.postData(options.gridUserOptions.url, { 'type': 'advSearch', 'params': params })
 									.then(function(data) {
 										if(data) {
@@ -372,9 +401,9 @@
 					 * @param:dataLoadParams - 每次进行相应操作会触发的加载参数，包括 "adSearch", "sortColumns", "page & pagesize", ...					 * 
 					 */
 					this._getPageData = function(dataLoadParams) {
-						var params = self._getAllDataLoadParams(dataLoadParams);
-						
-						var loadFlag = true;
+						var params = self._getAllDataLoadParams(dataLoadParams),
+							loadFlag = true;
+
 						angular.forEach(options.loadFlags, function(value, key) {
 							if(value === false) {
 								loadFlag = false;
