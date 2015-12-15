@@ -81,8 +81,10 @@
 								default: 
 									// todo:这里仅对单个字段模糊搜索进行处理，涉及到 range/object/array 类型的数据，没有进行处理
 									// @20151127
-									filterParams = $scope.$eval('{"' + key + '": "' + value + '"}');
-									dataSrc = $filter('filter')(dataSrc, filterParams);
+									if(angular.isDefined(value)) {
+										filterParams = $scope.$eval('{"' + key + '": "' + value + '"}');
+										dataSrc = $filter('filter')(dataSrc, filterParams);
+									}
 									break;
 							}
 						});
@@ -326,11 +328,14 @@
 											console.error(msg);
 										});										
 								} else {
+									var filteredData = [];
+									
 									page = params.page || options.dataLoadDefaultParams.page;
 									pagesize = params.pagesize || options.dataLoadDefaultParams.pagesize;
 									options.pageData = angular.copy(options.allData);
 
 									options.pageData = paramsManager(options.pageData, params);
+									filteredData = angular.copy(options.pageData);
 									if(page > 1) {
 										spliceStart = (page - 1) * pagesize;
 									}
@@ -344,7 +349,7 @@
 									options.gridOptions.data = options.pageData;
 
 									options.paginationOptions.currentPage = page;
-									options.paginationOptions.totalItems = options.allData.length;
+									options.paginationOptions.totalItems = filteredData.length;
 
 									fnAfterGetPageData(options.pageData);
 								}

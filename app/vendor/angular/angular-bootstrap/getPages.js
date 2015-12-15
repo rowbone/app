@@ -2,58 +2,54 @@
 function getPages(currentPage, totalPages) {
 	var pages = [],
 		page = null, 
-		startPage = 1,
-		endPage = totalPages,
-		isMaxSized = (angular.isDefined(maxSize) && maxSize < totalPages),
-		middlePagesCount = 0,
-		maxMiddlePagesCount = 0;
+		startPage = 1, 
+		endPage = totalPages, 
+		middlePagesCount = 0,		// 除去第一页和最后一页的页码数量
+		isMaxSized = (angular.isDefined(maxSize) && maxSize < totalPages), 
+		pageNumber = 1, 
+		pageText = 1;
 
 	// Add page number links
 	if(angular.isDefined(maxSize)) {
 		if(maxSize >= totalPages) {
-			for(var i=startPage; i<totalPages; i++) {
+			for(var i=startPage; i<=totalPages; i++) {
 				page = makePage(i, i, i === currentPage);
 				pages.push(page);
 			}
 		// 需要显示省略号的情况
 		} else {
 			middlePagesCount = maxSize - 2;
-			// 后面显示一个省略号	startPage + 1/startPage + 2/...
-			if(currentPage - startPage <= 4) {
-				page = makePage(startPage + 1, startPage + 1, (startPage + 1) === currentPage);
-				pages.push(page);
-				page = makePage(startPage + 2, startPage + 2, (startPage + 2) === currentPage);
-				pages.push(page);
-				page = makePage(startPage + 3, startPage + 3, (startPage + 3) === currentPage);
-				pages.push(page);
-				page = makePage(startPage + 4, startPage + 4, (startPage + 4) === currentPage);
-				pages.push(page);
-				page = makePage(startPage + 5, '...', (startPage + 5) === currentPage);
-				pages.push(page);
-			// 前面显示一个省略号 .../endPage - 2/ endPage - 1
-			} else if(totalPages - currentPage <= 4) {
-				page = makePage(endPage - 5, '...', (endPage - 5) === currentPage);
-				pages.push(page);
-				page = makePage(endPage - 4, endPage - 4, (endPage - 4) === currentPage);
-				pages.push(page);
-				page = makePage(endPage - 3, endPage - 3, (endPage - 3) === currentPage);
-				pages.push(page);
-				page = makePage(endPage - 2, endPage - 2, (endPage - 2) === currentPage);
-				pages.push(page);
-				page = makePage(endPage - 1, endPage - 1, (endPage - 1) === currentPage);
-				pages.push(page);
-			// 显示两个省略号	currentPage - 1/currentPage/currentPage + 1
+			// 后面显示一个省略号
+			if((currentPage - startPage) <= (middlePagesCount - 2)) {
+				for(var i=1; i<=middlePagesCount; i++) {
+					pageNumber = startPage + i;
+					pageText = (i === middlePagesCount) ? '...' : pageNumber;
+
+					page = makePage(pageNumber, pageText, pageNumber === currentPage);
+					pages.push(page);
+				}
+			// 前面显示一个省略号
+			} else if((totalPages - currentPage) <= (middlePagesCount - 2)) {
+				for(var i=middlePagesCount; i>=1; i--) {
+					pageNumber = endPage - i;
+					pageText = (i === middlePagesCount) ? '...' : pageNumber;
+					page = makePage(pageNumber, pageText, pageNumber === currentPage);
+					pages.push(page);
+				}
+			// 显示两个省略号
 			} else {
-				page = makePage(currentPage - 2, '...', false);
-				pages.push(page);
-				page = makePage(currentPage - 1, currentPage - 1, false);
-				pages.push(page);
-				page = makePage(currentPage, currentPage, true);
-				pages.push(page);
-				page = makePage(currentPage + 1, currentPage + 1, false);
-				pages.push(page);
-				page = makePage(currentPage + 2, '...', false);
-				pages.push(page);
+				var middleLeft = Math.floor(middlePagesCount / 2);
+				var min = currentPage - middleLeft;
+    			var max = min + middlePagesCount;
+    			// if(middlePagesCount % 2) {
+    			// 	max = max + 1;
+    			// }
+				for(var i = min; i < max; i++) {
+					pageNumber = i;
+					pageText = ((i === min) || (i === max -1)) ? '...' : pageNumber;
+					page = makePage(pageNumber, pageText, pageNumber === currentPage);
+					pages.push(page);
+				}
 			}
 			var firstPageSet = makePage(startPage, startPage, startPage === currentPage);
 			var lastPageSet = makePage(endPage, endPage, endPage === currentPage);
