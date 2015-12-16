@@ -1445,10 +1445,16 @@
                         headerTemplate = angular.element(document.createElement('thead')).attr('ng-include', 'templates.header');
                         $element.prepend(headerTemplate);
                     }
+                    // var paginationTemplate = angular.element(document.createElement('div')).attr({
+                    //     'ng-table-pagination': 'params',
+                    //     'template-url': 'templates.pagination'
+                    // });
                     var paginationTemplate = angular.element(document.createElement('div')).attr({
-                        'ng-table-pagination': 'params',
-                        'template-url': 'templates.pagination'
+                        'conow-pagination': '{ totalItems: 23 }'
                     });
+                    // var paginationTemplate = '<div conow-pagination="{ totalItems: 42 }"></div>';
+                    $element.after(angular.element('<div>{{params}}</div>'));
+
                     $element.after(paginationTemplate);
                     if (headerTemplate) {
                         $compile(headerTemplate)($scope);
