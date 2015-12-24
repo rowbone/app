@@ -770,6 +770,34 @@
 
 					var vm = scope.vm,
 						options = scope.options;
+					var $content = angular.element('.conow-grid-operation');
+
+					// function getContentBodyWidth() {
+					// 	return $content.width();
+					// }
+
+					// $(window).resize(function(event) {
+					// 	console.log('resizing...');
+					// });
+
+					// scope.$watch(getContentBodyWidth, function(newVal, oldVal) {
+					// 	$timeout(function() {
+					// 		console.log('js trigger resize')
+					// 		$(window).resize();
+					// 	})
+					// });
+					scope.$on('conow-grid-switch-aside', function(data) {
+						console.log('conow-grid-switch-aside');
+						$timeout(function() {
+							if(data.asideFolded) {
+								$('.grid-instance').width($('.grid-instance').width() - 10);
+							} else {
+								$('.grid-instance').width($('.grid-instance').width() + 1);
+							}
+							
+							$(window).resize();
+						})
+					})
 
 					//
 					scope.getSelectedRows = function() {

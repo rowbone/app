@@ -1128,7 +1128,9 @@
             // };
 
             $scope.$watch('vm.searchKey', function(newVal, oldVal) {
-              $scope.params.reload();
+                if(angular.isDefined(newVal)) {
+                    $scope.params.reload();
+                }              
             })
 
             // controlParams to store some parameters for ng-table control, show etc.
@@ -1391,14 +1393,14 @@
 
             this.compileDirectiveTemplates = function () {
 
-                if (!$element.hasClass('ng-table')) {
+                if (!$element.hasClass('ng-table conow-grid')) {
                     $scope.templates = {
                         search: 'ng-table/search.html',
                         header: ($attrs.templateHeader ? $attrs.templateHeader : 'ng-table/header.html'),
                         pagination: ($attrs.templatePagination ? $attrs.templatePagination : 'ng-table/pager.html'),
                         noDataTip: 'ng-table/noDataTip.html'
                     };
-                    $element.addClass('ng-table');
+                    $element.addClass('ng-table conow-grid');
 
                     // $element.wrap('<div class="ng-table-container" width="500"></div>');
 
@@ -1447,13 +1449,13 @@
                     }
                     // var paginationTemplate = angular.element(document.createElement('div')).attr({
                     //     'ng-table-pagination': 'params',
-                    //     'template-url': 'templates.pagination'
+                    //     'template-url': 'templates.pagination','attr1': 'params'
                     // });
+                    //                 
                     var paginationTemplate = angular.element(document.createElement('div')).attr({
-                        'conow-pagination': '{ totalItems: 23 }'
+                        'conow-pagination': 'params.paginationParams',
+                        'ng-if': 'params.settings().$loading === false'
                     });
-                    // var paginationTemplate = '<div conow-pagination="{ totalItems: 42 }"></div>';
-                    $element.after(angular.element('<div>{{params}}</div>'));
 
                     $element.after(paginationTemplate);
                     if (headerTemplate) {
@@ -1468,7 +1470,7 @@
                     // shows message when there is no data: ends
 
                     if($element.hasClass('horizontal-scroll')) {
-                    	$element.wrap('<div class="ng-table-container"></div>') ;
+                        $element.wrap('<div class="ng-table-container"></div>') ;
                     }                    
                 }
             };
@@ -1538,6 +1540,23 @@
                     $scope.paramsModel = tableParamsGetter;
                     $scope.params = params;
                 }), false);
+
+                $scope.$watch('params', function(newVal, oldVal) {
+                    if(angular.isUndefined($scope.params.paginationParams)) {
+                        $scope.params.paginationParams = {
+                            page: 1,
+                            pagesize: 10,
+                            totalItems: 0
+                        };
+                    }
+                    if(angular.isDefined(newVal)) {
+                        $scope.params.paginationParams.onChangeFn = function(pageInfo) {
+                            $scope.params.paginationParams.page = pageInfo.page;
+                            newVal.page(pageInfo.page);
+                        };
+                        $scope.params.paginationParams.totalItems = newVal.total();
+                    }
+                }, true);
 
                 if ($attrs.showFilter) {
                     $scope.$parent.$watch($attrs.showFilter, function(value) {
@@ -2195,7 +2214,7 @@ angular.module('ngTable').run(['$templateCache', function ($templateCache) {
   $templateCache.put('ng-table/filters/text.html', '<input type="text" name="{{name}}" ng-disabled="$filterRow.disabled" ng-model="params.filter()[name]" class="input-filter form-control" placeholder="{{getFilterPlaceholderValue(filter, name)}}"/> ');
   $templateCache.put('ng-table/header.html', '<ng-table-sorter-row></ng-table-sorter-row> <ng-table-filter-row></ng-table-filter-row> ');
   $templateCache.put('ng-table/pager.html', 
-    '<div class="ng-cloak ng-table-pager text-center" ng-if="params.data.length">' + 
+    '<div>{{ params.data.length }}</div><div class="ng-cloak ng-table-pager text-center" ng-if="params.data.length">' + 
         '<div ng-if="params.settings().counts.length" class="ng-table-counts btn-group pull-right">' + 
             '<button ng-repeat="count in params.settings().counts" type="button" ng-class="{\'active\':params.count()==count}" ng-click="params.count(count)" class="btn btn-default">' + 
                 '<span ng-bind="count"></span>' + 
@@ -2222,7 +2241,7 @@ angular.module('ngTable').run(['$templateCache', function ($templateCache) {
             '</li>' + 
         '</ul>' + 
     '</div> ');
-  $templateCache.put('ng-table/sorterRow.html', '<tr> <th title="{{$column.headerTitle(this)}}" ng-repeat="$column in $columns" ng-class="{ \'sortable\': $column.sortable(this), \'sort-asc\': params.sorting()[$column.sortable(this)]==\'asc\', \'sort-desc\': params.sorting()[$column.sortable(this)]==\'desc\' }" ng-click="sortBy($column, $event)" ng-if="$column.show(this)" ng-init="template=$column.headerTemplateURL(this)" class="header {{$column.class(this)}}"> <div ng-if="!template" class="ng-table-header" ng-class="{\'sort-indicator\': params.settings().sortingIndicator==\'div\'}"> <span ng-bind="$column.title(this)" ng-class="{\'sort-indicator\': params.settings().sortingIndicator==\'span\'}" class="font-normal"></span> </div> <div ng-if="template" ng-include="template"></div> </th> </tr> ');
+  $templateCache.put('ng-table/sorterRow.html', '<tr class="conow-grid-header"> <th title="{{$column.headerTitle(this)}}" ng-repeat="$column in $columns" ng-class="{ \'sortable\': $column.sortable(this), \'sort-asc\': params.sorting()[$column.sortable(this)]==\'asc\', \'sort-desc\': params.sorting()[$column.sortable(this)]==\'desc\' }" ng-click="sortBy($column, $event)" ng-if="$column.show(this)" ng-init="template=$column.headerTemplateURL(this)" class="conow-grid-header-item {{$column.class(this)}}"> <div ng-if="!template" class="ng-table-header" ng-class="{\'sort-indicator\': params.settings().sortingIndicator==\'div\'}"> <span ng-bind="$column.title(this)" ng-class="{\'sort-indicator\': params.settings().sortingIndicator==\'span\'}"></span> </div> <div ng-if="template" ng-include="template"></div> </th> </tr> ');
   $templateCache.put('ng-table/noDataTip.html', '<td ng-if="params.settings().$loading === false && params.settings().total == 0 && params.data.length == 0" colspan="{{ :: $columns.length }}" ng-bind="controlParams.noDataTip"></td>' + 
               '<td ng-if="params.settings().$loading === true" colspan="{{ :: $columns.length }}"><i class="fa fa-spin fa-spinner"></i>加载中...</td>');
   $templateCache.put('ng-table/search.html', '<input type="text" class="form-control" placeholder="请输入关键字进行搜索" ng-table-search="vm" ng-model="vm.searchKey" ng-keyup="searchTrigger($event)">');
