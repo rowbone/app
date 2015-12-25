@@ -27,6 +27,7 @@
 					var self = this,
 						vm = $scope.vm = {},
 						options = $scope.options = {
+							isJsonSrc: false,
 							isServerPage: true,
 							isPagination: true,
 							isAllowSelection: true,
@@ -249,6 +250,10 @@
 					this._getPageDataByParams = function(params) {
 						var page = null,
 							pagesize = null;
+
+						if(options.isJsonSrc) {
+							
+						}
 						
 						// options.isPagination === true
 						if (options.isPagination) {
@@ -448,8 +453,15 @@
 
 						// ----- isPagination & isServerPage starts -----
 						var isPagination = options.gridUserOptions.isPagination,
-							isServerPage = options.gridUserOptions.isServerPage;
+							isServerPage = options.gridUserOptions.isServerPage,
+							url = options.gridUserOptions.url,
+							json = options.gridUserOptions.json;
 
+						if(angular.isUndefined(url) && angular.isArray(json)) {
+							options.isJsonSrc = true;
+						} else {
+							options.isJsonSrc = false;
+						}
 						if(angular.isDefined(isPagination) && angular.equals(isPagination, false)) {
 							options.isPagination = false;
 							options.isServerPage = false;
@@ -786,18 +798,18 @@
 					// 		$(window).resize();
 					// 	})
 					// });
-					scope.$on('conow-grid-switch-aside', function(data) {
-						console.log('conow-grid-switch-aside');
-						$timeout(function() {
-							if(data.asideFolded) {
-								$('.grid-instance').width($('.grid-instance').width() - 10);
-							} else {
-								$('.grid-instance').width($('.grid-instance').width() + 1);
-							}
-							
-							$(window).resize();
-						})
-					})
+//					scope.$on('conow-grid-switch-aside', function(data) {
+//						console.log('conow-grid-switch-aside');
+//						$timeout(function() {
+//							if(data.asideFolded) {
+//								$('.grid-instance').width($('.grid-instance').width() - 10);
+//							} else {
+//								$('.grid-instance').width($('.grid-instance').width() + 1);
+//							}
+//							
+//							$(window).resize();
+//						})
+//					})
 
 					//
 					scope.getSelectedRows = function() {
