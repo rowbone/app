@@ -1552,8 +1552,11 @@
                     if(angular.isDefined(newVal)) {
                         $scope.params.paginationParams.onChangeFn = function(pageInfo) {
                             $scope.params.paginationParams.page = pageInfo.page;
+                            $scope.params.paginationParams.currentPage = pageInfo.page;
                             newVal.page(pageInfo.page);
                         };
+                        $scope.params.paginationParams.pagesize = newVal.parameters().count;
+                        $scope.params.paginationParams.pageSize = newVal.parameters().count;
                         $scope.params.paginationParams.totalItems = newVal.total();
                     }
                 }, true);

@@ -3334,6 +3334,12 @@ function uiGridDirective($compile, $templateCache, $timeout, $window, gridUtil, 
               grid.refreshCanvas(true);
             });
 
+            $scope.$on('uiGridResize', function(data) {
+              $timeout(function() {
+                gridResize();
+              })
+            })
+
             // If we add a right container after render, we need to watch and react
             $scope.$watch(function () { return grid.hasRightContainer();}, function (newValue, oldValue) {
               if (newValue === oldValue) {
@@ -8681,7 +8687,6 @@ angular.module('ui.grid')
     styles['overflow-x'] = self.hasHScrollbar ? 'auto' : 'hidden';
 //    styles['overflow-y'] = self.hasVScrollbar ? 'scroll' : 'hidden';
     styles['overflow-y'] = 'auto';
-
 
     return styles;
 

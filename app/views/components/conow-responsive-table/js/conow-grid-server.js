@@ -4,13 +4,12 @@
 	/**
 	 * todo:
 	 * 1.隐藏列：现在通过设置cellClass,headerCellClass可以做到隐藏，但是table大小不会改变需要做一个resize		@徐金奖
-	 * 2.筛选地区选择的问题。选择的时候页面需要显示名称，发送到后台需要地区的code		@周生伟
-	 * 3.加载数据时显示正在加载中
+	 * 2.加载数据时显示正在加载中
 	 * */
 	var app = angular.module('conowGrid', []);
 
-	app.directive('conowGrid', ['conowGridClass', '$filter', 'DataService', '$http', '$compile', '$rootScope', 'i18nService', '$timeout', 
-		function(conowGridClass, $filter, DataService, $http, $compile, $rootScope, i18nService, $timeout) {
+	app.directive('conowGrid', ['conowGridClass', '$filter', 'DataService', '$http', '$compile', '$rootScope', 'i18nService', '$timeout', '$controller', 
+		function(conowGridClass, $filter, DataService, $http, $compile, $rootScope, i18nService, $timeout, $controller) {
 			return {
 				restrict: 'A',
 				// template: '<div id="grid1" ui-grid="vm.gridOptions" class="grid"></div>',
@@ -180,9 +179,9 @@
 						}
 
 						// urlParams
-						urlParams = options.gridUserOptions.urlParams;
+						urlParams = angular.copy(options.gridUserOptions.urlParams);
 						if(angular.isDefined(urlParams)) {
-							angular.extend(tmpParams, urlParams);
+							tmpParams = angular.extend(urlParams, tmpParams);
 						}
 
 						// forceReload
@@ -235,7 +234,7 @@
 						var gridApi = options.gridApi,
 							selectedItems = options.gridUserOptions.selectedItems,
 							selectedItem = null;
-						if(angular.isDefined(gridApi.selection) && angular.isDefined(selectedItems)) {
+						if(angular.isDefined(gridApi) && angular.isDefined(gridApi.selection) && angular.isDefined(selectedItems)) {
 							$timeout(function() {
 								for(var i=0, iLen=selectedItems.length; i<iLen; i++) {
 									selectedItem = getSelectedItem(selectedItems[i], pageData);
@@ -247,14 +246,67 @@
 						}
 					};
 
-					this._getPageDataByParams = function(params) {
-						var page = null,
-							pagesize = null;
+					// 前台分页方法
+					function fePaginationFn(params) {
+						var sliceStart = 0,
+							filteredData = [],
+							page = null,
+							pagesize = null;;
 
-						if(options.isJsonSrc) {
-							
+						page = params.page || options.dataLoadDefaultParams.page;
+						pagesize = params.pagesize || options.dataLoadDefaultParams.pagesize;
+						options.pageData = angular.copy(options.allData);
+
+						options.pageData = paramsManager(options.pageData, params);
+						filteredData = angular.copy(options.pageData);
+						if(page > 1) {
+							sliceStart = (page - 1) * pagesize;
 						}
-						
+						options.pageData = options.pageData.slice(sliceStart, sliceStart + pagesize);
+
+						// add sequence for every piece of pageData
+						options.pageData.forEach(function(row, index) {
+							row.sequence = ((page - 1) * pagesize) + (index + 1);
+						});
+
+						options.gridOptions.data = options.pageData;
+
+						options.paginationOptions.currentPage = page;
+						options.paginationOptions.totalItems = filteredData.length;
+					}
+
+					// 没有分页方法
+					function noPaginationFn() {
+						options.pageData = angular.copy(options.allData);
+						options.pageData = paramsManager(options.pageData, params);
+
+						// add sequence for every piece of data
+						options.pageData.forEach(function(row, index) {
+							row.sequence = index + 1;
+						});
+
+						options.gridOptions.data = options.pageData;
+					}
+
+					this._getPageDataByParams = function(params) {						
+						if(options.isJsonSrc) {
+							// 数据源为 json 数据
+							if(angular.isUndefined(options.gridUserOptions.json)) {
+								return false;
+							}
+							options.allData = options.gridUserOptions.json;
+							if(options.isPagination) {
+								fePaginationFn(params);
+
+								fnAfterGetPageData(options.pageData);
+							} else {
+								noPaginationFn();
+
+								fnAfterGetPageData(options.pageData);
+							}
+
+							return true;
+						}
 						// options.isPagination === true
 						if (options.isPagination) {
 
@@ -294,7 +346,7 @@
 							} else {
 
 								// options.isServerPage === false
-								var spliceStart = 0;
+								var sliceStart = 0;
 								if(params.forceReload || options.allData.length === 0) {
 									params = removeNeedlessParams(params, 'page', 'pagesize');
 
@@ -313,9 +365,9 @@
 												page = params.page || options.dataLoadDefaultParams.page;
 												pagesize = params.pagesize || options.dataLoadDefaultParams.pagesize;
 												if(page > 1) {
-													spliceStart = (page - 1) * pagesize;
+													sliceStart = (page - 1) * pagesize;
 												}
-												options.pageData = gridData.slice(spliceStart, spliceStart + pagesize);
+												options.pageData = gridData.slice(sliceStart, sliceStart + pagesize);
 												// data.pageInfo = (angular.isDefined(data.pageInfo) && !angular.equals(data.pageInfo, null)) ? data.pageInfo : pageInfo;											
 
 												// add sequence for every piece of pageData
@@ -333,28 +385,7 @@
 											console.error(msg);
 										});										
 								} else {
-									var filteredData = [];
-									
-									page = params.page || options.dataLoadDefaultParams.page;
-									pagesize = params.pagesize || options.dataLoadDefaultParams.pagesize;
-									options.pageData = angular.copy(options.allData);
-
-									options.pageData = paramsManager(options.pageData, params);
-									filteredData = angular.copy(options.pageData);
-									if(page > 1) {
-										spliceStart = (page - 1) * pagesize;
-									}
-									options.pageData = options.pageData.slice(spliceStart, spliceStart + pagesize);
-
-									// add sequence for every piece of pageData
-									options.pageData.forEach(function(row, index) {
-										row.sequence = ((page - 1) * pagesize) + (index + 1);
-									});
-
-									options.gridOptions.data = options.pageData;
-
-									options.paginationOptions.currentPage = page;
-									options.paginationOptions.totalItems = filteredData.length;
+									fePaginationFn(params);
 
 									fnAfterGetPageData(options.pageData);
 								}
@@ -387,15 +418,7 @@
 										console.error(msg);
 									});
 							} else {
-								options.pageData = angular.copy(options.allData);
-								options.pageData = paramsManager(options.pageData, params);
-
-								// add sequence for every piece of data
-								options.pageData.forEach(function(row, index) {
-									row.sequence = index + 1;
-								});
-
-								options.gridOptions.data = options.pageData;
+								noPaginationFn();
 
 								fnAfterGetPageData(options.pageData);
 							}
@@ -441,6 +464,11 @@
 						// gridUserOptions for 'user config options'
 						options.gridUserOptions = $scope.getGridUserOptions();
 
+						// $watch to make sure json-data if it is async
+						// $scope.$watch('options.gridUserOptions.json', function(newVal, oldVal) {
+						// 	self._getPageData();
+						// });
+
 						// conowGridClass instance to hold default class and some public methods
 						options.conowGridInstance = new conowGridClass();
 						// 业务controller的配置参数中也持有当前 conowGridInstance，以提供操作的方法	@20151110
@@ -448,6 +476,7 @@
 						$scope.conowGridInstance = options.conowGridInstance;
 						// conowGrid Service 实例中持有当前 $scope
 						options.conowGridInstance.setScope($scope);
+						options.businessCtrl = $scope.$parent.$parent;
 
 						options.gridDefaultOptions = options.conowGridInstance.getDefaultOptions();
 
@@ -457,17 +486,19 @@
 							url = options.gridUserOptions.url,
 							json = options.gridUserOptions.json;
 
-						if(angular.isUndefined(url) && angular.isArray(json)) {
-							options.isJsonSrc = true;
-						} else {
-							options.isJsonSrc = false;
-						}
 						if(angular.isDefined(isPagination) && angular.equals(isPagination, false)) {
 							options.isPagination = false;
 							options.isServerPage = false;
 						} else if(angular.isDefined(isServerPage) && angular.equals(isServerPage, false)) {
 							options.isServerPage = false;
 						}
+
+						if(angular.isUndefined(url) && angular.isArray(json)) {
+							options.isJsonSrc = true;
+							options.isServerPage = false;
+						} else {
+							options.isJsonSrc = false;
+						};
 						// ----- isPagination & isServerPage ends -----
 
 						// gridInitOptions for 'get config options in initialization'
@@ -612,11 +643,11 @@
 						} else {
 							options.isAllowSelection = true;
 							tmpOptions = {
-								enableFullRowSelection: false,
-								enableRowHeaderSelection: true,
 								enableRowSelection: true,
-								multiSelect: true,
-								enableSelectAll: true
+								enableSelectAll: true,
+								enableRowHeaderSelection: true,
+								enableFullRowSelection: true,
+								multiSelect: true
 							};
 						}
 						angular.extend(options.gridInitOptions, tmpOptions);
@@ -635,6 +666,9 @@
 						// gridApi for public functions
 						options.gridOptions.onRegisterApi = function(gridApi) {
 							options.gridApi = gridApi;
+
+							fnAfterGetPageData(options.pageData);
+
 							// 排序触发事件
 							gridApi.core.on.sortChanged($scope, function(grid, sortColumns) {
 								if (sortColumns.length == 0) {
@@ -652,19 +686,21 @@
 									// page: 1
 								});
 							});
+							/*
 							// 切换页码触发事件
-							//							gridApi.pagination.on.paginationChanged($scope, function(newPage, pageSize) {
-							//								options.gridPaginationOptions.pageNumber = newPage;
-							//								options.gridPaginationOptions.pageSize = pageSize;
-							//								
-							//								self._getPageData({ page: newPage, pagesize: pageSize});
-							//							});
+							gridApi.pagination.on.paginationChanged($scope, function(newPage, pageSize) {
+								options.gridPaginationOptions.pageNumber = newPage;
+								options.gridPaginationOptions.pageSize = pageSize;
+								
+								self._getPageData({ page: newPage, pagesize: pageSize});
+							});
 							// cellNav navigate 触发事件
-							//							gridApi.cellNav.on.navigate($scope, function(newRowCol, oldRowCol) {
-							//								console.log('in cellNav navigation...')
-							//								console.log(newRowCol);
-							//								console.log(oldRowCol);
-							//							});
+							gridApi.cellNav.on.navigate($scope, function(newRowCol, oldRowCol) {
+								console.log('in cellNav navigation...')
+								console.log(newRowCol);
+								console.log(oldRowCol);
+							});
+							*/
 							// row selection 触发事件
 							if(gridApi.selection) {
 								// row select 触发方法
@@ -673,33 +709,17 @@
 									selectedGridRows = [],
 									selectedRows = [],
 									unSelectedGridRows = [],
-									unSelectedRows = [];
+									unSelectedRows = [],
+									rowSelectFn;
 
+								// row selection callback
 								gridApi.selection.on.rowSelectionChanged($scope, function(gridRows) {
+									var rowSelectFn = options.gridUserOptions.rowSelectFn;
+									if(angular.isFunction(rowSelectFn)) {
+										rowSelectFn(gridRows.entity);
+									}
 									selectedRows = [];
 									unSelectedRows = [];
-									// selectedRows = options.gridApi.selection.getSelectedRows();
-									 
-									// selectedGridRows = gridRows.filter(function(item) {
-									// 	return item.isSelected === true;
-									// });
-									// selectedRow = [];
-									// unSelectedGridRows = gridRows.filter(function(item) {
-									// 	return item.isSelected === false;
-									// });
-									// unSelectedRows = [];
-
-									// angular.forEach(unSelectedGridRows, function(value, index) {
-									// 	if(value.entity) {
-									// 		unSelectedRows.push(value.entity);
-									// 	}
-									// });
-
-									// selectedRows = angular.forEach(selectedGridRows, function(value, index) {
-									// 	if(value.entity) {
-									// 		selectedRows.push(value.entity);
-									// 	}
-									// });
 									
 									if(gridRows.isSelected) {
 										selectedRows.push(gridRows.entity);
@@ -724,11 +744,7 @@
 
 								// all select 触发方法
 								gridApi.selection.on.rowSelectionChangedBatch($scope, function(gridRows) {
-									// angular.forEach(gridRows, function(value, index) {
-									// 	if(value.entity) {
-									// 		selectedRows.push(value.entity);
-									// 	}
-									// });
+									
 									selectedGridRows = gridRows.filter(function(item) {
 										return item.isSelected === true;
 									});
@@ -761,7 +777,7 @@
 							}
 						};
 
-						if (angular.isDefined(options.gridUserOptions.url)) {
+						if (angular.isDefined(options.gridUserOptions.url) || angular.isDefined(options.gridUserOptions.json)) {
 							self._getPageData();
 						}
 
@@ -784,33 +800,27 @@
 						options = scope.options;
 					var $content = angular.element('.conow-grid-operation');
 
-					// function getContentBodyWidth() {
-					// 	return $content.width();
-					// }
+					/* resize:暂时有问题，需要想办法处理 @20151228
+					function getContentBodyWidth() {
+						return $content.width();
+					}
 
-					// $(window).resize(function(event) {
-					// 	console.log('resizing...');
-					// });
+					$(window).resize(function(event) {
+						console.log('resizing...');
+					});
 
-					// scope.$watch(getContentBodyWidth, function(newVal, oldVal) {
-					// 	$timeout(function() {
-					// 		console.log('js trigger resize')
-					// 		$(window).resize();
-					// 	})
-					// });
-//					scope.$on('conow-grid-switch-aside', function(data) {
-//						console.log('conow-grid-switch-aside');
-//						$timeout(function() {
-//							if(data.asideFolded) {
-//								$('.grid-instance').width($('.grid-instance').width() - 10);
-//							} else {
-//								$('.grid-instance').width($('.grid-instance').width() + 1);
-//							}
-//							
-//							$(window).resize();
-//						})
-//					})
-
+					scope.$watch(getContentBodyWidth, function(newVal, oldVal) {
+						$timeout(function() {
+							console.log('js trigger resize')
+							$(window).resize();
+						})
+					});
+					*/
+					// todo:内部触发 resize 
+					scope.$on('switchAside.conowGrid', function(data) {
+						$rootScope.$broadcast('uiGridResize');
+					});
+					
 					//
 					scope.getSelectedRows = function() {
 						var selectedRows = options.gridApi.selection.getSelectedRows();
@@ -821,6 +831,11 @@
 					// bind userOptions functions on grid 
 					angular.forEach(options.gridUserOptions, function(value, key) {
 						if (angular.isFunction(value)) {
+							scope[key] = value;
+						}
+					});
+					angular.forEach(options.businessCtrl, function(value, key) {
+						if(key.indexOf('$') !== 0 && angular.isFunction(value)) {
 							scope[key] = value;
 						}
 					});
@@ -853,7 +868,7 @@
 						paginationPageSize: 10,
 						// selection
 						enableFullRowSelection: true,
-						enableRowHeaderSelection: true,
+						enableRowHeaderSelection: true,		// is show checkbox
 						enableRowSelection: true,
 						enableSelectAll: true,
 						multiSelect: true
