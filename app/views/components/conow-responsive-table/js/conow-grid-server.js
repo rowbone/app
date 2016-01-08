@@ -60,6 +60,15 @@
 							loadFlags: {}
 						};
 
+					// 判断是否有 .conow-grid-button-group，决定是否显示 .conow-grid-operation
+					$transclude(function(clone) {
+						if(clone.filter('.conow-grid-button-group').length > 0) {
+							options.isShowOperation = true;
+						} else {
+							options.isShowOperation = false;
+						}
+					});
+
 					// 前端处理 搜索/排序 参数
 					var paramsManager = function(dataSrc, params) {
 						var filterParams = {};
@@ -276,7 +285,7 @@
 					}
 
 					// 没有分页方法
-					function noPaginationFn() {
+					function noPaginationFn(params) {
 						options.pageData = angular.copy(options.allData);
 						options.pageData = paramsManager(options.pageData, params);
 
@@ -288,7 +297,10 @@
 						options.gridOptions.data = options.pageData;
 					}
 
-					this._getPageDataByParams = function(params) {						
+					this._getPageDataByParams = function(params) {	
+						var page = null,
+							pagesize = null;
+
 						if(options.isJsonSrc) {
 							// 数据源为 json 数据
 							if(angular.isUndefined(options.gridUserOptions.json)) {
@@ -300,7 +312,7 @@
 
 								fnAfterGetPageData(options.pageData);
 							} else {
-								noPaginationFn();
+								noPaginationFn(params);
 
 								fnAfterGetPageData(options.pageData);
 							}
@@ -418,7 +430,7 @@
 										console.error(msg);
 									});
 							} else {
-								noPaginationFn();
+								noPaginationFn(params);
 
 								fnAfterGetPageData(options.pageData);
 							}
@@ -646,7 +658,7 @@
 								enableRowSelection: true,
 								enableSelectAll: true,
 								enableRowHeaderSelection: true,
-								enableFullRowSelection: true,
+								// enableFullRowSelection: true,
 								multiSelect: true
 							};
 						}
@@ -694,13 +706,15 @@
 								
 								self._getPageData({ page: newPage, pagesize: pageSize});
 							});
-							// cellNav navigate 触发事件
-							gridApi.cellNav.on.navigate($scope, function(newRowCol, oldRowCol) {
-								console.log('in cellNav navigation...')
-								console.log(newRowCol);
-								console.log(oldRowCol);
-							});
 							*/
+							// cellNav navigate 触发事件
+							if(angular.isDefined(gridApi.cellNav)) {
+								gridApi.cellNav.on.navigate($scope, function(newRowCol, oldRowCol) {
+									console.log('in cellNav navigation...')
+									console.log(newRowCol);
+									console.log(oldRowCol);
+								});
+							}
 							// row selection 触发事件
 							if(gridApi.selection) {
 								// row select 触发方法
@@ -798,24 +812,21 @@
 
 					var vm = scope.vm,
 						options = scope.options;
-					var $content = angular.element('.conow-grid-operation');
+					var $content = angular.element('.grid-instance');
 
-					/* resize:暂时有问题，需要想办法处理 @20151228
+					/* resize:暂时有问题，需要想办法处理 @20151228 
+					*/
 					function getContentBodyWidth() {
+						$content = angular.element('.grid-instance');
+
 						return $content.width();
 					}
 
-					$(window).resize(function(event) {
-						console.log('resizing...');
-					});
-
 					scope.$watch(getContentBodyWidth, function(newVal, oldVal) {
 						$timeout(function() {
-							console.log('js trigger resize')
-							$(window).resize();
-						})
+							$rootScope.$broadcast('uiGridResize');
+						}, 100);
 					});
-					*/
 					// todo:内部触发 resize 
 					scope.$on('switchAside.conowGrid', function(data) {
 						$rootScope.$broadcast('uiGridResize');
@@ -867,7 +878,7 @@
 						paginationPageSizes: [],
 						paginationPageSize: 10,
 						// selection
-						enableFullRowSelection: true,
+						// enableFullRowSelection: true,
 						enableRowHeaderSelection: true,		// is show checkbox
 						enableRowSelection: true,
 						enableSelectAll: true,

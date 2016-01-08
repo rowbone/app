@@ -2704,6 +2704,8 @@ function ($compile, $timeout, $window, $document, gridUtil, uiGridConstants, i18
             // TODO(c0bra): Handle resizing the inner canvas based on the number of elements
             function update() {
               var ret = '';
+              var scrollbarWidth = grid.scrollbarWidth;
+              // scrollbarWidth = 0;
 
               var canvasWidth = colContainer.canvasWidth;
               var viewportWidth = colContainer.getViewportWidth();
@@ -2728,7 +2730,7 @@ function ($compile, $timeout, $window, $document, gridUtil, uiGridConstants, i18
               // Set canvas dimensions
               ret += '\n .grid' + uiGridCtrl.grid.id + ' .ui-grid-render-container-' + $scope.containerId + ' .ui-grid-canvas { width: ' + canvasWidth + 'px; height: ' + canvasHeight + 'px; }';
 
-              ret += '\n .grid' + uiGridCtrl.grid.id + ' .ui-grid-render-container-' + $scope.containerId + ' .ui-grid-header-canvas { width: ' + (canvasWidth + grid.scrollbarWidth) + 'px; }';
+              ret += '\n .grid' + uiGridCtrl.grid.id + ' .ui-grid-render-container-' + $scope.containerId + ' .ui-grid-header-canvas { width: ' + (canvasWidth + scrollbarWidth) + 'px; }';
 
               if (renderContainer.explicitHeaderCanvasHeight) {
                 ret += '\n .grid' + uiGridCtrl.grid.id + ' .ui-grid-render-container-' + $scope.containerId + ' .ui-grid-header-canvas { height: ' + renderContainer.explicitHeaderCanvasHeight + 'px; }';
@@ -2740,7 +2742,7 @@ function ($compile, $timeout, $window, $document, gridUtil, uiGridConstants, i18
               ret += '\n .grid' + uiGridCtrl.grid.id + ' .ui-grid-render-container-' + $scope.containerId + ' .ui-grid-viewport { width: ' + viewportWidth + 'px; height: ' + viewportHeight + 'px; }';
               ret += '\n .grid' + uiGridCtrl.grid.id + ' .ui-grid-render-container-' + $scope.containerId + ' .ui-grid-header-viewport { width: ' + headerViewportWidth + 'px; }';
 
-              ret += '\n .grid' + uiGridCtrl.grid.id + ' .ui-grid-render-container-' + $scope.containerId + ' .ui-grid-footer-canvas { width: ' + (canvasWidth + grid.scrollbarWidth) + 'px; }';
+              ret += '\n .grid' + uiGridCtrl.grid.id + ' .ui-grid-render-container-' + $scope.containerId + ' .ui-grid-footer-canvas { width: ' + (canvasWidth + scrollbarWidth) + 'px; }';
               ret += '\n .grid' + uiGridCtrl.grid.id + ' .ui-grid-render-container-' + $scope.containerId + ' .ui-grid-footer-viewport { width: ' + footerViewportWidth + 'px; }';
 
               return ret;
@@ -3376,7 +3378,7 @@ function uiGridDirective($compile, $templateCache, $timeout, $window, gridUtil, 
             
             var scrollbarHeight = 0;
             if (grid.options.enableHorizontalScrollbar === uiGridConstants.scrollbars.ALWAYS) {
-              scrollbarHeight = gridUtil.getScrollbarWidth();
+              // scrollbarHeight = gridUtil.getScrollbarWidth();
             }
 
             var maxNumberOfFilters = 0;
@@ -3417,6 +3419,8 @@ function uiGridDirective($compile, $templateCache, $timeout, $window, gridUtil, 
           function gridResize($event) {
             grid.gridWidth = $scope.gridWidth = gridUtil.elementWidth($elm);
             grid.gridHeight = $scope.gridHeight = gridUtil.elementHeight($elm);
+
+            autoAdjustHeight();
 
             grid.refreshCanvas(true);
           }
@@ -8685,8 +8689,9 @@ angular.module('ui.grid')
 
     // styles['overflow-x'] = self.hasHScrollbar ? 'scroll' : 'hidden';
     styles['overflow-x'] = self.hasHScrollbar ? 'auto' : 'hidden';
-//    styles['overflow-y'] = self.hasVScrollbar ? 'scroll' : 'hidden';
-    styles['overflow-y'] = 'auto';
+    // styles['overflow-y'] = self.hasVScrollbar ? 'scroll' : 'hidden';
+    styles['overflow-y'] = self.hasHScrollbar ? 'auto' : 'hidden';
+
 
     return styles;
 
@@ -26646,7 +26651,7 @@ angular.module('ui.grid').run(['$templateCache', function($templateCache) {
 
 
   $templateCache.put('ui-grid/uiGridRenderContainer',
-    "<div role=\"grid\" ui-grid-one-bind-id-grid=\"'grid-container'\" class=\"ui-grid-render-container\" ng-style=\"{ 'margin-left': colContainer.getMargin('left') + 'px', 'margin-right': colContainer.getMargin('right') + 'px' }\"><!-- All of these dom elements are replaced in place --><div ui-grid-header></div><div ui-grid-viewport></div><div ng-if=\"colContainer.needsHScrollbarPlaceholder()\" class=\"ui-grid-scrollbar-placeholder\" ng-style=\"{height:colContainer.grid.scrollbarHeight + 'px'}\"></div><ui-grid-footer ng-if=\"grid.options.showColumnFooter\"></ui-grid-footer></div>"
+    "<div role=\"grid\" ui-grid-one-bind-id-grid=\"'grid-container'\" class=\"ui-grid-render-container\" ng-style=\"{ 'margin-left': colContainer.getMargin('left') + 'px', 'margin-right': colContainer.getMargin('right') + 'px' }\"><!-- All of these dom elements are replaced in place --><div ui-grid-header></div><div ui-grid-viewport></div><div ng-if=\"colContainer.needsHScrollbarPlaceholder() && false\" class=\"ui-grid-scrollbar-placeholder\" ng-style=\"{height:colContainer.grid.scrollbarHeight + 'px'}\"></div><ui-grid-footer ng-if=\"grid.options.showColumnFooter\"></ui-grid-footer></div>"
   );
 
 

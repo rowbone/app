@@ -1,0 +1,51 @@
+
+<div class="conow-grid-advanced-search" ng-if="options.isShowQuickSearch || options.isShowAdvancedSearch">	
+	<advsearch-wrapper ng-if="options.isShowQuickSearch"
+		config="filterOptions" 
+		quick-search-key="{{options.quickSearchKey}}" 
+		quick-search-tip="{{options.quickSearchTip}}">
+	</advsearch-wrapper>
+
+	<advsearch-wrapper ng-if="!options.isShowQuickSearch"
+		config="filterOptions">
+	</advsearch-wrapper>
+</div>
+
+<div class="conow-grid-operation" ng-transclude ng-if="options.isShowOperation"></div>
+
+<div 
+	ui-grid="options.gridOptions" 
+	ui-grid-auto-resize
+	class="grid grid-instance" 
+	ng-if="!options.isPagination && !options.isAllowSelection">
+</div>
+
+<div 
+	ui-grid="options.gridOptions" 
+	ui-grid-auto-resize
+	class="grid grid-instance" 
+	ng-if="options.isPagination && !options.isAllowSelection">
+</div>
+
+<div 
+	ui-grid="options.gridOptions" 
+	ui-grid-selection 
+	ui-grid-auto-resize
+	class="grid grid-instance" 
+	ng-if="!options.isPagination && options.isAllowSelection">
+</div>
+
+<div 
+	ui-grid="options.gridOptions" 
+	ui-grid-selection 
+	ui-grid-auto-resize
+	class="grid grid-instance" 
+	autoResize 
+	ng-if="options.isPagination && options.isAllowSelection">
+</div>
+
+<div 
+	conow-pagination="options.paginationOptions" 
+	current-page="options.paginationOptions.currentPage"
+	ng-if="options.isPagination">
+</div>
