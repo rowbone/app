@@ -552,7 +552,7 @@
 								onConfirm: function(queryToDB) {
 									self._getPageData({
 										adSearch: queryToDB,
-										// page: 1
+										page: 1
 									});
 								}									
 							}
@@ -726,19 +726,69 @@
 									unSelectedRows = [],
 									rowSelectFn;
 
+								// delete virtualKeys from gridRows
+								function removeVirtualKeysFromSelected(gridRows) {
+									var conowGridInstance = options.conowGridInstance,
+										isDataContainsVirtualKey = conowGridInstance.isDataContainsVirtualKey(),
+										virtualKeys = [],
+										virtualKeysLen,
+										virtualKey;
+
+									if(!isDataContainsVirtualKey) {
+										virtualKeys = conowGridInstance.getVirtualKeys();
+										virtualKeysLen = virtualKeys.length;
+
+										if(angular.isArray(gridRows)) {
+											var gridRow,
+												gridRowsLen = gridRows.length;
+
+											for(var i = 0; i < virtualKeysLen; i++) {
+												virtualKey = virtualKeys[i];
+												for(var j = 0; j < gridRowsLen; j++) {
+													gridRow = gridRows[j];
+													if(angular.isDefined(gridRow.entity[virtualKey])) {
+														try {
+															delete gridRow.entity[virtualKey];
+														} catch(e) {
+															throw e;
+														}
+													}
+												}
+											}
+										} else {
+											for(var i = 0; i < virtualKeysLen; i++) {
+												virtualKey = virtualKeys[i];
+												if(angular.isDefined(gridRows.entity[virtualKey])) {
+													try {
+														delete gridRows.entity[virtualKey];
+													} catch(e) {
+														throw e;
+													}
+												}
+											}
+										}
+									}
+
+									return gridRows;
+								}
+
 								// row selection callback
-								gridApi.selection.on.rowSelectionChanged($scope, function(gridRows) {
+								gridApi.selection.on.rowSelectionChanged($scope, function(gridRow) {
+									// rowSelectFn 是业务提供的行点击触发方法
 									var rowSelectFn = options.gridUserOptions.rowSelectFn;
+
+									gridRow = removeVirtualKeysFromSelected(gridRow);
+
 									if(angular.isFunction(rowSelectFn)) {
-										rowSelectFn(gridRows.entity);
+										rowSelectFn(gridRow.entity);
 									}
 									selectedRows = [];
 									unSelectedRows = [];
 									
-									if(gridRows.isSelected) {
-										selectedRows.push(gridRows.entity);
+									if(gridRow.isSelected) {
+										selectedRows.push(gridRow.entity);
 									} else {
-										unSelectedRows.push(gridRows.entity);
+										unSelectedRows.push(gridRow.entity);
 									}
 
 									if(angular.equals(selectMode, 'single')) {
@@ -758,6 +808,8 @@
 
 								// all select 触发方法
 								gridApi.selection.on.rowSelectionChangedBatch($scope, function(gridRows) {
+
+									gridRows = removeVirtualKeysFromSelected(gridRows);
 									
 									selectedGridRows = gridRows.filter(function(item) {
 										return item.isSelected === true;
@@ -886,7 +938,9 @@
 					},
 					selectedRows = [],
 					self = this,
-					scope = null;
+					scope = null,
+					virtualKeys = ['sequence'],
+					isDataContainsVirtualKey = true;
 
 				var indexInArr = function(obj, arr) {
 					var i = 0,
@@ -908,6 +962,20 @@
 				 * */
 				this.getDefaultOptions = function() {
 					return defaultOptions;
+				};
+
+				/**
+				 * virtualKeys which are set by conow-grid
+				 * */
+				this.getVirtualKeys = function() {
+					return virtualKeys;
+				};
+
+				/**
+				 * isDataContainsVirtualKey:to determine data which users select contains virtualKey or not
+				 * */
+				this.isDataContainsVirtualKey = function() {
+					return isDataContainsVirtualKey;
 				};
 
 				/**
@@ -980,5 +1048,30 @@
 			return conowGridClass;
 		}
 	]);
+
+	app.service('conowGridUtil', [function(){
+		var service = {
+			var self = this,
+				virtualKeys = ['$$index'];
+
+			this.getIndex = function() {
+				//
+			};
+
+			this.addKeysForSrc = function(dataSrc) {
+				var keysLen = virtualKeys.length;
+
+				for(var i=0; i<keysLen; i++) {
+					//
+				}
+			};
+
+			this.removeKeysForDest = function(dataDest) {
+				// 
+			};
+		};
+
+		return service;
+	}])
 
 })();
