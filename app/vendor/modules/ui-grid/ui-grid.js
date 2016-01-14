@@ -2733,13 +2733,17 @@ function ($compile, $timeout, $window, $document, gridUtil, uiGridConstants, i18
               viewportHeight = grid.getVisibleRowCount() * grid.options.rowHeight;
               if(viewportWidth < canvasWidth) {
                 viewportHeight += grid.scrollbarHeight;
+                canvasWidth -= grid.scrollbarHeight;
               } else {
                 viewportWidth = canvasWidth + scrollbarWidth;
               }
 
               // broadcast for ui-grid height
+              // viewportHeight:设置 grid 的高度;type:body/head - 只有为body时才需要按照给定高度调整
               $rootScope.$broadcast('uiGridAdjustHeight', {
-                viewportHeight: viewportHeight
+                viewportHeight: viewportHeight,
+                type: $scope.containerId,
+                id: uiGridCtrl.grid.id
               });
 
               // Set canvas dimensions
@@ -3385,7 +3389,9 @@ function uiGridDirective($compile, $templateCache, $timeout, $window, gridUtil, 
           }
 
           $scope.$on('uiGridAdjustHeight', function(e, data) {
-            autoAdjustHeight(data.viewportHeight);
+            if(data.type === 'body' && data.id == grid.id) {
+              autoAdjustHeight(data.viewportHeight);
+            }
           });
 
           // Set the grid's height ourselves in the case that its height would be unusably small
@@ -3393,6 +3399,11 @@ function uiGridDirective($compile, $templateCache, $timeout, $window, gridUtil, 
             // Figure out the new height
             // var contentHeight = grid.options.minRowsToShow * grid.options.rowHeight;
             var contentHeight = grid.getVisibleRowCount() * grid.options.rowHeight;
+            if(grid.getVisibleRowCount() === 0) {
+              $elm.addClass('grid-with-no-data');
+            } else {
+              $elm.removeClass('grid-with-no-data');
+            }
             var headerHeight = grid.options.showHeader ? grid.options.headerRowHeight : 0;
             var footerHeight = grid.calcFooterHeight();
             
@@ -3430,7 +3441,7 @@ function uiGridDirective($compile, $templateCache, $timeout, $window, gridUtil, 
 
             var newHeight = headerHeight + contentHeight + footerHeight + scrollbarHeight + filterHeight;
             if(angular.isNumber(viewportHeight)) {  // viewportHeight = contentHeight + scrollbarHeight
-              newHeight = headerHeight + footerHeight + filterHeight + (viewportHeight + 2);
+              newHeight = headerHeight + footerHeight + filterHeight + (viewportHeight + 3);
             }
 
             $elm.css('height', newHeight + 'px');
@@ -8547,9 +8558,9 @@ angular.module('ui.grid')
     // var availableWidth = self.grid.getViewportWidth() - self.grid.scrollbarWidth;
 
     // scrollbar
-    if(self.grid.gridWidth < self.canvasWidth) {
-      scrollbarWidth = self.grid.scrollbarWidth;
-    }
+    // if(self.grid.gridWidth < self.canvasWidth) {
+    //   scrollbarWidth = self.grid.scrollbarWidth;
+    // }
     var availableWidth = self.grid.getViewportWidth();
 
     // get all the columns across all render containers, we have to calculate them all or one render container

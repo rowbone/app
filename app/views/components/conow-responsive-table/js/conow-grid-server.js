@@ -90,7 +90,7 @@
 								default: 
 									// todo:这里仅对单个字段模糊搜索进行处理，涉及到 range/object/array 类型的数据，没有进行处理
 									// @20151127
-									if(angular.isDefined(value)) {
+									if(angular.isDefined(value) && !angular.isObject(value) && !angular.isArray(value) && !angular.equals(value, '')) {
 										filterParams = $scope.$eval('{"' + key + '": "' + value + '"}');
 										dataSrc = $filter('filter')(dataSrc, filterParams);
 									}
@@ -306,6 +306,9 @@
 							if(angular.isUndefined(options.gridUserOptions.json)) {
 								return false;
 							}
+							if(angular.equals(params.forceReload, true)) {
+								console.log('jsJsonSrc');
+							}
 							options.allData = options.gridUserOptions.json;
 							if(options.isPagination) {
 								fePaginationFn(params);
@@ -336,6 +339,8 @@
 												},
 												gridData = angular.isDefined(data.obj) ? data.obj : data;
 
+											fePaginationFn(params);
+
 											options.allData = gridData;
 											options.pageData = gridData;
 
@@ -365,6 +370,7 @@
 									DataService.postData(options.gridUserOptions.url, { 'type': 'advSearch', 'params': params })
 										.then(function(data) {
 											if(data) {
+												/*
 												var pageInfo = {
 														count: 0,
 														page: 1, 
@@ -390,7 +396,9 @@
 												options.paginationOptions.totalItems = gridData.length;
 
 												options.gridOptions.data = options.pageData;
-
+												*/
+												
+												fePaginationFn(params);
 												fnAfterGetPageData(options.pageData);
 											}
 										}, function(msg) {
@@ -461,6 +469,53 @@
 
 					// todo:列操作方法
 					this._cellOperation = function() {};
+
+
+					// delete virtualKeys from gridRows
+					function removeVirtualKeysFromSelected(gridRows) {
+						var conowGridInstance = options.conowGridInstance,
+							isDataContainsVirtualKey = conowGridInstance.isDataContainsVirtualKey(),
+							virtualKeys = [],
+							virtualKeysLen,
+							virtualKey;
+
+						if(!isDataContainsVirtualKey) {
+							virtualKeys = conowGridInstance.getVirtualKeys();
+							virtualKeysLen = virtualKeys.length;
+
+							if(angular.isArray(gridRows)) {
+								var gridRow,
+									gridRowsLen = gridRows.length;
+
+								for(var i = 0; i < virtualKeysLen; i++) {
+									virtualKey = virtualKeys[i];
+									for(var j = 0; j < gridRowsLen; j++) {
+										gridRow = gridRows[j];
+										if(angular.isDefined(gridRow.entity[virtualKey])) {
+											try {
+												delete gridRow.entity[virtualKey];
+											} catch(e) {
+												throw e;
+											}
+										}
+									}
+								}
+							} else {
+								for(var i = 0; i < virtualKeysLen; i++) {
+									virtualKey = virtualKeys[i];
+									if(angular.isDefined(gridRows.entity[virtualKey])) {
+										try {
+											delete gridRows.entity[virtualKey];
+										} catch(e) {
+											throw e;
+										}
+									}
+								}
+							}
+						}
+
+						return gridRows;
+					}
 
 					// 初始化方法
 					this._init = function() {
@@ -725,52 +780,6 @@
 									unSelectedGridRows = [],
 									unSelectedRows = [],
 									rowSelectFn;
-
-								// delete virtualKeys from gridRows
-								function removeVirtualKeysFromSelected(gridRows) {
-									var conowGridInstance = options.conowGridInstance,
-										isDataContainsVirtualKey = conowGridInstance.isDataContainsVirtualKey(),
-										virtualKeys = [],
-										virtualKeysLen,
-										virtualKey;
-
-									if(!isDataContainsVirtualKey) {
-										virtualKeys = conowGridInstance.getVirtualKeys();
-										virtualKeysLen = virtualKeys.length;
-
-										if(angular.isArray(gridRows)) {
-											var gridRow,
-												gridRowsLen = gridRows.length;
-
-											for(var i = 0; i < virtualKeysLen; i++) {
-												virtualKey = virtualKeys[i];
-												for(var j = 0; j < gridRowsLen; j++) {
-													gridRow = gridRows[j];
-													if(angular.isDefined(gridRow.entity[virtualKey])) {
-														try {
-															delete gridRow.entity[virtualKey];
-														} catch(e) {
-															throw e;
-														}
-													}
-												}
-											}
-										} else {
-											for(var i = 0; i < virtualKeysLen; i++) {
-												virtualKey = virtualKeys[i];
-												if(angular.isDefined(gridRows.entity[virtualKey])) {
-													try {
-														delete gridRows.entity[virtualKey];
-													} catch(e) {
-														throw e;
-													}
-												}
-											}
-										}
-									}
-
-									return gridRows;
-								}
 
 								// row selection callback
 								gridApi.selection.on.rowSelectionChanged($scope, function(gridRow) {
@@ -1048,27 +1057,74 @@
 			return conowGridClass;
 		}
 	]);
-
+	
+	/**
+	 * conowGridUtil:common methods provided by conowGrid
+	 * @author wlj
+	 * @time 20160113
+	 */
 	app.service('conowGridUtil', [function(){
+		var self = this,
+			virtualKeys = ['$$index'],
+			keysLen = virtualKeys.length,
+			index = 0;;
+
 		var service = {
-			var self = this,
-				virtualKeys = ['$$index'];
 
-			this.getIndex = function() {
-				//
-			};
+			/**
+			 * get object index from an array
+			 * @param  {[Object]} obj
+			 * @param  {[Array]} arr 
+			 * @return {[Number]} 
+			 */
+			getIndex: function(obj, arr) {
+				var arrLen = arr.length,
+					index = -1;
 
-			this.addKeysForSrc = function(dataSrc) {
-				var keysLen = virtualKeys.length;
+				for(var i=0; i<arr.length; i++) {
+					if(angular.equals(obj, arr[i])) {
+						index = i;
+						break;
+					}
+				}
+
+				return index;
+			},
+
+			/**
+			 * add some virtual-keys for json-data which will be shown in conow-grid.
+			 * the keys which are provided by virtualKeys array
+			 */
+			addKeysForSrc: function(dataSrc) {
+				var dataSrcLen = dataSrc.length;
+
+				index = 0;
+				for(var i=0; i<keysLen; i++) {
+					for(var j=0; j<dataSrcLen; j++) {
+						dataSrc[j][virtualKeys[i]] = ++index;
+					}
+				}
+
+				return dataSrc;
+			},
+
+			/**
+			 * remove virtual-keys from data, so the data's keys are the same with dataSrc.
+			 * this should be called before self.getIndex()
+			 */
+			removeKeysForDest: function(dataDest) {
+				var dataDestLen = dataDest.length;
 
 				for(var i=0; i<keysLen; i++) {
-					//
+					for(var j=0; j<dataDestLen; j++) {
+						if(angular.isDefined(dataDest[j][virtualKeys[i]])) {
+							delete dataDest[j][virtualKeys[i]];
+						}
+					}
 				}
-			};
 
-			this.removeKeysForDest = function(dataDest) {
-				// 
-			};
+				return dataDest;
+			}
 		};
 
 		return service;
