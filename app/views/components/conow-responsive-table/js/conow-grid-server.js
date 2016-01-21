@@ -8,8 +8,8 @@
 	 * */
 	var app = angular.module('conowGrid', []);
 
-	app.directive('conowGrid', ['conowGridClass', '$filter', 'DataService', '$http', '$compile', '$rootScope', 'i18nService', '$timeout', '$controller', 
-		function(conowGridClass, $filter, DataService, $http, $compile, $rootScope, i18nService, $timeout, $controller) {
+	app.directive('conowGrid', ['conowGridClass', '$filter', 'DataService', '$http', '$compile', '$rootScope', 'i18nService', '$timeout', 'conowGridUtil', 
+		function(conowGridClass, $filter, DataService, $http, $compile, $rootScope, i18nService, $timeout, conowGridUtil) {
 			return {
 				restrict: 'A',
 				// template: '<div id="grid1" ui-grid="vm.gridOptions" class="grid"></div>',
@@ -306,10 +306,9 @@
 							if(angular.isUndefined(options.gridUserOptions.json)) {
 								return false;
 							}
-							if(angular.equals(params.forceReload, true)) {
-								console.log('jsJsonSrc');
-							}
 							options.allData = options.gridUserOptions.json;
+
+							conowGridUtil.addKeysForSrc(options.allData, params.forceReload);
 							if(options.isPagination) {
 								fePaginationFn(params);
 
@@ -397,7 +396,10 @@
 
 												options.gridOptions.data = options.pageData;
 												*/
-												
+
+												var	gridData = angular.isDefined(data.obj) ? data.obj : data;
+
+												options.allData = gridData;
 												fePaginationFn(params);
 												fnAfterGetPageData(options.pageData);
 											}
@@ -736,6 +738,8 @@
 
 							fnAfterGetPageData(options.pageData);
 
+							options.gridApi.core.handleWindowResize();
+
 							// 排序触发事件
 							gridApi.core.on.sortChanged($scope, function(grid, sortColumns) {
 								if (sortColumns.length == 0) {
@@ -892,6 +896,10 @@
 					scope.$on('switchAside.conowGrid', function(data) {
 						$rootScope.$broadcast('uiGridResize');
 					});
+
+					scope.$on('tabClick.conowGrid', function(data) {
+						$rootScope.$broadcast('uiGridResize');
+					})
 					
 					//
 					scope.getSelectedRows = function() {
@@ -1095,7 +1103,16 @@
 			 * add some virtual-keys for json-data which will be shown in conow-grid.
 			 * the keys which are provided by virtualKeys array
 			 */
-			addKeysForSrc: function(dataSrc) {
+			addKeysForSrc: function(dataSrc, forceReload) {
+				// 满足下列条件直接返回源数据
+				// 1.不是数组;2.空数组;3.forceReload 为false，且已经有 $$index 属性
+				if(!angular.isArray(dataSrc) || dataSrc.length === 0 ) {
+					return dataSrc;
+				}
+				if(!forceReload && angular.isDefined(dataSrc[0]['$$index'])) {
+					return dataSrc;
+				}
+
 				var dataSrcLen = dataSrc.length;
 
 				index = 0;
