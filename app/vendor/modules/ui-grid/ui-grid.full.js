@@ -2747,11 +2747,7 @@ function ($compile, $timeout, $window, $document, gridUtil, uiGridConstants, i18
               });
 
               // Set canvas dimensions
-              if($scope.containerId === 'body') {
-                ret += '\n .grid' + uiGridCtrl.grid.id + ' .ui-grid-render-container-' + $scope.containerId + ' .ui-grid-canvas { width: ' + (canvasWidth + scrollbarWidth) + 'px; height: ' + canvasHeight + 'px; }';
-              } else {
-                ret += '\n .grid' + uiGridCtrl.grid.id + ' .ui-grid-render-container-' + $scope.containerId + ' .ui-grid-canvas { width: ' + (canvasWidth) + 'px; height: ' + canvasHeight + 'px; }';
-              }
+              ret += '\n .grid' + uiGridCtrl.grid.id + ' .ui-grid-render-container-' + $scope.containerId + ' .ui-grid-canvas { width: ' + (canvasWidth + scrollbarWidth) + 'px; height: ' + canvasHeight + 'px; }';
 
               ret += '\n .grid' + uiGridCtrl.grid.id + ' .ui-grid-render-container-' + $scope.containerId + ' .ui-grid-header-canvas { width: ' + (canvasWidth + scrollbarWidth) + 'px; }';
 
@@ -2965,19 +2961,6 @@ function ($compile, $timeout, $window, $document, gridUtil, uiGridConstants, i18
             console.log(newVal);
           });
           */
-          
-          // 行点击事件 add by wlj @20160125
-          $scope.rowClick = function(row, e) {
-            if(angular.equals(containerCtrl.containerId, 'body')) {
-              e.preventDefault();
-
-              if(angular.isFunction($scope.uiGridCtrl.grid.options.rowSelectFn)) {
-                ($scope.uiGridCtrl.grid.options.rowSelectFn)(row.entity);
-              }
-            }
-
-            e.stopPropagation();
-          }
 
           var grid = uiGridCtrl.grid;
 
@@ -3418,8 +3401,6 @@ function uiGridDirective($compile, $templateCache, $timeout, $window, gridUtil, 
             var contentHeight = grid.getVisibleRowCount() * grid.options.rowHeight;
             if(grid.getVisibleRowCount() === 0) {
               $elm.addClass('grid-with-no-data');
-            } else {
-              $elm.removeClass('grid-with-no-data');
             }
             var headerHeight = grid.options.showHeader ? grid.options.headerRowHeight : 0;
             var footerHeight = grid.calcFooterHeight();
@@ -26719,7 +26700,7 @@ angular.module('ui.grid').run(['$templateCache', function($templateCache) {
 
 
   $templateCache.put('ui-grid/uiGridViewport',
-    "<div role=\"rowgroup\" class=\"ui-grid-viewport ui-grid-body\" ng-style=\"colContainer.getViewportStyle()\"><!-- tbody --><div class=\"ui-grid-canvas\"><div class=\"ui-grid-no-data-tip\" ng-if=\"rowContainer.renderedRows.length==0\">没有获取到对应的数据！</div><div ng-repeat=\"(rowRenderIndex, row) in rowContainer.renderedRows track by $index\" ng-click=\"rowClick(row, $event)\" class=\"ui-grid-row\" ng-style=\"Viewport.rowStyle(rowRenderIndex)\" ng-class=\"{'ui-grid-row-selected': row.isSelected}\"><div role=\"row\" ui-grid-row=\"row\" row-render-index=\"rowRenderIndex\"></div></div></div></div>"
+    "<div role=\"rowgroup\" class=\"ui-grid-viewport ui-grid-body\" ng-style=\"colContainer.getViewportStyle()\"><!-- tbody --><div class=\"ui-grid-canvas\"><div class=\"ui-grid-no-data-tip\" ng-if=\"rowContainer.renderedRows.length==0\">没有获取到对应的数据！</div><div ng-repeat=\"(rowRenderIndex, row) in rowContainer.renderedRows track by $index\" class=\"ui-grid-row\" ng-style=\"Viewport.rowStyle(rowRenderIndex)\" ng-class=\"{'ui-grid-row-selected': row.isSelected}\"><div role=\"row\" ui-grid-row=\"row\" row-render-index=\"rowRenderIndex\"></div></div></div></div>"
   );
 
 
@@ -26787,31 +26768,26 @@ angular.module('ui.grid').run(['$templateCache', function($templateCache) {
     "<span ng-if=\"grid.selection.selectedCount !== 0 && grid.options.enableFooterTotalSelected\">({{\"search.selectedItems\" | t}} {{grid.selection.selectedCount}})</span>"
   );
 
-  // 
+
   $templateCache.put('ui-grid/selectionHeaderCell',
     "<div><!-- <div class=\"ui-grid-vertical-bar\">&nbsp;</div> --><div class=\"ui-grid-cell-contents\" col-index=\"renderIndex\"><ui-grid-selection-select-all-buttons ng-if=\"grid.options.enableSelectAll\"></ui-grid-selection-select-all-buttons></div></div>"
   );
 
-  // 选择行 Header
+
   $templateCache.put('ui-grid/selectionRowHeader',
-    // "<div class=\"ui-grid-disable-selection\"><div class=\"ui-grid-cell-contents\"><ui-grid-selection-row-header-buttons></ui-grid-selection-row-header-buttons></div></div>"
-    "<div class=\"ui-grid-disable-selection\"><div><ui-grid-selection-row-header-buttons></ui-grid-selection-row-header-buttons></div></div>"
+    "<div class=\"ui-grid-disable-selection\"><div class=\"ui-grid-cell-contents\"><ui-grid-selection-row-header-buttons></ui-grid-selection-row-header-buttons></div></div>"
   );
 
-  // 选择行 checkbox
+
   $templateCache.put('ui-grid/selectionRowHeaderButtons',
-    // "<div class=\"ui-grid-selection-row-header-buttons ui-grid-icon-ok\" ng-class=\"{'ui-grid-row-selected': row.isSelected}\" ng-click=\"selectButtonClick(row, $event)\">&nbsp;" 
-    "<div>" 
-    + "<label class=\"i-checks\"><input type=\"checkbox\" ng-checked=row.isSelected ng-click=\"selectButtonClick(row, $event)\"><i></i></label>" 
+    "<div class=\"ui-grid-selection-row-header-buttons ui-grid-icon-ok\" ng-class=\"{'ui-grid-row-selected': row.isSelected}\" ng-click=\"selectButtonClick(row, $event)\">&nbsp;" 
+    + "<label class=\"i-checks\"><input type=\"checkbox\"><i></i></label>" 
     + "</div>"
   );
 
-  // 选择所有 checkbox
+
   $templateCache.put('ui-grid/selectionSelectAllButtons',
-    // "<div class=\"ui-grid-selection-row-header-buttons ui-grid-icon-ok\" ng-class=\"{'ui-grid-all-selected': grid.selection.selectAll}\" ng-click=\"headerButtonClick($event)\"></div>"
-    "<div>" 
-    + "<label class=\"i-checks\"><input type=\"checkbox\" ng-checked=grid.selection.selectAll ng-click=\"headerButtonClick($event)\"><i></i></label>" 
-    + "</div>"
+    "<div class=\"ui-grid-selection-row-header-buttons ui-grid-icon-ok\" ng-class=\"{'ui-grid-all-selected': grid.selection.selectAll}\" ng-click=\"headerButtonClick($event)\"></div>"
   );
 
 

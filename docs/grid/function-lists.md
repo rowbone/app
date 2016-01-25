@@ -9,8 +9,8 @@
 * 单个搜索框对应多个字段(是否需要?)
 * 对应列 disabled
 * 字段排序类型(Number, String , etc...)
-* 高度由数据条数确定 :hearvy_check_mark:
-* 响应式表格通用样式类(基础样式) :hearvy_check_mark:
+* 高度由数据条数确定 :heavy_check_mark:
+* 响应式表格通用样式类(基础样式) :heavy_check_mark:
 * 列中包含自定义指令 :star:
 * 获取单页或指定数据
 * 支持 JSON 数据源 :heavy_check_mark:

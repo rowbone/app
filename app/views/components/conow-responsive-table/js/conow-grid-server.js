@@ -243,6 +243,12 @@
 						var gridApi = options.gridApi,
 							selectedItems = options.gridUserOptions.selectedItems,
 							selectedItem = null;
+
+						// 清除 grid 的选中项
+						if(options.gridApi && options.gridApi.selection) {
+							options.gridApi.selection.clearSelectedRows();
+						}
+
 						if(angular.isDefined(gridApi) && angular.isDefined(gridApi.selection) && angular.isDefined(selectedItems)) {
 							$timeout(function() {
 								for(var i=0, iLen=selectedItems.length; i<iLen; i++) {
