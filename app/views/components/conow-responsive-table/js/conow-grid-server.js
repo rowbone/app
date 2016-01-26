@@ -798,9 +798,9 @@
 
 									gridRow = removeVirtualKeysFromSelected(gridRow);
 
-									if(angular.isFunction(rowSelectFn)) {
-										rowSelectFn(gridRow.entity);
-									}
+									// if(angular.isFunction(rowSelectFn)) {
+									// 	rowSelectFn(gridRow.entity);
+									// }
 									selectedRows = [];
 									unSelectedRows = [];
 									

@@ -2942,8 +2942,8 @@ function ($compile, $timeout, $window, $document, gridUtil, uiGridConstants, i18
 (function(){
   'use strict';
 
-  angular.module('ui.grid').directive('uiGridViewport', ['gridUtil','ScrollEvent','uiGridConstants', '$log',
-    function(gridUtil, ScrollEvent, uiGridConstants, $log) {
+  angular.module('ui.grid').directive('uiGridViewport', ['gridUtil','ScrollEvent','uiGridConstants', '$log', 'uiGridSelectionService', 
+    function(gridUtil, ScrollEvent, uiGridConstants, $log, uiGridSelectionService) {
       return {
         replace: true,
         scope: {},
@@ -2967,16 +2967,20 @@ function ($compile, $timeout, $window, $document, gridUtil, uiGridConstants, i18
           */
           
           // 行点击事件 add by wlj @20160125
-          $scope.rowClick = function(row, e) {
+          $scope.rowClick = function(row, evt) {
             if(angular.equals(containerCtrl.containerId, 'body')) {
-              e.preventDefault();
+              evt.preventDefault();
+
+              var self = uiGridCtrl.grid;
+
+              uiGridSelectionService.toggleRowSelection(self, row, evt, (self.options.multiSelect && !self.options.modifierKeysToMultiSelect), self.options.noUnselect);
 
               if(angular.isFunction($scope.uiGridCtrl.grid.options.rowSelectFn)) {
                 ($scope.uiGridCtrl.grid.options.rowSelectFn)(row.entity);
               }
             }
 
-            e.stopPropagation();
+            evt.stopPropagation();
           }
 
           var grid = uiGridCtrl.grid;
