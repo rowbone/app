@@ -1,0 +1,28 @@
+
+<style>
+ul.popup {
+	min-width: 80px;
+	max-width: 100px;
+	background: #383a4c;
+	position: absolute;
+	padding: 0;
+	list-style: none;
+}
+
+ul.popup > li > a {
+	display: block;
+	color: #fff;
+	pading: 5px 10px;
+	text-align: center;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	margin: 0;
+}
+</style>
+
+<a title="更多">
+	<i class="ci-stillmore" ng-click="toggleMore($event)"></i>
+	<ul class="popup" ng-show="options.show">
+		<li class="more-menu-btn" ng-transclude></li>
+	</ul>
+</a>

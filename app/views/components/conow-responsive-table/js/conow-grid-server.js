@@ -1,4 +1,4 @@
-(function() {
+(function(angular) {
 	'use strict';
 
 	/**
@@ -1151,6 +1151,33 @@
 		};
 
 		return service;
-	}])
+	}]);
 
-})();
+	app.directive('conowGridOperatorMore', [function() {
+		return {
+			restrict: 'A',
+			template: '' + 
+				'<style></style><a title="更多"><i class="ci-stillmore" ng-click="toggleMore($event)"></i><ul class="popup">' + 
+				'<li class="more-menu-btn" ng-transclude>' + 
+				'</li></ul></a>',
+			transclude: true,
+			replace: true,
+			compile: function(tElem, tAttrs) {
+				return this.link;
+			},
+			controller: function($scope, $element, $attrs, $transclude) {
+				var self = this;
+
+				var options = $scope.options = {
+					show: false
+				};
+			},
+			link: function postLink(scope, elem, attrs, ctrl) {
+				scope.toggleMore = function(evt) {
+					options.show = !options.show;
+				}
+			}
+		}
+	}]);
+
+})(angular);

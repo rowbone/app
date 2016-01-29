@@ -2973,7 +2973,7 @@ function ($compile, $timeout, $window, $document, gridUtil, uiGridConstants, i18
 
               var self = uiGridCtrl.grid;
 
-              uiGridSelectionService.toggleRowSelection(self, row, evt, (self.options.multiSelect && !self.options.modifierKeysToMultiSelect), self.options.noUnselect);
+              // uiGridSelectionService.toggleRowSelection(self, row, evt, (self.options.multiSelect && !self.options.modifierKeysToMultiSelect), self.options.noUnselect);
 
               if(angular.isFunction($scope.uiGridCtrl.grid.options.rowSelectFn)) {
                 ($scope.uiGridCtrl.grid.options.rowSelectFn)(row.entity);
