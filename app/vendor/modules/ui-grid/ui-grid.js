@@ -24476,7 +24476,7 @@ module.filter('px', function() {
               $scope.$on( '$destroy', dataChangeDereg);
             },
             post: function ($scope, $elm, $attrs, uiGridCtrl) {
-
+              // console.log($elm);
             }
           };
         }
@@ -26806,7 +26806,7 @@ angular.module('ui.grid').run(['$templateCache', function($templateCache) {
   $templateCache.put('ui-grid/selectionRowHeaderButtons',
     // "<div class=\"ui-grid-selection-row-header-buttons ui-grid-icon-ok\" ng-class=\"{'ui-grid-row-selected': row.isSelected}\" ng-click=\"selectButtonClick(row, $event)\">&nbsp;" 
     "<div>" 
-    + "<label class=\"i-checks\"><input type=\"checkbox\" ng-checked=row.isSelected ng-click=\"selectButtonClick(row, $event)\"><i></i></label>" 
+    + "<label class=\"i-checks\"><input type=\"checkbox\" ng-disabled=!row.enableSelection ng-checked=row.isSelected ng-click=\"selectButtonClick(row, $event)\"><i></i></label>" 
     + "</div>"
   );
 

@@ -1,19 +1,12 @@
 (function(angular) {
 	'use strict';
 
-	/**
-	 * todo:
-	 * 1.隐藏列：现在通过设置cellClass,headerCellClass可以做到隐藏，但是table大小不会改变需要做一个resize		@徐金奖
-	 * 2.加载数据时显示正在加载中
-	 * */
 	var app = angular.module('conowGrid', []);
 
 	app.directive('conowGrid', ['conowGridClass', '$filter', 'DataService', '$http', '$compile', '$rootScope', 'i18nService', '$timeout', 'conowGridUtil', 
 		function(conowGridClass, $filter, DataService, $http, $compile, $rootScope, i18nService, $timeout, conowGridUtil) {
 			return {
 				restrict: 'A',
-				// template: '<div id="grid1" ui-grid="vm.gridOptions" class="grid"></div>',
-				// templateUrl: 'views/components/conow-responsive-table/tpls/conow-grid-tpl.html',
 				templateUrl: 'js/directives/conow-grid/tpls/conow-grid-tpl.html',
 				scope: {
 					getGridUserOptions: '&conowGrid'
@@ -660,6 +653,29 @@
 										enableSorting: false,
 										width: angular.isDefined(columnDef.width) ? columnDef.width : 100
 									};
+
+									var html = columnDef.cellTemplate,
+										$html = angular.element(html),
+										$operators = $html.find('.conow-grid-operator'),
+										$moreOperator = [],
+										$tmp = null;
+
+									var html1 = '', html2 = '';
+									if($operators.length > 3) {
+										$moreOperator = $operators.splice(2, $operators.length - 1);
+									}
+									for(var i=0; i<$operators.length; i++) {
+										html1 += angular.element($operators[i]).prop('outerHTML');
+									}
+									for(var i=0; i<$moreOperator.length; i++) {
+										$tmp = angular.element($moreOperator[i]);
+										// html2 += '<li>' + $tmp.prop('outerHTML') + '<span>' + $tmp.prop('title') + '</span>' + '</li>';
+										html2 += '<li>' + $tmp.prop('outerHTML') + '</li>';
+									}
+
+									html = '<div>' + html1 + '<span conow-grid-operator-more>' + html2 + '</span>' + '</div>'
+
+									columnDefTmp.cellTemplate = html;
 								// 序号列
 								} else if(cellType === 'sequence') {
 									columnDefTmp = {
@@ -1153,31 +1169,43 @@
 		return service;
 	}]);
 
-	app.directive('conowGridOperatorMore', [function() {
-		return {
-			restrict: 'A',
-			template: '' + 
-				'<style></style><a title="更多"><i class="ci-stillmore" ng-click="toggleMore($event)"></i><ul class="popup">' + 
-				'<li class="more-menu-btn" ng-transclude>' + 
-				'</li></ul></a>',
-			transclude: true,
-			replace: true,
-			compile: function(tElem, tAttrs) {
-				return this.link;
-			},
-			controller: function($scope, $element, $attrs, $transclude) {
-				var self = this;
+	app.directive('conowGridOperatorMore', ['$timeout',
+		function() {
+			return {
+				restrict: 'A',
+				template: '' + 
+					'<a title="更多"><i class="ci-stillmore" ng-click="toggleMore($event)"></i><ul class="popup" ng-show="options.show" ng-transclude>' + 
+					'</ul></a>',
+				transclude: true,
+				replace: true,
+				compile: function(tElem, tAttrs) {
+					return this.link;
+				},
+				controller: function($scope, $element, $attrs, $transclude) {
+					var self = this;
 
-				var options = $scope.options = {
-					show: false
-				};
-			},
-			link: function postLink(scope, elem, attrs, ctrl) {
-				scope.toggleMore = function(evt) {
-					options.show = !options.show;
+					var options = $scope.options = {
+						show: false
+					};
+				},
+				link: function postLink(scope, elem, attrs, ctrl) {
+					var options = scope.options;
+
+					scope.toggleMore = function(evt) {
+						evt.preventDefault();
+
+						options.show = !options.show;
+
+						evt.stopPropagation();
+					}
+
+					// $timeout(function() {
+					// 	var $popup = angular.element('.popup:visible'),
+
+					// });
 				}
 			}
 		}
-	}]);
+	]);
 
 })(angular);
