@@ -9,7 +9,8 @@
 				restrict: 'A',
 				templateUrl: 'js/directives/conow-grid/tpls/conow-grid-tpl.html',
 				scope: {
-					getGridUserOptions: '&conowGrid'
+					// getGridUserOptions: '&conowGrid'
+					conowGrid: '='
 				},
 				transclude: true,
 				compile: function(tElem, tAttrs) {
@@ -518,6 +519,13 @@
 						return gridRows;
 					}
 
+					$scope.noFn = function(evt) {
+						evt.proventDefault();
+
+						console.log(evt);
+						evt.stopPropagation();
+					}
+
 					// 初始化方法
 					this._init = function() {
 						// 设置语言类型，分页功能的文字有影响。
@@ -530,7 +538,8 @@
 						options.allData = [];
 
 						// gridUserOptions for 'user config options'
-						options.gridUserOptions = $scope.getGridUserOptions();
+						// options.gridUserOptions = $scope.getGridUserOptions();
+						options.gridUserOptions = $scope.conowGrid;
 
 						// $watch to make sure json-data if it is async
 						// $scope.$watch('options.gridUserOptions.json', function(newVal, oldVal) {
@@ -661,21 +670,23 @@
 										$tmp = null;
 
 									var html1 = '', html2 = '';
-									if($operators.length > 3) {
+									if($operators.length > 3 && $html.find('.conow-grid-operator-more').length === 0) {
 										$moreOperator = $operators.splice(2, $operators.length - 1);
-									}
-									for(var i=0; i<$operators.length; i++) {
-										html1 += angular.element($operators[i]).prop('outerHTML');
-									}
-									for(var i=0; i<$moreOperator.length; i++) {
-										$tmp = angular.element($moreOperator[i]);
-										// html2 += '<li>' + $tmp.prop('outerHTML') + '<span>' + $tmp.prop('title') + '</span>' + '</li>';
-										html2 += '<li>' + $tmp.prop('outerHTML') + '</li>';
-									}
 
-									html = '<div>' + html1 + '<span conow-grid-operator-more>' + html2 + '</span>' + '</div>'
+										for(var i=0; i<$operators.length; i++) {
+											html1 += angular.element($operators[i]).prop('outerHTML');
+										}
+										for(var i=0; i<$moreOperator.length; i++) {
+											$tmp = angular.element($moreOperator[i]);
+											// html2 += '<li>' + $tmp.prop('outerHTML') + '<span>' + $tmp.prop('title') + '</span>' + '</li>';
+											html2 += '<li>' + $tmp.prop('outerHTML') + '</li>';
+										}
 
-									columnDefTmp.cellTemplate = html;
+										html = '<div ng-click="grid.appScope.noFn($event)">' + html1 + '<span conow-grid-operator-more class="conow-grid-operator-more">' + html2 + '</span>' + '</div>'
+
+										columnDefTmp.cellTemplate = html;
+									}
+									
 								// 序号列
 								} else if(cellType === 'sequence') {
 									columnDefTmp = {
@@ -1177,6 +1188,9 @@
 					'<a title="更多"><i class="ci-stillmore" ng-click="toggleMore($event)"></i><ul class="popup" ng-show="options.show" ng-transclude>' + 
 					'</ul></a>',
 				transclude: true,
+				scope: {
+					// 
+				},
 				replace: true,
 				compile: function(tElem, tAttrs) {
 					return this.link;
@@ -1199,10 +1213,14 @@
 						evt.stopPropagation();
 					}
 
-					// $timeout(function() {
-					// 	var $popup = angular.element('.popup:visible'),
+					$timeout(function() {
+						var $popup = angular.element('.popup:visible');
 
-					// });
+						$popup.on('blur', function() {
+							this.addClass('hidden');
+						});
+
+					});
 				}
 			}
 		}
