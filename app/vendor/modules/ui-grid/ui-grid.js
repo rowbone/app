@@ -2960,11 +2960,16 @@ function ($compile, $timeout, $window, $document, gridUtil, uiGridConstants, i18
 
           var rowContainer = containerCtrl.rowContainer;
           var colContainer = containerCtrl.colContainer;
+
           /* temporary
           $scope.$watch('uiGridCtrl.uiGrid.data', function(newVal, oldVal) {
             console.log(newVal);
           });
           */
+
+          if(angular.isFunction(uiGridCtrl.grid.options.rowClassFn)) {
+            $scope.rowClass = uiGridCtrl.grid.options.rowClassFn;
+          }
           
           // 行点击事件 add by wlj @20160125
           $scope.rowClick = function(row, evt) {
@@ -26723,7 +26728,7 @@ angular.module('ui.grid').run(['$templateCache', function($templateCache) {
 
 
   $templateCache.put('ui-grid/uiGridViewport',
-    "<div role=\"rowgroup\" class=\"ui-grid-viewport ui-grid-body\" ng-style=\"colContainer.getViewportStyle()\"><!-- tbody --><div class=\"ui-grid-canvas\"><div class=\"ui-grid-no-data-tip\" ng-if=\"rowContainer.renderedRows.length==0\">没有获取到对应的数据！</div><div ng-repeat=\"(rowRenderIndex, row) in rowContainer.renderedRows track by $index\" ng-click=\"rowClick(row, $event)\" class=\"ui-grid-row\" ng-style=\"Viewport.rowStyle(rowRenderIndex)\" ng-class=\"{'ui-grid-row-selected': row.isSelected}\"><div role=\"row\" ui-grid-row=\"row\" row-render-index=\"rowRenderIndex\"></div></div></div></div>"
+    "<div role=\"rowgroup\" class=\"ui-grid-viewport ui-grid-body\" ng-style=\"colContainer.getViewportStyle()\"><!-- tbody --><div class=\"ui-grid-canvas\"><div class=\"ui-grid-no-data-tip\" ng-if=\"rowContainer.renderedRows.length==0\">没有获取到对应的数据！</div><div ng-repeat=\"(rowRenderIndex, row) in rowContainer.renderedRows track by $index\" ng-click=\"rowClick(row, $event)\" class=\"ui-grid-row {{rowClass(row)}}\" ng-style=\"Viewport.rowStyle(rowRenderIndex)\" ng-class=\"{ 'ui-grid-row-selected': row.isSelected }\"><div role=\"row\" ui-grid-row=\"row\" row-render-index=\"rowRenderIndex\"></div></div></div></div>"
   );
 
 

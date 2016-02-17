@@ -726,8 +726,6 @@
 						var tmpOptions = {},
 							selectMode = options.gridUserOptions.selectMode;
 
-						options.selectMode = selectMode;
-
 						if (angular.isUndefined(selectMode)) {
 							tmpOptions = {
 								enableRowSelection: false,
@@ -742,7 +740,9 @@
 								multiSelect: false,
 								enableSelectAll: false
 							};
-						} else {
+						} else if(selectMode === 'multiply' || selectMode === 'multiple') {
+							selectMode = 'multiple';
+
 							options.isAllowSelection = true;
 							tmpOptions = {
 								enableRowSelection: true,
@@ -751,7 +751,11 @@
 								// enableFullRowSelection: true,
 								multiSelect: true
 							};
+						} else {
+							// other options which aren't support
 						}
+
+						options.selectMode = selectMode;
 						angular.extend(options.gridInitOptions, tmpOptions);
 
 						// footer
@@ -839,7 +843,7 @@
 
 									if(angular.equals(selectMode, 'single')) {
 										gridInstance.setSelectedItems(selectedRows);
-									} else if(angular.equals(selectMode, 'multiply')) {
+									} else if(angular.equals(selectMode, 'multiple')) {
 										// gridInstance.addSelectedItems(selectedRows);
 										if(selectedRows.length > 0) {
 											gridInstance.addSelectedItems(selectedRows);
@@ -1093,6 +1097,14 @@
 					return selectedRows;
 				};
 
+				/**
+				 * [getPageItems description]
+				 * @return {[type]} [description]
+				 */
+				this.getPageItems = function() {
+					return [];
+				};
+
 			};
 
 			return conowGridClass;
@@ -1181,7 +1193,7 @@
 	}]);
 
 	app.directive('conowGridOperatorMore', ['$timeout',
-		function() {
+		function($timeout) {
 			return {
 				restrict: 'A',
 				template: '' + 
@@ -1214,10 +1226,10 @@
 					}
 
 					$timeout(function() {
-						var $popup = angular.element('.popup:visible');
+						var $popup = angular.element('.popup');
 
 						$popup.on('blur', function() {
-							this.addClass('hidden');
+							options.show = false;
 						});
 
 					});

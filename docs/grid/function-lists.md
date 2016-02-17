@@ -26,6 +26,7 @@
 ### 功能分组
 * 数据加载
     - url :heavy_check_mark:
+    - params :heavy_check_mark:
     - json :heavy_check_mark:
 * 过滤
     - 简单搜索 :heavy_check_mark:
@@ -66,9 +67,51 @@
 * [ui-grid](https://github.com/angular-ui/ui-grid)
 
 ## 接口定义
+### options
+* url:String
+* urlParams:Object
+* json:Object
+* isPagination:Boolean
+* isServerPage:Boolean
+* columnDefs:Array
+* quickSearchKey:String
+* quickSearchTip:String
+* filterOptions:Object
+* selectMode:String
+* selectedItems:Array
+* isRowSelectable:Function @return true/false
+* rowSelectFn:Function
+* rowClassFn:Function @return string
+
+### columnDefs
+* name
+* field
+* width
+* enableSorting:Boolean
+* cellToolTip:Function
+* type:String   @contains:number,date
+* cellType:String   @contains:operation,sequence
+* cellTemplate:Function @return string
+* cellFilter:String
+* cellClass:String
+* headerCellClass:String
+* 
+* enableColResize:Boolean
+* enableColDraggable:Boolean
+
+### methods(gridOptions.conowGridInstance)
+* reload
+* getSelectedItems
+* getPageItems
+
+### event
+* load state
+* 
 
 ## 代码结构
 
 ## 工具类
+
+## 问题
 
 ## FAQ(Frequently Asked Question)
