@@ -1,32 +1,51 @@
 
 <div>
 <title-bar name="conow-grid"></title-bar>
+<style>
+ul.popup {
+	min-width: 80px;
+	max-width: 100px;
+	background: #383a4c;
+	position: absolute;
+	padding: 0;
+	list-style: none;
+}
 
+ul.popup > li > a {
+	display: block;
+	color: #fff;
+	pading: 5px 10px;
+	text-align: center;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	margin: 0;
+}
+
+ul.popup > li + li {
+	border-top: 1px solid #fff;
+}
+
+@media(min-width: 768px) {
+	.table.demo  td,
+	.table.demo th {
+		min-width: 100px;
+	}
+}
+.text-danger2 {
+	color: #f47566 !important;
+}
+
+.ui-grid-cell-contents label {
+	margin-bottom: 0;
+}
+
+</style>
 <div-wrapper>
 	<conow-block-form>
 		<conow-block-group title="组件演示" is-pulldown="true" is-open="true">
 		
 			<conow-block class="">
 				<div ng-controller="conowGridDemoCtrl">
-    				<!-- <div class="conow-grid-button-group">
-    					<button type="button" class="btn add" ng-click="">添加</button>
-    					<button type="button" class="btn" ng-click="">导入</button>
-    					<button type="button" class="btn" ng-click="">导出</button>
-    				</div> -->
-    				
-    				
-					<!-- <div class="hbox m-t-xs m-b-xs">
-						<button class="btn btn-primary" ng-click="toggleAdSearchShow()">toggle AdSearch Show</button>
-					</div> -->
-					
-					<!-- <div class="hbox" ng-if="options.isShowAdvancedFilter">
-						<div ng-include="'other/demo/conow-responsive-table/conow-grid-filter-demo.html'"></div>
-						
-						<div class="text-center">
-							<button class="btn btn-primary" ng-click="advancedSearchClick()">搜索</button>
-							<button class="btn btn-default" ng-click="clearAdvancedSearchClick()">清空</button>
-						</div>
-					</div> -->
 					
 					<div class="hbox" class="m-t-xs">					
 						<div conow-grid="gridOptions1" ng-if="vm.dictList">							
@@ -37,7 +56,7 @@
 								<button type="button" class="btn" ng-click="operGetSelected()">获取已选项</button>
 								<button type="button" class="btn" ng-click="gridReload()">重新加载</button>
 		    				</div>							
-						</div>					
+						</div>		
 					</div>
 				</div>
 			</conow-block>
@@ -86,16 +105,161 @@
 	/**
 	 * conow-grid-demo controller
 	 * */
-	app.controller('conowGridDemoCtrl', ['$scope', 'DataService', 'conowModals', 'OperationService', '$state', 
-		function($scope, DataService, conowModals, OperationService, $state) {
-	
+	app.controller('conowGridDemoCtrl', ['$scope', 'DataService', 'conowModals', 'OperationService', '$state', '$rootScope', 'uiGridConstants', 
+		function($scope, DataService, conowModals, OperationService, $state, $rootScope, uiGridConstants) {
+
 			var vm = $scope.vm = {},
 				options = $scope.options = {
 					isShowAdvancedFilter: false
 				};
+
+			init();
 			
-			$scope.operGetSelected = function() {
-				console.log('已选项：', $scope.gridOptions1.conowGridInstance.getSelectedItems());
+			$scope.clickFn = function() {
+				console.log('clicked');
+//				$rootScope.$broadcast('tabClick.conowGrid');
+			}
+
+			$scope.getData = function() {
+				getData();
+			};
+			
+			$scope.combination = function(grid, row, col) {
+				return '字典类名称:' + row.entity['DICT_NAME'] + ',code:' + row.entity['DICT_CODE'];
+			}
+			
+			function init() {
+				getData();
+
+				$scope.filterOptions = {
+		            contentUrl: 'other/demo/conow-responsive-table/conow-grid-filter-demo.html',
+		            adSearch: null,
+		            criteriaData: {
+		            	
+		            },
+		            defaultParams: {
+		               'DICT_CODE': 'HR_STAFF'
+		            }
+				};
+				
+				$scope.otherData = [
+				    {
+				    	'name': 'abc',
+				    	'age': 7
+				    }, {
+				    	'name': 'xyz',
+				    	'age': 77
+				    }
+				];
+				
+				$scope.getData2 = function(row, e) {
+					console.log(row);
+					console.log(e);
+					console.log($scope.otherData);
+				}
+				
+				$scope.check = function(row, evt) {
+					evt.preventDefault();
+					
+					OperationService.alertAction('确认通过？');
+					
+					evt.stopPropagation();
+				};
+				
+				$scope.disable = function(row, evt) {
+					evt.preventDefault();
+					
+					OperationService.alertAction('确认禁用？');
+					
+					evt.stopPropagation();					
+				}
+				
+				$scope.download = function(row, evt) {
+					evt.preventDefault();
+					
+					OperationService.alertAction('正在跳转到下载页...');
+					
+					evt.stopPropagation();					
+				}
+				
+				$scope.deleteRow = function(row, evt) {
+					evt.preventDefault();
+					
+					OperationService.alertAction('确认删除？');
+					
+					evt.stopPropagation();					
+				}
+				
+				$scope.footerTplFn = function(grid, row, col) {
+					console.log(grid);
+					return '123';
+				}
+			
+				$scope.gridOptions1 = {
+					// url: '/service/dict!queryDictListByType',
+					// urlParams: { 'TYPE': 'DICT_OPTION'}, 
+					json: vm.dictList,
+//					url: 'other/demo/conow-responsive-table/data/queryDictListByType.json',
+					isPagination: true,
+					isServerPage: false,
+					selectMode: 'multiply',
+					columnDefs: [
+					    { name: '序号', cellType: 'sequence' },
+						{ name: '字典类名称', field: 'DICT_NAME', minWidth: '100', cellTooltip: function(row, col) {
+								return row.entity.name;
+							}, aggregationType: uiGridConstants.aggregationTypes.sum
+					    }, 
+						{ name: '字典类编码', field: 'DICT_CODE', width: '200', cellTooltip: function(row, col) {
+								return row.entity.workKey;
+							} 
+					    }, 
+//						{ name: '字典类说明', field: '', cellClass: 'hidden-sm', headerCellClass: 'hidden-sm', width: 300, enableSorting: false, cellTemplate: '<div>{{grid.appScope.combination(grid, row, col)}}</div>' }, 
+						{ name: '字典类规则', field: 'DICT_TYPE', width: '100', enableSorting: false }, 
+						{ name: '操作', field: '', enableSorting: false, minWidth: '200', cellType: 'operation', 
+							cellTemplate: '<div>' +  
+								'<a class="conow-grid-operator" ng-click="grid.appScope.showFlowChart(row, $event)" title= "查看"><i class="ci-seen"></i></a>' + 
+								'<a class="conow-grid-operator" ng-click="grid.appScope.edit(row, $event)" title="编辑"><i class="ci-edit"></i></a>' + 
+								'<a class="conow-grid-operator" ng-click="grid.appScope.check(row, $event)" title="通过"><i class="ci-check"></i>通过</a>' + 
+								'<a class="conow-grid-operator" ng-click="grid.appScope.disable(row, $event)" title="禁用"><i class="ci-disable"></i>禁用</a>' + 
+								'<a class="conow-grid-operator" ng-click="grid.appScope.download(row, $event)" title="下载"><i class="ci-download"></i>下载</a>' + 
+								'<a class="conow-grid-operator" ng-click="grid.appScope.deleteRow(row, $event)" title="删除"><i class="ci-delete"></i>删除</a>' + 
+								'</div>' }
+					],
+					quickSearchKey: 'DICT_NAME',
+					quickSearchTip: '请输入字典类名称',
+					// 这里也可以不用传入操作绑定的方法
+	//				showFlowChart: $scope.showFlowChart,
+	//				go: $scope.go,
+					filterOptions: $scope.filterOptions,
+					isRowSelectable: function(row) {
+						if(row.entity['DICT_NAME'].indexOf('状态') > -1) {
+							return true;
+						} else {
+							return false;
+						}
+					},
+					rowSelectFn: function(row) {
+						var modalInstance = conowModals.open({
+							templateUrl: 'other/demo/conow-responsive-table/conow-grid-modal.html',
+							controller: 'conowGridModalCtrl',
+							title: 'conowGrid弹窗演示',
+							size: 'lg',
+							isFull: true,
+							adaptive: true,
+							isModalBox: true,
+							resolve: {
+								modalParams: function() {
+									return {
+										data: row
+									}
+								},
+								deps: ['uiLoad', function(uiLoad) {
+									return uiLoad.load(['other/demo/conow-responsive-table/conow-grid-modal-ctrl.js']);
+								}]
+							}
+						});
+					}
+				}
 			}
 			
 			$scope.view = function(row) {			
@@ -133,27 +297,34 @@
 			$scope.setting = function(row) {
 				alert('in setting-->' + JSON.stringify(row.entity));
 			};
-			
-			$scope.del = function(row) {
-				alert('in del-->', JSON.stringify(row.entity));
-			};
-	
+
 			$scope.operAdd = function() {
-				console.log('addddddddddddddddddd');
+				vm.dictList.unshift(vm.dictList.slice(2, 1));
 				$scope.gridOptions1.conowGridInstance.reload();
 			};
-	
+
 			$scope.operImport = function() {
 				console.log('Import');
 			};
-	
+
 			$scope.operExport = function() {
 				console.log('export');
 			};
 			
+			// 重新加载
+			$scope.gridReload = function() {
+				$scope.gridOptions1.json = vm.dictList.slice(2, 10);
+				$scope.gridOptions1.conowGridInstance.reload();
+			}
+			
+			$scope.operGetSelected = function() {
+				console.log('已选项：', $scope.gridOptions1.conowGridInstance.getSelectedItems());
+			}
+			
 			// 查看流程图
-	        $scope.showFlowChart = function (row){
-	        	 var processDefinitionId = row.entity.id;
+	        $scope.showFlowChart = function (row, e){
+	        	 e.stopPropagation();
+	        	
 	        	 var modalInstance = conowModals.open({
 	                 templateUrl: 'other/demo/conow-responsive-table/conow-grid-modal.html',
 	                 controller:'conowGridModalCtrl',
@@ -175,43 +346,22 @@
 	             modalInstance.result.then(function (selectedItem) {
 	                 //$scope.selected = selectedItem;
 	             });
-	        }        
-	      
-	        $scope.exportFlow =  function(row){
-	        	var processDefinitionId = row.entity.id;
-	        	var processDefinitionKey = row.entity.workKey;
-	        	
-	        	var url = baseUrl+'/service/processDefinition!exportFlow?processDefinitionId='+processDefinitionId+"&processDefinitionKey="+processDefinitionKey;
-	        	
-	        	return url;    	
-	        	
 	        }
 	        
-	        $scope.deleteDeploy = function (row) {
-				var processDefinitionId = row.entity.id;
-				var deploymentId = row.entity.deploymentId;
-				var paramdata = {
-						deploymentId: deploymentId,
-						processDefinitionId:processDefinitionId
-					};
-				OperationService.interAction({
-	    			actionUrl: '/service/processDefinition!deleteDeploy',
-	    			data:paramdata,
-	    			isShowConfirm:true,
-	    			confirmTitle: '确认删除？',
-	    			successTitle: '删除成功！',
-	    			'isSuccessBack': false,
-	    			'redirectState': 'app.activiti.activitiShow',
-	    			'redirectParams': { 'TEMETEMP':new Date().getTime() }
-				});
-			}
-	        
 	        // 页面跳转
-	        $scope.go = function(row) {
+	        $scope.go = function(row, e) {
+	       	 	e.stopPropagation();
+	       	 	
 	        	$state.go('app.common.conowArea');
 	        }
 	        
-	        $scope.getData = function() {
+	        $scope.edit = function(row, e) {
+	        	e.stopPropagation();
+	        	
+	        	alert(JSON.stringify(row.entity));
+	        }
+	        
+	        function getData() {
 	        	DataService.getData('other/demo/conow-responsive-table/data/queryDictListByType.json')
 	        		.then(function(data) {
 	        			vm.dictList = data.obj;
@@ -220,66 +370,7 @@
 	        			console.error(msg);
 	        		});
 	        }
-	        
-	        $scope.getData();
-			
-			$scope.gridOptions1 = {//queryJobsListByParams
-					url: '/service/dict!queryDictListByType',
-					json: vm.dictList,
-					urlParams: { 'TYPE': 'DICT_OPTION'}, 
-					isPagination: true,
-	//				isServerPage: false,
-					selectMode: 'multiply',
-					columnDefs: [
-					    { name: '序号', cellType: 'sequence' },
-						{ name: '字典类名称', field: 'DICT_NAME', minWidth: '200', cellTooltip: function(row, col) {
-							return row.entity.name;
-						}  }, 
-						{ name: '字典类编码', field: 'DICT_CODE', width: '200', cellTooltip: function(row, col) {
-							return row.entity.workKey;
-						} }, 
-						{ name: '字典类说明', field: 'REMARK', width: 300, enableSorting: false }, 
-						{ name: '字典类规则', field: 'DICT_TYPE', width: '200', enableSorting: false }, 
-						{ name: '操作', field: '', width: 90, enableSorting: false, cellType: 'operation', 
-							cellTemplate: '<div>' + 
-								'<a class="" ng-click="grid.appScope.showFlowChart(row)" title= ""><i class="ci-seen"></i></a>' + 
-								'<a class="" href="{{grid.appScope.exportFlow(row)}}" ><i class="ci-download"></i></a>' + 
-								'<a class="" ng-click="grid.appScope.go(row)" ><i class="ci-share"></i></a>' + 
-								'</div>' }
-					],
-					quickSearchTip:'请输入流程定义KEY',
-					quickSearchKey: 'DICT_CODE',
-					// 这里也可以不用传入操作绑定的方法
-	//				showFlowChart: $scope.showFlowChart,
-	//				exportFlow:$scope.exportFlow,
-	//				deleteDeploy:$scope.deleteDeploy,
-	//				go: $scope.go,
-					filterOptions: '',
-					rowSelectFn: function(row) {
-						var modalInstance = conowModals.open({
-			                 templateUrl: 'other/demo/conow-responsive-table/conow-grid-row-click-modal.html',
-			                 controller:'conowGridRowClickModalCtrl',
-			                 title:"弹出层示例",
-			                 size: 'full',
-			                 isFull:'true',
-							 adaptive:'true',
-			                 resolve: {
-			                     modalParams: function () {
-			                         return {
-			                         	selected: row
-			                         };
-			                     },
-			                     deps: ['uiLoad', function (uiLoad) {
-			                         return uiLoad.load(['other/demo/conow-responsive-table/conow-grid-row-click-modal-ctrl.js']);
-			                     }]
-			                 }
-			             });
-			             modalInstance.result.then(function (selectedItem) {
-			                 //$scope.selected = selectedItem;
-			             });
-					}
-				}
-	
+
 		}
 	]);
 </div>
@@ -297,7 +388,7 @@
 						<li>指令调用：<code>&lt;div conow-grid="gridOptions1" class="grid"&gt;&lt;/div&gt;</code></li>
 						
 						<li>参数列表
-							<table class="table">
+							<table class="table demo">
 								<thead>
 									<tr>
 										<th ng-repeat="th in vm.paramsList.thead.tr.th track by $index" ng-bind="::th"></th>
@@ -326,7 +417,7 @@
 						</li>
 						<li>
 							列类型定义:(cellType)
-							<table class="table">
+							<table class="table demo">
 								<thead>
 									<tr>
 										<th ng-repeat="th in vm.cellTypes.thead.tr.th track by $index" ng-bind="::th"></th>
@@ -371,5 +462,18 @@
 					</ol>
 				</div>
 			</conow-block>
+		</conow-block-group>
+		
+	
+		<conow-block-group title="注意事项" is-pulldown="true" is-open="false">
+			<conow-block class="padder-md">
+				<ol class="text-primary">
+					<li>urlParams 是获取后台数据的最基本参数，<span class="text-danger">不需要包含筛选条件、排序、分页信息</span></li>
+					<li>后台分页时，会把包含筛选条件、排序、分页信息、urlParams 的参数发送到后台，<span class="text-danger">后台接口需要做对应的处理</span></li>
+					<li>筛选功能整合了 "高级搜索" 指令，可参考其使用说明进行配置，另外<span class="text-danger">不需要添加  onConfirm 方法</span></li>
+					<li>分页功能整合了 "分页" 指令，可参考其使用说明进行配置</li>
+				</ol>
+			</conow-block>
+		</conow-block-group>
 	</conow-block-form>
 </div-wrapper>

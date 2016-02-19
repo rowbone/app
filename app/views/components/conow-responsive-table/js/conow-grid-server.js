@@ -663,29 +663,29 @@
 										width: angular.isDefined(columnDef.width) ? columnDef.width : 100
 									};
 
-									var html = columnDef.cellTemplate,
-										$html = angular.element(html),
-										$operators = $html.find('.conow-grid-operator'),
-										$moreOperator = [],
-										$tmp = null;
+									// var html = columnDef.cellTemplate,
+									// 	$html = angular.element(html),
+									// 	$operators = $html.find('.conow-grid-operator'),
+									// 	$moreOperator = [],
+									// 	$tmp = null;
 
-									var html1 = '', html2 = '';
-									if($operators.length > 3 && $html.find('.conow-grid-operator-more').length === 0) {
-										$moreOperator = $operators.splice(2, $operators.length - 1);
+									// var html1 = '', html2 = '';
+									// if($operators.length > 3 && $html.find('.conow-grid-operator-more').length === 0) {
+									// 	$moreOperator = $operators.splice(2, $operators.length - 1);
 
-										for(var i=0; i<$operators.length; i++) {
-											html1 += angular.element($operators[i]).prop('outerHTML');
-										}
-										for(var i=0; i<$moreOperator.length; i++) {
-											$tmp = angular.element($moreOperator[i]);
-											// html2 += '<li>' + $tmp.prop('outerHTML') + '<span>' + $tmp.prop('title') + '</span>' + '</li>';
-											html2 += '<li>' + $tmp.prop('outerHTML') + '</li>';
-										}
+									// 	for(var i=0; i<$operators.length; i++) {
+									// 		html1 += angular.element($operators[i]).prop('outerHTML');
+									// 	}
+									// 	for(var i=0; i<$moreOperator.length; i++) {
+									// 		$tmp = angular.element($moreOperator[i]);
+									// 		// html2 += '<li>' + $tmp.prop('outerHTML') + '<span>' + $tmp.prop('title') + '</span>' + '</li>';
+									// 		html2 += '<li>' + $tmp.prop('outerHTML') + '</li>';
+									// 	}
 
-										html = '<div ng-click="grid.appScope.noFn($event)">' + html1 + '<span conow-grid-operator-more class="conow-grid-operator-more">' + html2 + '</span>' + '</div>'
+									// 	html = '<div ng-click="grid.appScope.noFn($event)">' + html1 + '<span conow-grid-operator-more class="conow-grid-operator-more">' + html2 + '</span>' + '</div>'
 
-										columnDefTmp.cellTemplate = html;
-									}
+									// 	columnDefTmp.cellTemplate = html;
+									// }
 									
 								// 序号列
 								} else if(cellType === 'sequence') {
@@ -793,6 +793,11 @@
 									'sortColumns': options.gridPaginationOptions.sortColumns,
 									// page: 1
 								});
+							});
+
+							// 列隐藏事件
+							gridApi.core.on.columnVisibilityChanged($scope, function(column) {
+								console.log(column); 
 							});
 							/*
 							// 切换页码触发事件

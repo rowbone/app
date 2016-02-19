@@ -53,7 +53,7 @@
     - 固定行:[lrStickyHeader](https://github.com/lorenzofox3/lrStickyHeader)
     - 固定列:(左边或/和右边分别用固定宽度的表格，内容宽度适应，但是要求行高固定)
 * 响应式
-    - collapse
+    - collapse/expand(展开/收缩)
     - hidden
 * resize
 * draggable

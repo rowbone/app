@@ -2,8 +2,10 @@
 /*
  * conow-area2 的指令实现（包含市的分组选择和省市区的级联选择）
  * */
-(function(app) {
+(function(angular) {
 	'use strict';
+
+	var app = angular.module('app');
 
 	app.directive('conowArea2', ['$filter', '$timeout', 'AreaService', 'conowModals', '$rootScope', 
 		function($filter, $timeout, AreaService, conowModals, $rootScope) {
@@ -14,7 +16,8 @@
 					return this.link;
 				},
 				scope: {
-					ngModel: '='
+					ngModel: '=',
+					callbackFn: '&'
 				},
 				replace: true,
 				templateUrl: 'js/directives/conow-area/tpls/area-sel-tpl.html',
@@ -99,6 +102,10 @@
 
 							modalInstance.result.then(function(data) {
 								scope.ngModel = data[options.selectKey];
+
+								if (angular.isFunction(scope.callbackFn) && angular.isDefined(data)) {
+									(scope.callbackFn)({ 'selectedItem': data });
+								}
 
 								$timeout(function() {
 									var selectedValue = data[options.selectValue];
@@ -512,16 +519,11 @@
 					vm.groupData[i].expanded = false;
 				}
 
-				// 清空搜索框
-//				vm.searchKey = '';
-
 				group.expanded = true;
-				// group.selectedLabel = item.label;
 
 				var groupIndex = AlphabetGroupFactory.getGroupIndex(item.label, options.isHasCommon);
 
 				if(!item.children && !options.isLoadingAll && options.getDataInitialsUrl) {
-//					DataService.getData(options.getDataInitialsUrl)
 					DataService.postData(options.getDataInitialsUrl, {'Initials': item.label})
 						.then(function(data) {
 							if(data.success && data.obj) {
@@ -842,4 +844,4 @@
 		    };
 		}
 	]);
-})(angular.module('app'));
+})(angular);
