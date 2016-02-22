@@ -7,8 +7,8 @@
 
 	var app = angular.module('app');
 
-	app.directive('conowArea2', ['$filter', '$timeout', 'AreaService', 'conowModals', '$rootScope', 
-		function($filter, $timeout, AreaService, conowModals, $rootScope) {
+	app.directive('conowArea2', ['$filter', '$timeout', 'AreaService', 'conowModals', '$rootScope', '$http', 
+		function($filter, $timeout, AreaService, conowModals, $rootScope, $http) {
 			return {
 				restrict: 'AE',
 				require: ['?^form', '?ngModel'],
@@ -40,10 +40,26 @@
 							selectType: 'city',
 							commonColsPerRow: 3,
 							commonColsClass: 'cols-per-row-3',
-							titleName: '地区选择'
+							titleName: '地区选择',
+							inland: true,
+							overseas: false
+						},
+						overseasSelOptions = scope.overseasSelOptions = {
+							dataSrcUrl: '/service/country!queryAllCountry',
+							isLoadingAll: true,
+							isHasCommon: true,
+							isCommonExpanded: true,
+							isShowAllLabels: false,
+							isShowSearch: true,
+							isMultiSelect: false,
+							selectKey: 'ID',
+							selectValue: 'VALUE',
+							selectTitle: 'VALUE',
 						},
 						selectType = 'city',
-						ctrl = ctrls[1];
+						ctrl = ctrls[1],
+						templateUrlBase = 'js/directives/conow-area/tpls/';
+
 					
 					// select-type 属性为2时，为级联选择
 					if(attrs.selectType == 2) {
@@ -67,34 +83,67 @@
 					
 					// selectType 为 'city' 时的处理方法
 					var cityFn = function(directInitOptions) {
+						var overseas = attrs.overseas;
+						var areaOverseas = null;
+
+						// inland && overseas
+						if(angular.isDefined(overseas) && !angular.equals(overseas, 'false')) {
+							citySelOptions.overseas = true;
+							templateUrl = templateUrlBase + 'area-group-sel-inland-overseas-tpl.html';
+							$http.post('/service/country!queryAllCountry')
+								.success(function(data) {
+									console.log(data);
+									areaOverseas = data.obj;
+								})
+								.error(function(msg) {
+									console.log(msg);
+								});
+						}
+
 						var options = citySelOptions;
 						
 						// 点击选择
 						scope.openPickerModal = function(e) {
 							e.preventDefault();
-							
-							var areaCity = AreaService.getAreaCity();
-							
-							vm.groupData = $filter('groupByAlphabet')(areaCity.origData, true);
-							vm.dataList = areaCity.citiesAll;
-							vm.selectedValue = scope.selected;
-							
-							var modalInstance = conowModals.open({
+							var modalInstance = null;
+							var controllerName = '';
+							var options2 = null;
+
+							// if(!citySelOptions.overseas) {
+								var areaCity = AreaService.getAreaCity();
+								
+								vm.groupData = $filter('groupByAlphabet')(areaCity.origData, true);
+								vm.dataList = areaCity.citiesAll;
+								vm.selectedValue = scope.selected;
+console.log(vm.groupData);
+								controllerName = 'areaGroupSelCtrl';
+							// } else {
+								vm.groupData2 = $filter('groupByAlphabet')(areaOverseas, true);
+								
+console.log(vm.groupData2);
+								// controllerName = 'areaOverseasSelCtrl';
+								controllerName = 'areaGroupSelCtrl';
+								options2 = overseasSelOptions;
+							// }
+								
+							modalInstance = conowModals.open({
 								templateUrl: templateUrl,
 								size: 'md',
 								adaptive: true,
 								isModalBox: true,
 								isFull: true,
 								title: options.titleName || '选择',
-								controller: 'areaGroupSelCtrl',
+								controller: controllerName,
 								resolve: {
 									modalParams: function() {
 										return {
 											dataAll: vm.dataAll,
 											groupData: vm.groupData,
+											groupData2: vm.groupData2,
 											dataList: vm.dataList,
 											selectedValue: vm.selectedValue,
-											options: options
+											options: options,
+											options2: options2
 										}
 									}
 								}
@@ -137,7 +186,7 @@
 					
 					// selectType 为 'cascade' 时的处理方法
 					var cascadeFn = function(directInitOptions) {
-						templateUrl = 'js/directives/conow-area/tpls/area-cascade-tpl.html';
+						templateUrl = templateUrlBase + 'area-cascade-tpl.html';
 						// 点击选择
 						scope.openPickerModal =  function(e) {
 							e.preventDefault();
@@ -197,7 +246,7 @@
 					
 					// selectType 为 'areaMaintain' 时的处理方法
 					var areaMaintainFn = function(directInitOptions) {
-						templateUrl = 'js/directives/conow-area/tpls/area-maintain-sel-tpl.html';
+						templateUrl = templateUrlBase + 'area-maintain-sel-tpl.html';
 						
 						scope.openPickerModal = function(e) {
 							var modalInstance = conowModals.open({
@@ -329,7 +378,7 @@
 						}
 					);
 
-					var templateUrl = 'js/directives/conow-area/tpls/area-group-sel-tpl.html';
+					var templateUrl = templateUrlBase + 'area-group-sel-tpl.html';
 					switch(selectType) {
 						case 'city':
 							cityFn(options);
@@ -349,12 +398,8 @@
 		}
 	]);
 
-	/**
-	 * [area group select controller]:用于地区字母分组的弹出层选择
-	 * @param  {modalParams} 
-	 */
-	app.controller('areaGroupSelCtrl', ['$scope', '$conowModalInstance', 'modalParams', 'AlphabetGroupFactory', 'DataService', '$timeout', '$filter', 
-		function($scope, $conowModalInstance, modalParams, AlphabetGroupFactory, DataService, $timeout, $filter) {
+	app.controller('areaOverseasSelCtrl', ['$scope', 'modalParams', 
+		function($scope) {
 			var vm = $scope.vm = {
 				dataAll: modalParams.dataAll,
 				groupData: AlphabetGroupFactory.getResetGroupData(modalParams.groupData, true),
@@ -371,6 +416,34 @@
 				commonColsClass = '';
 			
 			angular.extend(options, modalParams.options);
+		}
+	])
+
+	/**
+	 * [area group select controller]:用于地区字母分组的弹出层选择
+	 * @param  {modalParams} 
+	 */
+	app.controller('areaGroupSelCtrl', ['$scope', '$conowModalInstance', 'modalParams', 'AlphabetGroupFactory', 'DataService', '$timeout', '$filter', 
+		function($scope, $conowModalInstance, modalParams, AlphabetGroupFactory, DataService, $timeout, $filter) {
+			var vm = $scope.vm = {
+				dataAll: modalParams.dataAll,
+				groupData: AlphabetGroupFactory.getResetGroupData(modalParams.groupData, true),
+				groupData2: AlphabetGroupFactory.getResetGroupData(modalParams.groupData2, true),
+				contentData: [[], [], [], [], [], []],
+				selectedLabel: null
+			},
+				options = $scope.options= {
+					search: false,
+					isLoading: false,
+					colsClass: '',
+					commonColsClass: ''
+				},
+				colsClass = '',
+				commonColsClass = '',
+				options2 = angular.extend(options);
+			
+			angular.extend(options, modalParams.options);
+			angular.extend(options2, modalParams.options2);
 			
 			$scope.cityNameFilter = function(item) {
 				return (item[options.selectTitle].indexOf(vm.searchKey) > -1 

@@ -1,0 +1,190 @@
+<modal-body class="no-scoll">
+    <style>
+    .no-scoll {
+        overflow: hidden;
+        max-height: none;
+    } 
+    /*    
+    .alphabet-sel-container {
+        height: 380px;
+    }
+    */ 
+    
+    .search-group {
+        /*position: absolute;*/
+        width: 100%;
+    }    
+    .search-group input {
+        display: block;
+        padding-left: 25px;
+    }    
+    .search-group .search-group-btn {
+        position: absolute;
+        left: 10px;
+        top: 17px;
+        margin-left: 10px;
+        margin-right: 5px;
+        padding: 0;
+        background: transparent;
+        border: none;
+        color: #cacaca;
+    }    
+    .alphabet-selected {
+      /*position: absolute;*/
+      top: 54px;
+    }    
+    
+    .back-alphabet-list {
+        cursor: pointer;
+    }    
+    .alphabet-search-list {
+        border-radius: 0 !important;
+    }    
+    .alphabet-search-item {
+        padding: 10px;
+    }
+
+    </style>
+    
+    <div class="alphabet-sel-container">
+        <div class="search-group p-sm" ng-if="options.isShowSearch">
+            <!-- ng-model-options="{ updateOn: 'keyup', debounce: 500 }" -->
+            <input ng-model="vm.searchKey" type="text" class="form-control" ng-keyup="searchKeyup($event)" placeholder="请输入关键字...">
+            <button type="button" class="search-group-btn" tabindex="-1">
+                <i class="ci-search"></i>
+            </button>
+        </div>
+        <div class="alphabet-selected padder-sm padder-v-xs text-md">
+            已选择：<span class="text-primary" ng-bind="vm.selectedValue"></span>
+        </div>
+
+        <conow-tabs>
+            <conow-tabs-titles pills="true" theme="list">
+                <conow-tabs-titles-text title="国内" class="w-half" show="true"></conow-tabs-titles-text>
+                <conow-tabs-titles-text title="国外" class="w-half"></conow-tabs-titles-text>
+            </conow-tabs-titles>
+            <conow-tabs-content>
+                <conow-tabs-content-text>
+                                        
+                    <div class="alphabet-sel-body" ng-if="!options.search">
+                        <ul class="list-group list-unstyled">
+                            <div ng-repeat="group in vm.groupData track by $index" class="area-group">
+                                <li class="list-group-item no-border no-radius alphabet-sel-group-label" ng-class="{'b-b':!group.expanded,'b-white':group.expanded}" ng-click="groupLabelClick($event, group)">
+                                    <a href="#" 
+                                        class="inline alphabet-sel-item-label font-bold"
+                                        ng-if="item.children.length > 0" 
+                                        ng-class="{'selected-label': item.label == vm.selectedLabel, 'w-p-5': group.children.length > 1}" 
+                                        ng-repeat="item in group.children track by $index" 
+                                        ng-bind="::item.label" 
+                                        ng-click="itemLabelClick($event, item, group)" 
+                                        ng-hidden="(options.isLoadingAll) && (!options.isShowAllLabels) && (item.children.length <= 0)">
+                                    </a>
+                                    <i class="pull-right alphabet-expand-icon" 
+                                        ng-class="{true: 'ci-appup', false: 'ci-appdown'}[group.expanded]">
+                                    </i>
+                                </li>
+
+                                <div class="alphabet-content" ng-if="group.expanded && $index === 0">
+                                    <div class="area-city-box {{options.commonColsClass}}" ng-repeat="item in vm.contentData[$index] track by item[options.selectValue]" ng-click="itemClick($event, item)">
+                                        <a href="#" class="alphabet-sel-item area-city" title="{{ item[options.selectTitle] }}" >
+                                                <span ng-bind="::item[options.selectValue]" ng-class="{'selected': item == vm.selected}" style="line-height:1;"></span>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="alphabet-content" ng-if="group.expanded && $index > 0">
+                                    <div class="alphabet-sel-item-box {{options.colsClass}}" ng-repeat="item in vm.contentData[$index] track by item[options.selectValue]" 
+                                            ng-click="itemClick($event, item)">
+                                        <div>
+                                            <div class="alphabet-sel-item-width">
+                                                <a href="#" class="alphabet-sel-item" title="{{ ::item[options.selectTitle] }}" >
+                                                        <span ng-bind="::item[options.selectValue] | limitTo : 4" ng-class="{'selected': item == vm.selected}"></span>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </ul>
+                    </div>
+
+                </conow-tabs-content-text>
+                <conow-tabs-content-text>
+                    <pre>
+                        {{ vm.groupData2 | json }}
+                    </pre>               
+                    <!-- <div class="alphabet-sel-body" ng-if="!options2.search">
+                        <ul class="list-group list-unstyled">
+                            <div ng-repeat="group in vm.groupData2 track by $index" class="area-group">
+                                <li class="list-group-item no-border no-radius alphabet-sel-group-label" ng-class="{'b-b':!group.expanded,'b-white':group.expanded}" ng-click="groupLabelClick($event, group)">
+                                    <a href="#" 
+                                        class="inline alphabet-sel-item-label font-bold"
+                                        ng-if="item.children.length > 0" 
+                                        ng-class="{'selected-label': item.label == vm.selectedLabel, 'w-p-5': group.children.length > 1}" 
+                                        ng-repeat="item in group.children track by $index" 
+                                        ng-bind="::item.label" 
+                                        ng-click="itemLabelClick($event, item, group)" 
+                                        ng-hidden="(options2.isLoadingAll) && (!options2.isShowAllLabels) && (item.children.length <= 0)">
+                                    </a>
+                                    <i class="pull-right alphabet-expand-icon" 
+                                        ng-class="{true: 'ci-appup', false: 'ci-appdown'}[group.expanded]">
+                                    </i>
+                                </li>
+
+                                <div class="alphabet-content" ng-if="group.expanded && $index === 0">
+                                    <div class="area-city-box {{options2.commonColsClass}}" ng-repeat="item in vm.contentData[$index] track by item[options2.selectValue]" ng-click="itemClick($event, item)">
+                                        <a href="#" class="alphabet-sel-item area-city" title="{{ item[options2.selectTitle] }}" >
+                                                <span ng-bind="::item[options2.selectValue]" ng-class="{'selected': item == vm.selected}" style="line-height:1;"></span>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="alphabet-content" ng-if="group.expanded && $index > 0">
+                                    <div class="alphabet-sel-item-box {{options2.colsClass}}" ng-repeat="item in vm.contentData[$index] track by item[options.selectValue]" 
+                                            ng-click="itemClick($event, item)">
+                                        <div>
+                                            <div class="alphabet-sel-item-width">
+                                                <a href="#" class="alphabet-sel-item" title="{{ ::item[options.selectTitle] }}" >
+                                                        <span ng-bind="::item[options2.selectValue] | limitTo : 4" ng-class="{'selected': item == vm.selected}"></span>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </ul>
+                    </div> -->
+
+                </conow-tabs-content-text>
+            </conow-tabs-content>
+        </conow-tabs>
+
+        <div class="alphabet-search" ng-if="options.search">
+            <div class="hbox h-auto p-sm bg-dark dker">
+                <div class="col text-md">搜索结果</div>
+                <div class="col col-xs text-right back-alphabet-list" ng-click="back2List($event)">
+                    <i class="fa fa-mail-reply p-r-xs"></i>
+                    <span>返回</span>
+                </div>
+            </div>
+            <div class="p-sm text-md text-dark" ng-if="options.isLoading">
+                <i class="fa fa-spin fa-spinner"></i>
+                <span class="p-l-xs">加载中</span>
+            </div>
+            <div ng-if="!options.isLoading">
+                <div class="p-sm text-md text-dark" ng-if="options.noKeyWord">
+                    <span>请输入关键字</span>
+                </div>
+                <div class="p-sm text-md text-dark" ng-if="options.showSearchResult && vm.dataListShow.length === 0">
+                    <span>没有对应的信息</span>
+                </div>
+                <ul class="list-group list-unstyled alphabet-search-list">
+                    <li class="list-group-item alphabet-search-item" ng-repeat="item in vm.dataListShow track by item[options.selectKey]" ng-click="searchItemClick($event, item)">
+                        <a ng-bind="item[options.selectValue]" class="text-md" title="{{ ::item[options.selectTitle] }}"></a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</modal-body>
+<modal-btn>
+    <a href="#" class="btn btn-bar-primary" ng-click="confirm($event)">确定</a>
+</modal-btn>
