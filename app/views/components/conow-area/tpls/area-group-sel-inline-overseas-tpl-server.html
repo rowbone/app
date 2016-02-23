@@ -108,11 +108,8 @@
                     </div>
 
                 </conow-tabs-content-text>
-                <conow-tabs-content-text>
-                    <pre>
-                        {{ vm.groupData2 | json }}
-                    </pre>               
-                    <!-- <div class="alphabet-sel-body" ng-if="!options2.search">
+                <conow-tabs-content-text>          
+                    <div class="alphabet-sel-body" ng-if="!options2.search">
                         <ul class="list-group list-unstyled">
                             <div ng-repeat="group in vm.groupData2 track by $index" class="area-group">
                                 <li class="list-group-item no-border no-radius alphabet-sel-group-label" ng-class="{'b-b':!group.expanded,'b-white':group.expanded}" ng-click="groupLabelClick($event, group)">
@@ -131,18 +128,18 @@
                                 </li>
 
                                 <div class="alphabet-content" ng-if="group.expanded && $index === 0">
-                                    <div class="area-city-box {{options2.commonColsClass}}" ng-repeat="item in vm.contentData[$index] track by item[options2.selectValue]" ng-click="itemClick($event, item)">
+                                    <div class="area-city-box {{options2.commonColsClass}}" ng-repeat="item in vm.contentData2[$index]" ng-click="itemClick($event, item)">
                                         <a href="#" class="alphabet-sel-item area-city" title="{{ item[options2.selectTitle] }}" >
                                                 <span ng-bind="::item[options2.selectValue]" ng-class="{'selected': item == vm.selected}" style="line-height:1;"></span>
                                         </a>
                                     </div>
                                 </div>
                                 <div class="alphabet-content" ng-if="group.expanded && $index > 0">
-                                    <div class="alphabet-sel-item-box {{options2.colsClass}}" ng-repeat="item in vm.contentData[$index] track by item[options.selectValue]" 
+                                    <div class="alphabet-sel-item-box {{options2.colsClass}}" ng-repeat="item in vm.contentData2[$index]" 
                                             ng-click="itemClick($event, item)">
                                         <div>
                                             <div class="alphabet-sel-item-width">
-                                                <a href="#" class="alphabet-sel-item" title="{{ ::item[options.selectTitle] }}" >
+                                                <a href="#" class="alphabet-sel-item" title="{{ ::item[options2.selectTitle] }}" >
                                                         <span ng-bind="::item[options2.selectValue] | limitTo : 4" ng-class="{'selected': item == vm.selected}"></span>
                                                 </a>
                                             </div>
@@ -151,7 +148,7 @@
                                 </div>
                             </div>
                         </ul>
-                    </div> -->
+                    </div>
 
                 </conow-tabs-content-text>
             </conow-tabs-content>

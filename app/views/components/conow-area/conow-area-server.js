@@ -117,14 +117,14 @@
 								vm.selectedValue = scope.selected;
 console.log(vm.groupData);
 								controllerName = 'areaGroupSelCtrl';
-							// } else {
+// 							// } else {
 								vm.groupData2 = $filter('groupByAlphabet')(areaOverseas, true);
 								
 console.log(vm.groupData2);
 								// controllerName = 'areaOverseasSelCtrl';
 								controllerName = 'areaGroupSelCtrl';
 								options2 = overseasSelOptions;
-							// }
+// 							// }
 								
 							modalInstance = conowModals.open({
 								templateUrl: templateUrl,
@@ -430,6 +430,7 @@ console.log(vm.groupData2);
 				groupData: AlphabetGroupFactory.getResetGroupData(modalParams.groupData, true),
 				groupData2: AlphabetGroupFactory.getResetGroupData(modalParams.groupData2, true),
 				contentData: [[], [], [], [], [], []],
+				contentData2: [[], [], [], [], [], []],
 				selectedLabel: null
 			},
 				options = $scope.options= {
@@ -497,6 +498,7 @@ console.log(vm.groupData2);
 			// 当配置common展开时，初始化展开"热门"分组，并显示对应的数据
 			if(options.isCommonExpanded) {
 				vm.contentData[0] = vm.groupData[0].children[0].children;
+				vm.contentData2[0] = vm.groupData2[0].children[0].children;
 			}
 
 			// 已选项值
