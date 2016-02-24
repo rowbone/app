@@ -159,11 +159,7 @@ console.log(vm.groupData2);
 								$timeout(function() {
 									var selectedValue = data[options.selectValue];
 						        	scope.selected = selectedValue;
-
-									if(angular.isFunction(scope.callbackFn)) {
-										(scope.callbackFn)({'selected': data});
-									}
-
+						        	
 									if(angular.isDefined(directInitOptions) && directInitOptions.isBroadcast) {
 										$rootScope.$broadcast('emit-advsearch', {
 											'model': directInitOptions.ngModel,
@@ -441,7 +437,7 @@ console.log(vm.groupData2);
 				},
 				colsClass = '',
 				commonColsClass = '',
-				options2 = angular.extend(options);
+				options2 = $scope.options2 = angular.extend({}, options);
 			
 			angular.extend(options, modalParams.options);
 			angular.extend(options2, modalParams.options2);
@@ -606,6 +602,7 @@ console.log(vm.groupData2);
 
 								item.children = data;
 								vm.contentData[groupIndex] = data;
+								vm.contentData2[groupIndex] = data;
 							}
 						}, function(msg) {
 							console.error(msg);
@@ -613,6 +610,7 @@ console.log(vm.groupData2);
 				}
 				if(options.isLoadingAll || item.children) {
 					vm.contentData[groupIndex] = item.children;
+					vm.contentData2[groupIndex] = item.children;
 				}
 
 				vm.selectedLabel = item.label;

@@ -560,8 +560,14 @@
 						// ----- isPagination & isServerPage starts -----
 						var isPagination = options.gridUserOptions.isPagination,
 							isServerPage = options.gridUserOptions.isServerPage,
+							pageSize = options.gridUserOptions.pageSize,
 							url = options.gridUserOptions.url,
 							json = options.gridUserOptions.json;
+
+						if(angular.isDefined(pageSize) && Number(pageSize)) {
+							options.dataLoadDefaultParams.pagesize = Number(pageSize);
+							options.paginationOptions.pageSize = Number(pageSize);
+						}
 
 						if(angular.isDefined(isPagination) && angular.equals(isPagination, false)) {
 							options.isPagination = false;
